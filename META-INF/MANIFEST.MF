@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tallyfrontcrusher
+Bundle-SymbolicName: org.syvasoft.tallyfrontcrusher
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: org.adempiere.base;bundle-version="3.1.0",
+ org.adempiere.plugin.utils;bundle-version="3.1.0",
+ org.adempiere.ui.zk;bundle-version="3.1.0",
+ org.zkoss.zk.library;bundle-version="7.0.7",
+ org.adempiere.ui;bundle-version="3.1.0"
+Import-Package: org.osgi.framework;version="1.8.0"
+Service-Component: OSGi-INF/CrusherModelFactory.xml,
+ OSGi-INF/CrusherProcessFactory.xml
