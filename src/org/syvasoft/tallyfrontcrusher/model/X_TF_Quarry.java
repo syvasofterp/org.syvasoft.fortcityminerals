@@ -33,7 +33,7 @@ public class X_TF_Quarry extends PO implements I_TF_Quarry, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170116L;
+	private static final long serialVersionUID = 20170120L;
 
     /** Standard Constructor */
     public X_TF_Quarry (Properties ctx, int TF_Quarry_ID, String trxName)

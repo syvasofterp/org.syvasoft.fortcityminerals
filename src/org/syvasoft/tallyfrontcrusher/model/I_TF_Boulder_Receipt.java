@@ -95,6 +95,15 @@ public interface I_TF_Boulder_Receipt
 	  */
 	public int getCreatedBy();
 
+    /** Column name CreateSubcontractorInvoice */
+    public static final String COLUMNNAME_CreateSubcontractorInvoice = "CreateSubcontractorInvoice";
+
+	/** Set Create Subcontractor Invoice	  */
+	public void setCreateSubcontractorInvoice (String CreateSubcontractorInvoice);
+
+	/** Get Create Subcontractor Invoice	  */
+	public String getCreateSubcontractorInvoice();
+
     /** Column name DateAcct */
     public static final String COLUMNNAME_DateAcct = "DateAcct";
 
@@ -249,6 +258,33 @@ public interface I_TF_Boulder_Receipt
 
 	public org.compiere.model.I_M_Warehouse getM_Warehouse() throws RuntimeException;
 
+    /** Column name PostDriverSalary */
+    public static final String COLUMNNAME_PostDriverSalary = "PostDriverSalary";
+
+	/** Set Post Driver Salary Entry	  */
+	public void setPostDriverSalary (String PostDriverSalary);
+
+	/** Get Post Driver Salary Entry	  */
+	public String getPostDriverSalary();
+
+    /** Column name PostQuarryRent */
+    public static final String COLUMNNAME_PostQuarryRent = "PostQuarryRent";
+
+	/** Set Post Quarry Rent Entry	  */
+	public void setPostQuarryRent (String PostQuarryRent);
+
+	/** Get Post Quarry Rent Entry	  */
+	public String getPostQuarryRent();
+
+    /** Column name PostVehicleRent */
+    public static final String COLUMNNAME_PostVehicleRent = "PostVehicleRent";
+
+	/** Set Post Vehicle Rent Entry	  */
+	public void setPostVehicleRent (String PostVehicleRent);
+
+	/** Get Post Vehicle Rent Entry	  */
+	public String getPostVehicleRent();
+
     /** Column name Processed */
     public static final String COLUMNNAME_Processed = "Processed";
 
@@ -356,6 +392,17 @@ public interface I_TF_Boulder_Receipt
 	public int getTF_Quarry_ID();
 
 	public I_TF_Quarry getTF_Quarry() throws RuntimeException;
+
+    /** Column name TF_Vehicle_Rent_ID */
+    public static final String COLUMNNAME_TF_Vehicle_Rent_ID = "TF_Vehicle_Rent_ID";
+
+	/** Set Vehicle Rent	  */
+	public void setTF_Vehicle_Rent_ID (int TF_Vehicle_Rent_ID);
+
+	/** Get Vehicle Rent	  */
+	public int getTF_Vehicle_Rent_ID();
+
+	public I_TF_Vehicle_Rent getTF_Vehicle_Rent() throws RuntimeException;
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";

@@ -36,11 +36,10 @@ public class CreateSubcontractorInvoice extends SvrProcess {
 	@Override
 	protected void prepare() {
 		ProcessInfoParameter[] para = getParameter();
+		m_AD_Client_ID = Env.getAD_Client_ID(getCtx());
 		for (int i = 0; i < para.length; i++)
-		{
-			m_AD_Client_ID = Env.getAD_Client_ID(getCtx());			
-			String name = para[i].getParameterName();
-			
+		{						
+			String name = para[i].getParameterName();			
 			if (name.equals("AD_Org_ID"))				
 				m_AD_Org_ID = ((BigDecimal)para[i].getParameter()).intValue();
 			else if (name.equals("TF_Quarry_ID"))
