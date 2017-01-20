@@ -33,7 +33,7 @@ public class X_TF_Vehicle_Rent extends PO implements I_TF_Vehicle_Rent, I_Persis
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170116L;
+	private static final long serialVersionUID = 20170120L;
 
     /** Standard Constructor */
     public X_TF_Vehicle_Rent (Properties ctx, int TF_Vehicle_Rent_ID, String trxName)
@@ -121,6 +121,40 @@ public class X_TF_Vehicle_Rent extends PO implements I_TF_Vehicle_Rent, I_Persis
 	public Timestamp getDateAcct () 
 	{
 		return (Timestamp)get_Value(COLUMNNAME_DateAcct);
+	}
+
+	/** Set Date From.
+		@param DateFrom 
+		Starting date for a range
+	  */
+	public void setDateFrom (Timestamp DateFrom)
+	{
+		set_Value (COLUMNNAME_DateFrom, DateFrom);
+	}
+
+	/** Get Date From.
+		@return Starting date for a range
+	  */
+	public Timestamp getDateFrom () 
+	{
+		return (Timestamp)get_Value(COLUMNNAME_DateFrom);
+	}
+
+	/** Set Date To.
+		@param DateTo 
+		End date of a date range
+	  */
+	public void setDateTo (Timestamp DateTo)
+	{
+		set_Value (COLUMNNAME_DateTo, DateTo);
+	}
+
+	/** Get Date To.
+		@return End date of a date range
+	  */
+	public Timestamp getDateTo () 
+	{
+		return (Timestamp)get_Value(COLUMNNAME_DateTo);
 	}
 
 	/** Set Description.
@@ -334,6 +368,31 @@ public class X_TF_Vehicle_Rent extends PO implements I_TF_Vehicle_Rent, I_Persis
 		return bd;
 	}
 
+	public I_TF_Quarry getTF_Quarry() throws RuntimeException
+    {
+		return (I_TF_Quarry)MTable.get(getCtx(), I_TF_Quarry.Table_Name)
+			.getPO(getTF_Quarry_ID(), get_TrxName());	}
+
+	/** Set Quarry.
+		@param TF_Quarry_ID Quarry	  */
+	public void setTF_Quarry_ID (int TF_Quarry_ID)
+	{
+		if (TF_Quarry_ID < 1) 
+			set_Value (COLUMNNAME_TF_Quarry_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_Quarry_ID, Integer.valueOf(TF_Quarry_ID));
+	}
+
+	/** Get Quarry.
+		@return Quarry	  */
+	public int getTF_Quarry_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Quarry_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	/** Set Vehicle Rent.
 		@param TF_Vehicle_Rent_ID Vehicle Rent	  */
 	public void setTF_Vehicle_Rent_ID (int TF_Vehicle_Rent_ID)
@@ -366,6 +425,31 @@ public class X_TF_Vehicle_Rent extends PO implements I_TF_Vehicle_Rent, I_Persis
 	public String getTF_Vehicle_Rent_UU () 
 	{
 		return (String)get_Value(COLUMNNAME_TF_Vehicle_Rent_UU);
+	}
+
+	public I_TF_VehicleType getTF_VehicleType() throws RuntimeException
+    {
+		return (I_TF_VehicleType)MTable.get(getCtx(), I_TF_VehicleType.Table_Name)
+			.getPO(getTF_VehicleType_ID(), get_TrxName());	}
+
+	/** Set Vehicle Type.
+		@param TF_VehicleType_ID Vehicle Type	  */
+	public void setTF_VehicleType_ID (int TF_VehicleType_ID)
+	{
+		if (TF_VehicleType_ID < 1) 
+			set_Value (COLUMNNAME_TF_VehicleType_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_VehicleType_ID, Integer.valueOf(TF_VehicleType_ID));
+	}
+
+	/** Get Vehicle Type.
+		@return Vehicle Type	  */
+	public int getTF_VehicleType_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_VehicleType_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	public org.compiere.model.I_M_Product getVehicle() throws RuntimeException

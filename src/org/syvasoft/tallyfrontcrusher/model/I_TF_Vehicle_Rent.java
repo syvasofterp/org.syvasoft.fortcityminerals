@@ -108,6 +108,32 @@ public interface I_TF_Vehicle_Rent
 	  */
 	public Timestamp getDateAcct();
 
+    /** Column name DateFrom */
+    public static final String COLUMNNAME_DateFrom = "DateFrom";
+
+	/** Set Date From.
+	  * Starting date for a range
+	  */
+	public void setDateFrom (Timestamp DateFrom);
+
+	/** Get Date From.
+	  * Starting date for a range
+	  */
+	public Timestamp getDateFrom();
+
+    /** Column name DateTo */
+    public static final String COLUMNNAME_DateTo = "DateTo";
+
+	/** Set Date To.
+	  * End date of a date range
+	  */
+	public void setDateTo (Timestamp DateTo);
+
+	/** Get Date To.
+	  * End date of a date range
+	  */
+	public Timestamp getDateTo();
+
     /** Column name Description */
     public static final String COLUMNNAME_Description = "Description";
 
@@ -224,6 +250,17 @@ public interface I_TF_Vehicle_Rent
 	/** Get Standard Rent	  */
 	public BigDecimal getStd_Rent();
 
+    /** Column name TF_Quarry_ID */
+    public static final String COLUMNNAME_TF_Quarry_ID = "TF_Quarry_ID";
+
+	/** Set Quarry	  */
+	public void setTF_Quarry_ID (int TF_Quarry_ID);
+
+	/** Get Quarry	  */
+	public int getTF_Quarry_ID();
+
+	public I_TF_Quarry getTF_Quarry() throws RuntimeException;
+
     /** Column name TF_Vehicle_Rent_ID */
     public static final String COLUMNNAME_TF_Vehicle_Rent_ID = "TF_Vehicle_Rent_ID";
 
@@ -241,6 +278,17 @@ public interface I_TF_Vehicle_Rent
 
 	/** Get TF_Vehicle_Rent_UU	  */
 	public String getTF_Vehicle_Rent_UU();
+
+    /** Column name TF_VehicleType_ID */
+    public static final String COLUMNNAME_TF_VehicleType_ID = "TF_VehicleType_ID";
+
+	/** Set Vehicle Type	  */
+	public void setTF_VehicleType_ID (int TF_VehicleType_ID);
+
+	/** Get Vehicle Type	  */
+	public int getTF_VehicleType_ID();
+
+	public I_TF_VehicleType getTF_VehicleType() throws RuntimeException;
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";

@@ -33,7 +33,7 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170116L;
+	private static final long serialVersionUID = 20170120L;
 
     /** Standard Constructor */
     public X_TF_Boulder_Receipt (Properties ctx, int TF_Boulder_Receipt_ID, String trxName)
@@ -115,6 +115,20 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
+	}
+
+	/** Set Create Subcontractor Invoice.
+		@param CreateSubcontractorInvoice Create Subcontractor Invoice	  */
+	public void setCreateSubcontractorInvoice (String CreateSubcontractorInvoice)
+	{
+		set_Value (COLUMNNAME_CreateSubcontractorInvoice, CreateSubcontractorInvoice);
+	}
+
+	/** Get Create Subcontractor Invoice.
+		@return Create Subcontractor Invoice	  */
+	public String getCreateSubcontractorInvoice () 
+	{
+		return (String)get_Value(COLUMNNAME_CreateSubcontractorInvoice);
 	}
 
 	/** Set Account Date.
@@ -420,6 +434,48 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 		return ii.intValue();
 	}
 
+	/** Set Post Driver Salary Entry.
+		@param PostDriverSalary Post Driver Salary Entry	  */
+	public void setPostDriverSalary (String PostDriverSalary)
+	{
+		set_Value (COLUMNNAME_PostDriverSalary, PostDriverSalary);
+	}
+
+	/** Get Post Driver Salary Entry.
+		@return Post Driver Salary Entry	  */
+	public String getPostDriverSalary () 
+	{
+		return (String)get_Value(COLUMNNAME_PostDriverSalary);
+	}
+
+	/** Set Post Quarry Rent Entry.
+		@param PostQuarryRent Post Quarry Rent Entry	  */
+	public void setPostQuarryRent (String PostQuarryRent)
+	{
+		set_Value (COLUMNNAME_PostQuarryRent, PostQuarryRent);
+	}
+
+	/** Get Post Quarry Rent Entry.
+		@return Post Quarry Rent Entry	  */
+	public String getPostQuarryRent () 
+	{
+		return (String)get_Value(COLUMNNAME_PostQuarryRent);
+	}
+
+	/** Set Post Vehicle Rent Entry.
+		@param PostVehicleRent Post Vehicle Rent Entry	  */
+	public void setPostVehicleRent (String PostVehicleRent)
+	{
+		set_Value (COLUMNNAME_PostVehicleRent, PostVehicleRent);
+	}
+
+	/** Get Post Vehicle Rent Entry.
+		@return Post Vehicle Rent Entry	  */
+	public String getPostVehicleRent () 
+	{
+		return (String)get_Value(COLUMNNAME_PostVehicleRent);
+	}
+
 	/** Set Processed.
 		@param Processed 
 		The document has been processed
@@ -639,6 +695,31 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 	public int getTF_Quarry_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Quarry_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public I_TF_Vehicle_Rent getTF_Vehicle_Rent() throws RuntimeException
+    {
+		return (I_TF_Vehicle_Rent)MTable.get(getCtx(), I_TF_Vehicle_Rent.Table_Name)
+			.getPO(getTF_Vehicle_Rent_ID(), get_TrxName());	}
+
+	/** Set Vehicle Rent.
+		@param TF_Vehicle_Rent_ID Vehicle Rent	  */
+	public void setTF_Vehicle_Rent_ID (int TF_Vehicle_Rent_ID)
+	{
+		if (TF_Vehicle_Rent_ID < 1) 
+			set_Value (COLUMNNAME_TF_Vehicle_Rent_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_Vehicle_Rent_ID, Integer.valueOf(TF_Vehicle_Rent_ID));
+	}
+
+	/** Get Vehicle Rent.
+		@return Vehicle Rent	  */
+	public int getTF_Vehicle_Rent_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Vehicle_Rent_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
