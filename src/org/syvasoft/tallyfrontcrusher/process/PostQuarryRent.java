@@ -15,10 +15,10 @@ import org.compiere.process.SvrProcess;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
 import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
-import org.syvasoft.tallyfrontcrusher.model.MVehicleRent;
-import org.syvasoft.tallyfrontcrusher.model.MVehicleRentConfig;
+import org.syvasoft.tallyfrontcrusher.model.MQuarryRent;
+import org.syvasoft.tallyfrontcrusher.model.MQuarryRentConfig;
 
-public class PostVehicleRent extends SvrProcess {
+public class PostQuarryRent extends SvrProcess {
 
 	private int m_AD_Client_ID = 0;
 	private int m_AD_Org_ID = 0;
@@ -55,12 +55,13 @@ public class PostVehicleRent extends SvrProcess {
 	@Override
 	protected String doIt() throws Exception {
 		String where = "TF_Quarry_ID = ? AND DocStatus = 'CO' AND Processed = 'Y' AND DateReceipt >= ? AND DateReceipt <= ?  " +
-				" AND TF_Vehicle_Rent_ID IS NULL " ;
+				" AND TF_Quarry_Rent_ID IS NULL " ;
 	
-		String sql = "SELECT TF_Quarry_ID, Vehicle_ID, TF_VehicleType_ID, Count (Distinct DateReceipt) RentedDays " + 
+		String sql = "SELECT TF_Quarry_ID, Sum (vt.Std_Load) NoOfLoad " + 
 					" FROM	TF_Boulder_Receipt br INNER JOIN M_Product p 	ON br.Vehicle_ID = p.M_Product_ID " +
+					" INNER JOIN TF_VehicleType vt 	ON p.TF_VehicleType_ID = vt.TF_VehicleType_ID " +
 					" WHERE " + where +  
-					" GROUP BY TF_Quarry_ID, Vehicle_ID, p.TF_VehicleType_ID ";
+					" GROUP BY TF_Quarry_ID";
 		int no = 0;		
 		PreparedStatement pstmt =  null;
 		ResultSet rs = null;
@@ -73,62 +74,55 @@ public class PostVehicleRent extends SvrProcess {
 			DB.setParameters(pstmt,params.toArray());
 			rs = pstmt.executeQuery();			
 			while (rs.next()) {
-				no++;
-				int Vehicle_ID = rs.getInt("Vehicle_ID");
-				int TF_VehicleType_ID = rs.getInt("TF_VehicleType_ID");
-				BigDecimal rentedDays = rs.getBigDecimal("RentedDays");
-				MVehicleRentConfig rentConfig = MVehicleRentConfig.getVehicleRentConfig(getCtx(), TF_VehicleType_ID, m_DateAcct);
+				no++;				
+				BigDecimal noofLoad = rs.getBigDecimal("NoOfLoad");
+				MQuarryRentConfig rentConfig = MQuarryRentConfig.getMQuarryRentConfig(getCtx(), m_TF_Quarry_ID, m_DateAcct);
 				//Create Vehicle Rent Entry
-				MVehicleRent rent = new MVehicleRent(getCtx(), 0, get_TrxName());
+				MQuarryRent rent = new MQuarryRent(getCtx(), 0, get_TrxName());
 				rent.setAD_Org_ID(m_AD_Org_ID);
 				rent.setDateAcct(m_DateAcct);
-				rent.setVehicle_ID(Vehicle_ID);
-				rent.setTF_VehicleType_ID(TF_VehicleType_ID);
+				rent.setTF_Quarry_ID(m_TF_Quarry_ID);
 				
 				//If no salary config, skip to next salary entry.
 				if(rentConfig == null) {					
-					String errMsg = " NO RENT CONFIG -> Vehicle:" + rent.getVehicle().getName()  +
-							" | VehicleType:" + rent.getTF_VehicleType().getName() + 
+					String errMsg = " NO RENT CONFIG -> Quarry:" + rent.getTF_Quarry().getName()  +							 
 							" | Account Date:" + new SimpleDateFormat("MM/dd/yyyy").format(m_DateAcct);
 					addLog(errMsg);
 					continue;
 				}
-				//Create Vehicle Rent Entry
+				//Create Quarry Rent Entry
 				if(!isSimulate) {
-					rent.setStd_Days(rentConfig.getStd_Days());
-					rent.setStd_Rent(rentConfig.getStd_Rent());
-					rent.setRented_Days(rentedDays);
+					rent.setNoOfLoad(noofLoad);					
+					rent.setStd_Rent(rentConfig.getStd_Rent());					
 					rent.setIsCalculated(true);
-					rent.setDescription("Generated from Boulder Receipts");
-					rent.setTF_Quarry_ID(m_TF_Quarry_ID);				
+					rent.setDescription("Generated from Boulder Receipts");									
 					rent.setDateFrom(m_DateReceipt_1);
 					rent.setDateTo(m_DateReceipt_2);
 					rent.setC_ElementValue_ID(rent.getTF_Quarry().getC_ElementValue_ID());
 					rent.saveEx();
 					rent.processIt(MBoulderReceipt.DOCACTION_Complete);
 					rent.saveEx();
-					//End Vehicle Rent Entry
+					//End Quarry Rent Entry
 					
-					//Update Vehicle Rent ID
-					sql = " UPDATE TF_Boulder_Receipt SET TF_Vehicle_Rent_ID = ? WHERE " + where + " AND Vehicle_ID = ? ";
+					//Update Quarry Rent ID
+					sql = " UPDATE TF_Boulder_Receipt SET TF_Quarry_Rent_ID = ? WHERE " + where;
 					params = new ArrayList<Object>();
-					params.add(rent.getTF_Vehicle_Rent_ID());
+					params.add(rent.getTF_Quarry_Rent_ID());
 					params.add(m_TF_Quarry_ID);
 					params.add(m_DateReceipt_1);
-					params.add(m_DateReceipt_2);
-					params.add(Vehicle_ID);					
+					params.add(m_DateReceipt_2);										
 					DB.executeUpdateEx(sql, params.toArray(), get_TrxName());
 					//End Update
 					
-					String msg = "Vehicle:" + rent.getVehicle().getName() + 
-								" | Rented Days:" + rent.getRented_Days().toString() +
-								" | Amount:" + rent.getRent_Amt().toString();
-					addLog(0, null,null, msg, MVehicleRent.Table_ID, rent.getTF_Vehicle_Rent_ID());
+					String msg = "Quarry:" + rent.getTF_Quarry().getName() + 
+								" | No of load:" + rent.getNoOfLoad().toString() +
+								" | Rent:" + rent.getRent_Amt().toString();
+					addLog(0, null,null, msg, MQuarryRent.Table_ID, rent.getTF_Quarry_Rent_ID());
 				}// End Create
 				else {
-					String msg = "Vehicle:" + rent.getVehicle().getName() + 
-							" | Rented Days:" + rentedDays.toString() +
-							" | Amount:" + rentConfig.getStd_Rent().multiply(rentedDays.divide(rentConfig.getStd_Days())).toString();
+					String msg = "Quarry:" + rent.getTF_Quarry().getName() + 
+							" | No of load:" + noofLoad.toString() +
+							" | Rent:" + rentConfig.getStd_Rent().multiply(noofLoad).toString();
 					addLog(msg);
 				}
 			}
@@ -144,9 +138,10 @@ public class PostVehicleRent extends SvrProcess {
 		}
 			
 		if(isSimulate)
-			return no + " Vehicle Rent Entries will be posted!";
+			return no + " Quarry Rent Entries will be posted!";
 		else 
-			return no + " Vehicle Rent Entries have been posted!";		
+			return no + " Quarry Rent Entries have been posted!";
+		
 	}
 
 }

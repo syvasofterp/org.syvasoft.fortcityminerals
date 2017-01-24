@@ -10,8 +10,11 @@ import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MEmpSalaryConfig;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalary;
 import org.syvasoft.tallyfrontcrusher.model.MQuarry;
+import org.syvasoft.tallyfrontcrusher.model.MQuarryRent;
+import org.syvasoft.tallyfrontcrusher.model.MQuarryRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRent;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentConfig;
+import org.syvasoft.tallyfrontcrusher.model.MVehicleType;
 
 public class CrusherModelFactory implements IModelFactory {
 
@@ -29,6 +32,12 @@ public class CrusherModelFactory implements IModelFactory {
 			return MVehicleRentConfig.class;
 		else if (MVehicleRent.Table_Name.equals(tableName))
 			return MVehicleRent.class;
+		else if (MQuarryRentConfig.Table_Name.equals(tableName))
+			return MQuarryRentConfig.class;
+		else if (MQuarryRent.Table_Name.equals(tableName))
+			return MQuarryRent.class;
+		else if (MVehicleType.Table_Name.equals(tableName))
+			return MVehicleType.class;
 		return null;
 	}
 
@@ -47,6 +56,12 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MVehicleRentConfig(ctx, Record_ID, trxName);
 		else if (MVehicleRent.Table_Name.equals(tableName))
 			return new MVehicleRent(ctx, Record_ID, trxName);
+		else if (MQuarryRentConfig.Table_Name.equals(tableName))
+			return new MQuarryRentConfig(ctx, Record_ID, trxName);
+		else if (MQuarryRent.Table_Name.equals(tableName))
+			return new MQuarryRent(ctx, Record_ID, trxName);
+		else if (MVehicleType.Table_Name.equals(tableName))
+			return new MVehicleType(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -65,6 +80,12 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MVehicleRentConfig(ctx, rs, trxName);
 		else if (MVehicleRent.Table_Name.equals(tableName))
 			return new MVehicleRent(ctx, rs, trxName);
+		else if (MQuarryRentConfig.Table_Name.equals(tableName))
+			return new MQuarryRentConfig(ctx, rs, trxName);
+		else if (MQuarryRent.Table_Name.equals(tableName))
+			return new MQuarryRent(ctx, rs, trxName);
+		else if (MVehicleType.Table_Name.equals(tableName))
+			return new MVehicleType(ctx, rs, trxName);
 		return null;
 	}
 
