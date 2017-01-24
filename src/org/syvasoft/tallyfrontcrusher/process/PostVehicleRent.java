@@ -15,11 +15,11 @@ import org.compiere.process.SvrProcess;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
 import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
-import org.syvasoft.tallyfrontcrusher.model.MEmpSalaryConfig;
-import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalary;
+import org.syvasoft.tallyfrontcrusher.model.MVehicleRent;
+import org.syvasoft.tallyfrontcrusher.model.MVehicleRentConfig;
 
-public class PostDriverSalary extends SvrProcess {
-	
+public class PostVehicleRent extends SvrProcess {
+
 	private int m_AD_Client_ID = 0;
 	private int m_AD_Org_ID = 0;
 	private boolean isSimulate = false;
@@ -55,12 +55,12 @@ public class PostDriverSalary extends SvrProcess {
 	@Override
 	protected String doIt() throws Exception {
 		String where = "TF_Quarry_ID = ? AND DocStatus = 'CO' AND Processed = 'Y' AND DateReceipt >= ? AND DateReceipt <= ?  " +
-					" AND TF_Employee_Salary_ID IS NULL " ;
-		
-		String sql = "SELECT TF_Quarry_ID, Driver_ID, TF_VehicleType_ID, Count (Distinct DateReceipt) PresentDays " + 
+				" AND TF_Vehicle_Rent_ID IS NULL " ;
+	
+		String sql = "SELECT TF_Quarry_ID, Vehicle_ID, TF_VehicleType_ID, Count (Distinct DateReceipt) RentedDays " + 
 					" FROM	TF_Boulder_Receipt br INNER JOIN M_Product p 	ON br.Vehicle_ID = p.M_Product_ID " +
 					" WHERE " + where +  
-					" GROUP BY TF_Quarry_ID, Driver_ID, p.TF_VehicleType_ID ";
+					" GROUP BY TF_Quarry_ID, Vehicle_ID, p.TF_VehicleType_ID ";
 		int no = 0;		
 		PreparedStatement pstmt =  null;
 		ResultSet rs = null;
@@ -74,67 +74,64 @@ public class PostDriverSalary extends SvrProcess {
 			rs = pstmt.executeQuery();			
 			while (rs.next()) {
 				no++;
-				int C_BPartner_ID = rs.getInt("Driver_ID");
+				int Vehicle_ID = rs.getInt("Vehicle_ID");
 				int TF_VehicleType_ID = rs.getInt("TF_VehicleType_ID");
-				BigDecimal presentDays = rs.getBigDecimal("PresentDays");
-				MEmpSalaryConfig salConfig = MEmpSalaryConfig.getEmpSalaryConfig(getCtx(), C_BPartner_ID, TF_VehicleType_ID, m_DateAcct);
-				//Create Employee Salary Entry
-				MEmployeeSalary salary = new MEmployeeSalary(getCtx(), 0, get_TrxName());								
-				salary.setAD_Org_ID(m_AD_Org_ID);
-				salary.setDateAcct(m_DateAcct);				
-				salary.setC_BPartner_ID(C_BPartner_ID);
-				salary.setTF_VehicleType_ID(TF_VehicleType_ID);				
-								
+				BigDecimal rentedDays = rs.getBigDecimal("RentedDays");
+				MVehicleRentConfig rentConfig = MVehicleRentConfig.getVehicleRentConfig(getCtx(), TF_VehicleType_ID, m_DateAcct);
+				//Create Vehicle Rent Entry
+				MVehicleRent rent = new MVehicleRent(getCtx(), 0, get_TrxName());
+				rent.setAD_Org_ID(m_AD_Org_ID);
+				rent.setDateAcct(m_DateAcct);
+				rent.setVehicle_ID(Vehicle_ID);
+				rent.setTF_VehicleType_ID(TF_VehicleType_ID);
+				
 				//If no salary config, skip to next salary entry.
-				if(salConfig == null) {					
-					String errMsg = " NO SALARY CONFIG -> EMP:" + salary.getC_BPartner().getName() +
-							" | VehicleType:" + salary.getTF_VehicleType().getName() + 
+				if(rentConfig == null) {					
+					String errMsg = " NO RENT CONFIG -> Vehicle:" + rent.getVehicle().getName()  +
+							" | VehicleType:" + rent.getTF_VehicleType().getName() + 
 							" | Account Date:" + new SimpleDateFormat("MM/dd/yyyy").format(m_DateAcct);
 					addLog(errMsg);
 					continue;
 				}
-				//Create Salary Entry
+				//Create Vehicle Rent Entry
 				if(!isSimulate) {
-					salary.setStd_Wage(salConfig.getStd_Wage());
-					salary.setStd_Days(salConfig.getStd_Days());
-					salary.setPresent_Days(presentDays);
-					salary.setIsCalculated(true);
-					salary.setDescription("Generated from Boulder Receipts");				
-					salary.setTF_Quarry_ID(m_TF_Quarry_ID);				
-					salary.setDateFrom(m_DateReceipt_1);
-					salary.setDateTo(m_DateReceipt_2);
-					salary.setC_ElementValue_ID(salary.getTF_Quarry().getC_ElementValue_ID());
-					salary.saveEx();
-					salary.processIt(MBoulderReceipt.DOCACTION_Complete);
-					salary.saveEx();
-					//End Employee Salary Entry
+					rent.setStd_Days(rentConfig.getStd_Days());
+					rent.setStd_Rent(rentConfig.getStd_Rent());
+					rent.setRented_Days(rentedDays);
+					rent.setIsCalculated(true);
+					rent.setDescription("Generated from Boulder Receipts");
+					rent.setTF_Quarry_ID(m_TF_Quarry_ID);				
+					rent.setDateFrom(m_DateReceipt_1);
+					rent.setDateTo(m_DateReceipt_2);
+					rent.setC_ElementValue_ID(rent.getTF_Quarry().getC_ElementValue_ID());
+					rent.saveEx();
+					rent.processIt(MBoulderReceipt.DOCACTION_Complete);
+					rent.saveEx();
+					//End Vehicle Rent Entry
 					
-					//Update Employee Salary ID
-					sql = " UPDATE TF_Boulder_Receipt SET TF_Employee_Salary_ID = ? WHERE " + where + " AND Driver_ID = ? AND " + 
-							"(SELECT TF_VehicleType_ID FROM M_Product p WHERE p.M_Product_ID = TF_Boulder_Receipt.Vehicle_ID) = ? " ;
+					//Update Vehicle Rent ID
+					sql = " UPDATE TF_Boulder_Receipt SET TF_Vehicle_Rent_ID = ? WHERE " + where + " AND Vehicle_ID = ? ";
 					params = new ArrayList<Object>();
-					params.add(salary.getTF_Employee_Salary_ID());
+					params.add(rent.getTF_Vehicle_Rent_ID());
 					params.add(m_TF_Quarry_ID);
 					params.add(m_DateReceipt_1);
 					params.add(m_DateReceipt_2);
-					params.add(C_BPartner_ID);
-					params.add(TF_VehicleType_ID);
+					params.add(Vehicle_ID);					
 					DB.executeUpdateEx(sql, params.toArray(), get_TrxName());
 					//End Update
 					
-					String msg = "Employee:" + salary.getC_BPartner().getName() + 
-								" | Present Days:" + salary.getPresent_Days().toString() +
-								" | Salary:" + salary.getSalary_Amt().toString();
-					
-					addLog(0, null,null, msg, MEmployeeSalary.Table_ID, salary.getTF_Employee_Salary_ID());
-				} // End Create
+					String msg = "Vehicle:" + rent.getVehicle().getName() + 
+								" | Rented Days:" + rent.getRented_Days().toString() +
+								" | Salary:" + rent.getRent_Amt().toString();
+					addLog(0, null,null, msg, MVehicleRent.Table_ID, rent.getTF_Vehicle_Rent_ID());
+				}// End Create
 				else {
-					String msg = "Employee:" + salary.getC_BPartner().getName() + 
-							" | Present  Days:" + presentDays.toString() +
-							" | Salary:" + salConfig.getStd_Wage().multiply(presentDays.divide(salConfig.getStd_Days()));
+					String msg = "Vehicle:" + rent.getVehicle().getName() + 
+							" | Rented Days:" + rentedDays.toString() +
+							" | Salary:" + rentConfig.getStd_Rent().multiply(rentedDays.divide(rentConfig.getStd_Days())).toString();
 					addLog(msg);
 				}
-			}			
+			}
 		}
 		catch (SQLException e) {
 			rollback();
@@ -147,9 +144,9 @@ public class PostDriverSalary extends SvrProcess {
 		}
 			
 		if(isSimulate)
-			return no + " Salary Entries will be posted!";
+			return no + " Vehicle Rent Entries will be posted!";
 		else 
-			return no + " Salary Entries have been posted!";
+			return no + " Vehicle Rent Entries have been posted!";		
 	}
 
 }
