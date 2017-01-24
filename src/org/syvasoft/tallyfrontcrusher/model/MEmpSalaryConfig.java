@@ -27,7 +27,8 @@ public class MEmpSalaryConfig extends X_TF_Emp_Salary_Config {
 		String where = "(C_BPartner_ID = ? OR TF_VehicleType_ID = ?) AND ValidFrom <= ? ";
 		List<MEmpSalaryConfig> salConfigs = new Query(ctx, Table_Name, where, null)
 		.setClient_ID().setParameters(C_BPartner_ID, TF_VehicleType_ID, dateAcct)
-		.setOrderBy("COALESCE(TF_VehicleType_ID,0) DESC, COALESCE(C_BPartner_ID,0) DESC, DateFrom DESC").list();
+		.setOnlyActiveRecords(true)
+		.setOrderBy("COALESCE(TF_VehicleType_ID,0) DESC, COALESCE(C_BPartner_ID,0) DESC, ValidFrom DESC").list();
 		if(salConfigs.size() > 0)
 			return salConfigs.get(0);
 		else
@@ -38,6 +39,7 @@ public class MEmpSalaryConfig extends X_TF_Emp_Salary_Config {
 		String where = "(C_BPartner_ID = ? OR TF_VehicleType_ID = ?) ";
 		List<MEmpSalaryConfig> salConfigs = new Query(ctx, Table_Name, where, null)
 		.setClient_ID().setParameters(C_BPartner_ID, TF_VehicleType_ID )
+		.setOnlyActiveRecords(true)
 		.setOrderBy("COALESCE(TF_VehicleType_ID,0) DESC,COALESCE(C_BPartner_ID,0) DESC, DateFrom DESC").list();
 		if(salConfigs.size() > 0)
 			return salConfigs.get(0);

@@ -19,5 +19,22 @@ public class MVehicleRent extends X_TF_Vehicle_Rent {
 		super(ctx, TF_Vehicle_Rent_ID, trxName);
 		// TODO Auto-generated constructor stub
 	}
-
+	public void processIt(String DocAction) {
+		if(MBoulderReceipt.DOCACTION_Prepare.equals(DocAction)) {
+			setDocStatus(DOCSTATUS_InProgress);
+		}
+		else if(MBoulderReceipt.DOCACTION_Complete.equals(DocAction)) {
+			setDocStatus(DOCSTATUS_Completed);
+			setProcessed(true);
+		}
+	}
+	
+	@Override
+	protected boolean beforeSave(boolean newRecord) {
+		if(isCalculated()) {
+			setRent_Amt(getStd_Rent().multiply(getRented_Days().divide(getStd_Days())));
+		}
+		return super.beforeSave(newRecord);
+	}
+	
 }
