@@ -33,7 +33,7 @@ public class X_TF_Vehicle_Rent extends PO implements I_TF_Vehicle_Rent, I_Persis
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170120L;
+	private static final long serialVersionUID = 20170125L;
 
     /** Standard Constructor */
     public X_TF_Vehicle_Rent (Properties ctx, int TF_Vehicle_Rent_ID, String trxName)
@@ -101,6 +101,34 @@ public class X_TF_Vehicle_Rent extends PO implements I_TF_Vehicle_Rent, I_Persis
 	public int getC_ElementValue_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_C_ElementValue_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_ElementValue getCreditC_ElementValue() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getCreditC_ElementValue_ID(), get_TrxName());	}
+
+	/** Set Profit Center (Cr).
+		@param CreditC_ElementValue_ID 
+		Credit Profit Center
+	  */
+	public void setCreditC_ElementValue_ID (int CreditC_ElementValue_ID)
+	{
+		if (CreditC_ElementValue_ID < 1) 
+			set_Value (COLUMNNAME_CreditC_ElementValue_ID, null);
+		else 
+			set_Value (COLUMNNAME_CreditC_ElementValue_ID, Integer.valueOf(CreditC_ElementValue_ID));
+	}
+
+	/** Get Profit Center (Cr).
+		@return Credit Profit Center
+	  */
+	public int getCreditC_ElementValue_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_CreditC_ElementValue_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
@@ -291,6 +319,27 @@ public class X_TF_Vehicle_Rent extends PO implements I_TF_Vehicle_Rent, I_Persis
 	public boolean isProcessed () 
 	{
 		Object oo = get_Value(COLUMNNAME_Processed);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	/** Set Process Now.
+		@param Processing Process Now	  */
+	public void setProcessing (boolean Processing)
+	{
+		set_Value (COLUMNNAME_Processing, Boolean.valueOf(Processing));
+	}
+
+	/** Get Process Now.
+		@return Process Now	  */
+	public boolean isProcessing () 
+	{
+		Object oo = get_Value(COLUMNNAME_Processing);
 		if (oo != null) 
 		{
 			 if (oo instanceof Boolean) 
