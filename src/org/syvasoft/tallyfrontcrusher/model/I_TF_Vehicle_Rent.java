@@ -95,6 +95,21 @@ public interface I_TF_Vehicle_Rent
 	  */
 	public int getCreatedBy();
 
+    /** Column name CreditC_ElementValue_ID */
+    public static final String COLUMNNAME_CreditC_ElementValue_ID = "CreditC_ElementValue_ID";
+
+	/** Set Profit Center (Cr).
+	  * Credit Profit Center
+	  */
+	public void setCreditC_ElementValue_ID (int CreditC_ElementValue_ID);
+
+	/** Get Profit Center (Cr).
+	  * Credit Profit Center
+	  */
+	public int getCreditC_ElementValue_ID();
+
+	public org.compiere.model.I_C_ElementValue getCreditC_ElementValue() throws RuntimeException;
+
     /** Column name DateAcct */
     public static final String COLUMNNAME_DateAcct = "DateAcct";
 
@@ -213,6 +228,15 @@ public interface I_TF_Vehicle_Rent
 	  * The document has been processed
 	  */
 	public boolean isProcessed();
+
+    /** Column name Processing */
+    public static final String COLUMNNAME_Processing = "Processing";
+
+	/** Set Process Now	  */
+	public void setProcessing (boolean Processing);
+
+	/** Get Process Now	  */
+	public boolean isProcessing();
 
     /** Column name Rent_Amt */
     public static final String COLUMNNAME_Rent_Amt = "Rent_Amt";
