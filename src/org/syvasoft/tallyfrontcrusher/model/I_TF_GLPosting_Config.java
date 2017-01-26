@@ -115,6 +115,28 @@ public interface I_TF_GLPosting_Config
 
 	public org.compiere.model.I_C_ElementValue getQuarryRent_A() throws RuntimeException;
 
+    /** Column name SalariesExpenseAcct */
+    public static final String COLUMNNAME_SalariesExpenseAcct = "SalariesExpenseAcct";
+
+	/** Set Salary Expense	  */
+	public void setSalariesExpenseAcct (int SalariesExpenseAcct);
+
+	/** Get Salary Expense	  */
+	public int getSalariesExpenseAcct();
+
+	public org.compiere.model.I_C_ElementValue getSalariesExpenseA() throws RuntimeException;
+
+    /** Column name SalaryPayable_Acct */
+    public static final String COLUMNNAME_SalaryPayable_Acct = "SalaryPayable_Acct";
+
+	/** Set Salary Payable	  */
+	public void setSalaryPayable_Acct (int SalaryPayable_Acct);
+
+	/** Get Salary Payable	  */
+	public int getSalaryPayable_Acct();
+
+	public org.compiere.model.I_C_ElementValue getSalaryPayable_A() throws RuntimeException;
+
     /** Column name TF_GLPosting_Config_ID */
     public static final String COLUMNNAME_TF_GLPosting_Config_ID = "TF_GLPosting_Config_ID";
 
