@@ -33,7 +33,7 @@ public class X_TF_Employee_Salary extends PO implements I_TF_Employee_Salary, I_
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170120L;
+	private static final long serialVersionUID = 20170126L;
 
     /** Standard Constructor */
     public X_TF_Employee_Salary (Properties ctx, int TF_Employee_Salary_ID, String trxName)
@@ -279,6 +279,34 @@ public class X_TF_Employee_Salary extends PO implements I_TF_Employee_Salary, I_
 	public String getDocStatus () 
 	{
 		return (String)get_Value(COLUMNNAME_DocStatus);
+	}
+
+	public org.compiere.model.I_GL_Journal getGL_Journal() throws RuntimeException
+    {
+		return (org.compiere.model.I_GL_Journal)MTable.get(getCtx(), org.compiere.model.I_GL_Journal.Table_Name)
+			.getPO(getGL_Journal_ID(), get_TrxName());	}
+
+	/** Set Journal.
+		@param GL_Journal_ID 
+		General Ledger Journal
+	  */
+	public void setGL_Journal_ID (int GL_Journal_ID)
+	{
+		if (GL_Journal_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_GL_Journal_ID, null);
+		else 
+			set_ValueNoCheck (COLUMNNAME_GL_Journal_ID, Integer.valueOf(GL_Journal_ID));
+	}
+
+	/** Get Journal.
+		@return General Ledger Journal
+	  */
+	public int getGL_Journal_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_GL_Journal_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	/** Set Calculated.

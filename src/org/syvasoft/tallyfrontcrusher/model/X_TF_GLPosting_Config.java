@@ -30,7 +30,7 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170125L;
+	private static final long serialVersionUID = 20170126L;
 
     /** Standard Constructor */
     public X_TF_GLPosting_Config (Properties ctx, int TF_GLPosting_Config_ID, String trxName)
@@ -113,6 +113,50 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	public int getQuarryRent_Acct () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_QuarryRent_Acct);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_ElementValue getSalariesExpenseA() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getSalariesExpenseAcct(), get_TrxName());	}
+
+	/** Set Salary Expense.
+		@param SalariesExpenseAcct Salary Expense	  */
+	public void setSalariesExpenseAcct (int SalariesExpenseAcct)
+	{
+		set_Value (COLUMNNAME_SalariesExpenseAcct, Integer.valueOf(SalariesExpenseAcct));
+	}
+
+	/** Get Salary Expense.
+		@return Salary Expense	  */
+	public int getSalariesExpenseAcct () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_SalariesExpenseAcct);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_ElementValue getSalaryPayable_A() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getSalaryPayable_Acct(), get_TrxName());	}
+
+	/** Set Salary Payable.
+		@param SalaryPayable_Acct Salary Payable	  */
+	public void setSalaryPayable_Acct (int SalaryPayable_Acct)
+	{
+		set_Value (COLUMNNAME_SalaryPayable_Acct, Integer.valueOf(SalaryPayable_Acct));
+	}
+
+	/** Get Salary Payable.
+		@return Salary Payable	  */
+	public int getSalaryPayable_Acct () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_SalaryPayable_Acct);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
