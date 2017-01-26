@@ -6,6 +6,7 @@ import java.util.Properties;
 import org.compiere.model.MJournal;
 import org.compiere.model.MJournalLine;
 import org.compiere.model.MPeriod;
+import org.compiere.model.MResource;
 import org.compiere.util.Env;
 
 public class MVehicleRent extends X_TF_Vehicle_Rent {
@@ -79,7 +80,10 @@ public class MVehicleRent extends X_TF_Vehicle_Rent {
 		if(isCalculated()) {
 			setRent_Amt(getStd_Rent().multiply(getRented_Days().divide(getStd_Days())));
 		}
-		//TODO: set credit profit center from Vehicle.
+		//Set Credit Profit Center for Vehicle
+		MResource res = (MResource) getVehicle().getS_Resource();
+		setCreditC_ElementValue_ID(res.get_ValueAsInt("C_ElementValue_ID"));
+		
 		return super.beforeSave(newRecord);
 	}
 	
