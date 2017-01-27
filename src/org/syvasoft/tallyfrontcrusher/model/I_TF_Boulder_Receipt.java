@@ -217,6 +217,57 @@ public interface I_TF_Boulder_Receipt
 
 	public org.compiere.model.I_C_Order getJob_Order() throws RuntimeException;
 
+    /** Column name Jobwork_Journal_ID */
+    public static final String COLUMNNAME_Jobwork_Journal_ID = "Jobwork_Journal_ID";
+
+	/** Set Jobwork Journal	  */
+	public void setJobwork_Journal_ID (int Jobwork_Journal_ID);
+
+	/** Get Jobwork Journal	  */
+	public int getJobwork_Journal_ID();
+
+	public org.compiere.model.I_GL_Journal getJobwork_Journal() throws RuntimeException;
+
+    /** Column name Jobwork_PriceActual */
+    public static final String COLUMNNAME_Jobwork_PriceActual = "Jobwork_PriceActual";
+
+	/** Set Job Work Actual Price	  */
+	public void setJobwork_PriceActual (BigDecimal Jobwork_PriceActual);
+
+	/** Get Job Work Actual Price	  */
+	public BigDecimal getJobwork_PriceActual();
+
+    /** Column name JobWork_Product_ID */
+    public static final String COLUMNNAME_JobWork_Product_ID = "JobWork_Product_ID";
+
+	/** Set Job Work	  */
+	public void setJobWork_Product_ID (int JobWork_Product_ID);
+
+	/** Get Job Work	  */
+	public int getJobWork_Product_ID();
+
+	public org.compiere.model.I_M_Product getJobWork_Product() throws RuntimeException;
+
+    /** Column name Jobwork_StdPrice */
+    public static final String COLUMNNAME_Jobwork_StdPrice = "Jobwork_StdPrice";
+
+	/** Set Job Work Price	  */
+	public void setJobwork_StdPrice (BigDecimal Jobwork_StdPrice);
+
+	/** Get Job Work Price	  */
+	public BigDecimal getJobwork_StdPrice();
+
+    /** Column name Jobwork_VarJournal_ID */
+    public static final String COLUMNNAME_Jobwork_VarJournal_ID = "Jobwork_VarJournal_ID";
+
+	/** Set Jobwork Variance Journal	  */
+	public void setJobwork_VarJournal_ID (int Jobwork_VarJournal_ID);
+
+	/** Get Jobwork Variance Journal	  */
+	public int getJobwork_VarJournal_ID();
+
+	public org.compiere.model.I_GL_Journal getJobwork_VarJournal() throws RuntimeException;
+
     /** Column name M_Product_ID */
     public static final String COLUMNNAME_M_Product_ID = "M_Product_ID";
 
@@ -257,6 +308,30 @@ public interface I_TF_Boulder_Receipt
 	public int getM_Warehouse_ID();
 
 	public org.compiere.model.I_M_Warehouse getM_Warehouse() throws RuntimeException;
+
+    /** Column name NoOfLoad */
+    public static final String COLUMNNAME_NoOfLoad = "NoOfLoad";
+
+	/** Set No of Load	  */
+	public void setNoOfLoad (BigDecimal NoOfLoad);
+
+	/** Get No of Load	  */
+	public BigDecimal getNoOfLoad();
+
+    /** Column name PO_PriceList_ID */
+    public static final String COLUMNNAME_PO_PriceList_ID = "PO_PriceList_ID";
+
+	/** Set Purchase Pricelist.
+	  * Price List used by this Business Partner
+	  */
+	public void setPO_PriceList_ID (int PO_PriceList_ID);
+
+	/** Get Purchase Pricelist.
+	  * Price List used by this Business Partner
+	  */
+	public int getPO_PriceList_ID();
+
+	public org.compiere.model.I_M_PriceList getPO_PriceList() throws RuntimeException;
 
     /** Column name PostDriverSalary */
     public static final String COLUMNNAME_PostDriverSalary = "PostDriverSalary";
@@ -392,6 +467,17 @@ public interface I_TF_Boulder_Receipt
 	public int getTF_Quarry_ID();
 
 	public I_TF_Quarry getTF_Quarry() throws RuntimeException;
+
+    /** Column name TF_Quarry_Rent_ID */
+    public static final String COLUMNNAME_TF_Quarry_Rent_ID = "TF_Quarry_Rent_ID";
+
+	/** Set Quarry Rent	  */
+	public void setTF_Quarry_Rent_ID (int TF_Quarry_Rent_ID);
+
+	/** Get Quarry Rent	  */
+	public int getTF_Quarry_Rent_ID();
+
+	public I_TF_Quarry_Rent getTF_Quarry_Rent() throws RuntimeException;
 
     /** Column name TF_Vehicle_Rent_ID */
     public static final String COLUMNNAME_TF_Vehicle_Rent_ID = "TF_Vehicle_Rent_ID";

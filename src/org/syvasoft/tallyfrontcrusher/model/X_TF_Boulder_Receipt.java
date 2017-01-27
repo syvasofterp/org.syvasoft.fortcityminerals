@@ -33,7 +33,7 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170120L;
+	private static final long serialVersionUID = 20170127L;
 
     /** Standard Constructor */
     public X_TF_Boulder_Receipt (Properties ctx, int TF_Boulder_Receipt_ID, String trxName)
@@ -50,6 +50,10 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 // DR
 			setDocumentNo (null);
 			setDriver_ID (0);
+			setJobwork_PriceActual (Env.ZERO);
+// 0
+			setJobwork_StdPrice (Env.ZERO);
+// 0
 			setM_Product_ID (0);
 // 1000099
 			setM_Warehouse_ID (0);
@@ -353,6 +357,115 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 		return ii.intValue();
 	}
 
+	public org.compiere.model.I_GL_Journal getJobwork_Journal() throws RuntimeException
+    {
+		return (org.compiere.model.I_GL_Journal)MTable.get(getCtx(), org.compiere.model.I_GL_Journal.Table_Name)
+			.getPO(getJobwork_Journal_ID(), get_TrxName());	}
+
+	/** Set Jobwork Journal.
+		@param Jobwork_Journal_ID Jobwork Journal	  */
+	public void setJobwork_Journal_ID (int Jobwork_Journal_ID)
+	{
+		if (Jobwork_Journal_ID < 1) 
+			set_Value (COLUMNNAME_Jobwork_Journal_ID, null);
+		else 
+			set_Value (COLUMNNAME_Jobwork_Journal_ID, Integer.valueOf(Jobwork_Journal_ID));
+	}
+
+	/** Get Jobwork Journal.
+		@return Jobwork Journal	  */
+	public int getJobwork_Journal_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Jobwork_Journal_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Set Job Work Actual Price.
+		@param Jobwork_PriceActual Job Work Actual Price	  */
+	public void setJobwork_PriceActual (BigDecimal Jobwork_PriceActual)
+	{
+		set_Value (COLUMNNAME_Jobwork_PriceActual, Jobwork_PriceActual);
+	}
+
+	/** Get Job Work Actual Price.
+		@return Job Work Actual Price	  */
+	public BigDecimal getJobwork_PriceActual () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Jobwork_PriceActual);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	public org.compiere.model.I_M_Product getJobWork_Product() throws RuntimeException
+    {
+		return (org.compiere.model.I_M_Product)MTable.get(getCtx(), org.compiere.model.I_M_Product.Table_Name)
+			.getPO(getJobWork_Product_ID(), get_TrxName());	}
+
+	/** Set Job Work.
+		@param JobWork_Product_ID Job Work	  */
+	public void setJobWork_Product_ID (int JobWork_Product_ID)
+	{
+		if (JobWork_Product_ID < 1) 
+			set_Value (COLUMNNAME_JobWork_Product_ID, null);
+		else 
+			set_Value (COLUMNNAME_JobWork_Product_ID, Integer.valueOf(JobWork_Product_ID));
+	}
+
+	/** Get Job Work.
+		@return Job Work	  */
+	public int getJobWork_Product_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_JobWork_Product_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Set Job Work Price.
+		@param Jobwork_StdPrice Job Work Price	  */
+	public void setJobwork_StdPrice (BigDecimal Jobwork_StdPrice)
+	{
+		set_Value (COLUMNNAME_Jobwork_StdPrice, Jobwork_StdPrice);
+	}
+
+	/** Get Job Work Price.
+		@return Job Work Price	  */
+	public BigDecimal getJobwork_StdPrice () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Jobwork_StdPrice);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	public org.compiere.model.I_GL_Journal getJobwork_VarJournal() throws RuntimeException
+    {
+		return (org.compiere.model.I_GL_Journal)MTable.get(getCtx(), org.compiere.model.I_GL_Journal.Table_Name)
+			.getPO(getJobwork_VarJournal_ID(), get_TrxName());	}
+
+	/** Set Jobwork Variance Journal.
+		@param Jobwork_VarJournal_ID Jobwork Variance Journal	  */
+	public void setJobwork_VarJournal_ID (int Jobwork_VarJournal_ID)
+	{
+		if (Jobwork_VarJournal_ID < 1) 
+			set_Value (COLUMNNAME_Jobwork_VarJournal_ID, null);
+		else 
+			set_Value (COLUMNNAME_Jobwork_VarJournal_ID, Integer.valueOf(Jobwork_VarJournal_ID));
+	}
+
+	/** Get Jobwork Variance Journal.
+		@return Jobwork Variance Journal	  */
+	public int getJobwork_VarJournal_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Jobwork_VarJournal_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	public org.compiere.model.I_M_Product getM_Product() throws RuntimeException
     {
 		return (org.compiere.model.I_M_Product)MTable.get(getCtx(), org.compiere.model.I_M_Product.Table_Name)
@@ -429,6 +542,50 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 	public int getM_Warehouse_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_M_Warehouse_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Set No of Load.
+		@param NoOfLoad No of Load	  */
+	public void setNoOfLoad (BigDecimal NoOfLoad)
+	{
+		throw new IllegalArgumentException ("NoOfLoad is virtual column");	}
+
+	/** Get No of Load.
+		@return No of Load	  */
+	public BigDecimal getNoOfLoad () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_NoOfLoad);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	public org.compiere.model.I_M_PriceList getPO_PriceList() throws RuntimeException
+    {
+		return (org.compiere.model.I_M_PriceList)MTable.get(getCtx(), org.compiere.model.I_M_PriceList.Table_Name)
+			.getPO(getPO_PriceList_ID(), get_TrxName());	}
+
+	/** Set Purchase Pricelist.
+		@param PO_PriceList_ID 
+		Price List used by this Business Partner
+	  */
+	public void setPO_PriceList_ID (int PO_PriceList_ID)
+	{
+		if (PO_PriceList_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_PO_PriceList_ID, null);
+		else 
+			set_ValueNoCheck (COLUMNNAME_PO_PriceList_ID, Integer.valueOf(PO_PriceList_ID));
+	}
+
+	/** Get Purchase Pricelist.
+		@return Price List used by this Business Partner
+	  */
+	public int getPO_PriceList_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_PO_PriceList_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
@@ -695,6 +852,31 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 	public int getTF_Quarry_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Quarry_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public I_TF_Quarry_Rent getTF_Quarry_Rent() throws RuntimeException
+    {
+		return (I_TF_Quarry_Rent)MTable.get(getCtx(), I_TF_Quarry_Rent.Table_Name)
+			.getPO(getTF_Quarry_Rent_ID(), get_TrxName());	}
+
+	/** Set Quarry Rent.
+		@param TF_Quarry_Rent_ID Quarry Rent	  */
+	public void setTF_Quarry_Rent_ID (int TF_Quarry_Rent_ID)
+	{
+		if (TF_Quarry_Rent_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_TF_Quarry_Rent_ID, null);
+		else 
+			set_ValueNoCheck (COLUMNNAME_TF_Quarry_Rent_ID, Integer.valueOf(TF_Quarry_Rent_ID));
+	}
+
+	/** Get Quarry Rent.
+		@return Quarry Rent	  */
+	public int getTF_Quarry_Rent_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Quarry_Rent_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();

@@ -56,6 +56,7 @@ DELETE FROM TF_Employee_Salary;
 DELETE FROM TF_Vehicle_Rent;
 DELETE FROM TF_Quarry_Rent;
 DELETE FROM TF_Fuel_Issue;
+-- End Crusher Tables.
 
 
 --delete from ChuBoe_Replenish;

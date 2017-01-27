@@ -30,7 +30,7 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170126L;
+	private static final long serialVersionUID = 20170127L;
 
     /** Standard Constructor */
     public X_TF_GLPosting_Config (Properties ctx, int TF_GLPosting_Config_ID, String trxName)
@@ -38,6 +38,10 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
       super (ctx, TF_GLPosting_Config_ID, trxName);
       /** if (TF_GLPosting_Config_ID == 0)
         {
+			setC_AcctSchema_ID (0);
+			setJobworkExpenseAcct_ID (0);
+			setJobworkExpenseVarianceAcct_ID (0);
+			setJobworkPayableClearingAcct_ID (0);
 			setQuarryExp_Acct (0);
 			setQuarryRent_Acct (0);
 			setTF_GLPosting_Config_ID (0);
@@ -73,6 +77,134 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
         .append(get_ID()).append("]");
       return sb.toString();
     }
+
+	public org.compiere.model.I_C_AcctSchema getC_AcctSchema() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_AcctSchema)MTable.get(getCtx(), org.compiere.model.I_C_AcctSchema.Table_Name)
+			.getPO(getC_AcctSchema_ID(), get_TrxName());	}
+
+	/** Set Accounting Schema.
+		@param C_AcctSchema_ID 
+		Rules for accounting
+	  */
+	public void setC_AcctSchema_ID (int C_AcctSchema_ID)
+	{
+		if (C_AcctSchema_ID < 1) 
+			set_Value (COLUMNNAME_C_AcctSchema_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_AcctSchema_ID, Integer.valueOf(C_AcctSchema_ID));
+	}
+
+	/** Get Accounting Schema.
+		@return Rules for accounting
+	  */
+	public int getC_AcctSchema_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_AcctSchema_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_M_Product getJobWork_Product() throws RuntimeException
+    {
+		return (org.compiere.model.I_M_Product)MTable.get(getCtx(), org.compiere.model.I_M_Product.Table_Name)
+			.getPO(getJobWork_Product_ID(), get_TrxName());	}
+
+	/** Set Job Work.
+		@param JobWork_Product_ID Job Work	  */
+	public void setJobWork_Product_ID (int JobWork_Product_ID)
+	{
+		if (JobWork_Product_ID < 1) 
+			set_Value (COLUMNNAME_JobWork_Product_ID, null);
+		else 
+			set_Value (COLUMNNAME_JobWork_Product_ID, Integer.valueOf(JobWork_Product_ID));
+	}
+
+	/** Get Job Work.
+		@return Job Work	  */
+	public int getJobWork_Product_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_JobWork_Product_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_ElementValue getJobworkExpenseAcct() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getJobworkExpenseAcct_ID(), get_TrxName());	}
+
+	/** Set Jobwork Expense.
+		@param JobworkExpenseAcct_ID Jobwork Expense	  */
+	public void setJobworkExpenseAcct_ID (int JobworkExpenseAcct_ID)
+	{
+		if (JobworkExpenseAcct_ID < 1) 
+			set_Value (COLUMNNAME_JobworkExpenseAcct_ID, null);
+		else 
+			set_Value (COLUMNNAME_JobworkExpenseAcct_ID, Integer.valueOf(JobworkExpenseAcct_ID));
+	}
+
+	/** Get Jobwork Expense.
+		@return Jobwork Expense	  */
+	public int getJobworkExpenseAcct_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_JobworkExpenseAcct_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_ElementValue getJobworkExpenseVarianceAcct() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getJobworkExpenseVarianceAcct_ID(), get_TrxName());	}
+
+	/** Set Jobwork Expense Variance.
+		@param JobworkExpenseVarianceAcct_ID Jobwork Expense Variance	  */
+	public void setJobworkExpenseVarianceAcct_ID (int JobworkExpenseVarianceAcct_ID)
+	{
+		if (JobworkExpenseVarianceAcct_ID < 1) 
+			set_Value (COLUMNNAME_JobworkExpenseVarianceAcct_ID, null);
+		else 
+			set_Value (COLUMNNAME_JobworkExpenseVarianceAcct_ID, Integer.valueOf(JobworkExpenseVarianceAcct_ID));
+	}
+
+	/** Get Jobwork Expense Variance.
+		@return Jobwork Expense Variance	  */
+	public int getJobworkExpenseVarianceAcct_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_JobworkExpenseVarianceAcct_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_ElementValue getJobworkPayableClearingAcct() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getJobworkPayableClearingAcct_ID(), get_TrxName());	}
+
+	/** Set Jobwork Payable Clearing.
+		@param JobworkPayableClearingAcct_ID Jobwork Payable Clearing	  */
+	public void setJobworkPayableClearingAcct_ID (int JobworkPayableClearingAcct_ID)
+	{
+		if (JobworkPayableClearingAcct_ID < 1) 
+			set_Value (COLUMNNAME_JobworkPayableClearingAcct_ID, null);
+		else 
+			set_Value (COLUMNNAME_JobworkPayableClearingAcct_ID, Integer.valueOf(JobworkPayableClearingAcct_ID));
+	}
+
+	/** Get Jobwork Payable Clearing.
+		@return Jobwork Payable Clearing	  */
+	public int getJobworkPayableClearingAcct_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_JobworkPayableClearingAcct_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
 
 	public org.compiere.model.I_C_ElementValue getQuarryExp_A() throws RuntimeException
     {

@@ -64,6 +64,21 @@ public interface I_TF_GLPosting_Config
 	  */
 	public int getAD_Org_ID();
 
+    /** Column name C_AcctSchema_ID */
+    public static final String COLUMNNAME_C_AcctSchema_ID = "C_AcctSchema_ID";
+
+	/** Set Accounting Schema.
+	  * Rules for accounting
+	  */
+	public void setC_AcctSchema_ID (int C_AcctSchema_ID);
+
+	/** Get Accounting Schema.
+	  * Rules for accounting
+	  */
+	public int getC_AcctSchema_ID();
+
+	public org.compiere.model.I_C_AcctSchema getC_AcctSchema() throws RuntimeException;
+
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
 
@@ -92,6 +107,50 @@ public interface I_TF_GLPosting_Config
 	  * The record is active in the system
 	  */
 	public boolean isActive();
+
+    /** Column name JobWork_Product_ID */
+    public static final String COLUMNNAME_JobWork_Product_ID = "JobWork_Product_ID";
+
+	/** Set Job Work	  */
+	public void setJobWork_Product_ID (int JobWork_Product_ID);
+
+	/** Get Job Work	  */
+	public int getJobWork_Product_ID();
+
+	public org.compiere.model.I_M_Product getJobWork_Product() throws RuntimeException;
+
+    /** Column name JobworkExpenseAcct_ID */
+    public static final String COLUMNNAME_JobworkExpenseAcct_ID = "JobworkExpenseAcct_ID";
+
+	/** Set Jobwork Expense	  */
+	public void setJobworkExpenseAcct_ID (int JobworkExpenseAcct_ID);
+
+	/** Get Jobwork Expense	  */
+	public int getJobworkExpenseAcct_ID();
+
+	public org.compiere.model.I_C_ElementValue getJobworkExpenseAcct() throws RuntimeException;
+
+    /** Column name JobworkExpenseVarianceAcct_ID */
+    public static final String COLUMNNAME_JobworkExpenseVarianceAcct_ID = "JobworkExpenseVarianceAcct_ID";
+
+	/** Set Jobwork Expense Variance	  */
+	public void setJobworkExpenseVarianceAcct_ID (int JobworkExpenseVarianceAcct_ID);
+
+	/** Get Jobwork Expense Variance	  */
+	public int getJobworkExpenseVarianceAcct_ID();
+
+	public org.compiere.model.I_C_ElementValue getJobworkExpenseVarianceAcct() throws RuntimeException;
+
+    /** Column name JobworkPayableClearingAcct_ID */
+    public static final String COLUMNNAME_JobworkPayableClearingAcct_ID = "JobworkPayableClearingAcct_ID";
+
+	/** Set Jobwork Payable Clearing	  */
+	public void setJobworkPayableClearingAcct_ID (int JobworkPayableClearingAcct_ID);
+
+	/** Get Jobwork Payable Clearing	  */
+	public int getJobworkPayableClearingAcct_ID();
+
+	public org.compiere.model.I_C_ElementValue getJobworkPayableClearingAcct() throws RuntimeException;
 
     /** Column name QuarryExp_Acct */
     public static final String COLUMNNAME_QuarryExp_Acct = "QuarryExp_Acct";
