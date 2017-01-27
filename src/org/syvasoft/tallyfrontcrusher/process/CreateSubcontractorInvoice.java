@@ -138,12 +138,6 @@ public class CreateSubcontractorInvoice extends SvrProcess {
 			invLine.saveEx();
 			//End Invoice Line
 			
-			//DocAction
-			if (!invoice.processIt(m_DocAction))
-				throw new AdempiereException("Failed when processing document - " + invoice.getProcessMsg());
-			invoice.saveEx();
-			//End DocAction
-			
 			//Update back Invoice ID to Boulder Receipts.
 			sql = " Update TF_Boulder_Receipt SET Subcon_Invoice_ID = ? WHERE " + whereClause;
 			ArrayList<Object> params = new ArrayList<Object>();
@@ -155,6 +149,14 @@ public class CreateSubcontractorInvoice extends SvrProcess {
 			params.add(m_DateReceipt_2);			
 			DB.executeUpdateEx(sql, params.toArray(), get_TrxName());
 			//End Update
+			
+			
+			//DocAction
+			if (!invoice.processIt(m_DocAction))
+				throw new AdempiereException("Failed when processing document - " + invoice.getProcessMsg());
+			invoice.saveEx();
+			//End DocAction
+						
 			
 			addLog(0, null, null, "Invoice No : " + invoice.getDocumentNo() , MInvoice.Table_ID,invoice.getC_Invoice_ID());
 			
