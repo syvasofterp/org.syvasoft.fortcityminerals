@@ -29,8 +29,10 @@ public class CrusherEventHandler extends AbstractEventHandler {
 			//Post Jobwork Expense Variance Journal for Subcontractor Invoice
 			MGLPostingConfig glConfig = MGLPostingConfig.getMGLPostingConfig(inv.getCtx());
 			for(MInvoiceLine line : lines) {
-				if(line.getM_Product_ID() == glConfig.getJobWork_Product_ID()) 
+				if(line.getM_Product_ID() == glConfig.getJobWork_Product_ID()) {
 					MBoulderReceipt.postJobworkExpenseVarianceJournal(inv.getCtx(), inv, line.getPriceEntered(), inv.get_TrxName());
+					break;
+				}
 			}
 		}
 	}
