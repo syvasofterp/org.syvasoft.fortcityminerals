@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Level;
 
+import org.compiere.model.MAcctSchema;
+import org.compiere.model.MCostDetail;
 import org.compiere.model.MInvoice;
 import org.compiere.model.MJournal;
 import org.compiere.model.MJournalLine;
@@ -107,6 +109,10 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 				return m_processMsg;
 			}
 			
+			//Update Costing Record...
+			MAcctSchema as = (MAcctSchema) MGLPostingConfig.getMGLPostingConfig(getCtx()).getC_AcctSchema();			
+			MCostDetail.createBoulderReceipt(as, getAD_Org_ID(), getM_Product_ID(), 0, getTF_Boulder_Receipt_ID()
+					, 0, getJobwork_StdPrice().multiply(getQtyReceived()), getQtyReceived(), getDescription(), get_TrxName());
 			
 			//Posting GL journal for Jobwork expense 
 			MJournal j = new MJournal(getCtx(), 0, get_TrxName());
@@ -159,6 +165,7 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 			setM_Transaction_ID(mtrx.getM_Transaction_ID());
 			
 		}
+		
 		return m_processMsg;
 	}
 	
