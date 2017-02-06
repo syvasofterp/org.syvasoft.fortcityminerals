@@ -7,6 +7,8 @@ import org.adempiere.base.IModelFactory;
 import org.compiere.model.PO;
 import org.compiere.util.Env;
 import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
+import org.syvasoft.tallyfrontcrusher.model.MCrusherProduction;
+import org.syvasoft.tallyfrontcrusher.model.MCrusherProductionConfig;
 import org.syvasoft.tallyfrontcrusher.model.MEmpSalaryConfig;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalary;
 import org.syvasoft.tallyfrontcrusher.model.MGLPostingConfig;
@@ -41,6 +43,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return MVehicleType.class;
 		else if (MGLPostingConfig.Table_Name.equals(tableName))
 			return MGLPostingConfig.class;
+		else if (MCrusherProduction.Table_Name.equals(tableName))
+			return MCrusherProduction.class;
+		else if (MCrusherProductionConfig.Table_Name.equals(tableName))
+			return MCrusherProductionConfig.class;
 		return null;
 	}
 
@@ -67,6 +73,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MVehicleType(ctx, Record_ID, trxName);
 		else if (MGLPostingConfig.Table_Name.equals(tableName))
 			return new MGLPostingConfig(ctx, Record_ID, trxName);
+		else if (MCrusherProduction.Table_Name.equals(tableName))
+			return new MCrusherProduction(ctx, Record_ID, trxName);
+		else if (MCrusherProductionConfig.Table_Name.equals(tableName))
+			return new MCrusherProductionConfig(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -93,6 +103,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MVehicleType(ctx, rs, trxName);
 		else if (MGLPostingConfig.Table_Name.equals(tableName))
 			return new MGLPostingConfig(ctx, rs, trxName);
+		else if (MCrusherProduction.Table_Name.equals(tableName))
+			return new MCrusherProduction(ctx, rs, trxName);
+		else if (MCrusherProductionConfig.Table_Name.equals(tableName))
+			return new MCrusherProductionConfig(ctx, rs, trxName);
 		return null;
 	}
 
