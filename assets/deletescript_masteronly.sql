@@ -231,8 +231,8 @@ delete FROM fact_acct WHERE ad_client_id=1000000;
 -- DELETE FROM  M_Warehouse  WHERE AD_Client_ID = 1000000 and M_Warehouse_ID NOT IN (1000001,1000000);
 
 
+DELETE FROM TF_Crusher_Production;
 
 
-
-
+DELETE FROM AD_RecentItem where ad_client_id=1000000;
 
