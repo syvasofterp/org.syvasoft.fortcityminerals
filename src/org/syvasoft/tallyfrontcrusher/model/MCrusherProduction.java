@@ -26,10 +26,15 @@ public class MCrusherProduction extends X_TF_Crusher_Production {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public void deleteProductions() {
+	public List<MProduction> getProductions() {
 		String where = " TF_Crusher_Production_ID = ?";
 		List<MProduction> productions = new Query(getCtx(), MProduction.Table_Name, where, get_TrxName())
 		.setClient_ID().setParameters(getTF_Crusher_Production_ID()).list();
+		return productions;
+	}
+	
+	public void deleteProductions() {		
+		List<MProduction> productions = getProductions();
 		for(MProduction prod : productions) {
 			prod.deleteLines(get_TrxName());
 			prod.deleteEx(true);
@@ -97,5 +102,40 @@ public class MCrusherProduction extends X_TF_Crusher_Production {
 		}		
 		setIsCreated("Y");		
 	}
-
+	
+	public String validateCrusherProduction() {		
+		if(getProductions().size() == 0)
+			return "Create Production lines!";
+		
+		return null;
+			
+	}
+	
+	public String processIt(String DocAction) {
+		String m_processMsg = validateCrusherProduction();
+		
+		if(m_processMsg != null)
+			return m_processMsg;
+		
+		if(MProduction.DOCACTION_Prepare.equals(DocAction)) {
+			setDocStatus(DOCSTATUS_InProgress);
+		}
+		else if(MProduction.DOCACTION_Complete.equals(DocAction)) {
+			List<MProduction> productions = getProductions();
+			
+			for(MProduction prod : productions) {
+				boolean result = prod.processIt(DocAction);
+				prod.saveEx();
+				if(!result) {
+					m_processMsg = " Not able to Complete the Production! ";
+					break;
+				}
+			}
+			
+			setDocStatus(DOCSTATUS_Completed);
+			setProcessed(true);
+			
+		}
+		return m_processMsg;
+	}
 }
