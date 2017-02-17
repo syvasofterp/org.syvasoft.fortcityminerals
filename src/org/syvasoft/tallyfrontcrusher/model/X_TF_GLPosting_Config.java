@@ -30,7 +30,7 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170127L;
+	private static final long serialVersionUID = 20170217L;
 
     /** Standard Constructor */
     public X_TF_GLPosting_Config (Properties ctx, int TF_GLPosting_Config_ID, String trxName)
@@ -250,6 +250,31 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 		return ii.intValue();
 	}
 
+	public org.compiere.model.I_C_ElementValue getSalariesAdvanceAcct() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getSalariesAdvanceAcct_ID(), get_TrxName());	}
+
+	/** Set Salary Advance.
+		@param SalariesAdvanceAcct_ID Salary Advance	  */
+	public void setSalariesAdvanceAcct_ID (int SalariesAdvanceAcct_ID)
+	{
+		if (SalariesAdvanceAcct_ID < 1) 
+			set_Value (COLUMNNAME_SalariesAdvanceAcct_ID, null);
+		else 
+			set_Value (COLUMNNAME_SalariesAdvanceAcct_ID, Integer.valueOf(SalariesAdvanceAcct_ID));
+	}
+
+	/** Get Salary Advance.
+		@return Salary Advance	  */
+	public int getSalariesAdvanceAcct_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_SalariesAdvanceAcct_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	public org.compiere.model.I_C_ElementValue getSalariesExpenseA() throws RuntimeException
     {
 		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
@@ -367,6 +392,106 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	public int getVehicleRent_Acct () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_VehicleRent_Acct);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_ElementValue getWageAdvanceAcct() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getWageAdvanceAcct_ID(), get_TrxName());	}
+
+	/** Set Wage Advance.
+		@param WageAdvanceAcct_ID Wage Advance	  */
+	public void setWageAdvanceAcct_ID (int WageAdvanceAcct_ID)
+	{
+		if (WageAdvanceAcct_ID < 1) 
+			set_Value (COLUMNNAME_WageAdvanceAcct_ID, null);
+		else 
+			set_Value (COLUMNNAME_WageAdvanceAcct_ID, Integer.valueOf(WageAdvanceAcct_ID));
+	}
+
+	/** Get Wage Advance.
+		@return Wage Advance	  */
+	public int getWageAdvanceAcct_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_WageAdvanceAcct_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_ElementValue getWageExpenseAcct() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getWageExpenseAcct_ID(), get_TrxName());	}
+
+	/** Set Wage Expense.
+		@param WageExpenseAcct_ID Wage Expense	  */
+	public void setWageExpenseAcct_ID (int WageExpenseAcct_ID)
+	{
+		if (WageExpenseAcct_ID < 1) 
+			set_Value (COLUMNNAME_WageExpenseAcct_ID, null);
+		else 
+			set_Value (COLUMNNAME_WageExpenseAcct_ID, Integer.valueOf(WageExpenseAcct_ID));
+	}
+
+	/** Get Wage Expense.
+		@return Wage Expense	  */
+	public int getWageExpenseAcct_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_WageExpenseAcct_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_ElementValue getWageIncentiveAcct() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getWageIncentiveAcct_ID(), get_TrxName());	}
+
+	/** Set Wage Incentive.
+		@param WageIncentiveAcct_ID Wage Incentive	  */
+	public void setWageIncentiveAcct_ID (int WageIncentiveAcct_ID)
+	{
+		if (WageIncentiveAcct_ID < 1) 
+			set_Value (COLUMNNAME_WageIncentiveAcct_ID, null);
+		else 
+			set_Value (COLUMNNAME_WageIncentiveAcct_ID, Integer.valueOf(WageIncentiveAcct_ID));
+	}
+
+	/** Get Wage Incentive.
+		@return Wage Incentive	  */
+	public int getWageIncentiveAcct_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_WageIncentiveAcct_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_ElementValue getWagePayableAcct() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getWagePayableAcct_ID(), get_TrxName());	}
+
+	/** Set Wage Payable.
+		@param WagePayableAcct_ID Wage Payable	  */
+	public void setWagePayableAcct_ID (int WagePayableAcct_ID)
+	{
+		if (WagePayableAcct_ID < 1) 
+			set_Value (COLUMNNAME_WagePayableAcct_ID, null);
+		else 
+			set_Value (COLUMNNAME_WagePayableAcct_ID, Integer.valueOf(WagePayableAcct_ID));
+	}
+
+	/** Get Wage Payable.
+		@return Wage Payable	  */
+	public int getWagePayableAcct_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_WagePayableAcct_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();

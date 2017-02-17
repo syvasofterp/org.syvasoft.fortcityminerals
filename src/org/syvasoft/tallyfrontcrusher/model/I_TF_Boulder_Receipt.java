@@ -428,6 +428,15 @@ public interface I_TF_Boulder_Receipt
 
 	public org.compiere.model.I_C_BPartner getSubcontractor() throws RuntimeException;
 
+    /** Column name TF_BlueMetal_Type */
+    public static final String COLUMNNAME_TF_BlueMetal_Type = "TF_BlueMetal_Type";
+
+	/** Set Blue Metal Type	  */
+	public void setTF_BlueMetal_Type (String TF_BlueMetal_Type);
+
+	/** Get Blue Metal Type	  */
+	public String getTF_BlueMetal_Type();
+
     /** Column name TF_Boulder_Receipt_ID */
     public static final String COLUMNNAME_TF_Boulder_Receipt_ID = "TF_Boulder_Receipt_ID";
 
@@ -445,6 +454,17 @@ public interface I_TF_Boulder_Receipt
 
 	/** Get TF_Boulder_Receipt_UU	  */
 	public String getTF_Boulder_Receipt_UU();
+
+    /** Column name TF_Crusher_Production_ID */
+    public static final String COLUMNNAME_TF_Crusher_Production_ID = "TF_Crusher_Production_ID";
+
+	/** Set Crusher Production	  */
+	public void setTF_Crusher_Production_ID (int TF_Crusher_Production_ID);
+
+	/** Get Crusher Production	  */
+	public int getTF_Crusher_Production_ID();
+
+	public I_TF_Crusher_Production getTF_Crusher_Production() throws RuntimeException;
 
     /** Column name TF_Employee_Salary_ID */
     public static final String COLUMNNAME_TF_Employee_Salary_ID = "TF_Employee_Salary_ID";
@@ -478,6 +498,15 @@ public interface I_TF_Boulder_Receipt
 	public int getTF_Quarry_Rent_ID();
 
 	public I_TF_Quarry_Rent getTF_Quarry_Rent() throws RuntimeException;
+
+    /** Column name TF_Send_To */
+    public static final String COLUMNNAME_TF_Send_To = "TF_Send_To";
+
+	/** Set Send To	  */
+	public void setTF_Send_To (String TF_Send_To);
+
+	/** Get Send To	  */
+	public String getTF_Send_To();
 
     /** Column name TF_Vehicle_Rent_ID */
     public static final String COLUMNNAME_TF_Vehicle_Rent_ID = "TF_Vehicle_Rent_ID";

@@ -33,7 +33,7 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170127L;
+	private static final long serialVersionUID = 20170216L;
 
     /** Standard Constructor */
     public X_TF_Boulder_Receipt (Properties ctx, int TF_Boulder_Receipt_ID, String trxName)
@@ -773,6 +773,27 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 		return ii.intValue();
 	}
 
+	/** Regular = R */
+	public static final String TF_BLUEMETAL_TYPE_Regular = "R";
+	/** GSB = G */
+	public static final String TF_BLUEMETAL_TYPE_GSB = "G";
+	/** WMM = W */
+	public static final String TF_BLUEMETAL_TYPE_WMM = "W";
+	/** Set Blue Metal Type.
+		@param TF_BlueMetal_Type Blue Metal Type	  */
+	public void setTF_BlueMetal_Type (String TF_BlueMetal_Type)
+	{
+
+		set_Value (COLUMNNAME_TF_BlueMetal_Type, TF_BlueMetal_Type);
+	}
+
+	/** Get Blue Metal Type.
+		@return Blue Metal Type	  */
+	public String getTF_BlueMetal_Type () 
+	{
+		return (String)get_Value(COLUMNNAME_TF_BlueMetal_Type);
+	}
+
 	/** Set Boulder Receipt.
 		@param TF_Boulder_Receipt_ID Boulder Receipt	  */
 	public void setTF_Boulder_Receipt_ID (int TF_Boulder_Receipt_ID)
@@ -805,6 +826,31 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 	public String getTF_Boulder_Receipt_UU () 
 	{
 		return (String)get_Value(COLUMNNAME_TF_Boulder_Receipt_UU);
+	}
+
+	public I_TF_Crusher_Production getTF_Crusher_Production() throws RuntimeException
+    {
+		return (I_TF_Crusher_Production)MTable.get(getCtx(), I_TF_Crusher_Production.Table_Name)
+			.getPO(getTF_Crusher_Production_ID(), get_TrxName());	}
+
+	/** Set Crusher Production.
+		@param TF_Crusher_Production_ID Crusher Production	  */
+	public void setTF_Crusher_Production_ID (int TF_Crusher_Production_ID)
+	{
+		if (TF_Crusher_Production_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_TF_Crusher_Production_ID, null);
+		else 
+			set_ValueNoCheck (COLUMNNAME_TF_Crusher_Production_ID, Integer.valueOf(TF_Crusher_Production_ID));
+	}
+
+	/** Get Crusher Production.
+		@return Crusher Production	  */
+	public int getTF_Crusher_Production_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Crusher_Production_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	public I_TF_Employee_Salary getTF_Employee_Salary() throws RuntimeException
@@ -880,6 +926,25 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
+	}
+
+	/** Production = P */
+	public static final String TF_SEND_TO_Production = "P";
+	/** Stock = S */
+	public static final String TF_SEND_TO_Stock = "S";
+	/** Set Send To.
+		@param TF_Send_To Send To	  */
+	public void setTF_Send_To (String TF_Send_To)
+	{
+
+		set_Value (COLUMNNAME_TF_Send_To, TF_Send_To);
+	}
+
+	/** Get Send To.
+		@return Send To	  */
+	public String getTF_Send_To () 
+	{
+		return (String)get_Value(COLUMNNAME_TF_Send_To);
 	}
 
 	public I_TF_Vehicle_Rent getTF_Vehicle_Rent() throws RuntimeException
