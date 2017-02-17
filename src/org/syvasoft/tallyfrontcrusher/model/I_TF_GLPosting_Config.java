@@ -174,6 +174,17 @@ public interface I_TF_GLPosting_Config
 
 	public org.compiere.model.I_C_ElementValue getQuarryRent_A() throws RuntimeException;
 
+    /** Column name SalariesAdvanceAcct_ID */
+    public static final String COLUMNNAME_SalariesAdvanceAcct_ID = "SalariesAdvanceAcct_ID";
+
+	/** Set Salary Advance	  */
+	public void setSalariesAdvanceAcct_ID (int SalariesAdvanceAcct_ID);
+
+	/** Get Salary Advance	  */
+	public int getSalariesAdvanceAcct_ID();
+
+	public org.compiere.model.I_C_ElementValue getSalariesAdvanceAcct() throws RuntimeException;
+
     /** Column name SalariesExpenseAcct */
     public static final String COLUMNNAME_SalariesExpenseAcct = "SalariesExpenseAcct";
 
@@ -251,4 +262,48 @@ public interface I_TF_GLPosting_Config
 	public int getVehicleRent_Acct();
 
 	public org.compiere.model.I_C_ElementValue getVehicleRent_A() throws RuntimeException;
+
+    /** Column name WageAdvanceAcct_ID */
+    public static final String COLUMNNAME_WageAdvanceAcct_ID = "WageAdvanceAcct_ID";
+
+	/** Set Wage Advance	  */
+	public void setWageAdvanceAcct_ID (int WageAdvanceAcct_ID);
+
+	/** Get Wage Advance	  */
+	public int getWageAdvanceAcct_ID();
+
+	public org.compiere.model.I_C_ElementValue getWageAdvanceAcct() throws RuntimeException;
+
+    /** Column name WageExpenseAcct_ID */
+    public static final String COLUMNNAME_WageExpenseAcct_ID = "WageExpenseAcct_ID";
+
+	/** Set Wage Expense	  */
+	public void setWageExpenseAcct_ID (int WageExpenseAcct_ID);
+
+	/** Get Wage Expense	  */
+	public int getWageExpenseAcct_ID();
+
+	public org.compiere.model.I_C_ElementValue getWageExpenseAcct() throws RuntimeException;
+
+    /** Column name WageIncentiveAcct_ID */
+    public static final String COLUMNNAME_WageIncentiveAcct_ID = "WageIncentiveAcct_ID";
+
+	/** Set Wage Incentive	  */
+	public void setWageIncentiveAcct_ID (int WageIncentiveAcct_ID);
+
+	/** Get Wage Incentive	  */
+	public int getWageIncentiveAcct_ID();
+
+	public org.compiere.model.I_C_ElementValue getWageIncentiveAcct() throws RuntimeException;
+
+    /** Column name WagePayableAcct_ID */
+    public static final String COLUMNNAME_WagePayableAcct_ID = "WagePayableAcct_ID";
+
+	/** Set Wage Payable	  */
+	public void setWagePayableAcct_ID (int WagePayableAcct_ID);
+
+	/** Get Wage Payable	  */
+	public int getWagePayableAcct_ID();
+
+	public org.compiere.model.I_C_ElementValue getWagePayableAcct() throws RuntimeException;
 }

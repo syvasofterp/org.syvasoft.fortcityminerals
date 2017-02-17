@@ -165,7 +165,40 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 			setM_Transaction_ID(mtrx.getM_Transaction_ID());
 			
 		}
+		if(TF_SEND_TO_Production.equals(getTF_Send_To())) {
+			m_processMsg = postCrusherProduction();
+		}
+		return m_processMsg;
+	}
+	
+	public String postCrusherProduction() {
+		String m_processMsg = null;
+		//Create Crusher Production
+		MCrusherProduction cProd = new MCrusherProduction(getCtx(), 0, get_TrxName());
+		cProd.setTF_BlueMetal_Type(getTF_BlueMetal_Type());
+		cProd.setMovementDate(getDateReceipt());
+		cProd.setC_UOM_ID(getC_UOM_ID());		
+		cProd.setM_Warehouse_ID(getM_Warehouse_ID());
+		MWarehouse wh = MWarehouse.get(getCtx(), getM_Warehouse_ID());
+		cProd.setM_Locator_ID(wh.getDefaultLocator().get_ID());
+		cProd.setRM_Product_ID(getM_Product_ID());
+		cProd.setQtyUsed(getQtyReceived());
+		cProd.setDescription("Created from Boulder Receipt : " + getDocumentNo());
+		cProd.setDocStatus(DOCSTATUS_Drafted);
+		cProd.setDocAction(DOCACTION_Prepare);
+		cProd.saveEx();
 		
+		//Update Crusher Production Reference to Boulder Receipt
+		setTF_Crusher_Production_ID(cProd.getTF_Crusher_Production_ID());
+		
+		cProd.createProduction(true);
+		cProd.saveEx();		
+		//End Create
+		
+		//Post Crusher Production
+		m_processMsg = cProd.processIt(DOCACTION_Complete);
+		if(m_processMsg == null)			
+			cProd.saveEx();
 		return m_processMsg;
 	}
 	
