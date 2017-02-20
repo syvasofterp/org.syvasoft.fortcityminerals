@@ -25,6 +25,7 @@ import org.compiere.util.Trx;
 import org.osgi.service.event.Event;
 import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MGLPostingConfig;
+import org.syvasoft.tallyfrontcrusher.model.TF_MInvoice;
 
 
 public class CrusherEventHandler extends AbstractEventHandler {
@@ -32,23 +33,30 @@ public class CrusherEventHandler extends AbstractEventHandler {
 	CLogger log = CLogger.getCLogger(CrusherEventHandler.class);
 	@Override
 	protected void initialize() {
-		registerTableEvent(IEventTopics.DOC_AFTER_COMPLETE, MInvoice.Table_Name);
+		//Document Events
+		registerTableEvent(IEventTopics.DOC_AFTER_COMPLETE, TF_MInvoice.Table_Name);
 		registerTableEvent(IEventTopics.DOC_BEFORE_PREPARE, MProduction.Table_Name);
+		
+		//Table Events
+		registerTableEvent(IEventTopics.PO_AFTER_CHANGE, TF_MInvoice.Table_Name);
+		registerTableEvent(IEventTopics.PO_AFTER_NEW, TF_MInvoice.Table_Name);
 
 	}
 
 	@Override
 	protected void doHandleEvent(Event event) {
 		PO po = getPO(event);
-		if(po instanceof MInvoice) {
-			MInvoice inv = (MInvoice) po;
-			MInvoiceLine[] lines = inv.getLines();
-			//Post Jobwork Expense Variance Journal for Subcontractor Invoice
-			MGLPostingConfig glConfig = MGLPostingConfig.getMGLPostingConfig(inv.getCtx());
-			for(MInvoiceLine line : lines) {
-				if(line.getM_Product_ID() == glConfig.getJobWork_Product_ID()) {
-					MBoulderReceipt.postJobworkExpenseVarianceJournal(inv.getCtx(), inv, line.getPriceEntered(), inv.get_TrxName());
-					break;
+		if(po.get_TableName().equals(MInvoice.Table_Name)) {
+			if(event.getTopic().equals(IEventTopics.DOC_AFTER_COMPLETE)) {
+				MInvoice inv = MInvoice.get(po.getCtx(), po.get_ID());
+				MInvoiceLine[] lines = inv.getLines();
+				//Post Jobwork Expense Variance Journal for Subcontractor Invoice
+				MGLPostingConfig glConfig = MGLPostingConfig.getMGLPostingConfig(inv.getCtx());
+				for(MInvoiceLine line : lines) {
+					if(line.getM_Product_ID() == glConfig.getJobWork_Product_ID()) {
+						MBoulderReceipt.postJobworkExpenseVarianceJournal(inv.getCtx(), inv, line.getPriceEntered(), inv.get_TrxName());
+						break;
+					}
 				}
 			}
 		}
