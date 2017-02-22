@@ -19,6 +19,7 @@ import org.syvasoft.tallyfrontcrusher.model.MVehicleRent;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleType;
 import org.syvasoft.tallyfrontcrusher.model.TF_MInvoice;
+import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
 
 public class CrusherModelFactory implements IModelFactory {
 
@@ -50,6 +51,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return MCrusherProductionConfig.class;
 		else if (TF_MInvoice.Table_Name.equals(tableName))
 			return TF_MInvoice.class;
+		else if (TF_MOrder.Table_Name.equals(tableName))
+			return TF_MOrder.class;
 		return null;
 	}
 
@@ -82,6 +85,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MCrusherProductionConfig(ctx, Record_ID, trxName);
 		else if (TF_MInvoice.Table_Name.equals(tableName))
 			return new TF_MInvoice(ctx, Record_ID, trxName);
+		else if (TF_MOrder.Table_Name.equals(tableName))
+			return new TF_MOrder(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -114,6 +119,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MCrusherProductionConfig(ctx, rs, trxName);
 		else if (TF_MInvoice.Table_Name.equals(tableName))
 			return new TF_MInvoice(ctx, rs, trxName);
+		else if (TF_MOrder.Table_Name.equals(tableName))
+			return new TF_MOrder(ctx, rs, trxName);
 		return null;
 	}
 

@@ -1,11 +1,18 @@
 package org.syvasoft.tallyfrontcrusher.event;
 
+import java.math.BigDecimal;
+
 import org.adempiere.base.event.AbstractEventHandler;
 import org.adempiere.base.event.IEventTopics;
+import org.adempiere.exceptions.AdempiereException;
+import org.adempiere.exceptions.InvoiceFullyMatchedException;
 import org.compiere.model.MAcctSchema;
 import org.compiere.model.MClient;
 import org.compiere.model.MCost;
+import org.compiere.model.MCostDetail;
 import org.compiere.model.MCostElement;
+import org.compiere.model.MInOut;
+import org.compiere.model.MInOutLine;
 import org.compiere.model.MInvoice;
 import org.compiere.model.MInvoiceLine;
 import org.compiere.model.MPInstance;
@@ -15,6 +22,7 @@ import org.compiere.model.MProduction;
 import org.compiere.model.MSysConfig;
 import org.compiere.model.PO;
 import org.compiere.model.Query;
+import org.compiere.process.DocAction;
 import org.compiere.process.ProcessInfo;
 import org.compiere.process.ProcessInfoParameter;
 import org.compiere.process.RollUpCosts;
@@ -34,12 +42,9 @@ public class CrusherEventHandler extends AbstractEventHandler {
 	@Override
 	protected void initialize() {
 		//Document Events
-		registerTableEvent(IEventTopics.DOC_AFTER_COMPLETE, TF_MInvoice.Table_Name);
+		registerTableEvent(IEventTopics.DOC_AFTER_COMPLETE, TF_MInvoice.Table_Name);		
 		registerTableEvent(IEventTopics.DOC_BEFORE_PREPARE, MProduction.Table_Name);
-		
-		//Table Events
-		registerTableEvent(IEventTopics.PO_AFTER_CHANGE, TF_MInvoice.Table_Name);
-		registerTableEvent(IEventTopics.PO_AFTER_NEW, TF_MInvoice.Table_Name);
+				
 
 	}
 
@@ -47,18 +52,20 @@ public class CrusherEventHandler extends AbstractEventHandler {
 	protected void doHandleEvent(Event event) {
 		PO po = getPO(event);
 		if(po.get_TableName().equals(MInvoice.Table_Name)) {
-			if(event.getTopic().equals(IEventTopics.DOC_AFTER_COMPLETE)) {
-				MInvoice inv = MInvoice.get(po.getCtx(), po.get_ID());
-				MInvoiceLine[] lines = inv.getLines();
-				//Post Jobwork Expense Variance Journal for Subcontractor Invoice
-				MGLPostingConfig glConfig = MGLPostingConfig.getMGLPostingConfig(inv.getCtx());
-				for(MInvoiceLine line : lines) {
-					if(line.getM_Product_ID() == glConfig.getJobWork_Product_ID()) {
-						MBoulderReceipt.postJobworkExpenseVarianceJournal(inv.getCtx(), inv, line.getPriceEntered(), inv.get_TrxName());
-						break;
-					}
-				}
-			}
+			
+			//NOTE::Do not create another Invoice instance based on this RecordID and use it to generate receipts
+			//will lead to deadlock...
+			MInvoice inv = (MInvoice) po;
+			if(event.getTopic().equals(IEventTopics.DOC_AFTER_COMPLETE)) {				
+				
+				postJobworkExpenseVarianceJournal(inv);				
+				
+				// AP Invoice with Material Receipt
+				// Generate the MR immediately.
+				//if(inv.getC_DocTypeTarget_ID() == 1000051)
+				//	generateReceiptFromInvoice(inv);
+				
+			}			
 		}
 		else if (po instanceof MProduction) {
 			MProduction prod = (MProduction) po;
@@ -134,6 +141,67 @@ public class CrusherEventHandler extends AbstractEventHandler {
 			// End Call Rollup BOM Cost process
 			
 		}
+	}
+	
+	private void postJobworkExpenseVarianceJournal(MInvoice inv) {		
+		MInvoiceLine[] lines = inv.getLines();
+		
+		//Post Jobwork Expense Variance Journal for Subcontractor Invoice
+		MGLPostingConfig glConfig = MGLPostingConfig.getMGLPostingConfig(inv.getCtx());
+		for(MInvoiceLine line : lines) {
+			if(line.getM_Product_ID() == glConfig.getJobWork_Product_ID()) {
+				MBoulderReceipt.postJobworkExpenseVarianceJournal(inv.getCtx(), inv, line.getPriceEntered(), inv.get_TrxName());
+				break;
+			}
+		}
+	}
+	
+	private void generateReceiptFromInvoice(MInvoice invoice) {
+		//		
+		if (invoice.get_ID() <= 0)
+			throw new AdempiereException("@NotFound@ @C_Invoice_ID@");		
+		
+		int M_Warehouse_ID = invoice.get_ValueAsInt("M_Warehouse_ID");
+		if(M_Warehouse_ID == 0)
+			throw new AdempiereException("Invalid Warehouse!");
+		
+		MInOut m_inout = new MInOut (invoice, 0, null, M_Warehouse_ID);
+		m_inout.save();
+		
+		//
+		for (MInvoiceLine invoiceLine : invoice.getLines(false))
+		{
+			BigDecimal qtyMatched = invoiceLine.getMatchedQty();
+			BigDecimal qtyInvoiced = invoiceLine.getQtyInvoiced();
+			BigDecimal qtyNotMatched = qtyInvoiced.subtract(qtyMatched);
+			// If is fully matched don't create anything
+			if (qtyNotMatched.signum() == 0)
+			{
+				break;
+			}			
+			MInOutLine sLine = new MInOutLine(m_inout);
+			sLine.setInvoiceLine(invoiceLine, 0,	//	Locator 
+				invoice.isSOTrx() ? qtyNotMatched : Env.ZERO);
+			sLine.setQtyEntered(qtyNotMatched);
+			sLine.setMovementQty(qtyNotMatched);
+			if (invoice.isCreditMemo())
+			{
+				sLine.setQtyEntered(sLine.getQtyEntered().negate());
+				sLine.setMovementQty(sLine.getMovementQty().negate());
+			}
+			sLine.saveEx();
+			//
+			invoiceLine.setM_InOutLine_ID(sLine.getM_InOutLine_ID());
+			invoiceLine.saveEx();
+			
+			//Update Costing for products.
+			MCostDetail.createInvoice(MClient.get(invoice.getCtx()).getAcctSchema(), invoice.getAD_Org_ID(), invoiceLine.getM_Product_ID(), 0, invoiceLine.getC_InvoiceLine_ID()
+			, 0, invoiceLine.getPriceEntered().multiply(qtyInvoiced) , qtyInvoiced, invoiceLine.getDescription(), invoice.get_TrxName());
+		}
+		
+		// added AdempiereException
+		if (!m_inout.processIt(DocAction.ACTION_Complete))
+			throw new AdempiereException("Failed when processing document - " + m_inout.getProcessMsg());
 	}
 
 }

@@ -14,3 +14,5 @@ Require-Bundle: org.adempiere.base;bundle-version="3.1.0",
 Import-Package: org.osgi.framework;version="1.8.0"
 Service-Component: OSGi-INF/CrusherModelFactory.xml,OSGi-INF/CrusherProcessFactory.xml,OSGi-INF/CrusherEventHandler.xml,
  OSGi-INF/CrusherCalloutFactory.xml
+Export-Package: org.syvasoft.tallyfrontcrusher.callout
+Eclipse-Registerbuddy: org.adempiere.base
