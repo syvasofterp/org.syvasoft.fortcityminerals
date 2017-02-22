@@ -206,7 +206,7 @@ delete FROM m_cost WHERE ad_client_id=1000000;
 
 delete FROM fact_acct WHERE ad_client_id=1000000;
 
---delete from c_invoiceline WHERE ad_client_id=1000000;
+delete from c_invoiceline WHERE ad_client_id=1000000;
 
 --DELETE FROM M_Product WHERE ad_client_id=1000000 AND m_product_id>1000032 ;;
 --SELECT * FROM M_Product where ad_client_id=1000000 AND m_product_id>1000032 ;;
@@ -236,3 +236,4 @@ DELETE FROM TF_Crusher_Production;
 
 DELETE FROM AD_RecentItem where ad_client_id=1000000;
 
+ DELETE FROM AD_Note where ad_client_id=1000000;
