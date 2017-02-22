@@ -7,6 +7,7 @@ import org.adempiere.base.IColumnCallout;
 import org.adempiere.base.IColumnCalloutFactory;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutInvoiceHeaderItemAmount;
 import org.syvasoft.tallyfrontcrusher.model.TF_MInvoice;
+import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
 
 public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 
@@ -14,7 +15,7 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 	public IColumnCallout[] getColumnCallouts(String tableName,
 			String columnName) {
 		List<IColumnCallout> list = new ArrayList<IColumnCallout>();
-		if(tableName.equals(TF_MInvoice.Table_Name) && 
+		if((tableName.equals(TF_MInvoice.Table_Name) || tableName.equals(TF_MOrder.Table_Name)) && 
 				(columnName.equals(TF_MInvoice.COLUMNNAME_Item1_Qty) || columnName.equals(TF_MInvoice.COLUMNNAME_Item1_Price) ||
 				 columnName.equals(TF_MInvoice.COLUMNNAME_Item2_Qty) || columnName.equals(TF_MInvoice.COLUMNNAME_Item2_Price)))
 			list.add(new CalloutInvoiceHeaderItemAmount());

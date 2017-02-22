@@ -32,6 +32,37 @@ public class TF_MInvoice extends MInvoice {
 		// TODO Auto-generated constructor stub
 	}
 
+	/** Column name M_Warehouse_ID */
+    public static final String COLUMNNAME_M_Warehouse_ID = "M_Warehouse_ID";
+    
+    public org.compiere.model.I_M_Warehouse getM_Warehouse() throws RuntimeException
+    {
+		return (org.compiere.model.I_M_Warehouse)MTable.get(getCtx(), org.compiere.model.I_M_Warehouse.Table_Name)
+			.getPO(getM_Warehouse_ID(), get_TrxName());	}
+
+	/** Set Warehouse.
+		@param M_Warehouse_ID 
+		Storage Warehouse and Service Point
+	  */
+	public void setM_Warehouse_ID (int M_Warehouse_ID)
+	{
+		if (M_Warehouse_ID < 1) 
+			set_Value (COLUMNNAME_M_Warehouse_ID, null);
+		else 
+			set_Value (COLUMNNAME_M_Warehouse_ID, Integer.valueOf(M_Warehouse_ID));
+	}
+
+	/** Get Warehouse.
+		@return Storage Warehouse and Service Point
+	  */
+	public int getM_Warehouse_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_M_Warehouse_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+	
 	/** Set Item1 Amount.
 	@param Item1_Amt Item1 Amount	  */
 	public void setItem1_Amt (BigDecimal Item1_Amt)
@@ -277,7 +308,7 @@ public class TF_MInvoice extends MInvoice {
 		updateQuickInvoiceLines();
 		return success;
 	}
-	
+			
 	private void setLinePrice(MInvoiceLine line, BigDecimal price) {
 		line.setPriceActual(price);
 		line.setPriceList(price);
