@@ -95,6 +95,17 @@ public interface I_TF_GLPosting_Config
 	  */
 	public int getCreatedBy();
 
+    /** Column name FuelExpense_Charge_ID */
+    public static final String COLUMNNAME_FuelExpense_Charge_ID = "FuelExpense_Charge_ID";
+
+	/** Set Fuel Expense Charge	  */
+	public void setFuelExpense_Charge_ID (int FuelExpense_Charge_ID);
+
+	/** Get Fuel Expense Charge	  */
+	public int getFuelExpense_Charge_ID();
+
+	public org.compiere.model.I_C_Charge getFuelExpense_Charge() throws RuntimeException;
+
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";
 

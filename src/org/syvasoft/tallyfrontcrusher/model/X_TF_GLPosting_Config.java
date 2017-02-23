@@ -30,7 +30,7 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170217L;
+	private static final long serialVersionUID = 20170223L;
 
     /** Standard Constructor */
     public X_TF_GLPosting_Config (Properties ctx, int TF_GLPosting_Config_ID, String trxName)
@@ -101,6 +101,31 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	public int getC_AcctSchema_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_C_AcctSchema_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_Charge getFuelExpense_Charge() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Charge)MTable.get(getCtx(), org.compiere.model.I_C_Charge.Table_Name)
+			.getPO(getFuelExpense_Charge_ID(), get_TrxName());	}
+
+	/** Set Fuel Expense Charge.
+		@param FuelExpense_Charge_ID Fuel Expense Charge	  */
+	public void setFuelExpense_Charge_ID (int FuelExpense_Charge_ID)
+	{
+		if (FuelExpense_Charge_ID < 1) 
+			set_Value (COLUMNNAME_FuelExpense_Charge_ID, null);
+		else 
+			set_Value (COLUMNNAME_FuelExpense_Charge_ID, Integer.valueOf(FuelExpense_Charge_ID));
+	}
+
+	/** Get Fuel Expense Charge.
+		@return Fuel Expense Charge	  */
+	public int getFuelExpense_Charge_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_FuelExpense_Charge_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();

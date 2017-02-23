@@ -162,6 +162,19 @@ public interface I_TF_Fuel_Issue
 	  */
 	public String getDocStatus();
 
+    /** Column name DocumentNo */
+    public static final String COLUMNNAME_DocumentNo = "DocumentNo";
+
+	/** Set Document No.
+	  * Document sequence number of the document
+	  */
+	public void setDocumentNo (String DocumentNo);
+
+	/** Get Document No.
+	  * Document sequence number of the document
+	  */
+	public String getDocumentNo();
+
     /** Column name GL_Journal_ID */
     public static final String COLUMNNAME_GL_Journal_ID = "GL_Journal_ID";
 
@@ -203,6 +216,21 @@ public interface I_TF_Fuel_Issue
 	  */
 	public boolean isCalculated();
 
+    /** Column name M_Inventory_ID */
+    public static final String COLUMNNAME_M_Inventory_ID = "M_Inventory_ID";
+
+	/** Set Phys.Inventory.
+	  * Parameters for a Physical Inventory
+	  */
+	public void setM_Inventory_ID (int M_Inventory_ID);
+
+	/** Get Phys.Inventory.
+	  * Parameters for a Physical Inventory
+	  */
+	public int getM_Inventory_ID();
+
+	public org.compiere.model.I_M_Inventory getM_Inventory() throws RuntimeException;
+
     /** Column name M_Product_ID */
     public static final String COLUMNNAME_M_Product_ID = "M_Product_ID";
 
@@ -216,6 +244,21 @@ public interface I_TF_Fuel_Issue
 	  */
 	public int getM_Product_ID();
 
+    /** Column name M_Warehouse_ID */
+    public static final String COLUMNNAME_M_Warehouse_ID = "M_Warehouse_ID";
+
+	/** Set Warehouse.
+	  * Storage Warehouse and Service Point
+	  */
+	public void setM_Warehouse_ID (int M_Warehouse_ID);
+
+	/** Get Warehouse.
+	  * Storage Warehouse and Service Point
+	  */
+	public int getM_Warehouse_ID();
+
+	public org.compiere.model.I_M_Warehouse getM_Warehouse() throws RuntimeException;
+
     /** Column name Processed */
     public static final String COLUMNNAME_Processed = "Processed";
 
@@ -228,6 +271,15 @@ public interface I_TF_Fuel_Issue
 	  * The document has been processed
 	  */
 	public boolean isProcessed();
+
+    /** Column name Processing */
+    public static final String COLUMNNAME_Processing = "Processing";
+
+	/** Set Process Now	  */
+	public void setProcessing (boolean Processing);
+
+	/** Get Process Now	  */
+	public boolean isProcessing();
 
     /** Column name Qty */
     public static final String COLUMNNAME_Qty = "Qty";
