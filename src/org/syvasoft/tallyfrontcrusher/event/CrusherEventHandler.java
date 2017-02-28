@@ -78,7 +78,7 @@ public class CrusherEventHandler extends AbstractEventHandler {
 			String costingMethod 	= 	product.getCostingMethod(as) ;
 			int costElement_ID 		= 	MCostElement.getMaterialCostElement(prod.getCtx(), costingMethod).get_ID();
 			
-			String localTrxName		=	Trx.createTrxName();
+			String localTrxName		=	prod.get_TrxName();
 			Trx trx					=	Trx.get(localTrxName, true);
 			try {
 				MCost cost				=	MCost.get(product, 0, as, 0, costElement_ID, localTrxName);
@@ -87,7 +87,7 @@ public class CrusherEventHandler extends AbstractEventHandler {
 					return;
 				}
 				cost.saveEx();
-				trx.commit();
+				//trx.commit();
 							
 					
 				// Call Rollup BOM Cost process
@@ -128,14 +128,14 @@ public class CrusherEventHandler extends AbstractEventHandler {
 	
 				log.info("Starting process " + pr.getName());
 				boolean result = process.startProcess(prod.getCtx(), pi, trx);
-				trx.commit();
+				//trx.commit();
 			}
 			catch(Exception ex) {
-				trx.rollback();
+				//trx.rollback();
 				throw ex;
 			}
 			finally {
-				trx.close();
+				//trx.close();
 			}
 			
 			// End Call Rollup BOM Cost process
