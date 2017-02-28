@@ -232,7 +232,7 @@ delete from c_invoiceline WHERE ad_client_id=1000000;
 
 
 DELETE FROM TF_Crusher_Production;
-
+DELETE FROM TF_TripSheet;
 
 DELETE FROM AD_RecentItem where ad_client_id=1000000;
 
