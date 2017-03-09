@@ -3,6 +3,7 @@ package org.syvasoft.tallyfrontcrusher.model;
 import java.sql.ResultSet;
 import java.util.Properties;
 
+import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.MJournal;
 import org.compiere.model.MJournalLine;
 import org.compiere.model.MPeriod;
@@ -28,9 +29,12 @@ public class MEmployeeSalary extends X_TF_Employee_Salary {
 
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
-		if(isCalculated()) {
+		if(isCalculated() && getStd_Days().doubleValue()!=0) {			
 			setSalary_Amt(getStd_Wage().multiply(getPresent_Days().divide(getStd_Days())));
 		}
+		if(getSalary_Amt().doubleValue() == 0 )			
+			throw new AdempiereException("Invalid Earned Salary");
+			
 		return super.beforeSave(newRecord);
 	}
 	
@@ -44,7 +48,7 @@ public class MEmployeeSalary extends X_TF_Employee_Salary {
 			
 			//Posting GL journal for Employee Salary 
 			MJournal j = new MJournal(getCtx(), 0, get_TrxName());
-			j.setDescription("Generated from Employee Salary Entry - " + getTF_Employee_Salary_ID());
+			j.setDescription("Generated from Employee Salary Entry - " + getDocumentNo());
 			j.setC_AcctSchema_ID(Env.getContextAsInt(getCtx(), "$C_AcctSchema_ID"));
 			j.setC_Currency_ID(Env.getContextAsInt(getCtx(), "$C_Currency_ID"));
 			j.setPostingType(MJournal.POSTINGTYPE_Actual);
@@ -58,7 +62,7 @@ public class MEmployeeSalary extends X_TF_Employee_Salary {
 			j.setC_ConversionType_ID(114);
 			j.saveEx();
 			
-			//Salaries Expense
+			//Salaries Expense Dr
 			MJournalLine jl = new MJournalLine(j);
 			jl.setLine(10);			
 			jl.setAccount_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getSalariesExpenseAcct());
@@ -69,7 +73,7 @@ public class MEmployeeSalary extends X_TF_Employee_Salary {
 			jl.setIsGenerated(true);
 			jl.saveEx();
 			
-			//Quarry Rent
+			//Salary Payable Cr.
 			jl = new MJournalLine(j);
 			jl.setLine(20);			
 			jl.setAccount_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getSalaryPayable_Acct());

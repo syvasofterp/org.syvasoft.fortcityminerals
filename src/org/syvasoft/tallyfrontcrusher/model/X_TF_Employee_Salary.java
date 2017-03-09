@@ -33,7 +33,7 @@ public class X_TF_Employee_Salary extends PO implements I_TF_Employee_Salary, I_
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170126L;
+	private static final long serialVersionUID = 20170302L;
 
     /** Standard Constructor */
     public X_TF_Employee_Salary (Properties ctx, int TF_Employee_Salary_ID, String trxName)
@@ -279,6 +279,23 @@ public class X_TF_Employee_Salary extends PO implements I_TF_Employee_Salary, I_
 	public String getDocStatus () 
 	{
 		return (String)get_Value(COLUMNNAME_DocStatus);
+	}
+
+	/** Set Document No.
+		@param DocumentNo 
+		Document sequence number of the document
+	  */
+	public void setDocumentNo (String DocumentNo)
+	{
+		set_ValueNoCheck (COLUMNNAME_DocumentNo, DocumentNo);
+	}
+
+	/** Get Document No.
+		@return Document sequence number of the document
+	  */
+	public String getDocumentNo () 
+	{
+		return (String)get_Value(COLUMNNAME_DocumentNo);
 	}
 
 	public org.compiere.model.I_GL_Journal getGL_Journal() throws RuntimeException
