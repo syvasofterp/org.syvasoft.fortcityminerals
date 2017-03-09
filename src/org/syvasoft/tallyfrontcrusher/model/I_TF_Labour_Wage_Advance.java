@@ -21,18 +21,18 @@ import java.sql.Timestamp;
 import org.compiere.model.*;
 import org.compiere.util.KeyNamePair;
 
-/** Generated Interface for TF_Labour_Wage
+/** Generated Interface for TF_Labour_Wage_Advance
  *  @author iDempiere (generated) 
  *  @version Release 3.1
  */
 @SuppressWarnings("all")
-public interface I_TF_Labour_Wage 
+public interface I_TF_Labour_Wage_Advance 
 {
 
-    /** TableName=TF_Labour_Wage */
-    public static final String Table_Name = "TF_Labour_Wage";
+    /** TableName=TF_Labour_Wage_Advance */
+    public static final String Table_Name = "TF_Labour_Wage_Advance";
 
-    /** AD_Table_ID=1000180 */
+    /** AD_Table_ID=1000183 */
     public static final int Table_ID = MTable.getTable_ID(Table_Name);
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);
@@ -64,15 +64,39 @@ public interface I_TF_Labour_Wage
 	  */
 	public int getAD_Org_ID();
 
+    /** Column name Advance_Amt */
+    public static final String COLUMNNAME_Advance_Amt = "Advance_Amt";
+
+	/** Set Advance Amt	  */
+	public void setAdvance_Amt (BigDecimal Advance_Amt);
+
+	/** Get Advance Amt	  */
+	public BigDecimal getAdvance_Amt();
+
+    /** Column name C_BankAccount_ID */
+    public static final String COLUMNNAME_C_BankAccount_ID = "C_BankAccount_ID";
+
+	/** Set Bank Account.
+	  * Account at the Bank
+	  */
+	public void setC_BankAccount_ID (int C_BankAccount_ID);
+
+	/** Get Bank Account.
+	  * Account at the Bank
+	  */
+	public int getC_BankAccount_ID();
+
+	public org.compiere.model.I_C_BankAccount getC_BankAccount() throws RuntimeException;
+
     /** Column name C_BPartner_ID */
     public static final String COLUMNNAME_C_BPartner_ID = "C_BPartner_ID";
 
-	/** Set Business Partner .
+	/** Set Labour.
 	  * Identifies a Business Partner
 	  */
 	public void setC_BPartner_ID (int C_BPartner_ID);
 
-	/** Get Business Partner .
+	/** Get Labour.
 	  * Identifies a Business Partner
 	  */
 	public int getC_BPartner_ID();
@@ -82,17 +106,32 @@ public interface I_TF_Labour_Wage
     /** Column name C_ElementValue_ID */
     public static final String COLUMNNAME_C_ElementValue_ID = "C_ElementValue_ID";
 
-	/** Set Account Element.
+	/** Set Profit Center.
 	  * Account Element
 	  */
 	public void setC_ElementValue_ID (int C_ElementValue_ID);
 
-	/** Get Account Element.
+	/** Get Profit Center.
 	  * Account Element
 	  */
 	public int getC_ElementValue_ID();
 
 	public org.compiere.model.I_C_ElementValue getC_ElementValue() throws RuntimeException;
+
+    /** Column name C_Payment_ID */
+    public static final String COLUMNNAME_C_Payment_ID = "C_Payment_ID";
+
+	/** Set Payment.
+	  * Payment identifier
+	  */
+	public void setC_Payment_ID (int C_Payment_ID);
+
+	/** Get Payment.
+	  * Payment identifier
+	  */
+	public int getC_Payment_ID();
+
+	public org.compiere.model.I_C_Payment getC_Payment() throws RuntimeException;
 
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
@@ -162,15 +201,6 @@ public interface I_TF_Labour_Wage
 	  */
 	public String getDocumentNo();
 
-    /** Column name Earned_Wage */
-    public static final String COLUMNNAME_Earned_Wage = "Earned_Wage";
-
-	/** Set Earned Wage	  */
-	public void setEarned_Wage (BigDecimal Earned_Wage);
-
-	/** Get Earned Wage	  */
-	public BigDecimal getEarned_Wage();
-
     /** Column name GL_Journal_ID */
     public static final String COLUMNNAME_GL_Journal_ID = "GL_Journal_ID";
 
@@ -186,15 +216,6 @@ public interface I_TF_Labour_Wage
 
 	public org.compiere.model.I_GL_Journal getGL_Journal() throws RuntimeException;
 
-    /** Column name Incentive */
-    public static final String COLUMNNAME_Incentive = "Incentive";
-
-	/** Set Incentive	  */
-	public void setIncentive (BigDecimal Incentive);
-
-	/** Get Incentive	  */
-	public BigDecimal getIncentive();
-
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";
 
@@ -207,28 +228,6 @@ public interface I_TF_Labour_Wage
 	  * The record is active in the system
 	  */
 	public boolean isActive();
-
-    /** Column name IsCalculated */
-    public static final String COLUMNNAME_IsCalculated = "IsCalculated";
-
-	/** Set Calculated.
-	  * The value is calculated by the system
-	  */
-	public void setIsCalculated (boolean IsCalculated);
-
-	/** Get Calculated.
-	  * The value is calculated by the system
-	  */
-	public boolean isCalculated();
-
-    /** Column name Present_Days */
-    public static final String COLUMNNAME_Present_Days = "Present_Days";
-
-	/** Set Present Days	  */
-	public void setPresent_Days (BigDecimal Present_Days);
-
-	/** Get Present Days	  */
-	public BigDecimal getPresent_Days();
 
     /** Column name Processed */
     public static final String COLUMNNAME_Processed = "Processed";
@@ -252,72 +251,23 @@ public interface I_TF_Labour_Wage
 	/** Get Process Now	  */
 	public boolean isProcessing();
 
-    /** Column name Std_Days */
-    public static final String COLUMNNAME_Std_Days = "Std_Days";
+    /** Column name TF_Labour_Wage_Advance_ID */
+    public static final String COLUMNNAME_TF_Labour_Wage_Advance_ID = "TF_Labour_Wage_Advance_ID";
 
-	/** Set Standard Days	  */
-	public void setStd_Days (BigDecimal Std_Days);
+	/** Set Labour Wage Advance	  */
+	public void setTF_Labour_Wage_Advance_ID (int TF_Labour_Wage_Advance_ID);
 
-	/** Get Standard Days	  */
-	public BigDecimal getStd_Days();
+	/** Get Labour Wage Advance	  */
+	public int getTF_Labour_Wage_Advance_ID();
 
-    /** Column name Std_Wage */
-    public static final String COLUMNNAME_Std_Wage = "Std_Wage";
+    /** Column name TF_Labour_Wage_Advance_UU */
+    public static final String COLUMNNAME_TF_Labour_Wage_Advance_UU = "TF_Labour_Wage_Advance_UU";
 
-	/** Set Standard Wage	  */
-	public void setStd_Wage (BigDecimal Std_Wage);
+	/** Set TF_Labour_Wage_Advance_UU	  */
+	public void setTF_Labour_Wage_Advance_UU (String TF_Labour_Wage_Advance_UU);
 
-	/** Get Standard Wage	  */
-	public BigDecimal getStd_Wage();
-
-    /** Column name TF_Labour_Wage_ID */
-    public static final String COLUMNNAME_TF_Labour_Wage_ID = "TF_Labour_Wage_ID";
-
-	/** Set Labour Wage Entry	  */
-	public void setTF_Labour_Wage_ID (int TF_Labour_Wage_ID);
-
-	/** Get Labour Wage Entry	  */
-	public int getTF_Labour_Wage_ID();
-
-    /** Column name TF_Labour_Wage_UU */
-    public static final String COLUMNNAME_TF_Labour_Wage_UU = "TF_Labour_Wage_UU";
-
-	/** Set TF_Labour_Wage_UU	  */
-	public void setTF_Labour_Wage_UU (String TF_Labour_Wage_UU);
-
-	/** Get TF_Labour_Wage_UU	  */
-	public String getTF_Labour_Wage_UU();
-
-    /** Column name TF_TripSheet_ID */
-    public static final String COLUMNNAME_TF_TripSheet_ID = "TF_TripSheet_ID";
-
-	/** Set Trip Sheet	  */
-	public void setTF_TripSheet_ID (int TF_TripSheet_ID);
-
-	/** Get Trip Sheet	  */
-	public int getTF_TripSheet_ID();
-
-	public I_TF_TripSheet getTF_TripSheet() throws RuntimeException;
-
-    /** Column name TF_VehicleType_ID */
-    public static final String COLUMNNAME_TF_VehicleType_ID = "TF_VehicleType_ID";
-
-	/** Set Vehicle Type	  */
-	public void setTF_VehicleType_ID (int TF_VehicleType_ID);
-
-	/** Get Vehicle Type	  */
-	public int getTF_VehicleType_ID();
-
-	public I_TF_VehicleType getTF_VehicleType() throws RuntimeException;
-
-    /** Column name Total_Wage */
-    public static final String COLUMNNAME_Total_Wage = "Total_Wage";
-
-	/** Set Total Wage	  */
-	public void setTotal_Wage (BigDecimal Total_Wage);
-
-	/** Get Total Wage	  */
-	public BigDecimal getTotal_Wage();
+	/** Get TF_Labour_Wage_Advance_UU	  */
+	public String getTF_Labour_Wage_Advance_UU();
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";

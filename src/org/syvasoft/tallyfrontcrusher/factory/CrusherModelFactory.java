@@ -11,16 +11,22 @@ import org.syvasoft.tallyfrontcrusher.model.MCrusherProduction;
 import org.syvasoft.tallyfrontcrusher.model.MCrusherProductionConfig;
 import org.syvasoft.tallyfrontcrusher.model.MEmpSalaryConfig;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalary;
+import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryAdvance;
 import org.syvasoft.tallyfrontcrusher.model.MFuelIssue;
 import org.syvasoft.tallyfrontcrusher.model.MGLPostingConfig;
+import org.syvasoft.tallyfrontcrusher.model.MLabourWage;
+import org.syvasoft.tallyfrontcrusher.model.MLabourWageAdvance;
+import org.syvasoft.tallyfrontcrusher.model.MLabourWageConfig;
 import org.syvasoft.tallyfrontcrusher.model.MQuarry;
 import org.syvasoft.tallyfrontcrusher.model.MQuarryRent;
 import org.syvasoft.tallyfrontcrusher.model.MQuarryRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRent;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleType;
+import org.syvasoft.tallyfrontcrusher.model.TF_MCharge;
 import org.syvasoft.tallyfrontcrusher.model.TF_MInvoice;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
+import org.syvasoft.tallyfrontcrusher.model.TF_MPayment;
 
 public class CrusherModelFactory implements IModelFactory {
 
@@ -56,6 +62,18 @@ public class CrusherModelFactory implements IModelFactory {
 			return TF_MOrder.class;
 		else if (MFuelIssue.Table_Name.equals(tableName))
 			return MFuelIssue.class;
+		else if (MLabourWage.Table_Name.equals(tableName))
+			return MLabourWage.class;
+		else if (MLabourWageConfig.Table_Name.equals(tableName))			
+			return MLabourWageConfig.class;
+		else if (TF_MPayment.Table_Name.equals(tableName))
+			return TF_MPayment.class;
+		else if (TF_MCharge.Table_Name.equals(tableName))
+			return TF_MCharge.class;
+		else if (MLabourWageAdvance.Table_Name.equals(tableName))
+			return MLabourWageAdvance.class;
+		else if (MEmployeeSalaryAdvance.Table_Name.equals(tableName))
+			return MEmployeeSalaryAdvance.class;
 		return null;
 	}
 
@@ -92,6 +110,18 @@ public class CrusherModelFactory implements IModelFactory {
 			return new TF_MOrder(ctx, Record_ID, trxName);
 		else if (MFuelIssue.Table_Name.equals(tableName))
 			return new MFuelIssue(ctx, Record_ID, trxName);
+		else if (MLabourWage.Table_Name.equals(tableName))			
+			return new MLabourWage(ctx, Record_ID, trxName);
+		else if (MLabourWageConfig.Table_Name.equals(tableName))
+			return new MLabourWageConfig(ctx, Record_ID, trxName);
+		else if (TF_MPayment.Table_Name.equals(tableName))
+			return new TF_MPayment(ctx, Record_ID, trxName);
+		else if (TF_MCharge.Table_Name.equals(tableName))
+			return new TF_MCharge(ctx, Record_ID, trxName);
+		else if (MLabourWageAdvance.Table_Name.equals(tableName))
+			return new MLabourWageAdvance(ctx, Record_ID, trxName);
+		else if (MEmployeeSalaryAdvance.Table_Name.equals(tableName))
+			return new MEmployeeSalaryAdvance(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -128,6 +158,18 @@ public class CrusherModelFactory implements IModelFactory {
 			return new TF_MOrder(ctx, rs, trxName);
 		else if (MFuelIssue.Table_Name.equals(tableName))
 			return new MFuelIssue(ctx, rs, trxName);
+		else if (MLabourWage.Table_Name.equals(tableName))			
+			return new MLabourWage(ctx, rs, trxName);
+		else if (MLabourWageConfig.Table_Name.equals(tableName))
+			return new MLabourWageConfig(ctx, rs, trxName);
+		else if (TF_MPayment.Table_Name.equals(tableName))
+			return new TF_MPayment(ctx, rs, trxName);
+		else if (TF_MCharge.Table_Name.equals(tableName))
+			return new TF_MCharge(ctx, rs, trxName);
+		else if (MLabourWageAdvance.Table_Name.equals(tableName))
+			return new MLabourWageAdvance(ctx, rs, trxName);
+		else if (MEmployeeSalaryAdvance.Table_Name.equals(tableName))
+			return new MEmployeeSalaryAdvance(ctx, rs, trxName);
 		return null;
 	}
 

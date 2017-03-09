@@ -33,7 +33,7 @@ public class X_TF_Labour_Wage_Config extends PO implements I_TF_Labour_Wage_Conf
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170217L;
+	private static final long serialVersionUID = 20170301L;
 
     /** Standard Constructor */
     public X_TF_Labour_Wage_Config (Properties ctx, int TF_Labour_Wage_Config_ID, String trxName)

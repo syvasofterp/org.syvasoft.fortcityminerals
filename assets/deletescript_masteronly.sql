@@ -50,6 +50,8 @@ UPDATE TF_Employee_Salary SET GL_Journal_ID = NULL;
 UPDATE TF_Vehicle_Rent SET GL_Journal_ID = NULL;
 UPDATE TF_Quarry_Rent SET GL_Journal_ID = NULL;
 UPDATE TF_Fuel_Issue SET GL_Journal_ID = NULL;
+UPDATE TF_Labour_Wage SET GL_Journal_ID = NULL;
+UPDATE TF_Labour_Wage_Advance SET C_Payment_ID = NULL;
 
 DELETE FROM TF_Boulder_Receipt;
 DELETE FROM TF_Employee_Salary;
@@ -237,3 +239,6 @@ DELETE FROM TF_TripSheet;
 DELETE FROM AD_RecentItem where ad_client_id=1000000;
 
  DELETE FROM AD_Note where ad_client_id=1000000;
+DELETE FROM TF_Labour_Wage;
+DELETE FROM TF_Labour_Wage_Advance;
+ 
