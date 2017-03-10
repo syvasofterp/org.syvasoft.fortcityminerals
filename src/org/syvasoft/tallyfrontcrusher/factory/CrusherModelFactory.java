@@ -12,11 +12,13 @@ import org.syvasoft.tallyfrontcrusher.model.MCrusherProductionConfig;
 import org.syvasoft.tallyfrontcrusher.model.MEmpSalaryConfig;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalary;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryAdvance;
+import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryIssue;
 import org.syvasoft.tallyfrontcrusher.model.MFuelIssue;
 import org.syvasoft.tallyfrontcrusher.model.MGLPostingConfig;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWage;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWageAdvance;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWageConfig;
+import org.syvasoft.tallyfrontcrusher.model.MLabourWageIssue;
 import org.syvasoft.tallyfrontcrusher.model.MQuarry;
 import org.syvasoft.tallyfrontcrusher.model.MQuarryRent;
 import org.syvasoft.tallyfrontcrusher.model.MQuarryRentConfig;
@@ -74,6 +76,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return MLabourWageAdvance.class;
 		else if (MEmployeeSalaryAdvance.Table_Name.equals(tableName))
 			return MEmployeeSalaryAdvance.class;
+		else if (MLabourWageIssue.Table_Name.equals(tableName))
+			return MLabourWageIssue.class;
+		else if (MEmployeeSalaryIssue.Table_Name.equals(tableName))
+			return MEmployeeSalaryIssue.class;
 		return null;
 	}
 
@@ -122,6 +128,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MLabourWageAdvance(ctx, Record_ID, trxName);
 		else if (MEmployeeSalaryAdvance.Table_Name.equals(tableName))
 			return new MEmployeeSalaryAdvance(ctx, Record_ID, trxName);
+		else if (MLabourWageIssue.Table_Name.equals(tableName))
+			return new MLabourWageIssue(ctx, Record_ID, trxName);
+		else if (MEmployeeSalaryIssue.Table_Name.equals(tableName))
+			return new MEmployeeSalaryIssue(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -170,6 +180,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MLabourWageAdvance(ctx, rs, trxName);
 		else if (MEmployeeSalaryAdvance.Table_Name.equals(tableName))
 			return new MEmployeeSalaryAdvance(ctx, rs, trxName);
+		else if (MLabourWageIssue.Table_Name.equals(tableName))
+			return new MLabourWageIssue(ctx, rs, trxName);
+		else if (MEmployeeSalaryIssue.Table_Name.equals(tableName))
+			return new MEmployeeSalaryIssue(ctx, rs, trxName);
 		return null;
 	}
 
