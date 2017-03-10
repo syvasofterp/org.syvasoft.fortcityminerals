@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.util.Properties;
 
+import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.MAcctSchema;
 import org.compiere.model.MClient;
 import org.compiere.model.MCost;
@@ -44,6 +45,8 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 		MAcctSchema as = client.getAcctSchema();
 		String costingMethod = product.getCostingMethod(as);		
 		MCost cost = product.getCostingRecord(as, getAD_Org_ID(), 0, costingMethod);
+		if(cost == null)
+			throw new AdempiereException("No Costing Info for : "  + product.getName());
 		setRate(cost.getCurrentCostPrice());
 		
 		if(isCalculated()) {			
