@@ -2,11 +2,16 @@ package org.syvasoft.tallyfrontcrusher.model;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.util.List;
 import java.util.Properties;
 
+import org.compiere.model.MInOut;
 import org.compiere.model.MOrder;
 import org.compiere.model.MOrderLine;
+import org.compiere.model.MProductPricing;
 import org.compiere.model.MTable;
+import org.compiere.model.Query;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
 
@@ -332,4 +337,47 @@ public class TF_MOrder extends MOrder {
 		
 		
 	}
+
+	@Override
+	public boolean voidIt() {
+		//POS Order's MR and Invoice should be reversed.
+		if(getC_DocType_ID() == 1000050 || getC_DocType_ID() == 1000041) {
+			//MR/Shipment reverse Accrual
+			List<MInOut> inOutList = new Query(getCtx(), MInOut.Table_Name, "C_Order_ID=? AND DocStatus=?", get_TrxName())
+				.setClient_ID().setParameters(getC_Order_ID(),DOCSTATUS_Completed).list();
+			for(MInOut inout : inOutList) {
+				if(!inout.reverseAccrualIt())
+					return false;				
+				inout.saveEx();
+			}
+			
+			//Invoice reverse Accrual
+			List<TF_MInvoice> invList = new Query(getCtx(), TF_MInvoice.Table_Name, "C_Order_ID=? AND DocStatus=?", get_TrxName())
+				.setClient_ID().setParameters(getC_Order_ID(), DOCSTATUS_Completed).list();
+			for(TF_MInvoice inv : invList) {
+				if(!inv.reverseAccrualIt())
+					return false;
+				inv.saveEx();
+			}
+		}
+		
+		return super.voidIt();
+	}
+	
+	public static MProductPricing getProductPricing(int M_Product_ID, int M_PriceList_ID, int C_BPartner_ID, 
+			BigDecimal Qty,	Timestamp priceDate, boolean isSOTrx) {
+		//Get Unit Price from Latest Price List.
+		String sql = "SELECT plv.M_PriceList_Version_ID "
+				+ "FROM M_PriceList_Version plv "
+				+ "WHERE plv.M_PriceList_ID=? "	
+				+ " AND plv.ValidFrom <= ? "
+				+ "ORDER BY plv.ValidFrom DESC";
+		
+		int M_PriceList_Version_ID = DB.getSQLValueEx(null, sql, M_PriceList_ID, priceDate);
+		MProductPricing pp = new MProductPricing (M_Product_ID, C_BPartner_ID, Qty, isSOTrx);
+		pp.setM_PriceList_Version_ID(M_PriceList_Version_ID);
+		pp.setPriceDate(priceDate);		
+		return pp;
+	}
+	
 }

@@ -94,6 +94,7 @@ public class TF_MPayment extends MPayment {
 			TF_MCharge charge = TF_MCharge.createChargeFromAccount(getCtx(), getC_ElementValue_ID(), get_TrxName());
 			setC_Charge_ID(charge.get_ID());
 		}
+	
 		return super.beforeSave(newRecord);
 	}
 
