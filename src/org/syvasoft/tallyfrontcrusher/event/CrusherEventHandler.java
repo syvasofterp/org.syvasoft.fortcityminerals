@@ -16,6 +16,7 @@ import org.compiere.model.MInOutLine;
 import org.compiere.model.MInvoice;
 import org.compiere.model.MInvoiceLine;
 import org.compiere.model.MPInstance;
+import org.compiere.model.MPayment;
 import org.compiere.model.MProcess;
 import org.compiere.model.MProduct;
 import org.compiere.model.MProduction;
@@ -34,6 +35,7 @@ import org.osgi.service.event.Event;
 import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MGLPostingConfig;
 import org.syvasoft.tallyfrontcrusher.model.TF_MInvoice;
+import org.syvasoft.tallyfrontcrusher.model.TF_MPayment;
 
 
 public class CrusherEventHandler extends AbstractEventHandler {
@@ -44,14 +46,25 @@ public class CrusherEventHandler extends AbstractEventHandler {
 		//Document Events
 		registerTableEvent(IEventTopics.DOC_AFTER_COMPLETE, TF_MInvoice.Table_Name);		
 		registerTableEvent(IEventTopics.DOC_BEFORE_PREPARE, MProduction.Table_Name);
-				
+		registerTableEvent(IEventTopics.PO_BEFORE_CHANGE, MPayment.Table_Name);		
 
 	}
 
 	@Override
 	protected void doHandleEvent(Event event) {
 		PO po = getPO(event);
-		if(po.get_TableName().equals(MInvoice.Table_Name)) {
+		if(po.get_TableName().equals(MPayment.Table_Name)) {
+			MPayment payment = (MPayment) po;
+			if(event.getTopic().equals(IEventTopics.PO_BEFORE_CHANGE)) {
+				if(payment.getC_Invoice_ID() > 0) {
+					if(payment.getC_DocType().isSOTrx())
+						payment.set_ValueOfColumn(TF_MPayment.COLUMNNAME_CashType, TF_MPayment.CASHTYPE_CustomerPayment);					
+					else
+						payment.set_ValueOfColumn(TF_MPayment.COLUMNNAME_CashType, TF_MPayment.CASHTYPE_VendorPayment);
+				}
+			}
+		}
+		else if(po.get_TableName().equals(MInvoice.Table_Name)) {
 			
 			//NOTE::Do not create another Invoice instance based on this RecordID and use it to generate receipts
 			//will lead to deadlock...

@@ -13,6 +13,9 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutInvoiceHeaderItemAmount;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutLabourWage;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutLabourWageIssue_CalcBalanceAmts;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutLabourWageIssue_SetOpenAmt;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_CalcAmt;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_SetPrice;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_POSCashBP;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPaymentCashType;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetFuelExpensed;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetOpeningEntries;
@@ -38,6 +41,16 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 				 columnName.equals(TF_MInvoice.COLUMNNAME_Item2_Qty) || columnName.equals(TF_MInvoice.COLUMNNAME_Item2_Price)))
 			list.add(new CalloutInvoiceHeaderItemAmount());
 		
+		//TF_MOrder - Set Cash Payment Rule for POS BP
+		if(tableName.equals(TF_MOrder.Table_Name) && columnName.equals(TF_MOrder.COLUMNNAME_C_BPartner_ID))
+			list.add(new CalloutOrder_POSCashBP());
+		
+		//TF_MOrder / C_Invoice - Set Unit Price
+		if((tableName.equals(TF_MOrder.Table_Name) || tableName.equals(TF_MInvoice.Table_Name)) && (columnName.equals(TF_MOrder.COLUMNNAME_Item1_ID)				
+				|| columnName.equals(TF_MOrder.COLUMNNAME_Item2_ID)))
+			list.add(new CalloutOrderQuickEntry_SetPrice());		
+		
+				
 		//TF_TripSheet - Calc Running Meter
 		if(tableName.equals(MTripSheet.Table_Name) && (columnName.equals(MTripSheet.COLUMNNAME_Opening_Meter) || 
 				columnName.equals(MTripSheet.COLUMNNAME_Closing_Meter)))
