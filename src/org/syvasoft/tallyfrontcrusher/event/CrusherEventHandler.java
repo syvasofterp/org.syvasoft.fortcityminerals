@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import org.adempiere.base.event.AbstractEventHandler;
 import org.adempiere.base.event.IEventTopics;
 import org.adempiere.exceptions.AdempiereException;
-import org.adempiere.exceptions.InvoiceFullyMatchedException;
 import org.compiere.model.MAcctSchema;
 import org.compiere.model.MClient;
 import org.compiere.model.MCost;
@@ -15,12 +14,14 @@ import org.compiere.model.MInOut;
 import org.compiere.model.MInOutLine;
 import org.compiere.model.MInvoice;
 import org.compiere.model.MInvoiceLine;
+import org.compiere.model.MOrder;
 import org.compiere.model.MPInstance;
 import org.compiere.model.MPayment;
 import org.compiere.model.MProcess;
 import org.compiere.model.MProduct;
 import org.compiere.model.MProduction;
 import org.compiere.model.MSysConfig;
+import org.compiere.model.MUser;
 import org.compiere.model.PO;
 import org.compiere.model.Query;
 import org.compiere.process.DocAction;
@@ -28,13 +29,14 @@ import org.compiere.process.ProcessInfo;
 import org.compiere.process.ProcessInfoParameter;
 import org.compiere.process.RollUpCosts;
 import org.compiere.util.CLogger;
-import org.compiere.util.DB;
 import org.compiere.util.Env;
 import org.compiere.util.Trx;
 import org.osgi.service.event.Event;
 import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MGLPostingConfig;
+import org.syvasoft.tallyfrontcrusher.model.TF_MCharge;
 import org.syvasoft.tallyfrontcrusher.model.TF_MInvoice;
+import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
 import org.syvasoft.tallyfrontcrusher.model.TF_MPayment;
 
 
@@ -44,7 +46,8 @@ public class CrusherEventHandler extends AbstractEventHandler {
 	@Override
 	protected void initialize() {
 		//Document Events
-		registerTableEvent(IEventTopics.DOC_AFTER_COMPLETE, TF_MInvoice.Table_Name);		
+		registerTableEvent(IEventTopics.DOC_AFTER_COMPLETE, TF_MInvoice.Table_Name);
+		registerTableEvent(IEventTopics.DOC_AFTER_COMPLETE, MOrder.Table_Name);
 		registerTableEvent(IEventTopics.DOC_BEFORE_PREPARE, MProduction.Table_Name);
 		registerTableEvent(IEventTopics.PO_BEFORE_CHANGE, MPayment.Table_Name);		
 
@@ -79,6 +82,12 @@ public class CrusherEventHandler extends AbstractEventHandler {
 				//	generateReceiptFromInvoice(inv);
 				
 			}			
+		}
+		else if(po instanceof MOrder) {
+			MOrder ord = (MOrder) po;
+			if(event.getTopic().equals(IEventTopics.DOC_AFTER_COMPLETE)) {
+				createDriverTipsPayment(ord);
+			}
 		}
 		else if (po instanceof MProduction) {
 			MProduction prod = (MProduction) po;
@@ -167,6 +176,40 @@ public class CrusherEventHandler extends AbstractEventHandler {
 				break;
 			}
 		}
+	}
+	
+	private void createDriverTipsPayment(MOrder ord) {
+		BigDecimal amt = (BigDecimal) ord.get_Value(TF_MOrder.COLUMNNAME_DriverTips);
+		if(amt.doubleValue() == 0)
+			return;
+		
+		MGLPostingConfig glConfig = MGLPostingConfig.getMGLPostingConfig(ord.getCtx());
+		//Create Driver Tips Charge if it is not there already.
+		//It should be in atomic transaction to get account settings of Charge for the current docaction transaction.
+		TF_MCharge charge = TF_MCharge.createChargeFromAccount(ord.getCtx(), glConfig.getTipsExpenseAcct_ID(), null);
+		
+		//Posting Payment Document for Driver Tips
+		TF_MPayment payment = new TF_MPayment(ord.getCtx(), 0, ord.get_TrxName());
+		payment.setDescription("Generated from Sales Entry - " + ord.getDocumentNo());
+		payment.setCashType(TF_MPayment.CASHTYPE_GeneralExpense);
+		payment.setC_DocType_ID(false);		
+		payment.setC_Charge_ID(charge.getC_Charge_ID());
+		payment.setUser1_ID(ord.getUser1_ID()); // Profit Center
+		payment.setC_ElementValue_ID(glConfig.getTipsExpenseAcct_ID());
+		payment.setC_BankAccount_ID(glConfig.getC_BankAccount_ID());
+		MUser user = MUser.get(ord.getCtx(), Env.getAD_User_ID(ord.getCtx()));
+		payment.setC_BPartner_ID(user.getC_BPartner_ID());
+		payment.setPayAmt(amt);
+		payment.setC_Currency_ID(Env.getContextAsInt(ord.getCtx(), "$C_Currency_ID"));
+		payment.setDocStatus(TF_MOrder.DOCSTATUS_InProgress);
+		payment.setTenderType(TF_MPayment.TENDERTYPE_Cash);
+		payment.saveEx();
+		payment.processIt(DocAction.ACTION_Complete);
+		payment.saveEx();
+		
+		ord.set_ValueOfColumn(TF_MOrder.COLUMNNAME_TF_DriverTips_Pay_ID, payment.getC_Payment_ID());
+		ord.saveEx();
+		
 	}
 	
 	private void generateReceiptFromInvoice(MInvoice invoice) {
