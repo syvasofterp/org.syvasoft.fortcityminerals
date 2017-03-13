@@ -79,6 +79,21 @@ public interface I_TF_GLPosting_Config
 
 	public org.compiere.model.I_C_AcctSchema getC_AcctSchema() throws RuntimeException;
 
+    /** Column name C_BankAccount_ID */
+    public static final String COLUMNNAME_C_BankAccount_ID = "C_BankAccount_ID";
+
+	/** Set Bank/Cash Account.
+	  * Account at the Bank
+	  */
+	public void setC_BankAccount_ID (int C_BankAccount_ID);
+
+	/** Get Bank/Cash Account.
+	  * Account at the Bank
+	  */
+	public int getC_BankAccount_ID();
+
+	public org.compiere.model.I_C_BankAccount getC_BankAccount() throws RuntimeException;
+
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
 
@@ -235,6 +250,17 @@ public interface I_TF_GLPosting_Config
 
 	/** Get TF_GLPosting_Config_UU	  */
 	public String getTF_GLPosting_Config_UU();
+
+    /** Column name TipsExpenseAcct_ID */
+    public static final String COLUMNNAME_TipsExpenseAcct_ID = "TipsExpenseAcct_ID";
+
+	/** Set Tips Expense	  */
+	public void setTipsExpenseAcct_ID (int TipsExpenseAcct_ID);
+
+	/** Get Tips Expense	  */
+	public int getTipsExpenseAcct_ID();
+
+	public org.compiere.model.I_C_ElementValue getTipsExpenseAcct() throws RuntimeException;
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";

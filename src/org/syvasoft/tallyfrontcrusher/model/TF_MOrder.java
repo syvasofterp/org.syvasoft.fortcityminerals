@@ -9,9 +9,12 @@ import java.util.Properties;
 import org.compiere.model.MInOut;
 import org.compiere.model.MOrder;
 import org.compiere.model.MOrderLine;
+import org.compiere.model.MProductPrice;
 import org.compiere.model.MProductPricing;
+import org.compiere.model.MResource;
 import org.compiere.model.MTable;
 import org.compiere.model.Query;
+import org.compiere.util.AdempiereUserError;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
 
@@ -265,10 +268,150 @@ public class TF_MOrder extends MOrder {
 	return bd;
 	}
 
+	/** Column name Vehicle_ID */
+    public static final String COLUMNNAME_Vehicle_ID = "Vehicle_ID";
+    
+    public org.compiere.model.I_C_OrderLine getVehicle_C_OrderLine() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_OrderLine)MTable.get(getCtx(), org.compiere.model.I_C_OrderLine.Table_Name)
+			.getPO(getVehicle_C_OrderLine_ID(), get_TrxName());	}
+
+    /** Column name Vehicle_C_OrderLine_ID */
+    public static final String COLUMNNAME_Vehicle_C_OrderLine_ID = "Vehicle_C_OrderLine_ID";
+	/** Set Vehicle OrderLine ID.
+		@param Vehicle_C_OrderLine_ID Vehicle OrderLine ID	  */
+	public void setVehicle_C_OrderLine_ID (int Vehicle_C_OrderLine_ID)
+	{
+		if (Vehicle_C_OrderLine_ID < 1) 
+			set_Value (COLUMNNAME_Vehicle_C_OrderLine_ID, null);
+		else 
+			set_Value (COLUMNNAME_Vehicle_C_OrderLine_ID, Integer.valueOf(Vehicle_C_OrderLine_ID));
+	}
+
+	/** Get Vehicle OrderLine ID.
+		@return Vehicle OrderLine ID	  */
+	public int getVehicle_C_OrderLine_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Vehicle_C_OrderLine_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_M_Product getVehicle() throws RuntimeException
+    {
+		return (org.compiere.model.I_M_Product)MTable.get(getCtx(), org.compiere.model.I_M_Product.Table_Name)
+			.getPO(getVehicle_ID(), get_TrxName());	}
+
+	/** Set Vehicle.
+		@param Vehicle_ID Vehicle	  */
+	public void setVehicle_ID (int Vehicle_ID)
+	{
+		if (Vehicle_ID < 1) 
+			set_Value (COLUMNNAME_Vehicle_ID, null);
+		else 
+			set_Value (COLUMNNAME_Vehicle_ID, Integer.valueOf(Vehicle_ID));
+	}
+
+	/** Get Vehicle.
+		@return Vehicle	  */
+	public int getVehicle_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Vehicle_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	 /** Column name VehicleNo */
+    public static final String COLUMNNAME_VehicleNo = "VehicleNo";
+
+	/** Set Vehicle No.
+		@param VehicleNo Vehicle No	  */
+	public void setVehicleNo (String VehicleNo)
+	{
+		set_Value (COLUMNNAME_VehicleNo, VehicleNo);
+	}
+
+	/** Get Vehicle No.
+		@return Vehicle No	  */
+	public String getVehicleNo () 
+	{
+		return (String)get_Value(COLUMNNAME_VehicleNo);
+	}
+    
+	 /** Column name Rent_Amt */
+    public static final String COLUMNNAME_Rent_Amt = "Rent_Amt";
+    
+    /** Set Rent (Amount).
+	@param Rent_Amt Rent (Amount)	  */
+	public void setRent_Amt (BigDecimal Rent_Amt)
+	{
+		set_Value (COLUMNNAME_Rent_Amt, Rent_Amt);
+	}
+	
+	/** Get Rent (Amount).
+		@return Rent (Amount)	  */
+	public BigDecimal getRent_Amt () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Rent_Amt);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+    
+	 /** Column name TF_DriverTips_Pay_ID */
+    public static final String COLUMNNAME_TF_DriverTips_Pay_ID = "TF_DriverTips_Pay_ID";
+    public org.compiere.model.I_C_Payment getTF_DriverTips_Pay() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Payment)MTable.get(getCtx(), org.compiere.model.I_C_Payment.Table_Name)
+			.getPO(getTF_DriverTips_Pay_ID(), get_TrxName());	}
+
+	/** Set Driver Tips Payment.
+		@param TF_DriverTips_Pay_ID Driver Tips Payment	  */
+	public void setTF_DriverTips_Pay_ID (int TF_DriverTips_Pay_ID)
+	{
+		if (TF_DriverTips_Pay_ID < 1) 
+			set_Value (COLUMNNAME_TF_DriverTips_Pay_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_DriverTips_Pay_ID, Integer.valueOf(TF_DriverTips_Pay_ID));
+	}
+
+	/** Get Driver Tips Payment.
+		@return Driver Tips Payment	  */
+	public int getTF_DriverTips_Pay_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_DriverTips_Pay_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+	
+	 /** Column name DriverTips */
+    public static final String COLUMNNAME_DriverTips = "DriverTips";
+    /** Set Driver Tips.
+	@param DriverTips Driver Tips	  */
+	public void setDriverTips (BigDecimal DriverTips)
+	{
+		set_Value (COLUMNNAME_DriverTips, DriverTips);
+	}
+	
+	/** Get Driver Tips.
+		@return Driver Tips	  */
+	public BigDecimal getDriverTips () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_DriverTips);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
 		success = super.afterSave(newRecord, success);
 		updateQuickOrderLines();
+		updateVehicleRentLine();
 		return success;
 	}
 	
@@ -288,20 +431,24 @@ public class TF_MOrder extends MOrder {
 	public void updateQuickOrderLines() {
 		MOrderLine ordLine = null;
 		//Delete empty item lines
-		if(is_ValueChanged(COLUMNNAME_Item1_ID) && getItem1_ID() == 0) {
+		if(is_ValueChanged(COLUMNNAME_Item1_ID) || (getItem1_ID() == 0 && getItem1_C_OrderLine_ID() > 0)) {
 			ordLine = new MOrderLine(getCtx(), getItem1_C_OrderLine_ID(), get_TrxName());
 			if(ordLine.get_ID() > 0) {
-				ordLine.delete(false);
 				DB.executeUpdate("UPDATE C_Order SET " + COLUMNNAME_Item1_C_OrderLine_ID + " = NULL " +
-						" WHERE C_Order_ID =" + getC_Order_ID(), get_TrxName());				
+						" WHERE C_Order_ID =" + getC_Order_ID(), get_TrxName());
+				ordLine.setQtyReserved(BigDecimal.ZERO);
+				ordLine.delete(false);
+				setItem1_C_OrderLine_ID(0);
 			}
 		}
-		if(is_ValueChanged(COLUMNNAME_Item2_ID) && getItem2_ID() == 0) {
+		if(is_ValueChanged(COLUMNNAME_Item2_ID) || (getItem2_ID() == 0 && getItem2_C_OrderLine_ID() > 0)) {
 			ordLine = new MOrderLine(getCtx(), getItem2_C_OrderLine_ID(), get_TrxName());
 			if(ordLine.get_ID() > 0) {
-				ordLine.delete(false);
 				DB.executeUpdate("UPDATE C_Order SET " + COLUMNNAME_Item2_C_OrderLine_ID + " = NULL " +
-						" WHERE C_Order_ID =" + getC_Order_ID(), get_TrxName());				
+						" WHERE C_Order_ID =" + getC_Order_ID(), get_TrxName());
+				ordLine.setQtyReserved(BigDecimal.ZERO);				
+				ordLine.delete(false);
+				setItem2_C_OrderLine_ID(0);
 			}
 		} // End Delete
 		
@@ -314,7 +461,8 @@ public class TF_MOrder extends MOrder {
 				ordLine = new MOrderLine(getCtx(), getItem1_C_OrderLine_ID(), get_TrxName());
 			else
 				ordLine = new MOrderLine(this);
-			
+			TF_MOrder.addProductPricingIfNot(getItem1_ID(), getM_PriceList_ID(), getC_BPartner_ID(), getItem1_Qty(), getItem1_Price(), 
+					getDateOrdered(), getC_DocType().isSOTrx());
 			setOrderLine(ordLine, getItem1_ID(), getItem1_Qty(), getItem1_Price());									
 			ordLine.saveEx();			
 			DB.executeUpdate("UPDATE C_Order SET " + COLUMNNAME_Item1_C_OrderLine_ID + " = "
@@ -328,7 +476,8 @@ public class TF_MOrder extends MOrder {
 				ordLine = new MOrderLine(getCtx(), getItem2_C_OrderLine_ID(), get_TrxName());
 			else
 				ordLine = new MOrderLine(this);
-			
+			TF_MOrder.addProductPricingIfNot(getItem2_ID(), getM_PriceList_ID(), getC_BPartner_ID(), getItem2_Qty(), getItem2_Price(), 
+					getDateOrdered(), getC_DocType().isSOTrx());
 			setOrderLine(ordLine, getItem2_ID(), getItem2_Qty(), getItem2_Price());									
 			ordLine.saveEx();			
 			DB.executeUpdate("UPDATE C_Order SET " + COLUMNNAME_Item2_C_OrderLine_ID + " = "
@@ -336,6 +485,51 @@ public class TF_MOrder extends MOrder {
 		}
 		
 		
+	}
+	
+	public void updateVehicleRentLine() {
+		MOrderLine ordLine = null;
+		//Delete empty item lines
+		if(is_ValueChanged(COLUMNNAME_Vehicle_ID) || (getVehicle_ID() == 0 && getVehicle_C_OrderLine_ID() > 0)) {
+			ordLine = new MOrderLine(getCtx(), getVehicle_C_OrderLine_ID(), get_TrxName());
+			if(ordLine.get_ID() > 0) {
+				ordLine.setQtyReserved(BigDecimal.ZERO);
+				ordLine.delete(false);
+				DB.executeUpdate("UPDATE C_Order SET " + COLUMNNAME_Vehicle_C_OrderLine_ID + " = NULL " +
+						" WHERE C_Order_ID =" + getC_Order_ID(), get_TrxName());
+				setVehicle_C_OrderLine_ID(0);
+			}			
+		}//End Delete
+		
+		//Update modified Vehicle Rent line.		
+		//Vehicle Rent
+		if(getVehicle_ID() > 0 && (is_ValueChanged(COLUMNNAME_Vehicle_ID) || is_ValueChanged(COLUMNNAME_Rent_Amt)
+				|| getVehicle_C_OrderLine_ID() == 0)) {
+			
+			if(getVehicle_C_OrderLine_ID() > 0) 
+				ordLine = new MOrderLine(getCtx(), getVehicle_C_OrderLine_ID(), get_TrxName());
+			else
+				ordLine = new MOrderLine(this);
+			
+			TF_MOrder.addProductPricingIfNot(getVehicle_ID(), getM_PriceList_ID(), getC_BPartner_ID(), BigDecimal.ONE, getRent_Amt(), 
+					getDateOrdered(), getC_DocType().isSOTrx());
+			setOrderLine(ordLine, getVehicle_ID(), BigDecimal.ONE, getRent_Amt());
+			MResource res = MResource.get(getCtx(), getVehicle().getS_Resource_ID());
+			ordLine.setUser1_ID(res.get_ValueAsInt("C_ElementValue_ID"));
+			ordLine.setDescription("Vehicle Rent");
+			ordLine.saveEx();
+			DB.executeUpdate("UPDATE C_Order SET " + COLUMNNAME_Vehicle_C_OrderLine_ID + " = "
+				+ ordLine.getC_OrderLine_ID() + " WHERE C_Order_ID = " + getC_Order_ID(), get_TrxName());	
+		}
+	}
+
+	@Override
+	protected boolean beforeSave(boolean newRecord) {
+		if(getVehicle_ID()>0 && getRent_Amt().doubleValue()==0) {
+			throw new AdempiereUserError("Invalid Rent Amount");
+		}
+			
+		return super.beforeSave(newRecord);
 	}
 
 	@Override
@@ -378,6 +572,26 @@ public class TF_MOrder extends MOrder {
 		pp.setM_PriceList_Version_ID(M_PriceList_Version_ID);
 		pp.setPriceDate(priceDate);		
 		return pp;
+	}
+	
+	public static MProductPrice addProductPricingIfNot(int M_Product_ID, int M_PriceList_ID, int C_BPartner_ID, 
+			BigDecimal Qty, BigDecimal price, Timestamp priceDate, boolean isSOTrx) {
+		//Get Unit Price from Latest Price List.
+		String sql = "SELECT plv.M_PriceList_Version_ID "
+				+ "FROM M_PriceList_Version plv "
+				+ "WHERE plv.M_PriceList_ID=? "	
+				+ " AND plv.ValidFrom <= ? "
+				+ "ORDER BY plv.ValidFrom DESC";
+		MProductPrice prodPrice = null;
+		int M_PriceList_Version_ID = DB.getSQLValueEx(null, sql, M_PriceList_ID, priceDate);	
+		sql = " SELECT Count(*) FROM M_ProductPrice WHERE M_PriceList_Version_ID =? AND M_Product_ID =? AND IsActive='Y'";
+		BigDecimal count = DB.getSQLValueBD(null, sql, M_PriceList_Version_ID,M_Product_ID);
+		if(count == null || count.doubleValue() == 0) {
+			prodPrice = new MProductPrice(Env.getCtx(), M_PriceList_Version_ID, M_Product_ID, null);			
+			prodPrice.setPrices(price, price, price);		
+			prodPrice.saveEx();	
+		}
+		return prodPrice;
 	}
 	
 }

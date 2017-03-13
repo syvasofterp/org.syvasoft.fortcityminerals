@@ -30,7 +30,7 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170223L;
+	private static final long serialVersionUID = 20170313L;
 
     /** Standard Constructor */
     public X_TF_GLPosting_Config (Properties ctx, int TF_GLPosting_Config_ID, String trxName)
@@ -101,6 +101,34 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	public int getC_AcctSchema_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_C_AcctSchema_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_BankAccount getC_BankAccount() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_BankAccount)MTable.get(getCtx(), org.compiere.model.I_C_BankAccount.Table_Name)
+			.getPO(getC_BankAccount_ID(), get_TrxName());	}
+
+	/** Set Bank/Cash Account.
+		@param C_BankAccount_ID 
+		Account at the Bank
+	  */
+	public void setC_BankAccount_ID (int C_BankAccount_ID)
+	{
+		if (C_BankAccount_ID < 1) 
+			set_Value (COLUMNNAME_C_BankAccount_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_BankAccount_ID, Integer.valueOf(C_BankAccount_ID));
+	}
+
+	/** Get Bank/Cash Account.
+		@return Account at the Bank
+	  */
+	public int getC_BankAccount_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_BankAccount_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
@@ -376,6 +404,31 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	public String getTF_GLPosting_Config_UU () 
 	{
 		return (String)get_Value(COLUMNNAME_TF_GLPosting_Config_UU);
+	}
+
+	public org.compiere.model.I_C_ElementValue getTipsExpenseAcct() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getTipsExpenseAcct_ID(), get_TrxName());	}
+
+	/** Set Tips Expense.
+		@param TipsExpenseAcct_ID Tips Expense	  */
+	public void setTipsExpenseAcct_ID (int TipsExpenseAcct_ID)
+	{
+		if (TipsExpenseAcct_ID < 1) 
+			set_Value (COLUMNNAME_TipsExpenseAcct_ID, null);
+		else 
+			set_Value (COLUMNNAME_TipsExpenseAcct_ID, Integer.valueOf(TipsExpenseAcct_ID));
+	}
+
+	/** Get Tips Expense.
+		@return Tips Expense	  */
+	public int getTipsExpenseAcct_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TipsExpenseAcct_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	public org.compiere.model.I_C_ElementValue getVehicleExp_A() throws RuntimeException

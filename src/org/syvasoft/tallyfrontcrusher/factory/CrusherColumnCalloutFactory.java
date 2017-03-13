@@ -15,6 +15,7 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutLabourWageIssue_CalcBalance
 import org.syvasoft.tallyfrontcrusher.callout.CalloutLabourWageIssue_SetOpenAmt;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_CalcAmt;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_SetPrice;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_SetVehicleNo;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_POSCashBP;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPaymentCashType;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetFuelExpensed;
@@ -50,6 +51,9 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 				|| columnName.equals(TF_MOrder.COLUMNNAME_Item2_ID)))
 			list.add(new CalloutOrderQuickEntry_SetPrice());		
 		
+		//TF_MOrder - Set Vehicle No
+		if(tableName.equals(TF_MOrder.Table_Name) && columnName.equals(TF_MOrder.COLUMNNAME_Vehicle_ID))
+				list.add(new CalloutOrderQuickEntry_SetVehicleNo());
 				
 		//TF_TripSheet - Calc Running Meter
 		if(tableName.equals(MTripSheet.Table_Name) && (columnName.equals(MTripSheet.COLUMNNAME_Opening_Meter) || 
