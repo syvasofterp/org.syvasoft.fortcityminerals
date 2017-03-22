@@ -32,7 +32,7 @@ public class PostDriverWageFromTripSheet extends SvrProcess {
 		
 		sql = " SELECT  C_BPartner_ID, DateReport, TF_VehicleType_ID, TF_Quarry_ID,  SUM(RUNNING_METER) Running_Meter FROM " +
 				" TF_TripSheet ts INNER JOIN M_Product p ON ts.Vehicle_ID = p.M_Product_ID " +
-				" WHERE ts.processing='I' " +
+				" WHERE ts.processing='I' AND ts.C_BPartner_ID IS NOT NULL " +
 				" GROUP BY C_BPartner_ID, DateReport, p.TF_VehicleType_ID, TF_Quarry_ID " +
 				" ORDER BY 1, 2, 3, 4 DESC ";
 		int no = 0;		

@@ -33,7 +33,7 @@ public class X_TF_TripSheet extends PO implements I_TF_TripSheet, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170226L;
+	private static final long serialVersionUID = 20170321L;
 
     /** Standard Constructor */
     public X_TF_TripSheet (Properties ctx, int TF_TripSheet_ID, String trxName)
@@ -41,7 +41,6 @@ public class X_TF_TripSheet extends PO implements I_TF_TripSheet, I_Persistent
       super (ctx, TF_TripSheet_ID, trxName);
       /** if (TF_TripSheet_ID == 0)
         {
-			setC_BPartner_ID (0);
 			setDocumentNo (null);
 			setProcessed (false);
 			setTF_TripSheet_ID (0);
@@ -89,9 +88,9 @@ public class X_TF_TripSheet extends PO implements I_TF_TripSheet, I_Persistent
 	public void setC_BPartner_ID (int C_BPartner_ID)
 	{
 		if (C_BPartner_ID < 1) 
-			set_ValueNoCheck (COLUMNNAME_C_BPartner_ID, null);
+			set_Value (COLUMNNAME_C_BPartner_ID, null);
 		else 
-			set_ValueNoCheck (COLUMNNAME_C_BPartner_ID, Integer.valueOf(C_BPartner_ID));
+			set_Value (COLUMNNAME_C_BPartner_ID, Integer.valueOf(C_BPartner_ID));
 	}
 
 	/** Get Operator / Driver.
@@ -347,6 +346,20 @@ public class X_TF_TripSheet extends PO implements I_TF_TripSheet, I_Persistent
 		return bd;
 	}
 
+	/** Set Post Labour Wage.
+		@param PostLabourWage Post Labour Wage	  */
+	public void setPostLabourWage (String PostLabourWage)
+	{
+		set_Value (COLUMNNAME_PostLabourWage, PostLabourWage);
+	}
+
+	/** Get Post Labour Wage.
+		@return Post Labour Wage	  */
+	public String getPostLabourWage () 
+	{
+		return (String)get_Value(COLUMNNAME_PostLabourWage);
+	}
+
 	/** Set Processed.
 		@param Processed 
 		The document has been processed
@@ -508,6 +521,31 @@ public class X_TF_TripSheet extends PO implements I_TF_TripSheet, I_Persistent
 	public String getTF_TripSheet_UU () 
 	{
 		return (String)get_Value(COLUMNNAME_TF_TripSheet_UU);
+	}
+
+	public I_TF_Vehicle_Rental_Contract getTF_Vehicle_Rental_Contract() throws RuntimeException
+    {
+		return (I_TF_Vehicle_Rental_Contract)MTable.get(getCtx(), I_TF_Vehicle_Rental_Contract.Table_Name)
+			.getPO(getTF_Vehicle_Rental_Contract_ID(), get_TrxName());	}
+
+	/** Set Vehicle Rental Contract.
+		@param TF_Vehicle_Rental_Contract_ID Vehicle Rental Contract	  */
+	public void setTF_Vehicle_Rental_Contract_ID (int TF_Vehicle_Rental_Contract_ID)
+	{
+		if (TF_Vehicle_Rental_Contract_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_TF_Vehicle_Rental_Contract_ID, null);
+		else 
+			set_ValueNoCheck (COLUMNNAME_TF_Vehicle_Rental_Contract_ID, Integer.valueOf(TF_Vehicle_Rental_Contract_ID));
+	}
+
+	/** Get Vehicle Rental Contract.
+		@return Vehicle Rental Contract	  */
+	public int getTF_Vehicle_Rental_Contract_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Vehicle_Rental_Contract_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	public org.compiere.model.I_M_Product getVehicle() throws RuntimeException
