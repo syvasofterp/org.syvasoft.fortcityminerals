@@ -24,11 +24,14 @@ import org.syvasoft.tallyfrontcrusher.model.MQuarryRent;
 import org.syvasoft.tallyfrontcrusher.model.MQuarryRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRent;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentConfig;
+import org.syvasoft.tallyfrontcrusher.model.MVehicleRentalContract;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleType;
 import org.syvasoft.tallyfrontcrusher.model.TF_MCharge;
 import org.syvasoft.tallyfrontcrusher.model.TF_MInvoice;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
 import org.syvasoft.tallyfrontcrusher.model.TF_MPayment;
+import org.syvasoft.tallyfrontcrusher.model.TF_MResource;
+import org.syvasoft.tallyfrontcrusher.model.TF_MResourceType;
 
 public class CrusherModelFactory implements IModelFactory {
 
@@ -80,6 +83,12 @@ public class CrusherModelFactory implements IModelFactory {
 			return MLabourWageIssue.class;
 		else if (MEmployeeSalaryIssue.Table_Name.equals(tableName))
 			return MEmployeeSalaryIssue.class;
+		else if (TF_MResourceType.Table_Name.equals(tableName))
+			return TF_MResourceType.class;
+		else if (TF_MResource.Table_Name.equals(tableName))
+			return TF_MResource.class;
+		else if (MVehicleRentalContract.Table_Name.equals(tableName))
+			return MVehicleRentalContract.class;		
 		return null;
 	}
 
@@ -132,6 +141,12 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MLabourWageIssue(ctx, Record_ID, trxName);
 		else if (MEmployeeSalaryIssue.Table_Name.equals(tableName))
 			return new MEmployeeSalaryIssue(ctx, Record_ID, trxName);
+		else if (TF_MResourceType.Table_Name.equals(tableName))
+			return new TF_MResourceType(ctx, Record_ID, trxName);
+		else if (TF_MResource.Table_Name.equals(tableName))
+			return new TF_MResource(ctx, Record_ID, trxName);
+		else if (MVehicleRentalContract.Table_Name.equals(tableName))
+			return new MVehicleRentalContract(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -184,6 +199,12 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MLabourWageIssue(ctx, rs, trxName);
 		else if (MEmployeeSalaryIssue.Table_Name.equals(tableName))
 			return new MEmployeeSalaryIssue(ctx, rs, trxName);
+		else if (TF_MResourceType.Table_Name.equals(tableName))
+			return new TF_MResourceType(ctx, rs, trxName);
+		else if (TF_MResource.Table_Name.equals(tableName))
+			return new TF_MResource(ctx, rs, trxName);
+		else if (MVehicleRentalContract.Table_Name.equals(tableName))
+			return new MVehicleRentalContract(ctx, rs, trxName);
 		return null;
 	}
 

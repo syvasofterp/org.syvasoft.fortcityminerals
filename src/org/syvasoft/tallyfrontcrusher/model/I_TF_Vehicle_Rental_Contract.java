@@ -21,18 +21,18 @@ import java.sql.Timestamp;
 import org.compiere.model.*;
 import org.compiere.util.KeyNamePair;
 
-/** Generated Interface for TF_TripSheet
+/** Generated Interface for TF_Vehicle_Rental_Contract
  *  @author iDempiere (generated) 
  *  @version Release 3.1
  */
 @SuppressWarnings("all")
-public interface I_TF_TripSheet 
+public interface I_TF_Vehicle_Rental_Contract 
 {
 
-    /** TableName=TF_TripSheet */
-    public static final String Table_Name = "TF_TripSheet";
+    /** TableName=TF_Vehicle_Rental_Contract */
+    public static final String Table_Name = "TF_Vehicle_Rental_Contract";
 
-    /** AD_Table_ID=1000182 */
+    /** AD_Table_ID=1000187 */
     public static final int Table_ID = MTable.getTable_ID(Table_Name);
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);
@@ -67,41 +67,62 @@ public interface I_TF_TripSheet
     /** Column name C_BPartner_ID */
     public static final String COLUMNNAME_C_BPartner_ID = "C_BPartner_ID";
 
-	/** Set Operator / Driver.
+	/** Set Vendor.
 	  * Identifies a Business Partner
 	  */
 	public void setC_BPartner_ID (int C_BPartner_ID);
 
-	/** Get Operator / Driver.
+	/** Get Vendor.
 	  * Identifies a Business Partner
 	  */
 	public int getC_BPartner_ID();
 
 	public org.compiere.model.I_C_BPartner getC_BPartner() throws RuntimeException;
 
+    /** Column name C_Charge_ID */
+    public static final String COLUMNNAME_C_Charge_ID = "C_Charge_ID";
+
+	/** Set Charge.
+	  * Additional document charges
+	  */
+	public void setC_Charge_ID (int C_Charge_ID);
+
+	/** Get Charge.
+	  * Additional document charges
+	  */
+	public int getC_Charge_ID();
+
+	public org.compiere.model.I_C_Charge getC_Charge() throws RuntimeException;
+
     /** Column name C_ElementValue_ID */
     public static final String COLUMNNAME_C_ElementValue_ID = "C_ElementValue_ID";
 
-	/** Set Profit Center.
+	/** Set Account Element.
 	  * Account Element
 	  */
 	public void setC_ElementValue_ID (int C_ElementValue_ID);
 
-	/** Get Profit Center.
+	/** Get Account Element.
 	  * Account Element
 	  */
 	public int getC_ElementValue_ID();
 
 	public org.compiere.model.I_C_ElementValue getC_ElementValue() throws RuntimeException;
 
-    /** Column name Closing_Fuel */
-    public static final String COLUMNNAME_Closing_Fuel = "Closing_Fuel";
+    /** Column name C_UOM_ID */
+    public static final String COLUMNNAME_C_UOM_ID = "C_UOM_ID";
 
-	/** Set Closing Fuel	  */
-	public void setClosing_Fuel (BigDecimal Closing_Fuel);
+	/** Set UOM.
+	  * Unit of Measure
+	  */
+	public void setC_UOM_ID (int C_UOM_ID);
 
-	/** Get Closing Fuel	  */
-	public BigDecimal getClosing_Fuel();
+	/** Get UOM.
+	  * Unit of Measure
+	  */
+	public int getC_UOM_ID();
+
+	public org.compiere.model.I_C_UOM getC_UOM() throws RuntimeException;
 
     /** Column name Closing_Meter */
     public static final String COLUMNNAME_Closing_Meter = "Closing_Meter";
@@ -111,6 +132,37 @@ public interface I_TF_TripSheet
 
 	/** Get Closing Meter	  */
 	public BigDecimal getClosing_Meter();
+
+    /** Column name Contract_Amt_Act */
+    public static final String COLUMNNAME_Contract_Amt_Act = "Contract_Amt_Act";
+
+	/** Set Contract Amt (Actual)	  */
+	public void setContract_Amt_Act (BigDecimal Contract_Amt_Act);
+
+	/** Get Contract Amt (Actual)	  */
+	public BigDecimal getContract_Amt_Act();
+
+    /** Column name Contract_Amt_Est */
+    public static final String COLUMNNAME_Contract_Amt_Est = "Contract_Amt_Est";
+
+	/** Set Contract Amt (Estimated)	  */
+	public void setContract_Amt_Est (BigDecimal Contract_Amt_Est);
+
+	/** Get Contract Amt (Estimated)	  */
+	public BigDecimal getContract_Amt_Est();
+
+    /** Column name ContractBase */
+    public static final String COLUMNNAME_ContractBase = "ContractBase";
+
+	/** Set Contract Base.
+	  * Represents how the contract amount will be calculated.
+	  */
+	public void setContractBase (String ContractBase);
+
+	/** Get Contract Base.
+	  * Represents how the contract amount will be calculated.
+	  */
+	public String getContractBase();
 
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
@@ -128,6 +180,28 @@ public interface I_TF_TripSheet
 	  */
 	public int getCreatedBy();
 
+    /** Column name CreateInvoice */
+    public static final String COLUMNNAME_CreateInvoice = "CreateInvoice";
+
+	/** Set Create Invoice	  */
+	public void setCreateInvoice (String CreateInvoice);
+
+	/** Get Create Invoice	  */
+	public String getCreateInvoice();
+
+    /** Column name DateAcct */
+    public static final String COLUMNNAME_DateAcct = "DateAcct";
+
+	/** Set Account Date.
+	  * Accounting Date
+	  */
+	public void setDateAcct (Timestamp DateAcct);
+
+	/** Get Account Date.
+	  * Accounting Date
+	  */
+	public Timestamp getDateAcct();
+
     /** Column name DateEnd */
     public static final String COLUMNNAME_DateEnd = "DateEnd";
 
@@ -137,26 +211,17 @@ public interface I_TF_TripSheet
 	/** Get End Date	  */
 	public Timestamp getDateEnd();
 
-    /** Column name DateReport */
-    public static final String COLUMNNAME_DateReport = "DateReport";
-
-	/** Set Report Date.
-	  * Expense/Time Report Date
-	  */
-	public void setDateReport (Timestamp DateReport);
-
-	/** Get Report Date.
-	  * Expense/Time Report Date
-	  */
-	public Timestamp getDateReport();
-
     /** Column name DateStart */
     public static final String COLUMNNAME_DateStart = "DateStart";
 
-	/** Set Start Date	  */
+	/** Set Date Start.
+	  * Date Start for this Order
+	  */
 	public void setDateStart (Timestamp DateStart);
 
-	/** Get Start Date	  */
+	/** Get Date Start.
+	  * Date Start for this Order
+	  */
 	public Timestamp getDateStart();
 
     /** Column name Description */
@@ -171,6 +236,19 @@ public interface I_TF_TripSheet
 	  * Optional short description of the record
 	  */
 	public String getDescription();
+
+    /** Column name DocAction */
+    public static final String COLUMNNAME_DocAction = "DocAction";
+
+	/** Set Document Action.
+	  * The targeted status of the document
+	  */
+	public void setDocAction (String DocAction);
+
+	/** Get Document Action.
+	  * The targeted status of the document
+	  */
+	public String getDocAction();
 
     /** Column name DocStatus */
     public static final String COLUMNNAME_DocStatus = "DocStatus";
@@ -198,14 +276,50 @@ public interface I_TF_TripSheet
 	  */
 	public String getDocumentNo();
 
-    /** Column name Expensed_Fuel */
-    public static final String COLUMNNAME_Expensed_Fuel = "Expensed_Fuel";
+    /** Column name Fuel_Deducted_Qty */
+    public static final String COLUMNNAME_Fuel_Deducted_Qty = "Fuel_Deducted_Qty";
 
-	/** Set Fuel Expensed	  */
-	public void setExpensed_Fuel (BigDecimal Expensed_Fuel);
+	/** Set Fuel Deducted Qty	  */
+	public void setFuel_Deducted_Qty (BigDecimal Fuel_Deducted_Qty);
 
-	/** Get Fuel Expensed	  */
-	public BigDecimal getExpensed_Fuel();
+	/** Get Fuel Deducted Qty	  */
+	public BigDecimal getFuel_Deducted_Qty();
+
+    /** Column name Fuel_Issued_Total_Qty */
+    public static final String COLUMNNAME_Fuel_Issued_Total_Qty = "Fuel_Issued_Total_Qty";
+
+	/** Set Fuel Issued Total Qty	  */
+	public void setFuel_Issued_Total_Qty (BigDecimal Fuel_Issued_Total_Qty);
+
+	/** Get Fuel Issued Total Qty	  */
+	public BigDecimal getFuel_Issued_Total_Qty();
+
+    /** Column name Fuel_Price */
+    public static final String COLUMNNAME_Fuel_Price = "Fuel_Price";
+
+	/** Set Fuel Price	  */
+	public void setFuel_Price (BigDecimal Fuel_Price);
+
+	/** Get Fuel Price	  */
+	public BigDecimal getFuel_Price();
+
+    /** Column name Fuel_Total_Cost */
+    public static final String COLUMNNAME_Fuel_Total_Cost = "Fuel_Total_Cost";
+
+	/** Set Fuel Total Cost	  */
+	public void setFuel_Total_Cost (BigDecimal Fuel_Total_Cost);
+
+	/** Get Fuel Total Cost	  */
+	public BigDecimal getFuel_Total_Cost();
+
+    /** Column name Invoiced_Amt */
+    public static final String COLUMNNAME_Invoiced_Amt = "Invoiced_Amt";
+
+	/** Set Invoiced Amount	  */
+	public void setInvoiced_Amt (BigDecimal Invoiced_Amt);
+
+	/** Get Invoiced Amount	  */
+	public BigDecimal getInvoiced_Amt();
 
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";
@@ -219,6 +333,39 @@ public interface I_TF_TripSheet
 	  * The record is active in the system
 	  */
 	public boolean isActive();
+
+    /** Column name IsFuelIncluded */
+    public static final String COLUMNNAME_IsFuelIncluded = "IsFuelIncluded";
+
+	/** Set Fuel Included	  */
+	public void setIsFuelIncluded (boolean IsFuelIncluded);
+
+	/** Get Fuel Included	  */
+	public boolean isFuelIncluded();
+
+    /** Column name Issued_Fuel */
+    public static final String COLUMNNAME_Issued_Fuel = "Issued_Fuel";
+
+	/** Set Issued Fuel	  */
+	public void setIssued_Fuel (BigDecimal Issued_Fuel);
+
+	/** Get Issued Fuel	  */
+	public BigDecimal getIssued_Fuel();
+
+    /** Column name M_Product_ID */
+    public static final String COLUMNNAME_M_Product_ID = "M_Product_ID";
+
+	/** Set Product.
+	  * Product, Service, Item
+	  */
+	public void setM_Product_ID (int M_Product_ID);
+
+	/** Get Product.
+	  * Product, Service, Item
+	  */
+	public int getM_Product_ID();
+
+	public org.compiere.model.I_M_Product getM_Product() throws RuntimeException;
 
     /** Column name Opening_Fuel */
     public static final String COLUMNNAME_Opening_Fuel = "Opening_Fuel";
@@ -237,15 +384,6 @@ public interface I_TF_TripSheet
 
 	/** Get Opening Meter	  */
 	public BigDecimal getOpening_Meter();
-
-    /** Column name PostLabourWage */
-    public static final String COLUMNNAME_PostLabourWage = "PostLabourWage";
-
-	/** Set Post Labour Wage	  */
-	public void setPostLabourWage (String PostLabourWage);
-
-	/** Get Post Labour Wage	  */
-	public String getPostLabourWage();
 
     /** Column name Processed */
     public static final String COLUMNNAME_Processed = "Processed";
@@ -269,14 +407,31 @@ public interface I_TF_TripSheet
 	/** Get Process Now	  */
 	public boolean isProcessing();
 
-    /** Column name Received_Fuel */
-    public static final String COLUMNNAME_Received_Fuel = "Received_Fuel";
+    /** Column name Qty */
+    public static final String COLUMNNAME_Qty = "Qty";
 
-	/** Set Received Fuel	  */
-	public void setReceived_Fuel (BigDecimal Received_Fuel);
+	/** Set Quantity.
+	  * Quantity
+	  */
+	public void setQty (BigDecimal Qty);
 
-	/** Get Received Fuel	  */
-	public BigDecimal getReceived_Fuel();
+	/** Get Quantity.
+	  * Quantity
+	  */
+	public BigDecimal getQty();
+
+    /** Column name QtyInvoiced */
+    public static final String COLUMNNAME_QtyInvoiced = "QtyInvoiced";
+
+	/** Set Quantity Invoiced.
+	  * Invoiced Quantity
+	  */
+	public void setQtyInvoiced (BigDecimal QtyInvoiced);
+
+	/** Get Quantity Invoiced.
+	  * Invoiced Quantity
+	  */
+	public BigDecimal getQtyInvoiced();
 
     /** Column name Running_Meter */
     public static final String COLUMNNAME_Running_Meter = "Running_Meter";
@@ -287,45 +442,31 @@ public interface I_TF_TripSheet
 	/** Get Running Meter	  */
 	public BigDecimal getRunning_Meter();
 
-    /** Column name TF_Labour_Wage_ID */
-    public static final String COLUMNNAME_TF_Labour_Wage_ID = "TF_Labour_Wage_ID";
+    /** Column name S_Resource_ID */
+    public static final String COLUMNNAME_S_Resource_ID = "S_Resource_ID";
 
-	/** Set Labour Wage Entry	  */
-	public void setTF_Labour_Wage_ID (int TF_Labour_Wage_ID);
+	/** Set Resource.
+	  * Resource
+	  */
+	public void setS_Resource_ID (int S_Resource_ID);
 
-	/** Get Labour Wage Entry	  */
-	public int getTF_Labour_Wage_ID();
+	/** Get Resource.
+	  * Resource
+	  */
+	public int getS_Resource_ID();
 
-	public I_TF_Labour_Wage getTF_Labour_Wage() throws RuntimeException;
+	public org.compiere.model.I_S_Resource getS_Resource() throws RuntimeException;
 
-    /** Column name TF_Quarry_ID */
-    public static final String COLUMNNAME_TF_Quarry_ID = "TF_Quarry_ID";
+    /** Column name S_ResourceType_ID */
+    public static final String COLUMNNAME_S_ResourceType_ID = "S_ResourceType_ID";
 
-	/** Set Quarry	  */
-	public void setTF_Quarry_ID (int TF_Quarry_ID);
+	/** Set Resource Type	  */
+	public void setS_ResourceType_ID (int S_ResourceType_ID);
 
-	/** Get Quarry	  */
-	public int getTF_Quarry_ID();
+	/** Get Resource Type	  */
+	public int getS_ResourceType_ID();
 
-	public I_TF_Quarry getTF_Quarry() throws RuntimeException;
-
-    /** Column name TF_TripSheet_ID */
-    public static final String COLUMNNAME_TF_TripSheet_ID = "TF_TripSheet_ID";
-
-	/** Set Trip Sheet	  */
-	public void setTF_TripSheet_ID (int TF_TripSheet_ID);
-
-	/** Get Trip Sheet	  */
-	public int getTF_TripSheet_ID();
-
-    /** Column name TF_TripSheet_UU */
-    public static final String COLUMNNAME_TF_TripSheet_UU = "TF_TripSheet_UU";
-
-	/** Set TF_TripSheet_UU	  */
-	public void setTF_TripSheet_UU (String TF_TripSheet_UU);
-
-	/** Get TF_TripSheet_UU	  */
-	public String getTF_TripSheet_UU();
+	public org.compiere.model.I_S_ResourceType getS_ResourceType() throws RuntimeException;
 
     /** Column name TF_Vehicle_Rental_Contract_ID */
     public static final String COLUMNNAME_TF_Vehicle_Rental_Contract_ID = "TF_Vehicle_Rental_Contract_ID";
@@ -336,7 +477,23 @@ public interface I_TF_TripSheet
 	/** Get Vehicle Rental Contract	  */
 	public int getTF_Vehicle_Rental_Contract_ID();
 
-	public I_TF_Vehicle_Rental_Contract getTF_Vehicle_Rental_Contract() throws RuntimeException;
+    /** Column name TF_Vehicle_Rental_Contract_UU */
+    public static final String COLUMNNAME_TF_Vehicle_Rental_Contract_UU = "TF_Vehicle_Rental_Contract_UU";
+
+	/** Set TF_Vehicle_Rental_Contract_UU	  */
+	public void setTF_Vehicle_Rental_Contract_UU (String TF_Vehicle_Rental_Contract_UU);
+
+	/** Get TF_Vehicle_Rental_Contract_UU	  */
+	public String getTF_Vehicle_Rental_Contract_UU();
+
+    /** Column name Unit_Price */
+    public static final String COLUMNNAME_Unit_Price = "Unit_Price";
+
+	/** Set Unit Price	  */
+	public void setUnit_Price (BigDecimal Unit_Price);
+
+	/** Get Unit Price	  */
+	public BigDecimal getUnit_Price();
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";
@@ -354,14 +511,12 @@ public interface I_TF_TripSheet
 	  */
 	public int getUpdatedBy();
 
-    /** Column name Vehicle_ID */
-    public static final String COLUMNNAME_Vehicle_ID = "Vehicle_ID";
+    /** Column name VehicleNo */
+    public static final String COLUMNNAME_VehicleNo = "VehicleNo";
 
-	/** Set Vehicle	  */
-	public void setVehicle_ID (int Vehicle_ID);
+	/** Set Vehicle No	  */
+	public void setVehicleNo (String VehicleNo);
 
-	/** Get Vehicle	  */
-	public int getVehicle_ID();
-
-	public org.compiere.model.I_M_Product getVehicle() throws RuntimeException;
+	/** Get Vehicle No	  */
+	public String getVehicleNo();
 }

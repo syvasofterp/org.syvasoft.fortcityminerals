@@ -18,14 +18,18 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_SetPrice;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_SetVehicleNo;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_POSCashBP;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPaymentCashType;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutRentalContract_ResourceType;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutRentalContract_VehicleNo;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetFuelExpensed;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetOpeningEntries;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetRunningMeter;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetRentalContract;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalary;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryIssue;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWage;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWageIssue;
 import org.syvasoft.tallyfrontcrusher.model.MTripSheet;
+import org.syvasoft.tallyfrontcrusher.model.MVehicleRentalContract;
 import org.syvasoft.tallyfrontcrusher.model.TF_MInvoice;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
 
@@ -69,6 +73,10 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		if(tableName.equals(MTripSheet.Table_Name) && columnName.equals(MTripSheet.COLUMNNAME_Vehicle_ID))
 			list.add(new CalloutTripSheetOpeningEntries());
 		
+		//TF_TripSheet - Set Rental Contract 
+		if(tableName.equals(MTripSheet.Table_Name) && columnName.equals(MTripSheet.COLUMNNAME_Vehicle_ID))
+			list.add(new CalloutTripSheetRentalContract());
+		
 		//C_Payment - Cash Type
 		if(tableName.equals(MPayment.Table_Name) && (columnName.equals("CashType")))
 			list.add(new CalloutPaymentCashType());
@@ -103,6 +111,14 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		if(tableName.equals(MEmployeeSalaryIssue.Table_Name) && (columnName.equals(MEmployeeSalaryIssue.COLUMNNAME_Advance_Deduct) ||
 				columnName.equals(MEmployeeSalaryIssue.COLUMNNAME_Salary_Paid) || columnName.equals(MEmployeeSalaryIssue.COLUMNNAME_Salary_Payable)))
 			list.add(new CalloutEmployeeSalaryIssue_CalcBalanceAmts());
+		
+		//TF_Vehicle_Rental_Contract - Vehicle No
+		if(tableName.equals(MVehicleRentalContract.Table_Name) && columnName.equals(MVehicleRentalContract.COLUMNNAME_VehicleNo))
+			list.add(new CalloutRentalContract_VehicleNo());
+		
+		//TF_Vehicle_Rental_Contract - Resource Type
+		if(tableName.equals(MVehicleRentalContract.Table_Name) && columnName.equals(MVehicleRentalContract.COLUMNNAME_S_ResourceType_ID))
+			list.add(new CalloutRentalContract_ResourceType());
 		
 		return list != null ? list.toArray(new IColumnCallout[0]) : new IColumnCallout[0];
 	}
