@@ -52,6 +52,15 @@ UPDATE TF_Quarry_Rent SET GL_Journal_ID = NULL;
 UPDATE TF_Fuel_Issue SET GL_Journal_ID = NULL;
 UPDATE TF_Labour_Wage SET GL_Journal_ID = NULL;
 UPDATE TF_Labour_Wage_Advance SET C_Payment_ID = NULL;
+UPDATE TF_Employee_Salary_Advance SET C_Payment_ID = NULL;
+UPDATE TF_Labour_Wage_Issue SET GL_Journal_ID = NULL;
+UPDATE TF_Labour_Wage_Issue SET C_Payment_ID = NULL;
+
+UPDATE TF_Employee_Salary_Issue SET GL_Journal_ID = NULL;
+UPDATE TF_Employee_Salary_Issue SET C_Payment_ID = NULL;
+
+UPDATE TF_TripSheet SET TF_Vehicle_Rental_Contract_ID = NULL;
+UPDATE C_Invoice SET TF_Vehicle_Rental_Contract_ID = NULL;
 
 DELETE FROM TF_Boulder_Receipt;
 DELETE FROM TF_Employee_Salary;
@@ -238,7 +247,78 @@ DELETE FROM TF_TripSheet;
 
 DELETE FROM AD_RecentItem where ad_client_id=1000000;
 
- DELETE FROM AD_Note where ad_client_id=1000000;
+DELETE FROM AD_Note where ad_client_id=1000000;
 DELETE FROM TF_Labour_Wage;
 DELETE FROM TF_Labour_Wage_Advance;
- 
+
+DELETE FROM TF_Employee_Salary_Advance;
+DELETE FROM TF_Labour_Wage_Issue;
+DELETE FROM TF_Employee_Salary_Issue;
+
+
+-- Document Seq Resetting ----
+-- CashBook 
+UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000389;
+
+--Fuel Issue Entry -- DocumentNo_TF_Fuel_Issue
+UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000377;
+
+--Vehicle Rent Entry -- DocumentNo_TF_Vehicle_Rent
+UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000402;
+
+-- Employee Salary Entry -- DocumentNo_TF_Employee_Salary
+UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000391;
+
+-- Boulder Receipt -- DocumentNo_TF_Boulder_Receipt
+UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000358;
+
+
+-- Rental Contract  -- DocumentNo_TF_Vehicle_Rental_Contract
+UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000401;
+
+-- POS Sales Order -- POS Order
+UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000341;
+
+-- AR Invoice (both AR Invoice & Invoice Indirect) -- AR Invoice
+UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000307;
+
+-- MM Shipment (both Direct & Indirect) -- MM Shipment
+UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000312;
+
+-- Purchase Order -- Purchase Order
+UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000316;
+
+-- Vendor Invoice -- AP Invoice
+UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000403;
+
+-- Material Receipt -- Material Receipt
+UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000404;
+
+-- Employee Salary Issue Entry -- DocumentNo_TF_Employee_Salary_Issue
+UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000397;
+
+-- Labour Wage Issue Entry -- DocumentNo_TF_Labour_Wage_Issue
+UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000395;
+
+-- Employee Salary Advance Entry -- DocumentNo_TF_Employee_Salary_Advance
+UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000393;
+
+-- Labour Wage Advance Entry -- DocumentNo_TF_Labour_Wage_Advance
+UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000390;
+
+-- TripSheet Entry -- DocumentNo_TF_TripSheet
+UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000381;
+
+-- Labour Wage Entry -- DocumentNo_TF_Labour_Wage
+UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000387;
+
+-- Crusher Production -- DocumentNo_TF_Crusher_Production
+UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000374 ;
+
+--  Production -- DocumentNo_M_Production
+UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=200133 ;
+
+--  DocumentNo_TF_Quarry_Rent -- DocumentNo_TF_Quarry_Rent
+UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000405 ;
+
+-- Need to reset Document Seq No for Internal Use Inventory, Physical Inventory and etc...

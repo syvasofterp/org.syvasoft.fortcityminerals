@@ -85,7 +85,8 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 			//Inventory Use Header
 			MInventory inv = new MInventory(wh, get_TrxName());
 			inv.setC_DocType_ID(1000026);
-			inv.setDescription("Generated from Fuel Issue : " + getDocumentNo());
+			String desc = "Diesel Issued to " +  getVehicle().getName(); 
+			inv.setDescription(desc);
 			inv.setMovementDate(getDateAcct());
 			inv.setUser1_ID(getC_ElementValue_ID());			
 			inv.setDocStatus(DOCSTATUS_Drafted);
@@ -94,6 +95,7 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 			//Inventory Use Line
 			MInventoryLine line = new MInventoryLine(inv, wh.getDefaultLocator().get_ID(), getM_Product_ID(), 0, null, null, getQty());
 			line.setC_Charge_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getFuelExpense_Charge_ID());
+			line.setDescription(desc);
 			//line.setCurrentCostPrice(getRate());
 			line.saveEx();
 			

@@ -27,7 +27,7 @@ public class PostDriverWageFromTripSheet extends SvrProcess {
 
 	@Override
 	protected String doIt() throws Exception {		
-		String sql = "UPDATE TF_TripSheet SET processing='I' WHERE TF_Labour_Wage_ID IS NULL";
+		String sql = "UPDATE TF_TripSheet SET processing='I' WHERE Processed ='Y' AND TF_Labour_Wage_ID IS NULL";
 		DB.executeUpdate(sql, get_TrxName());
 		
 		sql = " SELECT  C_BPartner_ID, DateReport, TF_VehicleType_ID, TF_Quarry_ID,  SUM(RUNNING_METER) Running_Meter FROM " +
