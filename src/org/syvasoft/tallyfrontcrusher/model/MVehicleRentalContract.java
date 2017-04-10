@@ -62,7 +62,7 @@ public class MVehicleRentalContract extends X_TF_Vehicle_Rental_Contract {
 				int warehouseID = Env.getContextAsInt(getCtx(), "#M_Warehouse_ID");
 				res.setM_Warehouse_ID(warehouseID);
 				res.setIsAvailable(true);
-				res.setIsRented(true);				
+				res.setIsRented(true);
 			}
 			else {
 				res.setIsAvailable(true);

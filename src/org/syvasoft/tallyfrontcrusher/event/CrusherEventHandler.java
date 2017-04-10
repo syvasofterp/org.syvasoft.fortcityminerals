@@ -20,7 +20,9 @@ import org.compiere.model.MPayment;
 import org.compiere.model.MProcess;
 import org.compiere.model.MProduct;
 import org.compiere.model.MProduction;
+import org.compiere.model.MStorageOnHand;
 import org.compiere.model.MSysConfig;
+import org.compiere.model.MTransaction;
 import org.compiere.model.MUser;
 import org.compiere.model.PO;
 import org.compiere.model.Query;
@@ -49,7 +51,8 @@ public class CrusherEventHandler extends AbstractEventHandler {
 		registerTableEvent(IEventTopics.DOC_AFTER_COMPLETE, TF_MInvoice.Table_Name);
 		registerTableEvent(IEventTopics.DOC_AFTER_COMPLETE, MOrder.Table_Name);
 		registerTableEvent(IEventTopics.DOC_BEFORE_PREPARE, MProduction.Table_Name);
-		registerTableEvent(IEventTopics.PO_BEFORE_CHANGE, MPayment.Table_Name);		
+		registerTableEvent(IEventTopics.PO_BEFORE_CHANGE, MPayment.Table_Name);
+		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MTransaction.Table_Name);
 
 	}
 
@@ -163,6 +166,15 @@ public class CrusherEventHandler extends AbstractEventHandler {
 			// End Call Rollup BOM Cost process
 			
 		}
+		else if(po instanceof MTransaction) {			
+			MTransaction trans = (MTransaction) po;
+			if(IEventTopics.PO_BEFORE_NEW.equals(event.getTopic())) {
+				//Set Opening Qty at Locator Level
+				BigDecimal onHandQty = MStorageOnHand.getQtyOnHandForLocator(trans.getM_Product_ID(), trans.getM_Locator_ID(), 
+						trans.getM_AttributeSetInstance_ID(), null);
+				trans.set_ValueOfColumn("Opening_Qty", onHandQty);
+			}
+		}
 	}
 	
 	private void postJobworkExpenseVarianceJournal(MInvoice inv) {		
@@ -179,6 +191,8 @@ public class CrusherEventHandler extends AbstractEventHandler {
 	}
 	
 	private void createDriverTipsPayment(MOrder ord) {
+		if(ord.get_Value(TF_MOrder.COLUMNNAME_DriverTips) == null)
+			return;
 		BigDecimal amt = (BigDecimal) ord.get_Value(TF_MOrder.COLUMNNAME_DriverTips);
 		if(amt.doubleValue() == 0)
 			return;
