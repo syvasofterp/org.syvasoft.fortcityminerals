@@ -59,7 +59,8 @@ public class PostVehicleRent extends SvrProcess {
 	
 		String sql = "SELECT TF_Quarry_ID, Vehicle_ID, TF_VehicleType_ID, Count (Distinct DateReceipt) RentedDays " + 
 					" FROM	TF_Boulder_Receipt br INNER JOIN M_Product p 	ON br.Vehicle_ID = p.M_Product_ID " +
-					" WHERE " + where +  
+					" WHERE NOT EXISTS( SELECT * FROM S_Resource, M_Product where M_Product_ID = br.Vehicle_ID AND IsRented='Y' " + 
+					" AND S_Resource.S_Resource_ID = M_Product.S_Resource_ID) AND " + where +  
 					" GROUP BY TF_Quarry_ID, Vehicle_ID, p.TF_VehicleType_ID ";
 		int no = 0;		
 		PreparedStatement pstmt =  null;
