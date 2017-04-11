@@ -218,7 +218,7 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 		DB.executeUpdateEx(sql, params.toArray(), trxName);
 		//End Update
 		
-		sql = " SELECT SUM(QtyReceived) * SUM(Jobwork_PriceActual - Jobwork_StdPrice) AS expVar FROM TF_Boulder_Receipt WHERE Subcon_Invoice_ID = ?";
+		sql = " SELECT SUM(QtyReceived * (Jobwork_PriceActual - Jobwork_StdPrice)) AS expVar FROM TF_Boulder_Receipt WHERE Subcon_Invoice_ID = ?";
 		BigDecimal expVar = DB.getSQLValueBD(trxName, sql, SubconInvoice.getC_Invoice_ID());
 		
 		//Do not create Expense Variance Journal.
