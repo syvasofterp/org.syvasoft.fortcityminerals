@@ -76,7 +76,8 @@ public class PostDriverWageFromTripSheet extends SvrProcess {
 				wage.setStd_Days(wageConfig.getStd_Days());
 				wage.setStd_Wage(wageConfig.getStd_Wage());
 				wage.setPresent_Days(presentDays);
-				wage.setIsCalculated(true);
+				wage.setIncentive(BigDecimal.ZERO);
+				wage.setIsCalculated(true);				
 				wage.setDescription("Generated from TripSheet" );
 				MQuarry quarry = new MQuarry(getCtx(), TF_Quarry_ID, get_TrxName());
 				wage.setC_ElementValue_ID(quarry.getC_ElementValue_ID());
