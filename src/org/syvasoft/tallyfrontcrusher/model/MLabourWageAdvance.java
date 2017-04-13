@@ -42,6 +42,8 @@ public class MLabourWageAdvance extends X_TF_Labour_Wage_Advance {
 			
 			//Posting Payment Document for Labour Wage Advance
 			TF_MPayment payment = new TF_MPayment(getCtx(), 0, get_TrxName());
+			payment.setDateAcct(getDateAcct());
+			payment.setDateTrx(getDateAcct());
 			payment.setDescription("Generated from Labour Wage Advance - " + getDocumentNo());
 			payment.setCashType(TF_MPayment.CASHTYPE_EmployeePayment);
 			payment.setC_DocType_ID(false);

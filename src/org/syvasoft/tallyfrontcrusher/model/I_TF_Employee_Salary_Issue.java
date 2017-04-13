@@ -247,6 +247,33 @@ public interface I_TF_Employee_Salary_Issue
 	  */
 	public boolean isActive();
 
+    /** Column name Loan_Balance */
+    public static final String COLUMNNAME_Loan_Balance = "Loan_Balance";
+
+	/** Set Balance Loan	  */
+	public void setLoan_Balance (BigDecimal Loan_Balance);
+
+	/** Get Balance Loan	  */
+	public BigDecimal getLoan_Balance();
+
+    /** Column name Loan_Deduct */
+    public static final String COLUMNNAME_Loan_Deduct = "Loan_Deduct";
+
+	/** Set Deduct Loan	  */
+	public void setLoan_Deduct (BigDecimal Loan_Deduct);
+
+	/** Get Deduct Loan	  */
+	public BigDecimal getLoan_Deduct();
+
+    /** Column name Loan_Paid */
+    public static final String COLUMNNAME_Loan_Paid = "Loan_Paid";
+
+	/** Set Loan Paid	  */
+	public void setLoan_Paid (BigDecimal Loan_Paid);
+
+	/** Get Loan Paid	  */
+	public BigDecimal getLoan_Paid();
+
     /** Column name Processed */
     public static final String COLUMNNAME_Processed = "Processed";
 

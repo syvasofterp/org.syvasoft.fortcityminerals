@@ -204,6 +204,8 @@ public class CrusherEventHandler extends AbstractEventHandler {
 		
 		//Posting Payment Document for Driver Tips
 		TF_MPayment payment = new TF_MPayment(ord.getCtx(), 0, ord.get_TrxName());
+		payment.setDateAcct(ord.getDateAcct());
+		payment.setDateTrx(ord.getDateAcct());
 		payment.setDescription("Generated from Sales Entry - " + ord.getDocumentNo());
 		payment.setCashType(TF_MPayment.CASHTYPE_GeneralExpense);
 		payment.setC_DocType_ID(false);		

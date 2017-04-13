@@ -30,7 +30,7 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170313L;
+	private static final long serialVersionUID = 20170413L;
 
     /** Standard Constructor */
     public X_TF_GLPosting_Config (Properties ctx, int TF_GLPosting_Config_ID, String trxName)
@@ -254,6 +254,31 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	public int getJobworkPayableClearingAcct_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_JobworkPayableClearingAcct_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_ElementValue getLoan() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getLoan_ID(), get_TrxName());	}
+
+	/** Set Loan.
+		@param Loan_ID Loan	  */
+	public void setLoan_ID (int Loan_ID)
+	{
+		if (Loan_ID < 1) 
+			set_Value (COLUMNNAME_Loan_ID, null);
+		else 
+			set_Value (COLUMNNAME_Loan_ID, Integer.valueOf(Loan_ID));
+	}
+
+	/** Get Loan.
+		@return Loan	  */
+	public int getLoan_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Loan_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();

@@ -76,12 +76,12 @@ public interface I_TF_Employee_Salary_Advance
     /** Column name C_BankAccount_ID */
     public static final String COLUMNNAME_C_BankAccount_ID = "C_BankAccount_ID";
 
-	/** Set Bank Account.
+	/** Set Bank/Cash Account.
 	  * Account at the Bank
 	  */
 	public void setC_BankAccount_ID (int C_BankAccount_ID);
 
-	/** Get Bank Account.
+	/** Get Bank/Cash Account.
 	  * Account at the Bank
 	  */
 	public int getC_BankAccount_ID();
@@ -213,6 +213,19 @@ public interface I_TF_Employee_Salary_Advance
 	  * The record is active in the system
 	  */
 	public boolean isActive();
+
+    /** Column name LoanAmt */
+    public static final String COLUMNNAME_LoanAmt = "LoanAmt";
+
+	/** Set Loan Amount.
+	  * Loan Amount
+	  */
+	public void setLoanAmt (BigDecimal LoanAmt);
+
+	/** Get Loan Amount.
+	  * Loan Amount
+	  */
+	public BigDecimal getLoanAmt();
 
     /** Column name Processed */
     public static final String COLUMNNAME_Processed = "Processed";

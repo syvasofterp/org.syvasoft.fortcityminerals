@@ -33,7 +33,7 @@ public class X_TF_Employee_Salary_Advance extends PO implements I_TF_Employee_Sa
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170308L;
+	private static final long serialVersionUID = 20170413L;
 
     /** Standard Constructor */
     public X_TF_Employee_Salary_Advance (Properties ctx, int TF_Employee_Salary_Advance_ID, String trxName)
@@ -44,6 +44,8 @@ public class X_TF_Employee_Salary_Advance extends PO implements I_TF_Employee_Sa
 			setC_BankAccount_ID (0);
 			setC_BPartner_ID (0);
 			setDateAcct (new Timestamp( System.currentTimeMillis() ));
+			setLoanAmt (Env.ZERO);
+// 0
 			setProcessed (false);
 			setTF_Employee_Salary_Advance_ID (0);
         } */
@@ -99,7 +101,7 @@ public class X_TF_Employee_Salary_Advance extends PO implements I_TF_Employee_Sa
 		return (org.compiere.model.I_C_BankAccount)MTable.get(getCtx(), org.compiere.model.I_C_BankAccount.Table_Name)
 			.getPO(getC_BankAccount_ID(), get_TrxName());	}
 
-	/** Set Bank Account.
+	/** Set Bank/Cash Account.
 		@param C_BankAccount_ID 
 		Account at the Bank
 	  */
@@ -111,7 +113,7 @@ public class X_TF_Employee_Salary_Advance extends PO implements I_TF_Employee_Sa
 			set_Value (COLUMNNAME_C_BankAccount_ID, Integer.valueOf(C_BankAccount_ID));
 	}
 
-	/** Get Bank Account.
+	/** Get Bank/Cash Account.
 		@return Account at the Bank
 	  */
 	public int getC_BankAccount_ID () 
@@ -305,6 +307,26 @@ public class X_TF_Employee_Salary_Advance extends PO implements I_TF_Employee_Sa
 	public String getDocumentNo () 
 	{
 		return (String)get_Value(COLUMNNAME_DocumentNo);
+	}
+
+	/** Set Loan Amount.
+		@param LoanAmt 
+		Loan Amount
+	  */
+	public void setLoanAmt (BigDecimal LoanAmt)
+	{
+		set_Value (COLUMNNAME_LoanAmt, LoanAmt);
+	}
+
+	/** Get Loan Amount.
+		@return Loan Amount
+	  */
+	public BigDecimal getLoanAmt () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_LoanAmt);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
 	}
 
 	/** Set Processed.

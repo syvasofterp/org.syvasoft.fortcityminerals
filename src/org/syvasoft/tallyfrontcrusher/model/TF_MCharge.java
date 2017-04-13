@@ -144,7 +144,7 @@ public class TF_MCharge extends MCharge {
     
     public static TF_MCharge createChargeFromAccount(Properties ctx, int C_ElementValue_ID, String trxName) {
     	TF_MCharge charge = getTF_MCharge(ctx, C_ElementValue_ID, trxName);
-    	if(charge == null) {
+    	if(charge == null && C_ElementValue_ID > 0) {
     		charge = new TF_MCharge(ctx, 0, trxName);
     		MElementValue acct = new MElementValue(ctx, C_ElementValue_ID, trxName);
     		charge.setName(acct.getName());

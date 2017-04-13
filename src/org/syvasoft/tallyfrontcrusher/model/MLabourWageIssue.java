@@ -91,6 +91,8 @@ public class MLabourWageIssue extends X_TF_Labour_Wage_Issue {
 				TF_MCharge charge = TF_MCharge.createChargeFromAccount(getCtx(), glConfig.getWagePayableAcct_ID(), null);			
 				//Posting Payment Document for Labour Wage Issue 
 				TF_MPayment payment = new TF_MPayment(getCtx(), 0, get_TrxName());
+				payment.setDateAcct(getDateAcct());
+				payment.setDateTrx(getDateAcct());
 				payment.setDescription("Generated from Labour Wage Issue Entry - " + getDocumentNo());
 				payment.setCashType(TF_MPayment.CASHTYPE_EmployeePayment);
 				payment.setC_DocType_ID(false);

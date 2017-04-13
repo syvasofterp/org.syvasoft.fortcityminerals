@@ -33,7 +33,7 @@ public class X_TF_Employee_Salary extends PO implements I_TF_Employee_Salary, I_
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170302L;
+	private static final long serialVersionUID = 20170413L;
 
     /** Standard Constructor */
     public X_TF_Employee_Salary (Properties ctx, int TF_Employee_Salary_ID, String trxName)
@@ -169,7 +169,7 @@ public class X_TF_Employee_Salary extends PO implements I_TF_Employee_Salary, I_
 	  */
 	public void setDateAcct (Timestamp DateAcct)
 	{
-		set_ValueNoCheck (COLUMNNAME_DateAcct, DateAcct);
+		set_Value (COLUMNNAME_DateAcct, DateAcct);
 	}
 
 	/** Get Account Date.

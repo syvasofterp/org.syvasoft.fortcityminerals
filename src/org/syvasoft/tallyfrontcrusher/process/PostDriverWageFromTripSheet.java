@@ -81,6 +81,7 @@ public class PostDriverWageFromTripSheet extends SvrProcess {
 				wage.setDescription("Generated from TripSheet" );
 				MQuarry quarry = new MQuarry(getCtx(), TF_Quarry_ID, get_TrxName());
 				wage.setC_ElementValue_ID(quarry.getC_ElementValue_ID());
+				
 				wage.saveEx();
 				wage.processIt(DocAction.ACTION_Prepare);
 				wage.saveEx();

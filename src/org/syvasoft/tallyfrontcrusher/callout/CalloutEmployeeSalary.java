@@ -24,7 +24,8 @@ public class CalloutEmployeeSalary implements IColumnCallout {
 		if(mTab.getValue(MEmployeeSalary.COLUMNNAME_Present_Days) != null)
 			presentDays = (BigDecimal) mTab.getValue(MEmployeeSalary.COLUMNNAME_Present_Days);
 		
-		if(value == null || mTab.getValue(MEmployeeSalary.COLUMNNAME_DateAcct) == null) {
+		if(value == null || mTab.getValue(MEmployeeSalary.COLUMNNAME_DateAcct) == null || 
+				mTab.getValue(MEmployeeSalary.COLUMNNAME_C_BPartner_ID) == null) {
 			mTab.setValue(MEmployeeSalary.COLUMNNAME_Std_Days, stdDays);
 			mTab.setValue(MEmployeeSalary.COLUMNNAME_Std_Wage, stdWage);
 			mTab.setValue(MEmployeeSalary.COLUMNNAME_Salary_Amt, BigDecimal.ZERO);		
