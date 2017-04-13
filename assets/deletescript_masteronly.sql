@@ -255,6 +255,7 @@ DELETE FROM TF_Employee_Salary_Advance;
 DELETE FROM TF_Labour_Wage_Issue;
 DELETE FROM TF_Employee_Salary_Issue;
 
+DELETE FROM TF_Vehicle_Rental_Contract;
 
 -- Document Seq Resetting ----
 -- CashBook 
@@ -320,5 +321,8 @@ UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=200133 ;
 
 --  DocumentNo_TF_Quarry_Rent -- DocumentNo_TF_Quarry_Rent
 UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000405 ;
+
+--  GL_Journal -- DocumentNo_TF_Quarry_Rent
+UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000305 ;
 
 -- Need to reset Document Seq No for Internal Use Inventory, Physical Inventory and etc...
