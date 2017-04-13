@@ -39,7 +39,7 @@ public class MEmployeeSalaryIssue extends X_TF_Employee_Salary_Issue {
 			MGLPostingConfig glConfig = MGLPostingConfig.getMGLPostingConfig(getCtx());
 			
 			//Post Advance Deduct Adjustment journal entry
-			if(getAdvance_Deduct().doubleValue()>0) {
+			if(getAdvance_Deduct().doubleValue()>0 || getLoan_Deduct().doubleValue()>0) {
 				MJournal j = new MJournal(getCtx(), 0, get_TrxName());
 				j.setDescription("Generated from Employee Salary Issue Entry - " + getDocumentNo());
 				j.setC_AcctSchema_ID(Env.getContextAsInt(getCtx(), "$C_AcctSchema_ID"));
@@ -55,29 +55,43 @@ public class MEmployeeSalaryIssue extends X_TF_Employee_Salary_Issue {
 				j.setC_ConversionType_ID(114);
 				j.saveEx();
 				
-				//Wages Payable Dr.
+				//Salaries Payable Dr.
 				MJournalLine jl;				
 				jl = new MJournalLine(j);
 				jl.setLine(10);			
 				jl.setAccount_ID(glConfig.getSalaryPayable_Acct());
 				jl.setC_BPartner_ID(getC_BPartner_ID());
 				jl.setUser1_ID(getC_ElementValue_ID()); // Quarry Profit Center
-				jl.setAmtSourceDr(getAdvance_Deduct());
-				jl.setAmtAcctDr(getAdvance_Deduct());
+				jl.setAmtSourceDr(getAdvance_Deduct().add(getLoan_Deduct()));
+				jl.setAmtAcctDr(getAdvance_Deduct().add(getLoan_Deduct()));
 				jl.setIsGenerated(true);
 				jl.saveEx();
 				
-				//Wages Advance Cr.
-				jl = new MJournalLine(j);
-				jl.setLine(10);			
-				jl.setAccount_ID(glConfig.getSalariesAdvanceAcct_ID());
-				jl.setC_BPartner_ID(getC_BPartner_ID());
-				jl.setUser1_ID(getC_ElementValue_ID()); // Quarry Profit Center
-				jl.setAmtSourceCr(getAdvance_Deduct());
-				jl.setAmtAcctCr(getAdvance_Deduct());
-				jl.setIsGenerated(true);
-				jl.saveEx();
+				//Salary Advance Cr.
+				if(getAdvance_Deduct().doubleValue()>0) {
+					jl = new MJournalLine(j);
+					jl.setLine(10);			
+					jl.setAccount_ID(glConfig.getSalariesAdvanceAcct_ID());
+					jl.setC_BPartner_ID(getC_BPartner_ID());
+					jl.setUser1_ID(getC_ElementValue_ID()); // Quarry Profit Center
+					jl.setAmtSourceCr(getAdvance_Deduct());
+					jl.setAmtAcctCr(getAdvance_Deduct());
+					jl.setIsGenerated(true);
+					jl.saveEx();
+				}
 				
+				//Loan Advance Cr.
+				if(getLoan_Deduct().doubleValue() > 0) {
+					jl = new MJournalLine(j);
+					jl.setLine(10);			
+					jl.setAccount_ID(glConfig.getLoan_ID());
+					jl.setC_BPartner_ID(getC_BPartner_ID());
+					jl.setUser1_ID(getC_ElementValue_ID()); // Quarry Profit Center
+					jl.setAmtSourceCr(getLoan_Deduct());
+					jl.setAmtAcctCr(getLoan_Deduct());
+					jl.setIsGenerated(true);
+					jl.saveEx();
+				}
 				j.processIt(MJournal.ACTION_Complete);
 				j.saveEx();
 				
@@ -91,6 +105,8 @@ public class MEmployeeSalaryIssue extends X_TF_Employee_Salary_Issue {
 				TF_MCharge charge = TF_MCharge.createChargeFromAccount(getCtx(), glConfig.getSalaryPayable_Acct(), null);			
 				//Posting Payment Document for Employee Salary Issue 
 				TF_MPayment payment = new TF_MPayment(getCtx(), 0, get_TrxName());
+				payment.setDateAcct(getDateAcct());
+				payment.setDateTrx(getDateAcct());
 				payment.setDescription("Generated from Employee Salary Issue Entry - " + getDocumentNo());
 				payment.setCashType(TF_MPayment.CASHTYPE_EmployeePayment);
 				payment.setC_DocType_ID(false);

@@ -91,10 +91,15 @@ public class TF_MPayment extends MPayment {
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
 		if(newRecord || is_ValueChanged(COLUMNNAME_C_ElementValue_ID)) {
-			TF_MCharge charge = TF_MCharge.createChargeFromAccount(getCtx(), getC_ElementValue_ID(), get_TrxName());
-			setC_Charge_ID(charge.get_ID());
+			//if(getC_ElementValue_ID()>0 ) { 
+				TF_MCharge charge = TF_MCharge.createChargeFromAccount(getCtx(), getC_ElementValue_ID(), get_TrxName());
+				if(charge != null )
+					setC_Charge_ID(charge.get_ID());
+			//}
 		}
-	
+		
+		setIsReceipt(getC_DocType().isSOTrx());
+		
 		return super.beforeSave(newRecord);
 	}
 

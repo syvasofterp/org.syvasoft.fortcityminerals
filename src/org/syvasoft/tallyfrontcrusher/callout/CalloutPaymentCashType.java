@@ -6,6 +6,7 @@ import java.util.Properties;
 import org.adempiere.base.IColumnCallout;
 import org.compiere.model.GridField;
 import org.compiere.model.GridTab;
+import org.compiere.model.MDocType;
 import org.compiere.model.MPayment;
 import org.compiere.model.MUser;
 import org.compiere.util.Env;
@@ -43,6 +44,7 @@ public class CalloutPaymentCashType implements IColumnCallout {
 			}
 		}
 		mTab.setValue(MPayment.COLUMNNAME_C_DocType_ID, C_DocType_ID);
+		mTab.setValue(MPayment.COLUMNNAME_IsReceipt, MDocType.get(ctx, C_DocType_ID).isSOTrx());
 		return null;
 	}
 

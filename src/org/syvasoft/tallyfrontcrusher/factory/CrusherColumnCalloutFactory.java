@@ -109,6 +109,7 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 				
 		//TF_Employee_Salary_Issue - Calculate Balance amounts
 		if(tableName.equals(MEmployeeSalaryIssue.Table_Name) && (columnName.equals(MEmployeeSalaryIssue.COLUMNNAME_Advance_Deduct) ||
+				columnName.equals(MEmployeeSalaryIssue.COLUMNNAME_Loan_Deduct) ||
 				columnName.equals(MEmployeeSalaryIssue.COLUMNNAME_Salary_Paid) || columnName.equals(MEmployeeSalaryIssue.COLUMNNAME_Salary_Payable)))
 			list.add(new CalloutEmployeeSalaryIssue_CalcBalanceAmts());
 		

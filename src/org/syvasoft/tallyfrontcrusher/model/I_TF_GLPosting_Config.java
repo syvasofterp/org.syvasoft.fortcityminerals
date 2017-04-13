@@ -178,6 +178,17 @@ public interface I_TF_GLPosting_Config
 
 	public org.compiere.model.I_C_ElementValue getJobworkPayableClearingAcct() throws RuntimeException;
 
+    /** Column name Loan_ID */
+    public static final String COLUMNNAME_Loan_ID = "Loan_ID";
+
+	/** Set Loan	  */
+	public void setLoan_ID (int Loan_ID);
+
+	/** Get Loan	  */
+	public int getLoan_ID();
+
+	public org.compiere.model.I_C_ElementValue getLoan() throws RuntimeException;
+
     /** Column name QuarryExp_Acct */
     public static final String COLUMNNAME_QuarryExp_Acct = "QuarryExp_Acct";
 
