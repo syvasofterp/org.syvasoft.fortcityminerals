@@ -198,6 +198,15 @@ public interface I_TF_TripSheet
 	  */
 	public String getDocumentNo();
 
+    /** Column name Earned_Wage */
+    public static final String COLUMNNAME_Earned_Wage = "Earned_Wage";
+
+	/** Set Earned Wage	  */
+	public void setEarned_Wage (BigDecimal Earned_Wage);
+
+	/** Get Earned Wage	  */
+	public BigDecimal getEarned_Wage();
+
     /** Column name Expensed_Fuel */
     public static final String COLUMNNAME_Expensed_Fuel = "Expensed_Fuel";
 
@@ -206,6 +215,15 @@ public interface I_TF_TripSheet
 
 	/** Get Fuel Expensed	  */
 	public BigDecimal getExpensed_Fuel();
+
+    /** Column name Incentive */
+    public static final String COLUMNNAME_Incentive = "Incentive";
+
+	/** Set Incentive / OT	  */
+	public void setIncentive (BigDecimal Incentive);
+
+	/** Get Incentive / OT	  */
+	public BigDecimal getIncentive();
 
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";
@@ -337,6 +355,15 @@ public interface I_TF_TripSheet
 	public int getTF_Vehicle_Rental_Contract_ID();
 
 	public I_TF_Vehicle_Rental_Contract getTF_Vehicle_Rental_Contract() throws RuntimeException;
+
+    /** Column name Total_Wage */
+    public static final String COLUMNNAME_Total_Wage = "Total_Wage";
+
+	/** Set Total Earned Wage	  */
+	public void setTotal_Wage (BigDecimal Total_Wage);
+
+	/** Get Total Earned Wage	  */
+	public BigDecimal getTotal_Wage();
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";

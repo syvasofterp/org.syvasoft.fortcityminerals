@@ -22,6 +22,7 @@ import org.syvasoft.tallyfrontcrusher.model.MLabourWageIssue;
 import org.syvasoft.tallyfrontcrusher.model.MQuarry;
 import org.syvasoft.tallyfrontcrusher.model.MQuarryRent;
 import org.syvasoft.tallyfrontcrusher.model.MQuarryRentConfig;
+import org.syvasoft.tallyfrontcrusher.model.MTripSheet;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRent;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentalContract;
@@ -88,7 +89,9 @@ public class CrusherModelFactory implements IModelFactory {
 		else if (TF_MResource.Table_Name.equals(tableName))
 			return TF_MResource.class;
 		else if (MVehicleRentalContract.Table_Name.equals(tableName))
-			return MVehicleRentalContract.class;		
+			return MVehicleRentalContract.class;
+		else if (MTripSheet.Table_Name.equals(tableName))
+			return MTripSheet.class;
 		return null;
 	}
 
@@ -147,6 +150,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new TF_MResource(ctx, Record_ID, trxName);
 		else if (MVehicleRentalContract.Table_Name.equals(tableName))
 			return new MVehicleRentalContract(ctx, Record_ID, trxName);
+		else if (MTripSheet.Table_Name.equals(tableName))
+			return new MTripSheet(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -205,6 +210,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new TF_MResource(ctx, rs, trxName);
 		else if (MVehicleRentalContract.Table_Name.equals(tableName))
 			return new MVehicleRentalContract(ctx, rs, trxName);
+		else if (MTripSheet.Table_Name.equals(tableName))
+			return new MTripSheet(ctx, rs, trxName);
 		return null;
 	}
 

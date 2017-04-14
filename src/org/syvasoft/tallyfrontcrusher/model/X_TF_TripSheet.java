@@ -33,7 +33,7 @@ public class X_TF_TripSheet extends PO implements I_TF_TripSheet, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170321L;
+	private static final long serialVersionUID = 20170413L;
 
     /** Standard Constructor */
     public X_TF_TripSheet (Properties ctx, int TF_TripSheet_ID, String trxName)
@@ -295,6 +295,23 @@ public class X_TF_TripSheet extends PO implements I_TF_TripSheet, I_Persistent
 		return (String)get_Value(COLUMNNAME_DocumentNo);
 	}
 
+	/** Set Earned Wage.
+		@param Earned_Wage Earned Wage	  */
+	public void setEarned_Wage (BigDecimal Earned_Wage)
+	{
+		set_Value (COLUMNNAME_Earned_Wage, Earned_Wage);
+	}
+
+	/** Get Earned Wage.
+		@return Earned Wage	  */
+	public BigDecimal getEarned_Wage () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Earned_Wage);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
 	/** Set Fuel Expensed.
 		@param Expensed_Fuel Fuel Expensed	  */
 	public void setExpensed_Fuel (BigDecimal Expensed_Fuel)
@@ -307,6 +324,23 @@ public class X_TF_TripSheet extends PO implements I_TF_TripSheet, I_Persistent
 	public BigDecimal getExpensed_Fuel () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Expensed_Fuel);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set Incentive / OT.
+		@param Incentive Incentive / OT	  */
+	public void setIncentive (BigDecimal Incentive)
+	{
+		set_Value (COLUMNNAME_Incentive, Incentive);
+	}
+
+	/** Get Incentive / OT.
+		@return Incentive / OT	  */
+	public BigDecimal getIncentive () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Incentive);
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
@@ -546,6 +580,23 @@ public class X_TF_TripSheet extends PO implements I_TF_TripSheet, I_Persistent
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
+	}
+
+	/** Set Total Earned Wage.
+		@param Total_Wage Total Earned Wage	  */
+	public void setTotal_Wage (BigDecimal Total_Wage)
+	{
+		set_Value (COLUMNNAME_Total_Wage, Total_Wage);
+	}
+
+	/** Get Total Earned Wage.
+		@return Total Earned Wage	  */
+	public BigDecimal getTotal_Wage () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Total_Wage);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
 	}
 
 	public org.compiere.model.I_M_Product getVehicle() throws RuntimeException

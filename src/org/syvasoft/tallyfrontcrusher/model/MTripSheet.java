@@ -3,11 +3,13 @@ package org.syvasoft.tallyfrontcrusher.model;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Properties;
 
 import org.compiere.process.DocAction;
 import org.compiere.util.DB;
+import org.compiere.util.Env;
 
 public class MTripSheet extends X_TF_TripSheet {
 
@@ -53,6 +55,12 @@ public class MTripSheet extends X_TF_TripSheet {
 		return openingFuel;
 	}
 	
+	@Override
+	protected boolean beforeSave(boolean newRecord) {
+		setTotal_Wage(getEarned_Wage().add(getIncentive()));
+		return super.beforeSave(newRecord);
+	}
+
 	public void processIt(String docAction) {
 		if(DocAction.ACTION_Prepare.equals(docAction)) {
 			setDocStatus(DOCSTATUS_InProgress);
@@ -69,6 +77,33 @@ public class MTripSheet extends X_TF_TripSheet {
 			obj[1] = getVehicle_ID();
 			obj[2] = getDateReport();			
 			DB.executeUpdateEx(sql,obj, get_TrxName());
+			
+			if(getTotal_Wage().doubleValue() != 0){
+				// Create Wage Entry
+				MLabourWage wage = new MLabourWage(getCtx(), 0, get_TrxName());
+				wage.setAD_Org_ID(Env.getAD_Org_ID(getCtx()));
+				wage.setDateAcct(getDateReport());
+				wage.setC_BPartner_ID(getC_BPartner_ID());
+				//wage.setTF_VehicleType_ID();
+						
+				wage.setStd_Days(BigDecimal.ONE);
+				wage.setStd_Wage(getEarned_Wage());
+				wage.setPresent_Days(BigDecimal.ONE);
+				wage.setIncentive(getIncentive());
+				wage.setEarned_Wage(getEarned_Wage());
+				wage.setIsCalculated(false);				
+				wage.setDescription("Generated from TripSheet" );
+				if(getTF_Quarry_ID() > 0) {
+					MQuarry quarry = new MQuarry(getCtx(), getTF_Quarry_ID(), get_TrxName());
+					wage.setC_ElementValue_ID(quarry.getC_ElementValue_ID());
+				}
+				wage.saveEx();
+				wage.processIt(DocAction.ACTION_Complete);
+				wage.saveEx();
+				//End Create
+				
+				setTF_Labour_Wage_ID(wage.getTF_Labour_Wage_ID());
+			}
 			
 		}
 	}
