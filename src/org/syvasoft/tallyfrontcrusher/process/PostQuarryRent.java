@@ -54,14 +54,20 @@ public class PostQuarryRent extends SvrProcess {
 
 	@Override
 	protected String doIt() throws Exception {
-		String where = "TF_Quarry_ID = ? AND DocStatus = 'CO' AND Processed = 'Y' AND DateReceipt >= ? AND DateReceipt <= ?  " +
+		String where = "TF_Quarry_ID = ? AND DocStatus = 'CO' AND Processed = 'Y' "  + //AND DateReceipt >= ? AND DateReceipt <= ?  " +
 				" AND TF_Quarry_Rent_ID IS NULL " ;
 	
-		String sql = "SELECT TF_Quarry_ID, Sum (vt.Std_Load) NoOfLoad " + 
+		/*Commented to calculate No of load from Boulder Receipt Line.
+		 *  String sql = "SELECT TF_Quarry_ID, Sum (vt.Std_Load) NoOfLoad " + 
 					" FROM	TF_Boulder_Receipt br INNER JOIN M_Product p 	ON br.Vehicle_ID = p.M_Product_ID " +
 					" INNER JOIN TF_VehicleType vt 	ON p.TF_VehicleType_ID = vt.TF_VehicleType_ID " +
 					" WHERE " + where +  
 					" GROUP BY TF_Quarry_ID";
+		*/
+		String sql = " SELECT TF_Quarry_ID, Sum (load) NoOfLoad FROM TF_Boulder_Receipt br INNER JOIN TF_Boulder_Receipt_Line bl " +
+					" ON br.TF_Boulder_Receipt_ID = bl.TF_Boulder_Receipt_ID " +
+				    " WHERE " + where + 
+				    " GROUP BY TF_Quarry_ID";
 		int no = 0;		
 		PreparedStatement pstmt =  null;
 		ResultSet rs = null;
@@ -69,8 +75,8 @@ public class PostQuarryRent extends SvrProcess {
 			pstmt = DB.prepareStatement(sql.toString(), get_TrxName());
 			ArrayList<Object> params = new ArrayList<Object>();
 			params.add(m_TF_Quarry_ID);
-			params.add(m_DateReceipt_1);
-			params.add(m_DateReceipt_2);
+			//params.add(m_DateReceipt_1);
+			//params.add(m_DateReceipt_2);
 			DB.setParameters(pstmt,params.toArray());
 			rs = pstmt.executeQuery();			
 			while (rs.next()) {
@@ -96,8 +102,8 @@ public class PostQuarryRent extends SvrProcess {
 					rent.setStd_Rent(rentConfig.getStd_Rent());					
 					rent.setIsCalculated(true);
 					rent.setDescription("Generated from Boulder Receipts");									
-					rent.setDateFrom(m_DateReceipt_1);
-					rent.setDateTo(m_DateReceipt_2);
+					//rent.setDateFrom(m_DateReceipt_1);
+					//rent.setDateTo(m_DateReceipt_2);
 					rent.setC_ElementValue_ID(rent.getTF_Quarry().getC_ElementValue_ID());
 					rent.saveEx();
 					rent.processIt(MBoulderReceipt.DOCACTION_Complete);
@@ -109,8 +115,8 @@ public class PostQuarryRent extends SvrProcess {
 					params = new ArrayList<Object>();
 					params.add(rent.getTF_Quarry_Rent_ID());
 					params.add(m_TF_Quarry_ID);
-					params.add(m_DateReceipt_1);
-					params.add(m_DateReceipt_2);										
+					//params.add(m_DateReceipt_1);
+					//params.add(m_DateReceipt_2);										
 					DB.executeUpdateEx(sql, params.toArray(), get_TrxName());
 					//End Update
 					

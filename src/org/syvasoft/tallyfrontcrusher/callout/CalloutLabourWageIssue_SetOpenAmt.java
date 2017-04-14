@@ -56,6 +56,12 @@ public class CalloutLabourWageIssue_SetOpenAmt implements IColumnCallout {
 			advancePaid = DB.getSQLValueBD(null, sql, advancePaid_acctID, bPartner_ID);
 			if(advancePaid == null)
 				advancePaid = BigDecimal.ZERO;
+			
+			if(advancePaid.doubleValue() > earnedWage.doubleValue())
+				advanceDeduct = earnedWage;
+			else
+				advanceDeduct = advancePaid;
+			
 			advanceBalance = advancePaid.subtract(advanceDeduct);
 		}
 		
