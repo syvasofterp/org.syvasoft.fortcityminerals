@@ -113,6 +113,18 @@ public class MLabourWage extends X_TF_Labour_Wage {
 		
 	}
 
+	public void reverseIt() {
+		if(getGL_Journal_ID()>0) {
+			MJournal j = new MJournal(getCtx(), getGL_Journal_ID(), get_TrxName());
+			j.reverseCorrectIt();
+			j.saveEx();
+			
+			setGL_Journal_ID(0);
+			setProcessed(false);
+			setDocStatus(DOCSTATUS_Drafted);
+		}
+	}
+	
 	@Override
 	protected boolean beforeDelete() {
 		String sql = "UPDATE TF_TripSheet SET TF_Labour_Wage_ID = NULL WHERE TF_Labour_Wage_ID = " + getTF_Labour_Wage_ID();

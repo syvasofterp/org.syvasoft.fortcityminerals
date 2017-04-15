@@ -108,4 +108,16 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 			
 		}
 	}
+	
+	public void reverseIt() {
+		if(getM_Inventory_ID() > 0) {
+			MInventory inv = new MInventory(getCtx(), getM_Inventory_ID(), get_TrxName());
+			inv.reverseCorrectIt();
+			inv.saveEx();
+			
+			setM_Inventory_ID(0);
+			setProcessed(false);
+			setDocStatus(DOCSTATUS_Drafted);
+		}
+	}
 }

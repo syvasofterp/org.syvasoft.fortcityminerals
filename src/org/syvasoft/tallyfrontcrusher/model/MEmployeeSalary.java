@@ -90,4 +90,15 @@ public class MEmployeeSalary extends X_TF_Employee_Salary {
 			setGL_Journal_ID(j.getGL_Journal_ID());
 		}
 	}
+	public void reverseIt() {
+		if(getGL_Journal_ID()>0) {
+			MJournal j = new MJournal(getCtx(), getGL_Journal_ID(), get_TrxName());
+			j.reverseCorrectIt();
+			j.saveEx();
+			
+			setGL_Journal_ID(0);
+			setProcessed(false);
+			setDocStatus(DOCSTATUS_Drafted);
+		}
+	}
 }

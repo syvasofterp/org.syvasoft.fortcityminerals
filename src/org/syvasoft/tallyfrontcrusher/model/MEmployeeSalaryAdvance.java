@@ -75,4 +75,16 @@ public class MEmployeeSalaryAdvance extends X_TF_Employee_Salary_Advance {
 			
 		}
 	}
+	
+	public void reverseIt() {
+		if(getC_Payment_ID()>0) {
+			TF_MPayment payment = new TF_MPayment(getCtx(), getC_Payment_ID(), get_TrxName());
+			payment.reverseCorrectIt();
+			payment.saveEx();
+			
+			setC_Payment_ID(0);
+			setProcessed(false);
+			setDocStatus(DOCSTATUS_Drafted);
+		}
+	}
 }
