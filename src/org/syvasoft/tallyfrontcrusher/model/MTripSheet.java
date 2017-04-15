@@ -78,7 +78,7 @@ public class MTripSheet extends X_TF_TripSheet {
 			obj[2] = getDateReport();			
 			DB.executeUpdateEx(sql,obj, get_TrxName());
 			
-			if(getTotal_Wage().doubleValue() != 0){
+			if(getTotal_Wage().doubleValue() != 0 && getC_BPartner_ID() > 0){
 				// Create Wage Entry
 				MLabourWage wage = new MLabourWage(getCtx(), 0, get_TrxName());
 				wage.setAD_Org_ID(Env.getAD_Org_ID(getCtx()));
@@ -106,5 +106,19 @@ public class MTripSheet extends X_TF_TripSheet {
 			}
 			
 		}
+	}
+	
+	public void reverseIt() {
+		if(getTF_Labour_Wage_ID()>0) {
+			MLabourWage wage = new MLabourWage(getCtx(), getTF_Labour_Wage_ID(), get_TrxName());
+			wage.reverseIt();
+			wage.saveEx();
+			
+			setTF_Labour_Wage_ID(0);
+			wage.deleteEx(true);			
+			
+		}
+		setProcessed(false);
+		setDocStatus(DOCSTATUS_Drafted);
 	}
 }

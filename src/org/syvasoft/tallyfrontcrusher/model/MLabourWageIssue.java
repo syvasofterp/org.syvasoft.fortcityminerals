@@ -114,4 +114,29 @@ public class MLabourWageIssue extends X_TF_Labour_Wage_Issue {
 		}
 	}
 	
+	public void reverseIt() {
+		boolean isReversed = false;
+		if(getC_Payment_ID()>0) {
+			isReversed = true;
+			TF_MPayment payment = new TF_MPayment(getCtx(), getC_Payment_ID(), get_TrxName());
+			payment.reverseCorrectIt();
+			payment.saveEx();
+			
+			setC_Payment_ID(0);
+		}
+		if(getGL_Journal_ID()>0) {
+			isReversed = true;
+			MJournal j = new MJournal(getCtx(), getGL_Journal_ID(), get_TrxName());
+			j.reverseCorrectIt();
+			j.saveEx();
+			
+			setGL_Journal_ID(0);
+		}
+		
+		if(isReversed) {
+			setProcessed(false);
+			setDocStatus(DOCSTATUS_Drafted);			
+		}
+	}
+	
 }
