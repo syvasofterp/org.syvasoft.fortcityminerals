@@ -536,23 +536,30 @@ public class TF_MOrder extends MOrder {
 	public boolean voidIt() {
 		//POS Order's MR and Invoice should be reversed.
 		if(getC_DocType_ID() == 1000050 || getC_DocType_ID() == 1000041) {
-			//MR/Shipment reverse Accrual
+			//MR/Shipment reverse Correct
 			List<MInOut> inOutList = new Query(getCtx(), MInOut.Table_Name, "C_Order_ID=? AND DocStatus=?", get_TrxName())
 				.setClient_ID().setParameters(getC_Order_ID(),DOCSTATUS_Completed).list();
 			for(MInOut inout : inOutList) {
-				if(!inout.reverseAccrualIt())
+				if(!inout.reverseCorrectIt())
 					return false;				
 				inout.saveEx();
 			}
 			
-			//Invoice reverse Accrual
+			//Invoice reverse Correct
 			List<TF_MInvoice> invList = new Query(getCtx(), TF_MInvoice.Table_Name, "C_Order_ID=? AND DocStatus=?", get_TrxName())
 				.setClient_ID().setParameters(getC_Order_ID(), DOCSTATUS_Completed).list();
 			for(TF_MInvoice inv : invList) {
-				if(!inv.reverseAccrualIt())
+				if(!inv.reverseCorrectIt())
 					return false;
 				inv.saveEx();
 			}
+			
+			if(getTF_DriverTips_Pay_ID() > 0) {
+				TF_MPayment payment = new TF_MPayment(getCtx(), getTF_DriverTips_Pay_ID(), get_TrxName());
+				payment.reverseCorrectIt();
+				payment.saveEx();
+			}
+			
 		}
 		
 		return super.voidIt();
