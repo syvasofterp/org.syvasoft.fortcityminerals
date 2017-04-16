@@ -138,4 +138,15 @@ public class MCrusherProduction extends X_TF_Crusher_Production {
 		}
 		return m_processMsg;
 	}
+	
+	public void reverseIt() {
+		if(isProcessed() && getDocStatus().equals(DOCSTATUS_Completed)) {
+			List<MProduction> productions = getProductions();			
+			for(MProduction prod : productions) {
+				prod.reverseCorrectIt();
+				prod.saveEx();
+			}
+			setDocStatus(DOCSTATUS_Reversed);			
+		}
+	}
 }

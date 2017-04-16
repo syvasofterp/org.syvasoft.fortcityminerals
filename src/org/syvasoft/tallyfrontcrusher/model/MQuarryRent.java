@@ -85,6 +85,7 @@ public class MQuarryRent extends X_TF_Quarry_Rent {
 			setGL_Journal_ID(0);
 			setProcessed(false);
 			setDocStatus(DOCSTATUS_Drafted);
+			
 		}
 	}
 	

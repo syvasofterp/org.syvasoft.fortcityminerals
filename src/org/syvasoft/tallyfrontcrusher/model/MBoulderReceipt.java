@@ -171,6 +171,45 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 		return m_processMsg;
 	}
 	
+	public void reverseIt() {
+		if(getJobwork_Journal_ID()>0) {
+			MJournal j = new MJournal(getCtx(), getJobwork_Journal_ID(), get_TrxName());
+			j.reverseCorrectIt();
+			j.saveEx();
+			setJobwork_Journal_ID(0);
+		}
+		if(getJobwork_VarJournal_ID()>0) {
+			MJournal j = new MJournal(getCtx(), getJobwork_VarJournal_ID(), get_TrxName());
+			j.reverseCorrectIt();
+			j.saveEx();
+			setJobwork_VarJournal_ID(0);
+		}
+		if(getTF_Crusher_Production_ID() > 0) {
+			MCrusherProduction crProd = new MCrusherProduction(getCtx(), getTF_Crusher_Production_ID(), get_TrxName());
+			crProd.reverseIt();
+			crProd.saveEx();
+			setTF_Crusher_Production_ID(0);
+		}
+		if(getSubcon_Invoice_ID()>0) {
+			TF_MInvoice inv = new TF_MInvoice(getCtx(), getSubcon_Invoice_ID(), get_TrxName());
+			inv.reverseCorrectIt();
+			inv.saveEx();
+			setSubcon_Invoice_ID(0);			
+		}
+		if(getTF_Quarry_Rent_ID()>0) {
+			MQuarryRent rent = new MQuarryRent(getCtx(), getTF_Quarry_Rent_ID(), get_TrxName());
+			rent.reverseIt();
+			rent.saveEx();
+			int rentID = rent.getTF_Quarry_Rent_ID();
+			String sql = " UPDATE TF_Boulder_Receipt SET TF_Quarry_Rent_ID = NULL WHERE TF_Quarry_Rent_ID = " + rentID;
+			DB.executeUpdate(sql, get_TrxName());
+			rent.deleteEx(true);
+		}
+		
+		setProcessed(false);
+		setDocStatus(DOCSTATUS_Drafted);		
+	}
+	
 	public String postCrusherProduction() {
 		String m_processMsg = null;
 		//Create Crusher Production
