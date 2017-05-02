@@ -6,6 +6,7 @@ import java.util.List;
 import org.adempiere.base.IColumnCallout;
 import org.adempiere.base.IColumnCalloutFactory;
 import org.compiere.model.MPayment;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutBoulderReceipt_JobWork;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutEmployeeSalary;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutEmployeeSalaryIssue_CalcBalanceAmts;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutEmployeeSalaryIssue_SetOpenAmt;
@@ -21,9 +22,11 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutPaymentCashType;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutRentalContract_ResourceType;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutRentalContract_VehicleNo;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetFuelExpensed;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetJobwork;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetOpeningEntries;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetRunningMeter;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetRentalContract;
+import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalary;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryIssue;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWage;
@@ -77,6 +80,10 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		if(tableName.equals(MTripSheet.Table_Name) && columnName.equals(MTripSheet.COLUMNNAME_Vehicle_ID))
 			list.add(new CalloutTripSheetRentalContract());
 		
+		//TF_TripSheet - Set Subcontract / Jobwork 
+		if(tableName.equals(MTripSheet.Table_Name) && columnName.equals(MTripSheet.COLUMNNAME_Vehicle_ID))
+			list.add(new CalloutTripSheetJobwork());
+		
 		//C_Payment - Cash Type
 		if(tableName.equals(MPayment.Table_Name) && (columnName.equals("CashType")))
 			list.add(new CalloutPaymentCashType());
@@ -120,6 +127,10 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		//TF_Vehicle_Rental_Contract - Resource Type
 		if(tableName.equals(MVehicleRentalContract.Table_Name) && columnName.equals(MVehicleRentalContract.COLUMNNAME_S_ResourceType_ID))
 			list.add(new CalloutRentalContract_ResourceType());
+		
+		//TF_Boulder Receipt - Subcontract / Jobwork
+		if(tableName.equals(MBoulderReceipt.Table_Name) && columnName.equals(MBoulderReceipt.COLUMNNAME_C_Project_ID))
+			list.add(new CalloutBoulderReceipt_JobWork());
 		
 		return list != null ? list.toArray(new IColumnCallout[0]) : new IColumnCallout[0];
 	}

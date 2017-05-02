@@ -15,6 +15,12 @@ import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryAdvance;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryIssue;
 import org.syvasoft.tallyfrontcrusher.model.MFuelIssue;
 import org.syvasoft.tallyfrontcrusher.model.MGLPostingConfig;
+import org.syvasoft.tallyfrontcrusher.model.MJobworkCharges;
+import org.syvasoft.tallyfrontcrusher.model.MJobworkIssuedItems;
+import org.syvasoft.tallyfrontcrusher.model.MJobworkIssuedResource;
+import org.syvasoft.tallyfrontcrusher.model.MJobworkItemIssue;
+import org.syvasoft.tallyfrontcrusher.model.MJobworkProductPrice;
+import org.syvasoft.tallyfrontcrusher.model.MJobworkReceivedItems;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWage;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWageAdvance;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWageConfig;
@@ -31,6 +37,7 @@ import org.syvasoft.tallyfrontcrusher.model.TF_MCharge;
 import org.syvasoft.tallyfrontcrusher.model.TF_MInvoice;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
 import org.syvasoft.tallyfrontcrusher.model.TF_MPayment;
+import org.syvasoft.tallyfrontcrusher.model.TF_MProject;
 import org.syvasoft.tallyfrontcrusher.model.TF_MResource;
 import org.syvasoft.tallyfrontcrusher.model.TF_MResourceType;
 
@@ -92,6 +99,20 @@ public class CrusherModelFactory implements IModelFactory {
 			return MVehicleRentalContract.class;
 		else if (MTripSheet.Table_Name.equals(tableName))
 			return MTripSheet.class;
+		else if (TF_MProject.Table_Name.equals(tableName))
+			return TF_MProject.class;
+		else if (MJobworkCharges.Table_Name.equals(tableName))
+			return MJobworkCharges.class;
+		else if (MJobworkIssuedItems.Table_Name.equals(tableName))
+			return MJobworkIssuedItems.class;
+		else if (MJobworkIssuedResource.Table_Name.equals(tableName))
+			return MJobworkIssuedResource.class;
+		else if (MJobworkProductPrice.Table_Name.equals(tableName))
+			return MJobworkProductPrice.class;
+		else if (MJobworkReceivedItems.Table_Name.equals(tableName))
+			return MJobworkReceivedItems.class;
+		else if (MJobworkItemIssue.Table_Name.equals(tableName))
+			return MJobworkItemIssue.class;
 		return null;
 	}
 
@@ -152,6 +173,20 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MVehicleRentalContract(ctx, Record_ID, trxName);
 		else if (MTripSheet.Table_Name.equals(tableName))
 			return new MTripSheet(ctx, Record_ID, trxName);
+		else if (TF_MProject.Table_Name.equals(tableName))
+			return new TF_MProject(ctx, Record_ID, trxName);
+		else if (MJobworkCharges.Table_Name.equals(tableName))
+			return new MJobworkCharges(ctx, Record_ID, trxName);
+		else if (MJobworkIssuedItems.Table_Name.equals(tableName))
+			return new MJobworkIssuedItems(ctx, Record_ID, trxName);
+		else if (MJobworkIssuedResource.Table_Name.equals(tableName))
+			return new MJobworkIssuedResource(ctx, Record_ID, trxName);
+		else if (MJobworkProductPrice.Table_Name.equals(tableName))
+			return new MJobworkProductPrice(ctx, Record_ID, trxName);
+		else if (MJobworkReceivedItems.Table_Name.equals(tableName))
+			return new MJobworkReceivedItems(ctx, Record_ID, trxName);
+		else if (MJobworkItemIssue.Table_Name.equals(tableName))
+			return new MJobworkItemIssue(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -212,6 +247,20 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MVehicleRentalContract(ctx, rs, trxName);
 		else if (MTripSheet.Table_Name.equals(tableName))
 			return new MTripSheet(ctx, rs, trxName);
+		else if (TF_MProject.Table_Name.equals(tableName))
+			return new TF_MProject(ctx, rs, trxName);
+		else if (MJobworkCharges.Table_Name.equals(tableName))
+			return new MJobworkCharges(ctx, rs, trxName);
+		else if (MJobworkIssuedItems.Table_Name.equals(tableName))
+			return new MJobworkIssuedItems(ctx, rs, trxName);
+		else if (MJobworkIssuedResource.Table_Name.equals(tableName))
+			return new MJobworkIssuedResource(ctx, rs, trxName);
+		else if (MJobworkProductPrice.Table_Name.equals(tableName))
+			return new MJobworkProductPrice(ctx, rs, trxName);
+		else if (MJobworkReceivedItems.Table_Name.equals(tableName))
+			return new MJobworkReceivedItems(ctx, rs, trxName);
+		else if (MJobworkItemIssue.Table_Name.equals(tableName))
+			return new MJobworkItemIssue(ctx, rs, trxName);
 		return null;
 	}
 

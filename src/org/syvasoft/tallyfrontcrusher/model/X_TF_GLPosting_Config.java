@@ -30,7 +30,7 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170413L;
+	private static final long serialVersionUID = 20170501L;
 
     /** Standard Constructor */
     public X_TF_GLPosting_Config (Properties ctx, int TF_GLPosting_Config_ID, String trxName)
@@ -129,6 +129,34 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	public int getC_BankAccount_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_C_BankAccount_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_M_Product getFuel_Product() throws RuntimeException
+    {
+		return (org.compiere.model.I_M_Product)MTable.get(getCtx(), org.compiere.model.I_M_Product.Table_Name)
+			.getPO(getFuel_Product_ID(), get_TrxName());	}
+
+	/** Set Fuel.
+		@param Fuel_Product_ID 
+		Fuel
+	  */
+	public void setFuel_Product_ID (int Fuel_Product_ID)
+	{
+		if (Fuel_Product_ID < 1) 
+			set_Value (COLUMNNAME_Fuel_Product_ID, null);
+		else 
+			set_Value (COLUMNNAME_Fuel_Product_ID, Integer.valueOf(Fuel_Product_ID));
+	}
+
+	/** Get Fuel.
+		@return Fuel
+	  */
+	public int getFuel_Product_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Fuel_Product_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();

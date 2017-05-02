@@ -94,6 +94,21 @@ public interface I_TF_TripSheet
 
 	public org.compiere.model.I_C_ElementValue getC_ElementValue() throws RuntimeException;
 
+    /** Column name C_Project_ID */
+    public static final String COLUMNNAME_C_Project_ID = "C_Project_ID";
+
+	/** Set Subcontract / Job Work.
+	  * Subcontract / Job Work
+	  */
+	public void setC_Project_ID (int C_Project_ID);
+
+	/** Get Subcontract / Job Work.
+	  * Subcontract / Job Work
+	  */
+	public int getC_Project_ID();
+
+	public org.compiere.model.I_C_Project getC_Project() throws RuntimeException;
+
     /** Column name Closing_Fuel */
     public static final String COLUMNNAME_Closing_Fuel = "Closing_Fuel";
 

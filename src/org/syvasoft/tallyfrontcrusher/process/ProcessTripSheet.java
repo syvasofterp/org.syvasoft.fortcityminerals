@@ -4,6 +4,7 @@ package org.syvasoft.tallyfrontcrusher.process;
 import org.compiere.process.DocAction;
 import org.compiere.process.ProcessInfoParameter;
 import org.compiere.process.SvrProcess;
+import org.syvasoft.tallyfrontcrusher.model.MJobworkIssuedResource;
 import org.syvasoft.tallyfrontcrusher.model.MTripSheet;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentalContract;
 
@@ -39,6 +40,12 @@ public class ProcessTripSheet extends SvrProcess {
 			MVehicleRentalContract rentalContract = new MVehicleRentalContract(getCtx(), rentalContractID, get_TrxName());
 			rentalContract.updateTripSheetBasedFields();
 			rentalContract.saveEx();
+		}
+		MJobworkIssuedResource issuedResource = MJobworkIssuedResource.getByResource(getCtx(), tripSheet.getC_Project_ID(), 
+				tripSheet.getVehicle_ID(), get_TrxName());
+		if(issuedResource != null) {
+			issuedResource.updateTripSheetBasedFields();
+			issuedResource.saveEx();
 		}
 		return null;
 	}

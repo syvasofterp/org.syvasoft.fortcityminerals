@@ -102,6 +102,24 @@ public class TF_MPayment extends MPayment {
 		
 		return super.beforeSave(newRecord);
 	}
-
+	
+	@Override
+	public String completeIt() {
+		//Subcontract / Job Work
+		if(getC_Project_ID() > 0) {
+			MJobworkCharges.updateJobworkCharges(getCtx(), getC_Project_ID(), getC_Charge_ID(), getPayAmt(), get_TrxName());
+		}
+		return super.completeIt();
+	}
+	@Override
+	public boolean reverseCorrectIt() {
+		//Subcontract / Job Work
+		if(getC_Project_ID() > 0) {
+			MJobworkCharges.updateJobworkCharges(getCtx(), getC_Project_ID(), getC_Charge_ID(), getPayAmt().negate(), get_TrxName());
+		}
+		return super.reverseCorrectIt();
+	}
+	
+	
 	
 }
