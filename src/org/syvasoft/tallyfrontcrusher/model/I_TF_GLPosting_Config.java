@@ -110,6 +110,21 @@ public interface I_TF_GLPosting_Config
 	  */
 	public int getCreatedBy();
 
+    /** Column name Fuel_Product_ID */
+    public static final String COLUMNNAME_Fuel_Product_ID = "Fuel_Product_ID";
+
+	/** Set Fuel.
+	  * Fuel
+	  */
+	public void setFuel_Product_ID (int Fuel_Product_ID);
+
+	/** Get Fuel.
+	  * Fuel
+	  */
+	public int getFuel_Product_ID();
+
+	public org.compiere.model.I_M_Product getFuel_Product() throws RuntimeException;
+
     /** Column name FuelExpense_Charge_ID */
     public static final String COLUMNNAME_FuelExpense_Charge_ID = "FuelExpense_Charge_ID";
 

@@ -105,6 +105,24 @@ public class MTripSheet extends X_TF_TripSheet {
 				setTF_Labour_Wage_ID(wage.getTF_Labour_Wage_ID());
 			}
 			
+			//Update Subcontract Issued Items for Diesel
+			MJobworkIssuedResource issuedResource = MJobworkIssuedResource.getByResource(getCtx(), getC_Project_ID(), getVehicle_ID(), get_TrxName());
+			if(issuedResource != null && !issuedResource.isFuelIncluded()) {
+				
+				MGLPostingConfig glConfig = MGLPostingConfig.getMGLPostingConfig(getCtx());  
+				MJobworkIssuedItems.addIssuedItem(getCtx(), getC_Project_ID(), 
+						glConfig.getFuel_Product_ID(), glConfig.getFuel_Product().getC_UOM_ID(), getExpensed_Fuel() , get_TrxName());
+				
+			}
+			
+			
+			//Update Rental Contract Fields in Job Work
+			//if(issuedResource != null && !issuedResource.isOperatorWageIncluded()) {				
+			//	issuedResource.setOperatorTotalWage(issuedResource.getOperatorTotalWage().add(getTotal_Wage()));
+			//	issuedResource.saveEx();
+				
+			//}
+			
 		}
 	}
 	
@@ -118,6 +136,22 @@ public class MTripSheet extends X_TF_TripSheet {
 			wage.deleteEx(true);			
 			
 		}
+		
+		//Update Subcontract Issued Items for Diesel
+		MJobworkIssuedResource issuedResource = MJobworkIssuedResource.getByResource(getCtx(), getC_Project_ID(), getVehicle_ID(), get_TrxName());
+		if(issuedResource != null && !issuedResource.isFuelIncluded()) {
+			
+			MGLPostingConfig glConfig = MGLPostingConfig.getMGLPostingConfig(getCtx());  
+			MJobworkIssuedItems.addIssuedItem(getCtx(), getC_Project_ID(), 
+					glConfig.getFuel_Product_ID(), glConfig.getFuel_Product().getC_UOM_ID(), getExpensed_Fuel().negate() , get_TrxName());
+			
+		}
+		
+		//if(issuedResource != null && !issuedResource.isOperatorWageIncluded()) {			
+		//	issuedResource.setOperatorTotalWage(issuedResource.getOperatorTotalWage().subtract(getTotal_Wage()));
+		//	issuedResource.saveEx();
+		//}
+		
 		setProcessed(false);
 		setDocStatus(DOCSTATUS_Drafted);
 	}

@@ -33,7 +33,7 @@ public class X_TF_TripSheet extends PO implements I_TF_TripSheet, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170413L;
+	private static final long serialVersionUID = 20170501L;
 
     /** Standard Constructor */
     public X_TF_TripSheet (Properties ctx, int TF_TripSheet_ID, String trxName)
@@ -127,6 +127,34 @@ public class X_TF_TripSheet extends PO implements I_TF_TripSheet, I_Persistent
 	public int getC_ElementValue_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_C_ElementValue_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_Project getC_Project() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Project)MTable.get(getCtx(), org.compiere.model.I_C_Project.Table_Name)
+			.getPO(getC_Project_ID(), get_TrxName());	}
+
+	/** Set Subcontract / Job Work.
+		@param C_Project_ID 
+		Subcontract / Job Work
+	  */
+	public void setC_Project_ID (int C_Project_ID)
+	{
+		if (C_Project_ID < 1) 
+			set_Value (COLUMNNAME_C_Project_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_Project_ID, Integer.valueOf(C_Project_ID));
+	}
+
+	/** Get Subcontract / Job Work.
+		@return Subcontract / Job Work
+	  */
+	public int getC_Project_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_Project_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();

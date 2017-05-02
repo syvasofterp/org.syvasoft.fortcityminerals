@@ -64,6 +64,21 @@ public interface I_TF_Boulder_Receipt
 	  */
 	public int getAD_Org_ID();
 
+    /** Column name C_Project_ID */
+    public static final String COLUMNNAME_C_Project_ID = "C_Project_ID";
+
+	/** Set Subcontract / Job Work.
+	  * Subcontract / Job Work
+	  */
+	public void setC_Project_ID (int C_Project_ID);
+
+	/** Get Subcontract / Job Work.
+	  * Subcontract / Job Work
+	  */
+	public int getC_Project_ID();
+
+	public org.compiere.model.I_C_Project getC_Project() throws RuntimeException;
+
     /** Column name C_UOM_ID */
     public static final String COLUMNNAME_C_UOM_ID = "C_UOM_ID";
 

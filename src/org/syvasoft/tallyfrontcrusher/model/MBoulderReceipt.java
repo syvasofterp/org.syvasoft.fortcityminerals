@@ -165,6 +165,13 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 			setM_Transaction_ID(mtrx.getM_Transaction_ID());
 			
 		}
+		
+		if(getC_Project_ID() > 0) {
+			TF_MProject jobWork = new TF_MProject(getCtx(), getC_Project_ID(), get_TrxName());
+			jobWork.updateBoulderReceiptBasedFields(this);
+			jobWork.saveEx();
+		}
+		
 		if(TF_SEND_TO_Production.equals(getTF_Send_To())) {
 			m_processMsg = postCrusherProduction();
 		}
@@ -206,6 +213,12 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 			rent.deleteEx(true);
 		}
 		
+		if(getC_Project_ID() > 0) {
+			TF_MProject jobWork = new TF_MProject(getCtx(), getC_Project_ID(), get_TrxName());
+			jobWork.reverseBoulderReceiptBasedFields(this);
+			jobWork.saveEx();
+		}
+		
 		setProcessed(false);
 		setDocStatus(DOCSTATUS_Drafted);		
 	}
@@ -240,6 +253,7 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 			cProd.saveEx();
 		return m_processMsg;
 	}
+		
 	
 	/***
 	 * This method will be called after DOCACTION_Complete of Subcontractor Invoice 
