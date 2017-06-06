@@ -16,7 +16,7 @@ public class ProcessJobWork extends SvrProcess {
 				docAction = para.getParameterAsString();			
 		}
 		if(docAction == null)
-			throw new AdempiereException("Invalid Rental Contract Action");
+			throw new AdempiereException("Invalid Jobwork Document Action");
 
 	}
 

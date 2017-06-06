@@ -16,9 +16,11 @@ import org.compiere.util.AdempiereUserError;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkCharges;
+import org.syvasoft.tallyfrontcrusher.model.MJobworkExpense;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkIssuedItems;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkIssuedResource;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkProductPrice;
+import org.syvasoft.tallyfrontcrusher.model.TF_MCharge;
 import org.syvasoft.tallyfrontcrusher.model.TF_MInvoice;
 import org.syvasoft.tallyfrontcrusher.model.TF_MProject;
 
@@ -189,6 +191,22 @@ public class CreateInvoiceForJobWork extends SvrProcess {
 				charge.saveEx();
 			}
 			//End Invoice Lines
+			
+			// Invoice Lines - Expenses
+			for(MJobworkExpense exp : MJobworkExpense.getExpensesToDeduct(getCtx(), jobWork.getC_Project_ID())) {
+				BigDecimal deductAmt = exp.getTotalAmt().subtract(exp.getDeductedAmt());
+				invLine = new MInvoiceLine(invoice);
+				TF_MCharge chrg = TF_MCharge.createChargeFromAccount(getCtx(), exp.getC_ElementValue_ID(), null);
+				invLine.setC_Charge_ID(chrg.getC_Charge_ID());
+				invLine.setDescription("Expense Deducted");
+				invLine.setQty(BigDecimal.ONE.negate());
+				invLine.setPrice(deductAmt);
+				invLine.saveEx();
+				
+				//Add Deducted Amount to Jobwork Expense
+				exp.setDeductedAmt(exp.getDeductedAmt().add(deductAmt));
+				exp.saveEx();
+			}
 			
 			
 			//Update back Invoice ID to Boulder Receipts.
