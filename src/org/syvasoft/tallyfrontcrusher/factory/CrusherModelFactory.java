@@ -16,6 +16,8 @@ import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryIssue;
 import org.syvasoft.tallyfrontcrusher.model.MFuelIssue;
 import org.syvasoft.tallyfrontcrusher.model.MGLPostingConfig;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkCharges;
+import org.syvasoft.tallyfrontcrusher.model.MJobworkExpense;
+import org.syvasoft.tallyfrontcrusher.model.MJobworkExpenseEntry;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkIssuedItems;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkIssuedResource;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkItemIssue;
@@ -113,6 +115,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return MJobworkReceivedItems.class;
 		else if (MJobworkItemIssue.Table_Name.equals(tableName))
 			return MJobworkItemIssue.class;
+		else if (MJobworkExpense.Table_Name.equals(tableName))
+			return MJobworkExpense.class;
+		else if (MJobworkExpenseEntry.Table_Name.equals(tableName))
+			return MJobworkExpenseEntry.class;
 		return null;
 	}
 
@@ -187,6 +193,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MJobworkReceivedItems(ctx, Record_ID, trxName);
 		else if (MJobworkItemIssue.Table_Name.equals(tableName))
 			return new MJobworkItemIssue(ctx, Record_ID, trxName);
+		else if (MJobworkExpense.Table_Name.equals(tableName))
+			return new MJobworkExpense(ctx, Record_ID, trxName);
+		else if (MJobworkExpenseEntry.Table_Name.equals(tableName))
+			return new MJobworkExpenseEntry(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -261,6 +271,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MJobworkReceivedItems(ctx, rs, trxName);
 		else if (MJobworkItemIssue.Table_Name.equals(tableName))
 			return new MJobworkItemIssue(ctx, rs, trxName);
+		else if (MJobworkExpense.Table_Name.equals(tableName))
+			return new MJobworkExpense(ctx, rs, trxName);
+		else if (MJobworkExpenseEntry.Table_Name.equals(tableName))
+			return new MJobworkExpenseEntry(ctx, rs, trxName);
 		return null;
 	}
 
