@@ -7,6 +7,7 @@ import java.util.Properties;
 import org.compiere.model.MBPartner;
 import org.compiere.model.MInvoice;
 import org.compiere.model.MInvoiceLine;
+import org.compiere.model.MProduct;
 import org.compiere.model.MTable;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
@@ -372,6 +373,24 @@ public class TF_MInvoice extends MInvoice {
 				+ invLine.getC_InvoiceLine_ID() + " WHERE C_Invoice_ID = " + getC_Invoice_ID(), get_TrxName());	
 		}
 						
+	}
+
+	@Override
+	public boolean reverseCorrectIt() {
+		int TF_Vehicle_Rental_Contract_ID = get_ValueAsInt("TF_Vehicle_Rental_Contract_ID");
+		if(TF_Vehicle_Rental_Contract_ID > 0) {
+				for(MInvoiceLine invLine : getLines()) {
+					if(invLine.getM_Product_ID()>0 && 
+							invLine.getM_Product().getProductType().equals(MProduct.PRODUCTTYPE_Resource)) {
+						MVehicleRentalContract rc = new MVehicleRentalContract(getCtx(), TF_Vehicle_Rental_Contract_ID, get_TrxName());
+						rc.setQtyInvoiced(rc.getQtyInvoiced().subtract(invLine.getQtyInvoiced()));
+						//rc.setInvoiced_Amt(rc.getInvoiced_Amt().subtract(invLine.getLineTotalAmt()));
+						rc.saveEx();
+						break;
+					}
+				}
+		}
+		return super.reverseCorrectIt();
 	}
 
 }
