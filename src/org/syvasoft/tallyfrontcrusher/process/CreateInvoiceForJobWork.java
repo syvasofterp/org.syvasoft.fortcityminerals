@@ -234,7 +234,7 @@ public class CreateInvoiceForJobWork extends SvrProcess {
 		else {
 			msg = " This Subcontract is already invoiced completely!";
 		}
-		return null;
+		return msg;
 	}
 
 }
