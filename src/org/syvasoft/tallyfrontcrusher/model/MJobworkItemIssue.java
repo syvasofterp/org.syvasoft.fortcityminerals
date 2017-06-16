@@ -49,7 +49,7 @@ public class MJobworkItemIssue extends X_TF_Jobwork_ItemIssue {
 			
 			//Inventory Use Line
 			MInventoryLine line = new MInventoryLine(inv, wh.getDefaultLocator().get_ID(), getM_Product_ID(), 0, null, null, getQty());
-			line.setC_Charge_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getFuelExpense_Charge_ID());
+			line.setC_Charge_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getItemIssue_Charge_ID());
 			line.setDescription(desc);
 			//line.setCurrentCostPrice(getRate());
 			line.saveEx();
