@@ -149,6 +149,17 @@ public interface I_TF_GLPosting_Config
 	  */
 	public boolean isActive();
 
+    /** Column name ItemIssue_Charge_ID */
+    public static final String COLUMNNAME_ItemIssue_Charge_ID = "ItemIssue_Charge_ID";
+
+	/** Set Item Issue Charge	  */
+	public void setItemIssue_Charge_ID (int ItemIssue_Charge_ID);
+
+	/** Get Item Issue Charge	  */
+	public int getItemIssue_Charge_ID();
+
+	public org.compiere.model.I_C_Charge getItemIssue_Charge() throws RuntimeException;
+
     /** Column name JobWork_Product_ID */
     public static final String COLUMNNAME_JobWork_Product_ID = "JobWork_Product_ID";
 
