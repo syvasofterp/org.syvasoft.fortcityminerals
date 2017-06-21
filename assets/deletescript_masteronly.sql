@@ -334,6 +334,11 @@ UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000413 ;
 
 --  DocumentNo_TF_Jobwork_Expense_Entry -- DocumentNo_TF_Jobwork_Expense_Entry
 UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000416 ;
+DELETE FROM TF_Jobwork_Expense_Entry;
+
+--  DocumentNo_TF_ItemReceipt_OtherSrc -- TF_ItemReceipt_OtherSrc
+UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000419 ;
+DELETE FROM TF_ItemReceipt_OtherSrc;
 
 
 -- Need to reset Document Seq No for Internal Use Inventory, Physical Inventory and etc...

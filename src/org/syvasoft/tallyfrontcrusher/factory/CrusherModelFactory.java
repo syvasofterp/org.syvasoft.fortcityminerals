@@ -15,6 +15,7 @@ import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryAdvance;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryIssue;
 import org.syvasoft.tallyfrontcrusher.model.MFuelIssue;
 import org.syvasoft.tallyfrontcrusher.model.MGLPostingConfig;
+import org.syvasoft.tallyfrontcrusher.model.MItemReceiptOtherSrc;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkCharges;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkExpense;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkExpenseEntry;
@@ -119,6 +120,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return MJobworkExpense.class;
 		else if (MJobworkExpenseEntry.Table_Name.equals(tableName))
 			return MJobworkExpenseEntry.class;
+		else if (MItemReceiptOtherSrc.Table_Name.equals(tableName))
+			return MItemReceiptOtherSrc.class;
 		return null;
 	}
 
@@ -197,6 +200,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MJobworkExpense(ctx, Record_ID, trxName);
 		else if (MJobworkExpenseEntry.Table_Name.equals(tableName))
 			return new MJobworkExpenseEntry(ctx, Record_ID, trxName);
+		else if (MItemReceiptOtherSrc.Table_Name.equals(tableName))
+			return new MItemReceiptOtherSrc(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -275,6 +280,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MJobworkExpense(ctx, rs, trxName);
 		else if (MJobworkExpenseEntry.Table_Name.equals(tableName))
 			return new MJobworkExpenseEntry(ctx, rs, trxName);
+		else if (MItemReceiptOtherSrc.Table_Name.equals(tableName))
+			return new MItemReceiptOtherSrc(ctx, rs, trxName);
 		return null;
 	}
 
