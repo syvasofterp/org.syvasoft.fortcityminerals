@@ -56,9 +56,9 @@ public class MItemReceiptOtherSrc extends X_TF_ItemReceipt_OtherSrc {
 					+ " AND M_Locator_ID=?";
 			BigDecimal QtyBook = DB.getSQLValueBD(get_TrxName(), sql, getM_Product_ID(), M_Locator_ID);
 			BigDecimal QtyCount = QtyBook.add(getQty());
+			TF_MCharge ch = TF_MCharge.createChargeFromAccount(getCtx(), getC_ElementValue_ID(), null);
 			MInventoryLine invLine = new MInventoryLine(inv, M_Locator_ID, getM_Product_ID(), 0, QtyBook, QtyCount, null); 
-			invLine.setInventoryType(MInventoryLine.INVENTORYTYPE_ChargeAccount);
-			TF_MCharge ch = TF_MCharge.createChargeFromAccount(getCtx(), getC_ElementValue_ID(), get_TrxName());
+			invLine.setInventoryType(MInventoryLine.INVENTORYTYPE_ChargeAccount);			
 			invLine.setC_Charge_ID(ch.getC_Charge_ID());
 			invLine.setDescription(inv.getDescription());
 			invLine.saveEx();
