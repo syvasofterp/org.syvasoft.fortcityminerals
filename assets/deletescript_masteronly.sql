@@ -62,11 +62,26 @@ UPDATE TF_Employee_Salary_Issue SET C_Payment_ID = NULL;
 UPDATE TF_TripSheet SET TF_Vehicle_Rental_Contract_ID = NULL;
 UPDATE C_Invoice SET TF_Vehicle_Rental_Contract_ID = NULL;
 
+DELETE FROM TF_Boulder_Receipt_Line;
 DELETE FROM TF_Boulder_Receipt;
 DELETE FROM TF_Employee_Salary;
 DELETE FROM TF_Vehicle_Rent;
 DELETE FROM TF_Quarry_Rent;
 DELETE FROM TF_Fuel_Issue;
+
+--SubContract Tables
+DELETE FROM TF_Jobwork_Expense;
+DELETE FROM TF_Jobwork_Charges;
+DELETE FROM TF_Jobwork_IssuedResource;
+DELETE FROM TF_Jobwork_IssuedItems;
+DELETE FROM TF_Jobwork_ReceivedItems;
+DELETE FROM TF_Jobwork_ProductPrice;
+DELETE FROM TF_Jobwork_ItemIssue;
+DELETE from c_validcombination WHERE C_Project_ID IN (SELECT C_Project_ID FROM C_Project WHERE C_Project_id !=1000000 AND ad_client_id=1000000);
+DELETE FROM  C_Project WHERE C_Project_id !=1000000 AND ad_client_id=1000000;;
+
+
+
 -- End Crusher Tables.
 
 
@@ -150,6 +165,7 @@ delete from m_inout WHERE ad_client_id=1000000;;
 delete from m_inoutconfirm WHERE ad_client_id=1000000;; 
 delete from m_inoutlineconfirm WHERE ad_client_id=1000000;; 
 delete from m_inoutlinema WHERE ad_client_id=1000000;; 
+update m_product set m_inventory_id = NULL;
 delete from m_inventoryline WHERE ad_client_id=1000000;; 
 delete from m_inventory WHERE ad_client_id=1000000;;
 delete from m_inventorylinema  WHERE ad_client_id=1000000;; 
@@ -167,7 +183,7 @@ delete from c_dunningrunentry WHERE ad_client_id=1000000;;
 delete from AD_WF_EventAudit  WHERE ad_client_id=1000000;;
 delete from AD_WF_Process WHERE ad_client_id=1000000; ;
 Update M_Cost SET CurrentQty=0, CumulatedAMT=0, CumulatedQty=0  WHERE ad_client_id=1000000;
-Update C_BPartner SET ActualLifetimeValue=0, SO_CreditUsed=0, TotalOpenBalance=0  WHERE ad_client_id=1000000;;
+Update C_BPartner SET ActualLifetimeValue=0, SO_CreditUsed=0, TotalOpenBalance=0, C_Invoice_ID=NULL  WHERE ad_client_id=1000000;;
 delete from R_RequestUpdates WHERE ad_client_id=1000000;;
 delete from R_RequestUpdate WHERE ad_client_id=1000000;;
 delete from R_RequestAction WHERE ad_client_id=1000000;;
@@ -342,3 +358,9 @@ DELETE FROM TF_ItemReceipt_OtherSrc;
 
 
 -- Need to reset Document Seq No for Internal Use Inventory, Physical Inventory and etc...
+--  Physical Inventory -
+UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000323;
+
+--  Internal Use Inventory -
+UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000326;
+
