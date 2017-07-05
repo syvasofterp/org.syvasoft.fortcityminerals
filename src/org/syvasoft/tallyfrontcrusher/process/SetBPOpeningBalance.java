@@ -118,7 +118,7 @@ public class SetBPOpeningBalance extends SvrProcess {
 				m_M_PriceList_ID = bp.getPO_PriceList_ID();			
 			invoice.setM_PriceList_ID(m_M_PriceList_ID);
 			invoice.setC_Currency_ID(MPriceList.get(getCtx(), m_M_PriceList_ID, get_TrxName()).getC_Currency_ID());
-			
+			invoice.setDescription("Opening Balance Entry");
 			invoice.saveEx();
 			//End Invoice Header
 			

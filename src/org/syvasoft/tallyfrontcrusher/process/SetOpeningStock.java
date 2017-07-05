@@ -87,6 +87,8 @@ public class SetOpeningStock extends SvrProcess {
 					+ "WHERE M_Product_ID=?"	//	1
 					+ " AND M_Locator_ID=?";
 			BigDecimal QtyBook = DB.getSQLValueBD(get_TrxName(), sql, M_Product_ID, M_Locator_ID);
+			if(QtyBook == null)
+				QtyBook = BigDecimal.ZERO;
 			BigDecimal QtyCount = QtyBook.add(OpeningStock);
 			MInventoryLine invLine = new MInventoryLine(inv, M_Locator_ID, M_Product_ID, 0, QtyBook, QtyCount, null); 
 			invLine.setInventoryType(MInventoryLine.INVENTORYTYPE_InventoryDifference);

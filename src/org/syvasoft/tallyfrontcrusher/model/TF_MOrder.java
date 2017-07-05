@@ -565,6 +565,16 @@ public class TF_MOrder extends MOrder {
 		return super.voidIt();
 	}
 	
+	@Override
+	public boolean reActivateIt() {
+		if(getTF_DriverTips_Pay_ID() > 0) {
+			TF_MPayment payment = new TF_MPayment(getCtx(), getTF_DriverTips_Pay_ID(), get_TrxName());
+			payment.reverseCorrectIt();
+			payment.saveEx();
+		}
+		return super.reActivateIt();
+	}
+
 	public static MProductPricing getProductPricing(int M_Product_ID, int M_PriceList_ID, int C_BPartner_ID, 
 			BigDecimal Qty,	Timestamp priceDate, boolean isSOTrx) {
 		//Get Unit Price from Latest Price List.
