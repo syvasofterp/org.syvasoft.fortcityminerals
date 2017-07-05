@@ -275,7 +275,7 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 		BigDecimal expVar = DB.getSQLValueBD(trxName, sql, SubconInvoice.getC_Invoice_ID());
 		
 		//Do not create Expense Variance Journal.
-		if(expVar.doubleValue() == 0)
+		if(expVar == null || expVar.doubleValue() == 0)
 			return;
 		
 		

@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.util.Properties;
 
 import org.adempiere.exceptions.AdempiereException;
+import org.compiere.model.MBPartner;
 import org.compiere.model.MJournal;
 import org.compiere.model.MJournalLine;
 import org.compiere.model.MPeriod;
@@ -34,7 +35,16 @@ public class MEmployeeSalary extends X_TF_Employee_Salary {
 		}
 		if(getSalary_Amt().doubleValue() == 0 )			
 			throw new AdempiereException("Invalid Earned Salary");
-			
+		
+		//If the Employee is created from Quick Entry
+		if(!getC_BPartner().isEmployee()) {
+			MBPartner bp = new MBPartner(getCtx(), getC_BPartner_ID(), get_TrxName());
+			bp.setIsEmployee(true);
+			bp.setIsCustomer(false);
+			bp.setIsVendor(false);
+			bp.saveEx();
+		}
+				
 		return super.beforeSave(newRecord);
 	}
 	

@@ -2,13 +2,18 @@ package org.syvasoft.tallyfrontcrusher.model;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import org.compiere.model.MBPartner;
 import org.compiere.model.MInvoice;
 import org.compiere.model.MInvoiceLine;
+import org.compiere.model.MJournal;
 import org.compiere.model.MProduct;
+import org.compiere.model.MQuery;
 import org.compiere.model.MTable;
+import org.compiere.model.Query;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
 
@@ -377,6 +382,116 @@ public class TF_MInvoice extends MInvoice {
 
 	@Override
 	public boolean reverseCorrectIt() {
+		
+		//For Subcontract Invoice
+		int C_Project_ID = getC_Project_ID();
+		if(C_Project_ID > 0) {
+			//REVERSAL Procedure
+			//0. In Boulder Receipts, Reverse Jobwork Variance Journal & Jobwork Invoiced Price
+			//1. In Boulder Receipts, Reset Subcon Invoice ID to NULL
+			//2. In Subcontract, Reverse the Invoiced Amount & Qty
+			//3. 				Reverse Issued Items
+			//4. 				Reverse Issued Vehicle Rent
+			//5. 				Reverse Additional Charges
+			//6.				Reverse Expenses
+			TF_MProject proj = new TF_MProject(getCtx(), C_Project_ID, get_TrxName());
+			String whereClause;
+			for(MInvoiceLine line : getLines()) {
+				if(line.getM_Product_ID() == proj.getJobWork_Product_ID()) {
+					//0
+					whereClause = "Subcon_Invoice_ID = ? ";
+					List<MBoulderReceipt> list = new Query(getCtx(), MBoulderReceipt.Table_Name, whereClause, get_TrxName())
+						.setParameters(getC_Invoice_ID()).list();
+					for(MBoulderReceipt r : list) {
+						r.setJobwork_PriceActual(BigDecimal.ZERO);
+						if(r.getJobwork_VarJournal_ID() > 0) {
+							MJournal j = new MJournal(getCtx(), r.getJobwork_VarJournal_ID(), get_TrxName());
+							j.reverseCorrectIt();
+							j.saveEx();
+							r.setJobwork_VarJournal_ID(0);							
+						}
+						//1
+						r.setSubcon_Invoice_ID(0);
+						r.saveEx();
+					}
+
+					//2. In Subcontract, Reverse the Invoiced Amount & Qty
+					proj.setInvoicedQty(proj.getInvoicedQty().subtract(line.getQtyInvoiced()));
+					proj.setInvoicedAmt(proj.getInvoicedAmt().subtract(line.getLineNetAmt()));
+					proj.saveEx();
+					continue;
+				}
+				
+				//3 or 4
+				if(line.getM_Product_ID() > 0) {
+					//3
+					whereClause = " C_Project_ID = ?  AND M_Product_ID = ? ";
+					List<MJobworkIssuedItems> issuedItems = new Query(getCtx(), MJobworkIssuedItems.Table_Name, whereClause, get_TrxName())
+						.setParameters(C_Project_ID, line.getM_Product_ID()).list();
+					if(issuedItems.size() > 0) {						
+						//Subtract Deducted Qty from Jobwork Issued Item
+						MJobworkIssuedItems issuedItem = issuedItems.get(0);						
+						issuedItem.setQtyDeducted(issuedItem.getQtyDeducted().add(line.getQtyInvoiced()));
+						issuedItem.saveEx();
+						continue;
+					}
+					
+					//4 - vehicle rent
+					List<MJobworkIssuedResource> resources = new Query(getCtx(), MJobworkIssuedResource.Table_Name, whereClause, get_TrxName())
+						.setParameters(C_Project_ID, line.getM_Product_ID()).list();
+					if(resources.size()>0) {
+						MJobworkIssuedResource res = resources.get(0);
+						//Subtract Deducted Qty from Jobwork issued vehicle
+						res.setQtyDeducted(res.getQtyDeducted().add(line.getQtyInvoiced()));
+						res.setDeductedAmt(res.getDeductedAmt().add(line.getLineNetAmt()));
+						res.saveEx();
+						continue;
+					}
+				}
+				
+				//4-Operator wage or 5 or 6
+				if(line.getC_Charge_ID() > 0) {
+					//4 - operator wage
+					whereClause = " C_Project_ID = ? AND Wage_Charge_ID = ? ";
+					List<MJobworkIssuedResource> resources = new Query(getCtx(), MJobworkIssuedResource.Table_Name, whereClause, get_TrxName())
+					.setParameters(C_Project_ID, line.getC_Charge_ID()).list();
+					if(resources.size()>0) {
+						MJobworkIssuedResource res = resources.get(0);
+						//Subtract Deducted wage to Jobwork Issued Vehicle
+						res.setOperatorDeductedWage(res.getOperatorDeductedWage().add(line.getLineNetAmt()));
+						res.saveEx();
+					}
+					
+					//5
+					whereClause = " C_Project_ID = ? AND C_Charge_ID = ? ";
+					List<MJobworkCharges> charges = new Query(getCtx(), MJobworkCharges.Table_Name, whereClause, get_TrxName())
+						.setParameters(C_Project_ID, line.getC_Charge_ID()).list();
+					if(charges.size()>0) {						
+						//Subtract Deducted Amount from Jobwork Additonal Charge
+						MJobworkCharges charge = charges.get(0);
+						charge.setDeductedAmt(charge.getDeductedAmt().add(line.getLineNetAmt()));
+						charge.saveEx();
+						continue;
+					}					
+					
+					//6
+					whereClause = " C_Project_ID = ? AND C_ElementValue_ID = (SELECT c.C_ElementValue_ID FROM "
+								+ " C_Charge c WHERE c.C_Charge_ID = ? ) ";
+					List<MJobworkExpense> expenses = new Query(getCtx(), MJobworkExpense.Table_Name, whereClause, get_TrxName())
+						.setParameters(C_Project_ID, line.getC_Charge_ID()).list();
+					if(expenses.size()>0) {						
+						//Subtract Deducted Amount from Jobwork Expense
+						MJobworkExpense exp = expenses.get(0);
+						exp.setDeductedAmt(exp.getDeductedAmt().add(line.getLineNetAmt()));
+						exp.saveEx();
+						continue;
+					}
+				}
+				
+			}
+			
+		}//End C_Project_ID
+		
 		int TF_Vehicle_Rental_Contract_ID = get_ValueAsInt("TF_Vehicle_Rental_Contract_ID");
 		if(TF_Vehicle_Rental_Contract_ID > 0) {
 				for(MInvoiceLine invLine : getLines()) {
