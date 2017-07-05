@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Level;
 
+import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.MAcctSchema;
 import org.compiere.model.MCostDetail;
 import org.compiere.model.MInvoice;
@@ -179,6 +180,36 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 	}
 	
 	public void reverseIt() {
+		
+		MWarehouse warehouse = MWarehouse.get(getCtx(), getM_Warehouse_ID());
+		int defaultLocatorID = warehouse.getDefaultLocator().getM_Locator_ID();
+		String m_processMsg; 
+		//Update Storage for the received Product from the Joborder.
+		if (!MStorageOnHand.add(getCtx(), getM_Warehouse_ID(),
+				defaultLocatorID,
+				getM_Product_ID(),
+				0,
+				getQtyReceived().negate(),getDateAcct(),
+				get_TrxName()))
+			{
+				String lastError = CLogger.retrieveErrorString("");
+				m_processMsg = "Cannot correct Inventory OnHand (MA) [" + getM_Product().getValue() + "] - " + lastError;				
+				throw new AdempiereException(m_processMsg);
+			}
+		//Update Transaction History
+		MTransaction mtrx = new MTransaction (getCtx(), getAD_Org_ID(),
+			"J+", defaultLocatorID,
+			getM_Product_ID(), 0,
+			getQtyReceived().negate(), getDateAcct(), get_TrxName());
+		mtrx.set_ValueOfColumn(MBoulderReceipt.COLUMNNAME_TF_Boulder_Receipt_ID, getTF_Boulder_Receipt_ID());
+		if (!mtrx.save())
+		{
+			m_processMsg = "Could not create Material Transaction (MA) [" + getM_Product().getValue() + "]";			
+			throw new AdempiereException(m_processMsg);
+		}
+		
+
+		
 		if(getJobwork_Journal_ID()>0) {
 			MJournal j = new MJournal(getCtx(), getJobwork_Journal_ID(), get_TrxName());
 			j.reverseCorrectIt();
