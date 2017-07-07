@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import org.compiere.model.MBPartner;
 import org.compiere.process.DocAction;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
@@ -58,6 +59,16 @@ public class MTripSheet extends X_TF_TripSheet {
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
 		setTotal_Wage(getEarned_Wage().add(getIncentive()));
+		
+		//If the Employee is created from Quick Entry
+		if(!getC_BPartner().isEmployee()) {
+			MBPartner bp = new MBPartner(getCtx(), getC_BPartner_ID(), get_TrxName());
+			bp.setIsEmployee(true);
+			bp.setIsCustomer(false);
+			bp.setIsVendor(false);
+			bp.saveEx();
+		}
+				
 		return super.beforeSave(newRecord);
 	}
 
