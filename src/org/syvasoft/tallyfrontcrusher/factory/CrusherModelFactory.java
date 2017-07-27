@@ -32,6 +32,13 @@ import org.syvasoft.tallyfrontcrusher.model.MQuarry;
 import org.syvasoft.tallyfrontcrusher.model.MQuarryRent;
 import org.syvasoft.tallyfrontcrusher.model.MQuarryRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MTripSheet;
+import org.syvasoft.tallyfrontcrusher.model.MTyre;
+import org.syvasoft.tallyfrontcrusher.model.MTyreAssignment;
+import org.syvasoft.tallyfrontcrusher.model.MTyreLife;
+import org.syvasoft.tallyfrontcrusher.model.MTyrePosition;
+import org.syvasoft.tallyfrontcrusher.model.MTyreStatus;
+import org.syvasoft.tallyfrontcrusher.model.MTyreStatusChange;
+import org.syvasoft.tallyfrontcrusher.model.MTyreType;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRent;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentalContract;
@@ -122,6 +129,20 @@ public class CrusherModelFactory implements IModelFactory {
 			return MJobworkExpenseEntry.class;
 		else if (MItemReceiptOtherSrc.Table_Name.equals(tableName))
 			return MItemReceiptOtherSrc.class;
+		else if (MTyre.Table_Name.equals(tableName))
+			return MTyre.class;
+		else if (MTyreType.Table_Name.equals(tableName))
+			return MTyreType.class;
+		else if (MTyreStatus.Table_Name.equals(tableName))
+			return MTyreStatus.class;
+		else if (MTyrePosition.Table_Name.equals(tableName))
+			return MTyrePosition.class;
+		else if (MTyreAssignment.Table_Name.equalsIgnoreCase(tableName))
+			return MTyreAssignment.class;
+		else if (MTyreStatusChange.Table_Name.equals(tableName))
+			return MTyreStatusChange.class;
+		else if (MTyreLife.Table_Name.equals(tableName))
+			return MTyreLife.class;
 		return null;
 	}
 
@@ -202,6 +223,20 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MJobworkExpenseEntry(ctx, Record_ID, trxName);
 		else if (MItemReceiptOtherSrc.Table_Name.equals(tableName))
 			return new MItemReceiptOtherSrc(ctx, Record_ID, trxName);
+		else if (MTyre.Table_Name.equals(tableName))
+			return new MTyre(ctx, Record_ID, trxName);
+		else if (MTyreType.Table_Name.equals(tableName))
+			return new MTyreType(ctx, Record_ID, trxName);
+		else if (MTyreStatus.Table_Name.equals(tableName))
+			return new MTyreStatus(ctx, Record_ID, trxName);
+		else if (MTyrePosition.Table_Name.equals(tableName))
+			return new MTyrePosition(ctx, Record_ID, trxName);
+		else if (MTyreAssignment.Table_Name.equalsIgnoreCase(tableName))
+			return new MTyreAssignment(ctx, Record_ID, trxName);
+		else if (MTyreStatusChange.Table_Name.equals(tableName))
+			return new MTyreStatusChange(ctx, Record_ID, trxName);
+		else if (MTyreLife.Table_Name.equals(tableName))
+			return new MTyreLife(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -282,6 +317,20 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MJobworkExpenseEntry(ctx, rs, trxName);
 		else if (MItemReceiptOtherSrc.Table_Name.equals(tableName))
 			return new MItemReceiptOtherSrc(ctx, rs, trxName);
+		else if (MTyre.Table_Name.equals(tableName))
+			return new MTyre(ctx, rs, trxName);
+		else if (MTyreType.Table_Name.equals(tableName))
+			return new MTyreType(ctx, rs, trxName);
+		else if (MTyreStatus.Table_Name.equals(tableName))
+			return new MTyreStatus(ctx, rs, trxName);
+		else if (MTyrePosition.Table_Name.equals(tableName))
+			return new MTyrePosition(ctx, rs, trxName);
+		else if (MTyreAssignment.Table_Name.equalsIgnoreCase(tableName))
+			return new MTyreAssignment(ctx, rs, trxName);
+		else if (MTyreStatusChange.Table_Name.equals(tableName))
+			return new MTyreStatusChange(ctx, rs, trxName);
+		else if (MTyreLife.Table_Name.equals(tableName))
+			return new MTyreLife(ctx, rs, trxName);
 		return null;
 	}
 
