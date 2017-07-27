@@ -26,12 +26,14 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetJobwork;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetOpeningEntries;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetRunningMeter;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetRentalContract;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutTyreAssignment;
 import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalary;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryIssue;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWage;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWageIssue;
 import org.syvasoft.tallyfrontcrusher.model.MTripSheet;
+import org.syvasoft.tallyfrontcrusher.model.MTyreAssignment;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentalContract;
 import org.syvasoft.tallyfrontcrusher.model.TF_MInvoice;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
@@ -131,6 +133,11 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		//TF_Boulder Receipt - Subcontract / Jobwork
 		if(tableName.equals(MBoulderReceipt.Table_Name) && columnName.equals(MBoulderReceipt.COLUMNNAME_C_Project_ID))
 			list.add(new CalloutBoulderReceipt_JobWork());
+		
+		//TF_TyreAssignment
+		if(tableName.equals(MTyreAssignment.Table_Name) && (columnName.equals(MTyreAssignment.COLUMNNAME_TF_Tyre_ID) 
+				|| columnName.equals(MTyreAssignment.COLUMNNAME_TyreAssignmentType)))
+			list.add(new CalloutTyreAssignment());
 		
 		return list != null ? list.toArray(new IColumnCallout[0]) : new IColumnCallout[0];
 	}
