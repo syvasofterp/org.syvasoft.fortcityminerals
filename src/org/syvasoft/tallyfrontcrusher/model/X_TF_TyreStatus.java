@@ -30,7 +30,7 @@ public class X_TF_TyreStatus extends PO implements I_TF_TyreStatus, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170727L;
+	private static final long serialVersionUID = 20170730L;
 
     /** Standard Constructor */
     public X_TF_TyreStatus (Properties ctx, int TF_TyreStatus_ID, String trxName)
@@ -229,6 +229,25 @@ public class X_TF_TyreStatus extends PO implements I_TF_TyreStatus, I_Persistent
 	public String getTF_TyreStatus_UU () 
 	{
 		return (String)get_Value(COLUMNNAME_TF_TyreStatus_UU);
+	}
+
+	/** Stocked = ST */
+	public static final String TYRESTATUSTYPE_Stocked = "ST";
+	/** Running = RU */
+	public static final String TYRESTATUSTYPE_Running = "RU";
+	/** Set Status Type.
+		@param TyreStatusType Status Type	  */
+	public void setTyreStatusType (String TyreStatusType)
+	{
+
+		set_Value (COLUMNNAME_TyreStatusType, TyreStatusType);
+	}
+
+	/** Get Status Type.
+		@return Status Type	  */
+	public String getTyreStatusType () 
+	{
+		return (String)get_Value(COLUMNNAME_TyreStatusType);
 	}
 
 	/** Set Search Key.

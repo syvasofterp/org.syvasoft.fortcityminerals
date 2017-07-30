@@ -28,7 +28,8 @@ public class MTyre extends X_TF_Tyre {
 
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
-		
+		if(getCurrent_TyreType_ID()==0)
+			setCurrent_TyreType_ID(getPurchased_TyreType_ID());
 		
 		return true;
 	}
