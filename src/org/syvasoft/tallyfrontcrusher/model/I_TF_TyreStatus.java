@@ -183,6 +183,15 @@ public interface I_TF_TyreStatus
 	/** Get TF_TyreStatus_UU	  */
 	public String getTF_TyreStatus_UU();
 
+    /** Column name TyreStatusType */
+    public static final String COLUMNNAME_TyreStatusType = "TyreStatusType";
+
+	/** Set Status Type	  */
+	public void setTyreStatusType (String TyreStatusType);
+
+	/** Get Status Type	  */
+	public String getTyreStatusType();
+
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";
 

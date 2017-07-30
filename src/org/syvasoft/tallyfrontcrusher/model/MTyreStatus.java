@@ -3,7 +3,10 @@ package org.syvasoft.tallyfrontcrusher.model;
 import java.sql.ResultSet;
 import java.util.Properties;
 
+import org.adempiere.exceptions.AdempiereException;
+import org.compiere.model.Query;
 import org.compiere.util.DB;
+import org.compiere.util.Env;
 
 public class MTyreStatus extends X_TF_TyreStatus {
 
@@ -35,4 +38,15 @@ public class MTyreStatus extends X_TF_TyreStatus {
 		}
 		return super.beforeSave(newRecord);
 	}
+	
+	public static int getTyreStatus(String statusType) {
+		MTyreStatus tStatus = new Query(Env.getCtx(), Table_Name, "TyreStatusType=?", null)
+			.setParameters(statusType).setClient_ID().setOnlyActiveRecords(true).first();
+		if(tStatus != null)
+			return tStatus.getTF_TyreStatus_ID();
+		else
+			throw new AdempiereException("No Valid Tyre Status for " + statusType);
+		
+	}
+	
 }

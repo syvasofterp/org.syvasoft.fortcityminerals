@@ -27,6 +27,8 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetOpeningEntries;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetRunningMeter;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetRentalContract;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTyreAssignment;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutTyreAssignment_CalcRunningMeter;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutTyreAssignment_ReleaseTyreMovement;
 import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalary;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryIssue;
@@ -134,11 +136,20 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		if(tableName.equals(MBoulderReceipt.Table_Name) && columnName.equals(MBoulderReceipt.COLUMNNAME_C_Project_ID))
 			list.add(new CalloutBoulderReceipt_JobWork());
 		
-		//TF_TyreAssignment
+		//TF_TyreAssignment - Tyre, Tyre Assignment Type
 		if(tableName.equals(MTyreAssignment.Table_Name) && (columnName.equals(MTyreAssignment.COLUMNNAME_TF_Tyre_ID) 
 				|| columnName.equals(MTyreAssignment.COLUMNNAME_TyreAssignmentType)))
 			list.add(new CalloutTyreAssignment());
 		
+		//TF_TyreAssignment - Release Tyre Movement
+		if(tableName.equals(MTyreAssignment.Table_Name) && columnName.equals(MTyreAssignment.COLUMNNAME_RD_TF_TyreMovement_ID))
+			list.add(new CalloutTyreAssignment_ReleaseTyreMovement());
+		
+		//TF_TyreAssignment - Calc Running Meter
+				if(tableName.equals(MTyreAssignment.Table_Name) && (columnName.equals(MTyreAssignment.COLUMNNAME_RD_TF_TyreMovement_ID)
+						|| columnName.equals(MTyreAssignment.COLUMNNAME_RD_End_Meter)))
+					list.add(new CalloutTyreAssignment_CalcRunningMeter());
+				
 		return list != null ? list.toArray(new IColumnCallout[0]) : new IColumnCallout[0];
 	}
 
