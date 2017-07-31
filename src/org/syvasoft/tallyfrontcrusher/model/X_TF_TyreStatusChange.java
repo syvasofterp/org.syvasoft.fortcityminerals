@@ -31,7 +31,7 @@ public class X_TF_TyreStatusChange extends PO implements I_TF_TyreStatusChange, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170727L;
+	private static final long serialVersionUID = 20170731L;
 
     /** Standard Constructor */
     public X_TF_TyreStatusChange (Properties ctx, int TF_TyreStatusChange_ID, String trxName)
@@ -39,6 +39,8 @@ public class X_TF_TyreStatusChange extends PO implements I_TF_TyreStatusChange, 
       super (ctx, TF_TyreStatusChange_ID, trxName);
       /** if (TF_TyreStatusChange_ID == 0)
         {
+			setChangeTyreType (false);
+// N
 			setCurr_TF_TyreStatus_ID (0);
 			setCurr_TF_TyreType_ID (0);
 			setDocAction (null);
@@ -80,6 +82,27 @@ public class X_TF_TyreStatusChange extends PO implements I_TF_TyreStatusChange, 
         .append(get_ID()).append("]");
       return sb.toString();
     }
+
+	/** Set Change Tyre Type.
+		@param ChangeTyreType Change Tyre Type	  */
+	public void setChangeTyreType (boolean ChangeTyreType)
+	{
+		set_Value (COLUMNNAME_ChangeTyreType, Boolean.valueOf(ChangeTyreType));
+	}
+
+	/** Get Change Tyre Type.
+		@return Change Tyre Type	  */
+	public boolean isChangeTyreType () 
+	{
+		Object oo = get_Value(COLUMNNAME_ChangeTyreType);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
 
 	public I_TF_TyreStatus getCurr_TF_TyreStatus() throws RuntimeException
     {

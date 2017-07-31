@@ -64,6 +64,15 @@ public interface I_TF_TyreStatusChange
 	  */
 	public int getAD_Org_ID();
 
+    /** Column name ChangeTyreType */
+    public static final String COLUMNNAME_ChangeTyreType = "ChangeTyreType";
+
+	/** Set Change Tyre Type	  */
+	public void setChangeTyreType (boolean ChangeTyreType);
+
+	/** Get Change Tyre Type	  */
+	public boolean isChangeTyreType();
+
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
 
