@@ -1,9 +1,12 @@
 package org.syvasoft.tallyfrontcrusher.model;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.util.Properties;
 
+import org.compiere.model.Query;
 import org.compiere.util.DB;
+import org.compiere.util.Env;
 
 public class MTyreLife extends X_TF_TyreLife {
 
@@ -33,6 +36,22 @@ public class MTyreLife extends X_TF_TyreLife {
 				setSeqNo(ii);
 			}
 		}
+		calcActualRunningMeter();
 		return super.beforeSave(newRecord);
-	}	
+	}
+	
+	public void calcActualRunningMeter() {
+		String sql = "SELECT SUM(Running_Meter) FROM TF_TyreMovement WHERE TF_Tyre_ID=? AND TF_TyreType_ID=?";
+		BigDecimal totRunningMeter = DB.getSQLValueBD(get_TrxName(), sql, getTF_Tyre_ID(), getTF_TyreType_ID());
+		if(totRunningMeter==null) {
+			totRunningMeter = BigDecimal.ZERO;
+		}
+		setActRunning_Meter(totRunningMeter);
+	}
+	
+	public static MTyreLife getTyreLife(int TF_Tyre_ID, int TF_TyreType_ID, String trxName) {
+		MTyreLife tlife = new Query(Env.getCtx(), Table_Name, "TF_Tyre_ID=? AND TF_TyreType_ID=?", trxName)
+			.setParameters(TF_Tyre_ID, TF_TyreType_ID).first();
+		return tlife;
+	}
 }
