@@ -7,6 +7,7 @@ import java.util.Properties;
 
 import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.Query;
+import org.compiere.util.DB;
 import org.compiere.util.Trx;
 
 public class MTyre extends X_TF_Tyre {
@@ -39,6 +40,7 @@ public class MTyre extends X_TF_Tyre {
 		if(newRecord) {
 			createTyreLifeRecords();
 		}
+		//calcRunningMeter();
 		return super.afterSave(newRecord, success);
 	}
 
@@ -68,6 +70,15 @@ public class MTyre extends X_TF_Tyre {
 		finally {
 			trans.commit();
 		}
+	}
+	
+	public void calcRunningMeter() {
+		String sql = "SELECT SUM(ActRunning_Meter) FROM TF_TyreLife WHERE TF_Tyre_ID=?";
+		BigDecimal totRunningMeter = DB.getSQLValueBD(get_TrxName(), sql, getTF_Tyre_ID());
+		if(totRunningMeter==null) {
+			totRunningMeter = BigDecimal.ZERO;
+		}
+		setRunning_Meter(totRunningMeter);
 	}
 	
 }

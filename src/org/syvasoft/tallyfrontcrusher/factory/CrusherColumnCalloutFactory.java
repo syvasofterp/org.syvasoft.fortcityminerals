@@ -29,6 +29,7 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetRentalContract;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTyreAssignment;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTyreAssignment_CalcRunningMeter;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTyreAssignment_ReleaseTyreMovement;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutTyreStatusChange_Tyre;
 import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalary;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryIssue;
@@ -36,6 +37,7 @@ import org.syvasoft.tallyfrontcrusher.model.MLabourWage;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWageIssue;
 import org.syvasoft.tallyfrontcrusher.model.MTripSheet;
 import org.syvasoft.tallyfrontcrusher.model.MTyreAssignment;
+import org.syvasoft.tallyfrontcrusher.model.MTyreStatusChange;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentalContract;
 import org.syvasoft.tallyfrontcrusher.model.TF_MInvoice;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
@@ -146,10 +148,14 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 			list.add(new CalloutTyreAssignment_ReleaseTyreMovement());
 		
 		//TF_TyreAssignment - Calc Running Meter
-				if(tableName.equals(MTyreAssignment.Table_Name) && (columnName.equals(MTyreAssignment.COLUMNNAME_RD_TF_TyreMovement_ID)
-						|| columnName.equals(MTyreAssignment.COLUMNNAME_RD_End_Meter)))
-					list.add(new CalloutTyreAssignment_CalcRunningMeter());
-				
+		if(tableName.equals(MTyreAssignment.Table_Name) && (columnName.equals(MTyreAssignment.COLUMNNAME_RD_TF_TyreMovement_ID)
+				|| columnName.equals(MTyreAssignment.COLUMNNAME_RD_End_Meter)))
+			list.add(new CalloutTyreAssignment_CalcRunningMeter());
+		
+		//TF_TyreStatusChange - Tyre
+		if(tableName.equals(MTyreStatusChange.Table_Name) && columnName.equals(MTyreStatusChange.COLUMNNAME_TF_Tyre_ID))
+			list.add(new CalloutTyreStatusChange_Tyre());
+		
 		return list != null ? list.toArray(new IColumnCallout[0]) : new IColumnCallout[0];
 	}
 
