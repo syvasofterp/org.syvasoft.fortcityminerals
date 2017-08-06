@@ -188,6 +188,15 @@ public interface I_TF_TyreLife
 
 	public I_TF_TyreType getTF_TyreType() throws RuntimeException;
 
+    /** Column name TyreCost */
+    public static final String COLUMNNAME_TyreCost = "TyreCost";
+
+	/** Set Tyre Cost	  */
+	public void setTyreCost (BigDecimal TyreCost);
+
+	/** Get Tyre Cost	  */
+	public BigDecimal getTyreCost();
+
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";
 

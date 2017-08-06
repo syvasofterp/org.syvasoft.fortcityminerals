@@ -206,6 +206,17 @@ public interface I_TF_Tyre
 	/** Get TF_Tyre_UU	  */
 	public String getTF_Tyre_UU();
 
+    /** Column name TF_TyrePosition_ID */
+    public static final String COLUMNNAME_TF_TyrePosition_ID = "TF_TyrePosition_ID";
+
+	/** Set Tyre Position	  */
+	public void setTF_TyrePosition_ID (int TF_TyrePosition_ID);
+
+	/** Get Tyre Position	  */
+	public int getTF_TyrePosition_ID();
+
+	public I_TF_TyrePosition getTF_TyrePosition() throws RuntimeException;
+
     /** Column name TF_TyreStatus_ID */
     public static final String COLUMNNAME_TF_TyreStatus_ID = "TF_TyreStatus_ID";
 

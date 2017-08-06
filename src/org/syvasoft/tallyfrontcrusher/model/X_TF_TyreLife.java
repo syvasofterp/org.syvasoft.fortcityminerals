@@ -33,7 +33,7 @@ public class X_TF_TyreLife extends PO implements I_TF_TyreLife, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170727L;
+	private static final long serialVersionUID = 20170801L;
 
     /** Standard Constructor */
     public X_TF_TyreLife (Properties ctx, int TF_TyreLife_ID, String trxName)
@@ -243,5 +243,22 @@ public class X_TF_TyreLife extends PO implements I_TF_TyreLife, I_Persistent
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
+	}
+
+	/** Set Tyre Cost.
+		@param TyreCost Tyre Cost	  */
+	public void setTyreCost (BigDecimal TyreCost)
+	{
+		set_Value (COLUMNNAME_TyreCost, TyreCost);
+	}
+
+	/** Get Tyre Cost.
+		@return Tyre Cost	  */
+	public BigDecimal getTyreCost () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_TyreCost);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
 	}
 }
