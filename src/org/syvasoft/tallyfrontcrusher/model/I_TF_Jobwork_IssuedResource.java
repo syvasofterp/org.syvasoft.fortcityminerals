@@ -79,6 +79,19 @@ public interface I_TF_Jobwork_IssuedResource
 
 	public org.compiere.model.I_C_Project getC_Project() throws RuntimeException;
 
+    /** Column name CloseDate */
+    public static final String COLUMNNAME_CloseDate = "CloseDate";
+
+	/** Set Close Date.
+	  * Close Date
+	  */
+	public void setCloseDate (Timestamp CloseDate);
+
+	/** Get Close Date.
+	  * Close Date
+	  */
+	public Timestamp getCloseDate();
+
     /** Column name Contract_Amt_Act */
     public static final String COLUMNNAME_Contract_Amt_Act = "Contract_Amt_Act";
 

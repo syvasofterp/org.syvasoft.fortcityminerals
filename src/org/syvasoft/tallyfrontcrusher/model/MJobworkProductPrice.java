@@ -2,6 +2,7 @@ package org.syvasoft.tallyfrontcrusher.model;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Properties;
 
@@ -25,10 +26,11 @@ public class MJobworkProductPrice extends X_TF_Jobwork_ProductPrice {
 		// TODO Auto-generated constructor stub
 	}
 
-	public static BigDecimal getPrice(Properties ctx, int C_Project_ID, int M_Product_ID) {
-		String whereClause = " C_Project_ID = ? AND M_Product_ID = ? ";
+	public static BigDecimal getPrice(Properties ctx, int C_Project_ID, int M_Product_ID, Timestamp priceDate) {
+		String whereClause = " C_Project_ID = ? AND M_Product_ID = ? AND ValidFrom <= ?";
 		List<MJobworkProductPrice> list = new Query(ctx, Table_Name, whereClause, null)
-			.setParameters(C_Project_ID, M_Product_ID).setOnlyActiveRecords(true).list();
+			.setParameters(C_Project_ID, M_Product_ID, priceDate).setOnlyActiveRecords(true)
+			.setOrderBy("ValidFrom DESC").list();
 						
 		if(list.size()>0) {
 			return list.get(0).getPriceList();
