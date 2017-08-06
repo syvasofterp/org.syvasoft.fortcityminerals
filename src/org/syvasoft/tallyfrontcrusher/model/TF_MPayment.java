@@ -83,6 +83,37 @@ public class TF_MPayment extends MPayment {
 			 return 0;
 		return ii.intValue();
 	}
+	
+	/** Column name Subcon_Invoice_ID */
+    public static final String COLUMNNAME_Subcon_Invoice_ID = "Subcon_Invoice_ID";
+	
+    public org.compiere.model.I_C_Invoice getSubcon_Invoice() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Invoice)MTable.get(getCtx(), org.compiere.model.I_C_Invoice.Table_Name)
+			.getPO(getSubcon_Invoice_ID(), get_TrxName());	}
+
+	/** Set Subcontractor Invoice.
+		@param Subcon_Invoice_ID Subcontractor Invoice	  */
+	public void setSubcon_Invoice_ID (int Subcon_Invoice_ID)
+	{
+		if (Subcon_Invoice_ID < 1) 
+			set_Value (COLUMNNAME_Subcon_Invoice_ID, null);
+		else 
+			set_Value (COLUMNNAME_Subcon_Invoice_ID, Integer.valueOf(Subcon_Invoice_ID));
+	}
+
+	/** Get Subcontractor Invoice.
+		@return Subcontractor Invoice	  */
+	public int getSubcon_Invoice_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Subcon_Invoice_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	
+	
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {
 		

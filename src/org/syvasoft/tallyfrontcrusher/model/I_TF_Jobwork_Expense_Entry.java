@@ -225,6 +225,17 @@ public interface I_TF_Jobwork_Expense_Entry
 	/** Get Process Now	  */
 	public boolean isProcessing();
 
+    /** Column name Subcon_Invoice_ID */
+    public static final String COLUMNNAME_Subcon_Invoice_ID = "Subcon_Invoice_ID";
+
+	/** Set Subcontractor Invoice	  */
+	public void setSubcon_Invoice_ID (int Subcon_Invoice_ID);
+
+	/** Get Subcontractor Invoice	  */
+	public int getSubcon_Invoice_ID();
+
+	public org.compiere.model.I_C_Invoice getSubcon_Invoice() throws RuntimeException;
+
     /** Column name TF_Jobwork_Expense_Entry_ID */
     public static final String COLUMNNAME_TF_Jobwork_Expense_Entry_ID = "TF_Jobwork_Expense_Entry_ID";
 

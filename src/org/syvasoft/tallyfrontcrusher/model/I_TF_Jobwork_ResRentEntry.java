@@ -21,18 +21,18 @@ import java.sql.Timestamp;
 import org.compiere.model.*;
 import org.compiere.util.KeyNamePair;
 
-/** Generated Interface for TF_Jobwork_ItemIssue
+/** Generated Interface for TF_Jobwork_ResRentEntry
  *  @author iDempiere (generated) 
  *  @version Release 3.1
  */
 @SuppressWarnings("all")
-public interface I_TF_Jobwork_ItemIssue 
+public interface I_TF_Jobwork_ResRentEntry 
 {
 
-    /** TableName=TF_Jobwork_ItemIssue */
-    public static final String Table_Name = "TF_Jobwork_ItemIssue";
+    /** TableName=TF_Jobwork_ResRentEntry */
+    public static final String Table_Name = "TF_Jobwork_ResRentEntry";
 
-    /** AD_Table_ID=1000194 */
+    /** AD_Table_ID=1000206 */
     public static final int Table_ID = MTable.getTable_ID(Table_Name);
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);
@@ -64,50 +64,27 @@ public interface I_TF_Jobwork_ItemIssue
 	  */
 	public int getAD_Org_ID();
 
-    /** Column name C_ElementValue_ID */
-    public static final String COLUMNNAME_C_ElementValue_ID = "C_ElementValue_ID";
+    /** Column name Contract_Amt_Act */
+    public static final String COLUMNNAME_Contract_Amt_Act = "Contract_Amt_Act";
 
-	/** Set Profit Center.
-	  * Profit Center
+	/** Set Contract Amt (Actual)	  */
+	public void setContract_Amt_Act (BigDecimal Contract_Amt_Act);
+
+	/** Get Contract Amt (Actual)	  */
+	public BigDecimal getContract_Amt_Act();
+
+    /** Column name ContractBase */
+    public static final String COLUMNNAME_ContractBase = "ContractBase";
+
+	/** Set Contract Base.
+	  * Represents how the contract amount will be calculated.
 	  */
-	public void setC_ElementValue_ID (int C_ElementValue_ID);
+	public void setContractBase (String ContractBase);
 
-	/** Get Profit Center.
-	  * Profit Center
+	/** Get Contract Base.
+	  * Represents how the contract amount will be calculated.
 	  */
-	public int getC_ElementValue_ID();
-
-	public org.compiere.model.I_C_ElementValue getC_ElementValue() throws RuntimeException;
-
-    /** Column name C_Project_ID */
-    public static final String COLUMNNAME_C_Project_ID = "C_Project_ID";
-
-	/** Set Subcontract / Job Work.
-	  * Subcontract / Job Work
-	  */
-	public void setC_Project_ID (int C_Project_ID);
-
-	/** Get Subcontract / Job Work.
-	  * Subcontract / Job Work
-	  */
-	public int getC_Project_ID();
-
-	public org.compiere.model.I_C_Project getC_Project() throws RuntimeException;
-
-    /** Column name C_UOM_ID */
-    public static final String COLUMNNAME_C_UOM_ID = "C_UOM_ID";
-
-	/** Set UOM.
-	  * Unit of Measure
-	  */
-	public void setC_UOM_ID (int C_UOM_ID);
-
-	/** Get UOM.
-	  * Unit of Measure
-	  */
-	public int getC_UOM_ID();
-
-	public org.compiere.model.I_C_UOM getC_UOM() throws RuntimeException;
+	public String getContractBase();
 
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
@@ -138,45 +115,6 @@ public interface I_TF_Jobwork_ItemIssue
 	  */
 	public Timestamp getDateAcct();
 
-    /** Column name Description */
-    public static final String COLUMNNAME_Description = "Description";
-
-	/** Set Description.
-	  * Optional short description of the record
-	  */
-	public void setDescription (String Description);
-
-	/** Get Description.
-	  * Optional short description of the record
-	  */
-	public String getDescription();
-
-    /** Column name DocStatus */
-    public static final String COLUMNNAME_DocStatus = "DocStatus";
-
-	/** Set Document Status.
-	  * The current status of the document
-	  */
-	public void setDocStatus (String DocStatus);
-
-	/** Get Document Status.
-	  * The current status of the document
-	  */
-	public String getDocStatus();
-
-    /** Column name DocumentNo */
-    public static final String COLUMNNAME_DocumentNo = "DocumentNo";
-
-	/** Set Document No.
-	  * Document sequence number of the document
-	  */
-	public void setDocumentNo (String DocumentNo);
-
-	/** Get Document No.
-	  * Document sequence number of the document
-	  */
-	public String getDocumentNo();
-
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";
 
@@ -190,51 +128,6 @@ public interface I_TF_Jobwork_ItemIssue
 	  */
 	public boolean isActive();
 
-    /** Column name M_Inventory_ID */
-    public static final String COLUMNNAME_M_Inventory_ID = "M_Inventory_ID";
-
-	/** Set Phys.Inventory.
-	  * Parameters for a Physical Inventory
-	  */
-	public void setM_Inventory_ID (int M_Inventory_ID);
-
-	/** Get Phys.Inventory.
-	  * Parameters for a Physical Inventory
-	  */
-	public int getM_Inventory_ID();
-
-	public org.compiere.model.I_M_Inventory getM_Inventory() throws RuntimeException;
-
-    /** Column name M_Product_ID */
-    public static final String COLUMNNAME_M_Product_ID = "M_Product_ID";
-
-	/** Set Product.
-	  * Product, Service, Item
-	  */
-	public void setM_Product_ID (int M_Product_ID);
-
-	/** Get Product.
-	  * Product, Service, Item
-	  */
-	public int getM_Product_ID();
-
-	public org.compiere.model.I_M_Product getM_Product() throws RuntimeException;
-
-    /** Column name M_Warehouse_ID */
-    public static final String COLUMNNAME_M_Warehouse_ID = "M_Warehouse_ID";
-
-	/** Set Warehouse.
-	  * Storage Warehouse and Service Point
-	  */
-	public void setM_Warehouse_ID (int M_Warehouse_ID);
-
-	/** Get Warehouse.
-	  * Storage Warehouse and Service Point
-	  */
-	public int getM_Warehouse_ID();
-
-	public org.compiere.model.I_M_Warehouse getM_Warehouse() throws RuntimeException;
-
     /** Column name Processed */
     public static final String COLUMNNAME_Processed = "Processed";
 
@@ -247,15 +140,6 @@ public interface I_TF_Jobwork_ItemIssue
 	  * The document has been processed
 	  */
 	public boolean isProcessed();
-
-    /** Column name Processing */
-    public static final String COLUMNNAME_Processing = "Processing";
-
-	/** Set Process Now	  */
-	public void setProcessing (boolean Processing);
-
-	/** Get Process Now	  */
-	public boolean isProcessing();
 
     /** Column name Qty */
     public static final String COLUMNNAME_Qty = "Qty";
@@ -281,23 +165,43 @@ public interface I_TF_Jobwork_ItemIssue
 
 	public org.compiere.model.I_C_Invoice getSubcon_Invoice() throws RuntimeException;
 
-    /** Column name TF_Jobwork_ItemIssue_ID */
-    public static final String COLUMNNAME_TF_Jobwork_ItemIssue_ID = "TF_Jobwork_ItemIssue_ID";
+    /** Column name TF_Jobwork_IssuedResource_ID */
+    public static final String COLUMNNAME_TF_Jobwork_IssuedResource_ID = "TF_Jobwork_IssuedResource_ID";
 
-	/** Set Issue to Jobwork	  */
-	public void setTF_Jobwork_ItemIssue_ID (int TF_Jobwork_ItemIssue_ID);
+	/** Set Issued Vehicles / Resources	  */
+	public void setTF_Jobwork_IssuedResource_ID (int TF_Jobwork_IssuedResource_ID);
 
-	/** Get Issue to Jobwork	  */
-	public int getTF_Jobwork_ItemIssue_ID();
+	/** Get Issued Vehicles / Resources	  */
+	public int getTF_Jobwork_IssuedResource_ID();
 
-    /** Column name TF_Jobwork_ItemIssue_UU */
-    public static final String COLUMNNAME_TF_Jobwork_ItemIssue_UU = "TF_Jobwork_ItemIssue_UU";
+	public I_TF_Jobwork_IssuedResource getTF_Jobwork_IssuedResource() throws RuntimeException;
 
-	/** Set TF_Jobwork_ItemIssue_UU	  */
-	public void setTF_Jobwork_ItemIssue_UU (String TF_Jobwork_ItemIssue_UU);
+    /** Column name TF_Jobwork_ResRentEntry_ID */
+    public static final String COLUMNNAME_TF_Jobwork_ResRentEntry_ID = "TF_Jobwork_ResRentEntry_ID";
 
-	/** Get TF_Jobwork_ItemIssue_UU	  */
-	public String getTF_Jobwork_ItemIssue_UU();
+	/** Set Rent Entry	  */
+	public void setTF_Jobwork_ResRentEntry_ID (int TF_Jobwork_ResRentEntry_ID);
+
+	/** Get Rent Entry	  */
+	public int getTF_Jobwork_ResRentEntry_ID();
+
+    /** Column name TF_Jobwork_ResRentEntry_UU */
+    public static final String COLUMNNAME_TF_Jobwork_ResRentEntry_UU = "TF_Jobwork_ResRentEntry_UU";
+
+	/** Set TF_Jobwork_ResRentEntry_UU	  */
+	public void setTF_Jobwork_ResRentEntry_UU (String TF_Jobwork_ResRentEntry_UU);
+
+	/** Get TF_Jobwork_ResRentEntry_UU	  */
+	public String getTF_Jobwork_ResRentEntry_UU();
+
+    /** Column name Unit_Price */
+    public static final String COLUMNNAME_Unit_Price = "Unit_Price";
+
+	/** Set Unit Price	  */
+	public void setUnit_Price (BigDecimal Unit_Price);
+
+	/** Get Unit Price	  */
+	public BigDecimal getUnit_Price();
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";

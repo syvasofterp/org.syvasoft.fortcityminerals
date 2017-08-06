@@ -27,7 +27,9 @@ public class MTyreStatusChange extends X_TF_TyreStatusChange {
 	private boolean isLatestDocument() {
 		String sql = " SELECT COUNT(*) FROM TF_TyreStatusChange WHERE TF_Tyre_ID = ? AND DateAcct > ? ";
 		int count = DB.getSQLValue(get_TrxName(), sql, getTF_Tyre_ID(), getDateAcct());
-		return (count == 0);
+		sql = " SELECT COUNT(*) FROM TF_TyreMovement WHERE TF_Tyre_ID = ? AND MovementDate > ?";
+		int count1 = DB.getSQLValue(get_TrxName(), sql, getTF_Tyre_ID(), getDateAcct());
+		return (count == 0 && count1 == 0);
 	}
 	public void processIt(String docAction) {
 		if(DocAction.ACTION_Prepare.equals(docAction)) {
