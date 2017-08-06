@@ -33,7 +33,7 @@ public class X_TF_Jobwork_ItemIssue extends PO implements I_TF_Jobwork_ItemIssue
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170501L;
+	private static final long serialVersionUID = 20170806L;
 
     /** Standard Constructor */
     public X_TF_Jobwork_ItemIssue (Properties ctx, int TF_Jobwork_ItemIssue_ID, String trxName)
@@ -169,7 +169,7 @@ public class X_TF_Jobwork_ItemIssue extends PO implements I_TF_Jobwork_ItemIssue
 	  */
 	public void setDateAcct (Timestamp DateAcct)
 	{
-		set_ValueNoCheck (COLUMNNAME_DateAcct, DateAcct);
+		set_Value (COLUMNNAME_DateAcct, DateAcct);
 	}
 
 	/** Get Account Date.
@@ -411,6 +411,31 @@ public class X_TF_Jobwork_ItemIssue extends PO implements I_TF_Jobwork_ItemIssue
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
+	}
+
+	public org.compiere.model.I_C_Invoice getSubcon_Invoice() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Invoice)MTable.get(getCtx(), org.compiere.model.I_C_Invoice.Table_Name)
+			.getPO(getSubcon_Invoice_ID(), get_TrxName());	}
+
+	/** Set Subcontractor Invoice.
+		@param Subcon_Invoice_ID Subcontractor Invoice	  */
+	public void setSubcon_Invoice_ID (int Subcon_Invoice_ID)
+	{
+		if (Subcon_Invoice_ID < 1) 
+			set_Value (COLUMNNAME_Subcon_Invoice_ID, null);
+		else 
+			set_Value (COLUMNNAME_Subcon_Invoice_ID, Integer.valueOf(Subcon_Invoice_ID));
+	}
+
+	/** Get Subcontractor Invoice.
+		@return Subcontractor Invoice	  */
+	public int getSubcon_Invoice_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Subcon_Invoice_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	/** Set Issue to Jobwork.

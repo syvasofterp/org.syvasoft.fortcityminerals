@@ -24,6 +24,7 @@ import org.syvasoft.tallyfrontcrusher.model.MJobworkIssuedResource;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkItemIssue;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkProductPrice;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkReceivedItems;
+import org.syvasoft.tallyfrontcrusher.model.MJobworkResourceRentEntry;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWage;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWageAdvance;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWageConfig;
@@ -143,6 +144,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return MTyreStatusChange.class;
 		else if (MTyreLife.Table_Name.equals(tableName))
 			return MTyreLife.class;
+		else if (MJobworkResourceRentEntry.Table_Name.equals(tableName))
+			return MJobworkResourceRentEntry.class;
 		return null;
 	}
 
@@ -237,6 +240,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MTyreStatusChange(ctx, Record_ID, trxName);
 		else if (MTyreLife.Table_Name.equals(tableName))
 			return new MTyreLife(ctx, Record_ID, trxName);
+		else if (MJobworkResourceRentEntry.Table_Name.equals(tableName))
+			return new MJobworkResourceRentEntry(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -331,6 +336,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MTyreStatusChange(ctx, rs, trxName);
 		else if (MTyreLife.Table_Name.equals(tableName))
 			return new MTyreLife(ctx, rs, trxName);
+		else if (MJobworkResourceRentEntry.Table_Name.equals(tableName))
+			return new MJobworkResourceRentEntry(ctx, rs, trxName);
 		return null;
 	}
 

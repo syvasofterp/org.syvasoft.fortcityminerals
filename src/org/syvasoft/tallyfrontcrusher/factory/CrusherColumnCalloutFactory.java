@@ -14,6 +14,7 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutInvoiceHeaderItemAmount;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutLabourWage;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutLabourWageIssue_CalcBalanceAmts;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutLabourWageIssue_SetOpenAmt;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutMJobworkResourceRentEntry_CalcContractAmt;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_CalcAmt;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_SetPrice;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_SetVehicleNo;
@@ -33,6 +34,7 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutTyreStatusChange_Tyre;
 import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalary;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryIssue;
+import org.syvasoft.tallyfrontcrusher.model.MJobworkResourceRentEntry;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWage;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWageIssue;
 import org.syvasoft.tallyfrontcrusher.model.MTripSheet;
@@ -155,6 +157,11 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		//TF_TyreStatusChange - Tyre
 		if(tableName.equals(MTyreStatusChange.Table_Name) && columnName.equals(MTyreStatusChange.COLUMNNAME_TF_Tyre_ID))
 			list.add(new CalloutTyreStatusChange_Tyre());
+		
+		//TF_Jobwork_ResRentEntry - Calc Contract Amount
+		if(tableName.equals(MJobworkResourceRentEntry.Table_Name) && (columnName.equals(MJobworkResourceRentEntry.COLUMNNAME_Qty))
+				|| (columnName.equals(MJobworkResourceRentEntry.COLUMNNAME_Unit_Price)))
+				list.add(new CalloutMJobworkResourceRentEntry_CalcContractAmt());
 		
 		return list != null ? list.toArray(new IColumnCallout[0]) : new IColumnCallout[0];
 	}

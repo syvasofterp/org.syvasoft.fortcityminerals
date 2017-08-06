@@ -57,6 +57,7 @@ public class MTyre extends X_TF_Tyre {
 				tlife.setTF_Tyre_ID(getTF_Tyre_ID());
 				tlife.setSeqNo(seq);
 				tlife.setTF_TyreType_ID(type.getTF_TyreType_ID());
+				tlife.setTyreCost(BigDecimal.ZERO);
 				tlife.setEstRunning_Meter(type.getEstRunning_Meter());
 				tlife.setActRunning_Meter(BigDecimal.ZERO);
 				tlife.saveEx();

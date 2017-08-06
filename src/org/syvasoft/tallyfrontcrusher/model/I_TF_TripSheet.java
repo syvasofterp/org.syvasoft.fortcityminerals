@@ -320,6 +320,17 @@ public interface I_TF_TripSheet
 	/** Get Running Meter	  */
 	public BigDecimal getRunning_Meter();
 
+    /** Column name Subcon_Invoice_ID */
+    public static final String COLUMNNAME_Subcon_Invoice_ID = "Subcon_Invoice_ID";
+
+	/** Set Subcontractor Invoice	  */
+	public void setSubcon_Invoice_ID (int Subcon_Invoice_ID);
+
+	/** Get Subcontractor Invoice	  */
+	public int getSubcon_Invoice_ID();
+
+	public org.compiere.model.I_C_Invoice getSubcon_Invoice() throws RuntimeException;
+
     /** Column name TF_Labour_Wage_ID */
     public static final String COLUMNNAME_TF_Labour_Wage_ID = "TF_Labour_Wage_ID";
 

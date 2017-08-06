@@ -53,7 +53,9 @@ public class MJobworkIssuedResource extends X_TF_Jobwork_IssuedResource {
 	
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
-		setContract_Amt_Act(getQty().multiply(getUnit_Price()));
+		//To keep the amount calculated from Rent Entry 
+		if(!is_ValueChanged(COLUMNNAME_Contract_Amt_Act))
+			setContract_Amt_Act(getQty().multiply(getUnit_Price()));
 		//setDeductedAmt(getUnit_Price().multiply(getQtyDeducted()));
 		if(is_ValueChanged(COLUMNNAME_ContractBase))
 			updateTripSheetBasedFields();
