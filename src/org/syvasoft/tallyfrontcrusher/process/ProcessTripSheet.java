@@ -1,6 +1,7 @@
 package org.syvasoft.tallyfrontcrusher.process;
 
 
+import org.adempiere.exceptions.AdempiereException;
 import org.compiere.process.DocAction;
 import org.compiere.process.ProcessInfoParameter;
 import org.compiere.process.SvrProcess;
@@ -46,6 +47,9 @@ public class ProcessTripSheet extends SvrProcess {
 		if(issuedResource != null) {
 			issuedResource.updateTripSheetBasedFields();
 			issuedResource.saveEx();
+		}
+		else {
+			throw new AdempiereException("Invalid Vehicle for this Subcontract!");
 		}
 		return null;
 	}

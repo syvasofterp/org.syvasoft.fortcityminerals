@@ -34,7 +34,7 @@ public class MJobworkIssuedResource extends X_TF_Jobwork_IssuedResource {
 	}
 	
 	public static MJobworkIssuedResource getByResource(Properties ctx, int C_Project_ID, int M_Product_ID, String trxName) {
-		String whereClause = " C_Project_ID = ? AND M_Product_ID = ? ";
+		String whereClause = " C_Project_ID = ? AND M_Product_ID = ? AND ContractStatus = 'A' ";
 		List<MJobworkIssuedResource> list = new Query(ctx, Table_Name, whereClause, trxName)
 			.setParameters(C_Project_ID, M_Product_ID).setOrderBy(" ContractStatus ").list();
 		MJobworkIssuedResource res = null;

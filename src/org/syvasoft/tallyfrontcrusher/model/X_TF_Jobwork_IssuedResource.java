@@ -19,9 +19,11 @@ package org.syvasoft.tallyfrontcrusher.model;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.Properties;
 import org.compiere.model.*;
 import org.compiere.util.Env;
+import org.compiere.util.KeyNamePair;
 
 /** Generated Model for TF_Jobwork_IssuedResource
  *  @author iDempiere (generated) 
@@ -32,7 +34,7 @@ public class X_TF_Jobwork_IssuedResource extends PO implements I_TF_Jobwork_Issu
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170502L;
+	private static final long serialVersionUID = 20170806L;
 
     /** Standard Constructor */
     public X_TF_Jobwork_IssuedResource (Properties ctx, int TF_Jobwork_IssuedResource_ID, String trxName)
@@ -110,6 +112,23 @@ public class X_TF_Jobwork_IssuedResource extends PO implements I_TF_Jobwork_Issu
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
+	}
+
+	/** Set Close Date.
+		@param CloseDate 
+		Close Date
+	  */
+	public void setCloseDate (Timestamp CloseDate)
+	{
+		set_Value (COLUMNNAME_CloseDate, CloseDate);
+	}
+
+	/** Get Close Date.
+		@return Close Date
+	  */
+	public Timestamp getCloseDate () 
+	{
+		return (Timestamp)get_Value(COLUMNNAME_CloseDate);
 	}
 
 	/** Set Contract Amt (Actual).
@@ -258,6 +277,14 @@ public class X_TF_Jobwork_IssuedResource extends PO implements I_TF_Jobwork_Issu
 			 return 0;
 		return ii.intValue();
 	}
+
+    /** Get Record ID/ColumnName
+        @return ID/ColumnName pair
+      */
+    public KeyNamePair getKeyNamePair() 
+    {
+        return new KeyNamePair(get_ID(), String.valueOf(getM_Product_ID()));
+    }
 
 	/** Set Operator Deducted Wage.
 		@param OperatorDeductedWage Operator Deducted Wage	  */
