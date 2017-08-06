@@ -33,7 +33,7 @@ public class X_TF_Tyre extends PO implements I_TF_Tyre, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170727L;
+	private static final long serialVersionUID = 20170803L;
 
     /** Standard Constructor */
     public X_TF_Tyre (Properties ctx, int TF_Tyre_ID, String trxName)
@@ -274,6 +274,31 @@ public class X_TF_Tyre extends PO implements I_TF_Tyre, I_Persistent
 	public String getTF_Tyre_UU () 
 	{
 		return (String)get_Value(COLUMNNAME_TF_Tyre_UU);
+	}
+
+	public I_TF_TyrePosition getTF_TyrePosition() throws RuntimeException
+    {
+		return (I_TF_TyrePosition)MTable.get(getCtx(), I_TF_TyrePosition.Table_Name)
+			.getPO(getTF_TyrePosition_ID(), get_TrxName());	}
+
+	/** Set Tyre Position.
+		@param TF_TyrePosition_ID Tyre Position	  */
+	public void setTF_TyrePosition_ID (int TF_TyrePosition_ID)
+	{
+		if (TF_TyrePosition_ID < 1) 
+			set_Value (COLUMNNAME_TF_TyrePosition_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_TyrePosition_ID, Integer.valueOf(TF_TyrePosition_ID));
+	}
+
+	/** Get Tyre Position.
+		@return Tyre Position	  */
+	public int getTF_TyrePosition_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_TyrePosition_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	public I_TF_TyreStatus getTF_TyreStatus() throws RuntimeException
