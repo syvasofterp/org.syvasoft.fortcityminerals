@@ -392,8 +392,10 @@ public class TF_MInvoice extends MInvoice {
 			//2. In Subcontract, Reverse the Invoiced Amount & Qty
 			//3. 				Reverse Issued Items
 			//4. 				Reverse Issued Vehicle Rent
-			//5. 				Reverse Additional Charges
-			//6.				Reverse Expenses
+			//5.				Reverse Operator Wage
+			//6.				Reverse Diesel Issued to Rented Vehicle
+			//7. 				Reverse Additional Charges
+			//8.				Reverse Expenses
 			TF_MProject proj = new TF_MProject(getCtx(), C_Project_ID, get_TrxName());
 			String whereClause;
 			for(MInvoiceLine line : getLines()) {
@@ -422,7 +424,7 @@ public class TF_MInvoice extends MInvoice {
 					continue;
 				}
 				
-				//3 or 4
+				//3 or 4 or 6
 				if(line.getM_Product_ID() > 0) {
 					//3
 					whereClause = " C_Project_ID = ?  AND M_Product_ID = ? ";
@@ -433,6 +435,14 @@ public class TF_MInvoice extends MInvoice {
 						MJobworkIssuedItems issuedItem = issuedItems.get(0);						
 						issuedItem.setQtyDeducted(issuedItem.getQtyDeducted().add(line.getQtyInvoiced()));
 						issuedItem.saveEx();
+						//Reset Invoice ID to Issued Items.
+						String sql = " Update TF_Jobwork_ItemIssue SET Subcon_Invoice_ID = NULL WHERE Subcon_Invoice_ID = ? " +
+								" AND M_Product_ID = ? ";
+						ArrayList<Object> params = new ArrayList<Object>();
+						params = new ArrayList<Object>();
+						params.add(getC_Invoice_ID());
+						params.add(issuedItem.getM_Product_ID());
+						DB.executeUpdateEx(sql, params.toArray(), get_TrxName());
 						continue;
 					}
 					
@@ -449,9 +459,9 @@ public class TF_MInvoice extends MInvoice {
 					}
 				}
 				
-				//4-Operator wage or 5 or 6
+				//5-Operator wage or 7 or 8
 				if(line.getC_Charge_ID() > 0) {
-					//4 - operator wage
+					//5 - operator wage
 					whereClause = " C_Project_ID = ? AND Wage_Charge_ID = ? ";
 					List<MJobworkIssuedResource> resources = new Query(getCtx(), MJobworkIssuedResource.Table_Name, whereClause, get_TrxName())
 					.setParameters(C_Project_ID, line.getC_Charge_ID()).list();
@@ -462,7 +472,7 @@ public class TF_MInvoice extends MInvoice {
 						res.saveEx();
 					}
 					
-					//5
+					//7
 					whereClause = " C_Project_ID = ? AND C_Charge_ID = ? ";
 					List<MJobworkCharges> charges = new Query(getCtx(), MJobworkCharges.Table_Name, whereClause, get_TrxName())
 						.setParameters(C_Project_ID, line.getC_Charge_ID()).list();
@@ -471,10 +481,18 @@ public class TF_MInvoice extends MInvoice {
 						MJobworkCharges charge = charges.get(0);
 						charge.setDeductedAmt(charge.getDeductedAmt().add(line.getLineNetAmt()));
 						charge.saveEx();
+						//Reset Invoice ID to Additional Charges and Advance Amount.
+						String sql = " Update C_Payment SET Subcon_Invoice_ID = NULL WHERE Subcon_Invoice_ID = ? " +
+								" AND C_Charge_ID = ? ";
+						ArrayList<Object> params = new ArrayList<Object>();
+						params = new ArrayList<Object>();
+						params.add(getC_Invoice_ID());
+						params.add(charge.getC_Charge_ID());
+						DB.executeUpdateEx(sql, params.toArray(), get_TrxName());
 						continue;
 					}					
 					
-					//6
+					//8
 					whereClause = " C_Project_ID = ? AND C_ElementValue_ID = (SELECT c.C_ElementValue_ID FROM "
 								+ " C_Charge c WHERE c.C_Charge_ID = ? ) ";
 					List<MJobworkExpense> expenses = new Query(getCtx(), MJobworkExpense.Table_Name, whereClause, get_TrxName())
@@ -484,11 +502,32 @@ public class TF_MInvoice extends MInvoice {
 						MJobworkExpense exp = expenses.get(0);
 						exp.setDeductedAmt(exp.getDeductedAmt().add(line.getLineNetAmt()));
 						exp.saveEx();
+						//Reset Invoice ID to Expense Entry.
+						String sql = " Update TF_Jobwork_Expense SET Subcon_Invoice_ID = NULL WHERE Subcon_Invoice_ID = ? " +
+								" AND C_ElementValue_ID = ? ";
+						ArrayList<Object> params = new ArrayList<Object>();
+						params = new ArrayList<Object>();
+						params.add(getC_Invoice_ID());
+						params.add(exp.getC_ElementValue_ID());
+						DB.executeUpdateEx(sql, params.toArray(), get_TrxName());
 						continue;
 					}
 				}
 				
 			}
+			
+			//Reset Invoice ID to Issued Resource/Vehicle Rent Entry for Monthly Contract Base.
+			String sql = " Update TF_Jobwork_ResRentEntry SET Subcon_Invoice_ID = NULL WHERE Subcon_Invoice_ID = ? " ;
+			ArrayList<Object> params = new ArrayList<Object>();			
+			params.add(getC_Invoice_ID());						
+			DB.executeUpdateEx(sql, params.toArray(), get_TrxName());
+			
+			//Reset Invoice ID to TripSheet Entries.
+			sql = " Update TF_TripSheet SET Subcon_Invoice_ID = NULL WHERE Subcon_Invoice_ID = ? " ;
+			params = new ArrayList<Object>();
+			params.add(getC_Invoice_ID());
+			DB.executeUpdateEx(sql, params.toArray(), get_TrxName());
+			
 			
 		}//End C_Project_ID
 		

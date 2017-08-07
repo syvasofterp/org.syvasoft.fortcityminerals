@@ -33,7 +33,7 @@ public class X_TF_TripSheet extends PO implements I_TF_TripSheet, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170806L;
+	private static final long serialVersionUID = 20170807L;
 
     /** Standard Constructor */
     public X_TF_TripSheet (Properties ctx, int TF_TripSheet_ID, String trxName)
@@ -521,6 +521,31 @@ public class X_TF_TripSheet extends PO implements I_TF_TripSheet, I_Persistent
 	public int getSubcon_Invoice_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_Subcon_Invoice_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public I_TF_Jobwork_IssuedResource getTF_Jobwork_IssuedResource() throws RuntimeException
+    {
+		return (I_TF_Jobwork_IssuedResource)MTable.get(getCtx(), I_TF_Jobwork_IssuedResource.Table_Name)
+			.getPO(getTF_Jobwork_IssuedResource_ID(), get_TrxName());	}
+
+	/** Set Issued Vehicles / Resources.
+		@param TF_Jobwork_IssuedResource_ID Issued Vehicles / Resources	  */
+	public void setTF_Jobwork_IssuedResource_ID (int TF_Jobwork_IssuedResource_ID)
+	{
+		if (TF_Jobwork_IssuedResource_ID < 1) 
+			set_Value (COLUMNNAME_TF_Jobwork_IssuedResource_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_Jobwork_IssuedResource_ID, Integer.valueOf(TF_Jobwork_IssuedResource_ID));
+	}
+
+	/** Get Issued Vehicles / Resources.
+		@return Issued Vehicles / Resources	  */
+	public int getTF_Jobwork_IssuedResource_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Jobwork_IssuedResource_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();

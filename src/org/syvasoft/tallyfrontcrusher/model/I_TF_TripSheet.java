@@ -331,6 +331,17 @@ public interface I_TF_TripSheet
 
 	public org.compiere.model.I_C_Invoice getSubcon_Invoice() throws RuntimeException;
 
+    /** Column name TF_Jobwork_IssuedResource_ID */
+    public static final String COLUMNNAME_TF_Jobwork_IssuedResource_ID = "TF_Jobwork_IssuedResource_ID";
+
+	/** Set Issued Vehicles / Resources	  */
+	public void setTF_Jobwork_IssuedResource_ID (int TF_Jobwork_IssuedResource_ID);
+
+	/** Get Issued Vehicles / Resources	  */
+	public int getTF_Jobwork_IssuedResource_ID();
+
+	public I_TF_Jobwork_IssuedResource getTF_Jobwork_IssuedResource() throws RuntimeException;
+
     /** Column name TF_Labour_Wage_ID */
     public static final String COLUMNNAME_TF_Labour_Wage_ID = "TF_Labour_Wage_ID";
 

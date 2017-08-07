@@ -17,6 +17,7 @@ import org.compiere.process.SvrProcess;
 import org.compiere.util.AdempiereUserError;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
+import org.syvasoft.tallyfrontcrusher.model.MGLPostingConfig;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkCharges;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkExpense;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkIssuedItems;
@@ -172,6 +173,7 @@ public class CreateInvoiceForJobWork extends SvrProcess {
 				invLine.saveEx();
 				
 				//Add Deducted Qty to Jobwork Issued Item
+				issuedItem.set_TrxName(get_TrxName());
 				issuedItem.setQtyDeducted(issuedItem.getQtyDeducted().add(issuedQty));
 				issuedItem.saveEx();
 				
@@ -193,10 +195,10 @@ public class CreateInvoiceForJobWork extends SvrProcess {
 					//get Running Meter
 					//whereClause = "SELECT SUM(Running_Meter) FROM TF_TripSheet WHERE C_Project_ID = ? AND Vehicle_ID = ? AND Processed='Y'";
 					whereClause = " C_Project_ID = ? AND Vehicle_ID = ? AND Processed='Y' AND  DocStatus = 'CO' AND " + 
-							" DateReport >= ? AND DateReport <= ? AND DateReport <= COALESCE(?,DateReport) AND Subcon_Invoice_ID IS NULL ";
+							" DateReport >= ? AND DateReport <= ? AND TF_Jobwork_IssuedResource_ID = ? AND Subcon_Invoice_ID IS NULL ";
 					sql = " SELECT SUM(Running_Meter) FROM TF_TripSheet WHERE " + whereClause;
 					BigDecimal runningMeter = DB.getSQLValueBD(get_TrxName(), sql, jobWork.getC_Project_ID(), res.getM_Product_ID(),
-								m_DateTrx_1, m_DateTrx_2, res.getCloseDate());
+								m_DateTrx_1, m_DateTrx_2, res.getTF_Jobwork_IssuedResource_ID());
 					
 					if(runningMeter == null)
 						runningMeter = BigDecimal.ZERO;
@@ -234,7 +236,7 @@ public class CreateInvoiceForJobWork extends SvrProcess {
 					
 					invLine.saveEx();
 					
-					//Add Deducted Qty to Jobwork issued vehicle
+					//Add Deducted Qty to Jobwork issued vehicle					
 					res.setQtyDeducted(res.getQtyDeducted().add(qtyDeduct));
 					res.setDeductedAmt(res.getDeductedAmt().add(price.multiply(qtyDeduct)));
 				}
@@ -245,7 +247,8 @@ public class CreateInvoiceForJobWork extends SvrProcess {
 					for(MJobworkResourceRentEntry rent : rentEntries) {
 						//BigDecimal qtyDeduct = res.getQty().subtract(res.getQtyDeducted());
 						BigDecimal price = rent.getUnit_Price();
-						
+						//Created Individual Invoice line 
+						//To support different price  for different rent entry.
 						invLine = new MInvoiceLine(invoice);
 						invLine.setM_Product_ID(res.getM_Product_ID(), true);
 						invLine.setQty(rent.getQty().negate());
@@ -264,8 +267,9 @@ public class CreateInvoiceForJobWork extends SvrProcess {
 						
 						//Update back Subcontract Invoice ID to Rent Entry
 						rent.setSubcon_Invoice_ID(invoice.getC_Invoice_ID());
+						rent.setProcessed(true);
 						rent.saveEx();
-																	
+						
 						//Add Deducted Qty to Jobwork issued vehicle
 						res.setQtyDeducted(res.getQtyDeducted().add(rent.getQty()));
 						res.setDeductedAmt(res.getDeductedAmt().add(price.multiply(rent.getQty())));
@@ -275,20 +279,66 @@ public class CreateInvoiceForJobWork extends SvrProcess {
 				
 				//Deduct Operator Wage
 				if(!res.isOperatorWageIncluded() && res.getOperatorTotalWage().doubleValue() > res.getOperatorDeductedWage().doubleValue()) {
-					BigDecimal wageDeduct = res.getOperatorTotalWage().subtract(res.getOperatorDeductedWage());
-					invLine = new MInvoiceLine(invoice);
-					invLine.setC_Charge_ID(res.getWage_Charge_ID());
-					invLine.setDescription("Operator Wage for " + res.getM_Product().getName());
-					invLine.setQty(BigDecimal.ONE.negate());
-					invLine.setPrice(wageDeduct);
-					invLine.saveEx();
-					
-					//Add Deducted wage to Jobwork Issued Vehicle
-					res.setOperatorDeductedWage(res.getOperatorDeductedWage().add(wageDeduct));					
+					whereClause = " C_Project_ID = ? AND Vehicle_ID = ? AND Processed='Y' AND  DocStatus = 'CO' AND " + 
+							" DateReport >= ? AND DateReport <= ? AND TF_Jobwork_IssuedResource_ID = ? AND Subcon_Invoice_ID IS NULL ";
+					sql = " SELECT SUM(Total_Wage) FROM TF_TripSheet WHERE " + whereClause;
+					BigDecimal wageDeduct = DB.getSQLValueBD(get_TrxName(), sql, jobWork.getC_Project_ID(), res.getM_Product_ID(),
+							m_DateTrx_1, m_DateTrx_2, res.getTF_Jobwork_IssuedResource_ID());
+					if(wageDeduct != null && wageDeduct.doubleValue() > 0 ) {
+						//BigDecimal wageDeduct = res.getOperatorTotalWage().subtract(res.getOperatorDeductedWage());
+						invLine = new MInvoiceLine(invoice);
+						invLine.setC_Charge_ID(res.getWage_Charge_ID());
+						invLine.setDescription("Operator Wage for " + res.getM_Product().getName());
+						invLine.setQty(BigDecimal.ONE.negate());
+						invLine.setPrice(wageDeduct);
+						invLine.saveEx();
+						
+						//Add Deducted wage to Jobwork Issued Vehicle
+						res.setOperatorDeductedWage(res.getOperatorDeductedWage().add(wageDeduct));
+					}
 				}
+				res.set_TrxName(get_TrxName());
 				res.saveEx();
 				
-				//TODO: diesel issue should be deducted here as well from the Subcontract Issued Items.
+				
+				//Deduct Issued Diesel to Subconract.
+				if(!res.isFuelIncluded()) {
+					
+					MGLPostingConfig glConfig = MGLPostingConfig.getMGLPostingConfig(getCtx());
+					List<MJobworkIssuedItems> items = MJobworkIssuedItems.getIssuedItemsToDeduct(getCtx(), jobWork.getC_Project_ID(), 
+							glConfig.getFuel_Product_ID());
+					if(items.size() > 0) {
+						MJobworkIssuedItems issuedItem = items.get(0);
+						whereClause = " C_Project_ID = ? AND Vehicle_ID = ? AND Processed='Y' AND  DocStatus = 'CO' AND " + 
+								" DateReport >= ? AND DateReport <= ? AND TF_Jobwork_IssuedResource_ID = ? AND Subcon_Invoice_ID IS NULL ";
+						sql = " SELECT SUM(Received_Fuel) FROM TF_TripSheet WHERE " + whereClause;
+						BigDecimal issuedQty = DB.getSQLValueBD(get_TrxName(), sql, jobWork.getC_Project_ID(), res.getM_Product_ID(),
+									m_DateTrx_1, m_DateTrx_2, res.getTF_Jobwork_IssuedResource_ID());
+						if(issuedQty != null && issuedQty.doubleValue() > 0) {
+							
+							BigDecimal price = MJobworkProductPrice.getPrice(getCtx(), jobWork.getC_Project_ID(), issuedItem.getM_Product_ID(),
+									m_DateInvoiced);
+							
+							if(price == null)
+								throw new AdempiereUserError("Please specify Contract Price for " + issuedItem.getM_Product().getName());
+							
+							invLine = new MInvoiceLine(invoice);
+							invLine.setM_Product_ID(issuedItem.getM_Product_ID(), issuedItem.getC_UOM_ID());
+							invLine.setQty(issuedQty.negate());
+							invLine.setDescription("Diesel Issued to " + res.getM_Product().getName());
+							invLine.setPriceActual(price);
+							invLine.setPriceList(price);
+							invLine.setPriceLimit(price);
+							invLine.setPriceEntered(price);
+							invLine.saveEx();
+							
+							//Add Deducted Qty to Jobwork Issued Item
+							issuedItem.setQtyDeducted(issuedItem.getQtyDeducted().add(issuedQty));
+							issuedItem.saveEx();
+						}
+					}
+					
+				}
 				
 				//Update back Invoice ID to TripSheet Entries.
 				sql = " Update TF_TripSheet SET Subcon_Invoice_ID = ? WHERE " + whereClause;
@@ -298,6 +348,7 @@ public class CreateInvoiceForJobWork extends SvrProcess {
 				params.add(res.getM_Product_ID());							
 				params.add(m_DateTrx_1);
 				params.add(m_DateTrx_2);
+				params.add(res.getTF_Jobwork_IssuedResource_ID());
 				DB.executeUpdateEx(sql, params.toArray(), get_TrxName());
 			}
 			// End Invoice Line
@@ -307,7 +358,7 @@ public class CreateInvoiceForJobWork extends SvrProcess {
 				// Get Total Advance Amount between Date Range
 				whereClause = " CashType='E' AND C_Charge_ID = ? AND  C_Project_ID = ? AND DateAcct >= ? AND DateAcct <= ? AND Processed = 'Y' AND "
 						+ " DocStatus IN ('CO','CL') AND Subcon_Invoice_ID IS NULL ";
-				sql = "SELECT SUM(PayAmt) FROM TF_Jobwork_ItemIssue WHERE " + whereClause; 
+				sql = "SELECT SUM(PayAmt) FROM C_Payment WHERE " + whereClause; 
 				BigDecimal deductAmt = DB.getSQLValueBD(get_TrxName(), sql, charge.getC_Charge_ID(), jobWork.getC_Project_ID(), 
 						m_DateTrx_1, m_DateTrx_2);
 				if(deductAmt == null || deductAmt.doubleValue() == 0)
@@ -322,6 +373,7 @@ public class CreateInvoiceForJobWork extends SvrProcess {
 				invLine.saveEx();
 				
 				//Add Deducted Amount to Jobwork Additonal Charge
+				charge.set_TrxName(get_TrxName());
 				charge.setDeductedAmt(charge.getDeductedAmt().add(deductAmt));
 				charge.saveEx();
 				
@@ -359,6 +411,7 @@ public class CreateInvoiceForJobWork extends SvrProcess {
 				invLine.saveEx();
 				
 				//Add Deducted Amount to Jobwork Expense
+				exp.set_TrxName(get_TrxName());
 				exp.setDeductedAmt(exp.getDeductedAmt().add(deductAmt));
 				exp.saveEx();
 				
