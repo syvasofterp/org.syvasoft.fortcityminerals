@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import org.compiere.model.MBPartner;
@@ -68,7 +69,16 @@ public class MTripSheet extends X_TF_TripSheet {
 			bp.setIsVendor(false);
 			bp.saveEx();
 		}
-				
+		
+		//Set Issued Resource/Vehicle
+		if(getC_Project_ID() > 0) {
+			MJobworkIssuedResource res = MJobworkIssuedResource.getByResource(getCtx(), getC_Project_ID(), getVehicle_ID(), get_TrxName());
+			setTF_Jobwork_IssuedResource_ID(res.getTF_Jobwork_IssuedResource_ID());
+		}
+		else {
+			setTF_Jobwork_IssuedResource_ID(0);
+		}
+		
 		return super.beforeSave(newRecord);
 	}
 

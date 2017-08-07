@@ -56,4 +56,10 @@ public class MJobworkIssuedItems extends X_TF_Jobwork_IssuedItems {
 		return list;
 	}
 	
+	public static List<MJobworkIssuedItems> getIssuedItemsToDeduct(Properties ctx, int C_Project_ID, int M_Product_ID) {
+		String whereClause = " C_Project_ID = ? AND QtyIssued > QtyDeducted AND M_Product_ID = ? ";
+		List<MJobworkIssuedItems> list = new Query(ctx, Table_Name, whereClause, null)
+			.setParameters(C_Project_ID, M_Product_ID).list();
+		return list;
+	}
 }
