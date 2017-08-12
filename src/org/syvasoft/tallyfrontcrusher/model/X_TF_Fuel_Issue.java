@@ -33,7 +33,7 @@ public class X_TF_Fuel_Issue extends PO implements I_TF_Fuel_Issue, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170223L;
+	private static final long serialVersionUID = 20170810L;
 
     /** Standard Constructor */
     public X_TF_Fuel_Issue (Properties ctx, int TF_Fuel_Issue_ID, String trxName)
@@ -42,6 +42,7 @@ public class X_TF_Fuel_Issue extends PO implements I_TF_Fuel_Issue, I_Persistent
       /** if (TF_Fuel_Issue_ID == 0)
         {
 			setDateAcct (new Timestamp( System.currentTimeMillis() ));
+// @#Date@
 			setIsCalculated (true);
 // Y
 			setM_Product_ID (0);
@@ -504,6 +505,31 @@ public class X_TF_Fuel_Issue extends PO implements I_TF_Fuel_Issue, I_Persistent
 	public String getTF_Fuel_Issue_UU () 
 	{
 		return (String)get_Value(COLUMNNAME_TF_Fuel_Issue_UU);
+	}
+
+	public I_TF_TripSheet getTF_TripSheet() throws RuntimeException
+    {
+		return (I_TF_TripSheet)MTable.get(getCtx(), I_TF_TripSheet.Table_Name)
+			.getPO(getTF_TripSheet_ID(), get_TrxName());	}
+
+	/** Set Trip Sheet.
+		@param TF_TripSheet_ID Trip Sheet	  */
+	public void setTF_TripSheet_ID (int TF_TripSheet_ID)
+	{
+		if (TF_TripSheet_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_TF_TripSheet_ID, null);
+		else 
+			set_ValueNoCheck (COLUMNNAME_TF_TripSheet_ID, Integer.valueOf(TF_TripSheet_ID));
+	}
+
+	/** Get Trip Sheet.
+		@return Trip Sheet	  */
+	public int getTF_TripSheet_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_TripSheet_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	public org.compiere.model.I_M_Product getVehicle() throws RuntimeException
