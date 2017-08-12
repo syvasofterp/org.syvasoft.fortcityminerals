@@ -45,23 +45,23 @@ public class CalloutEmployeeSalaryIssue_SetOpenAmt implements IColumnCallout {
 			
 			//Salary Payable
 			String sql = "SELECT 	SUM(AmtAcctCr - AmtAcctDr) Earned_Wage FROM Fact_Acct_Balance " +
-					" WHERE Account_ID = ? AND C_BPartner_ID = ? AND postingtype='A' ";
-			salaryAmt = DB.getSQLValueBD(null, sql, salaryPayable_acctID, bPartner_ID);
+					" WHERE Account_ID = ? AND C_BPartner_ID = ? AND postingtype='A' AND DateAcct <= ?";
+			salaryAmt = DB.getSQLValueBD(null, sql, salaryPayable_acctID, bPartner_ID, dateAcct);
 			if(salaryAmt == null)
 				salaryAmt = BigDecimal.ZERO;			
 			
 			//Loan Paid
 			sql = "SELECT 	SUM(AmtAcctDr - AmtAcctCr) Loan_Paid FROM Fact_Acct_Balance " +
-					" WHERE Account_ID = ? AND C_BPartner_ID = ? AND postingtype='A' ";
-			loanPaid = DB.getSQLValueBD(null, sql, loan_accID, bPartner_ID);
+					" WHERE Account_ID = ? AND C_BPartner_ID = ? AND postingtype='A' AND DateAcct <= ?";
+			loanPaid = DB.getSQLValueBD(null, sql, loan_accID, bPartner_ID, dateAcct);
 			if(loanPaid == null)
 				loanPaid = BigDecimal.ZERO;
 			loanBalance = loanPaid.subtract(loanDeduct);
 			
 			//Advance Paid
 			sql = "SELECT 	SUM(AmtAcctDr - AmtAcctCr) Advance_Paid FROM Fact_Acct_Balance " +
-					" WHERE Account_ID = ? AND C_BPartner_ID = ? AND postingtype='A' ";
-			advancePaid = DB.getSQLValueBD(null, sql, salaryAdvance_acctID, bPartner_ID);
+					" WHERE Account_ID = ? AND C_BPartner_ID = ? AND postingtype='A' AND DateAcct <= ? ";
+			advancePaid = DB.getSQLValueBD(null, sql, salaryAdvance_acctID, bPartner_ID, dateAcct);
 			if(advancePaid == null)
 				advancePaid = BigDecimal.ZERO;
 			
