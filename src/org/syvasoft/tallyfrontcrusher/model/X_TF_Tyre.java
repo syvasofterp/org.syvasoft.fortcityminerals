@@ -33,7 +33,7 @@ public class X_TF_Tyre extends PO implements I_TF_Tyre, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170803L;
+	private static final long serialVersionUID = 20170811L;
 
     /** Standard Constructor */
     public X_TF_Tyre (Properties ctx, int TF_Tyre_ID, String trxName)
@@ -147,23 +147,26 @@ public class X_TF_Tyre extends PO implements I_TF_Tyre, I_Persistent
 		return (String)get_Value(COLUMNNAME_Description);
 	}
 
-	public org.compiere.model.I_M_Product getMounted() throws RuntimeException
+	public org.compiere.model.I_M_Product getMounted_To() throws RuntimeException
     {
 		return (org.compiere.model.I_M_Product)MTable.get(getCtx(), org.compiere.model.I_M_Product.Table_Name)
-			.getPO(getMounted_To(), get_TrxName());	}
+			.getPO(getMounted_To_ID(), get_TrxName());	}
 
 	/** Set Mounted To.
-		@param Mounted_To Mounted To	  */
-	public void setMounted_To (int Mounted_To)
+		@param Mounted_To_ID Mounted To	  */
+	public void setMounted_To_ID (int Mounted_To_ID)
 	{
-		set_Value (COLUMNNAME_Mounted_To, Integer.valueOf(Mounted_To));
+		if (Mounted_To_ID < 1) 
+			set_Value (COLUMNNAME_Mounted_To_ID, null);
+		else 
+			set_Value (COLUMNNAME_Mounted_To_ID, Integer.valueOf(Mounted_To_ID));
 	}
 
 	/** Get Mounted To.
 		@return Mounted To	  */
-	public int getMounted_To () 
+	public int getMounted_To_ID () 
 	{
-		Integer ii = (Integer)get_Value(COLUMNNAME_Mounted_To);
+		Integer ii = (Integer)get_Value(COLUMNNAME_Mounted_To_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();

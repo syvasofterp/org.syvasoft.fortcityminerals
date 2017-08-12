@@ -135,16 +135,16 @@ public interface I_TF_Tyre
 	  */
 	public boolean isActive();
 
-    /** Column name Mounted_To */
-    public static final String COLUMNNAME_Mounted_To = "Mounted_To";
+    /** Column name Mounted_To_ID */
+    public static final String COLUMNNAME_Mounted_To_ID = "Mounted_To_ID";
 
 	/** Set Mounted To	  */
-	public void setMounted_To (int Mounted_To);
+	public void setMounted_To_ID (int Mounted_To_ID);
 
 	/** Get Mounted To	  */
-	public int getMounted_To();
+	public int getMounted_To_ID();
 
-	public org.compiere.model.I_M_Product getMounted() throws RuntimeException;
+	public org.compiere.model.I_M_Product getMounted_To() throws RuntimeException;
 
     /** Column name Purchased_TyreType_ID */
     public static final String COLUMNNAME_Purchased_TyreType_ID = "Purchased_TyreType_ID";
