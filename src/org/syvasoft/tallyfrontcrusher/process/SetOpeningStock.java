@@ -67,6 +67,7 @@ public class SetOpeningStock extends SvrProcess {
 				MInventory prevInv = new MInventory(getCtx(), M_Inventory_ID, get_TrxName());
 				if (!prevInv.processIt(DocAction.ACTION_Reverse_Correct))
 					throw new AdempiereException("Failed when processing document - " + prevInv.getProcessMsg());
+				prevInv.saveEx();
 			}
 			
 			//Physical Inventory Header
