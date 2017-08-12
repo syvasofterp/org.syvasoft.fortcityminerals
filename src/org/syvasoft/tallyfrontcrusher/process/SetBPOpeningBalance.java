@@ -86,6 +86,7 @@ public class SetBPOpeningBalance extends SvrProcess {
 				TF_MInvoice prevInv = new TF_MInvoice(getCtx(), C_Invoice_ID, get_TrxName());
 				if (!prevInv.processIt(DocAction.ACTION_Reverse_Correct))
 					throw new AdempiereException("Failed when processing document - " + prevInv.getProcessMsg());
+				prevInv.saveEx();
 								
 			}
 			
