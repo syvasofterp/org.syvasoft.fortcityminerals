@@ -43,8 +43,8 @@ public class CalloutLabourWageIssue_SetOpenAmt implements IColumnCallout {
 			
 			//Wage Payable
 			String sql = "SELECT 	SUM(AmtAcctCr - AmtAcctDr) Earned_Wage FROM Fact_Acct_Balance " +
-					" WHERE Account_ID = ? AND C_BPartner_ID = ? AND postingtype='A' ";
-			earnedWage = DB.getSQLValueBD(null, sql, wagePayable_acctID, bPartner_ID);
+					" WHERE Account_ID = ? AND C_BPartner_ID = ? AND postingtype='A' AND DateAcct <= ?";
+			earnedWage = DB.getSQLValueBD(null, sql, wagePayable_acctID, bPartner_ID, dateAcct);
 			if(earnedWage == null)
 				earnedWage = BigDecimal.ZERO;
 			wagesPaid = earnedWage.subtract(advanceDeduct);
@@ -52,8 +52,8 @@ public class CalloutLabourWageIssue_SetOpenAmt implements IColumnCallout {
 			
 			//Advance Paid
 			sql = "SELECT 	SUM(AmtAcctDr - AmtAcctCr) Advance_Paid FROM Fact_Acct_Balance " +
-					" WHERE Account_ID = ? AND C_BPartner_ID = ? AND postingtype='A' ";
-			advancePaid = DB.getSQLValueBD(null, sql, advancePaid_acctID, bPartner_ID);
+					" WHERE Account_ID = ? AND C_BPartner_ID = ? AND postingtype='A' AND DateAcct <= ?";
+			advancePaid = DB.getSQLValueBD(null, sql, advancePaid_acctID, bPartner_ID, dateAcct);
 			if(advancePaid == null)
 				advancePaid = BigDecimal.ZERO;
 			
