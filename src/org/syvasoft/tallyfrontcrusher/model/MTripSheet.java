@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Properties;
 
 import org.compiere.model.MBPartner;
+import org.compiere.model.MSysConfig;
+import org.compiere.model.MWarehouse;
+import org.compiere.model.Query;
 import org.compiere.process.DocAction;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
@@ -82,6 +85,25 @@ public class MTripSheet extends X_TF_TripSheet {
 		return super.beforeSave(newRecord);
 	}
 
+	private void issueDiesel() {
+		String dieselIssue = MSysConfig.getValue("TF_DIESEL_ISSUE_FROM_TRIPSHEET", "N");
+		if(dieselIssue.equals("Y")) {
+			MFuelIssue issue = new MFuelIssue(getCtx(), 0, get_TrxName());
+			issue.setDateAcct(getDateReport());
+			issue.setM_Warehouse_ID(Env.getContextAsInt(getCtx(), "#M_Warehouse_ID"));
+			int dieselID = MGLPostingConfig.getMGLPostingConfig(getCtx()).getFuel_Product_ID();
+			issue.setM_Product_ID(dieselID);
+			issue.setVehicle_ID(getVehicle_ID());
+			issue.setQty(getReceived_Fuel());
+			issue.setIsCalculated(true);
+			issue.setDocStatus(DOCSTATUS_Drafted);
+			issue.setTF_TripSheet_ID(getTF_TripSheet_ID());
+			issue.saveEx();
+			issue.processIt(DocAction.ACTION_Complete);
+			issue.saveEx();
+		}
+	}
+	
 	public void processIt(String docAction) {
 		if(DocAction.ACTION_Prepare.equals(docAction)) {
 			setDocStatus(DOCSTATUS_InProgress);
@@ -98,6 +120,8 @@ public class MTripSheet extends X_TF_TripSheet {
 			obj[1] = getVehicle_ID();
 			obj[2] = getDateReport();			
 			DB.executeUpdateEx(sql,obj, get_TrxName());
+			
+			issueDiesel();
 			
 			if(getTotal_Wage().doubleValue() != 0 && getC_BPartner_ID() > 0){
 				// Create Wage Entry
@@ -154,10 +178,18 @@ public class MTripSheet extends X_TF_TripSheet {
 			wage.saveEx();
 			
 			setTF_Labour_Wage_ID(0);
-			wage.deleteEx(true);			
-			
+			wage.deleteEx(true);
 		}
-		
+		String dieselIssue = MSysConfig.getValue("TF_DIESEL_ISSUE_FROM_TRIPSHEET", "N");
+		if(dieselIssue.equals("Y")) {
+			List<MFuelIssue> issues = new Query(getCtx(), MFuelIssue.Table_Name, "DocStatus='CO' AND TF_TripSheet_ID=?", get_TrxName())
+				.setParameters(getTF_TripSheet_ID()).list();
+			for(MFuelIssue issue : issues) {
+				issue.reverseIt();
+				issue.saveEx();
+				issue.deleteEx(true,get_TrxName());
+			}
+		}
 		//Update Subcontract Issued Items for Diesel
 		MJobworkIssuedResource issuedResource = MJobworkIssuedResource.getByResource(getCtx(), getC_Project_ID(), getVehicle_ID(), get_TrxName());
 		if(issuedResource != null && !issuedResource.isFuelIncluded()) {

@@ -325,6 +325,17 @@ public interface I_TF_Fuel_Issue
 	/** Get TF_Fuel_Issue_UU	  */
 	public String getTF_Fuel_Issue_UU();
 
+    /** Column name TF_TripSheet_ID */
+    public static final String COLUMNNAME_TF_TripSheet_ID = "TF_TripSheet_ID";
+
+	/** Set Trip Sheet	  */
+	public void setTF_TripSheet_ID (int TF_TripSheet_ID);
+
+	/** Get Trip Sheet	  */
+	public int getTF_TripSheet_ID();
+
+	public I_TF_TripSheet getTF_TripSheet() throws RuntimeException;
+
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";
 

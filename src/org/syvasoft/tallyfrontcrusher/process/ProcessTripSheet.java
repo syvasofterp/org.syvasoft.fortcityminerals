@@ -42,14 +42,16 @@ public class ProcessTripSheet extends SvrProcess {
 			rentalContract.updateTripSheetBasedFields();
 			rentalContract.saveEx();
 		}
-		MJobworkIssuedResource issuedResource = MJobworkIssuedResource.getByResource(getCtx(), tripSheet.getC_Project_ID(), 
-				tripSheet.getVehicle_ID(), get_TrxName());
-		if(issuedResource != null) {
-			issuedResource.updateTripSheetBasedFields();
-			issuedResource.saveEx();
-		}
-		else {
-			throw new AdempiereException("Invalid Vehicle for this Subcontract!");
+		if(tripSheet.getC_Project_ID() > 0) {
+			MJobworkIssuedResource issuedResource = MJobworkIssuedResource.getByResource(getCtx(), tripSheet.getC_Project_ID(), 
+					tripSheet.getVehicle_ID(), get_TrxName());
+			if(issuedResource != null) {
+				issuedResource.updateTripSheetBasedFields();
+				issuedResource.saveEx();
+			}
+			else {
+				throw new AdempiereException("Invalid Vehicle for this Subcontract!");
+			}
 		}
 		return null;
 	}
