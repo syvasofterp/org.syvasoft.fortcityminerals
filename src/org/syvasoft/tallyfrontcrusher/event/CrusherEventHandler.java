@@ -53,11 +53,18 @@ public class CrusherEventHandler extends AbstractEventHandler {
 		registerTableEvent(IEventTopics.DOC_BEFORE_PREPARE, MProduction.Table_Name);
 		registerTableEvent(IEventTopics.PO_BEFORE_CHANGE, MPayment.Table_Name);
 		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MTransaction.Table_Name);
+		registerEvent(IEventTopics.AFTER_LOGIN);		
 
 	}
-
+	
 	@Override
 	protected void doHandleEvent(Event event) {
+		if(event.getTopic().equals(IEventTopics.AFTER_LOGIN)) {
+			String dieselIssue = MSysConfig.getValue("TF_DIESEL_ISSUE_FROM_TRIPSHEET", "N");
+			Env.setContext(Env.getCtx(), "#DieselIssue", dieselIssue);
+			return;
+		}
+		
 		PO po = getPO(event);
 		if(po.get_TableName().equals(MPayment.Table_Name)) {
 			MPayment payment = (MPayment) po;

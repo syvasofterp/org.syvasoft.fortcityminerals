@@ -5,9 +5,12 @@ import java.sql.Timestamp;
 import java.util.Properties;
 
 import org.adempiere.base.IColumnCallout;
+import org.adempiere.base.event.IEventTopics;
 import org.compiere.model.GridField;
 import org.compiere.model.GridTab;
+import org.compiere.model.MSysConfig;
 import org.compiere.util.DB;
+import org.compiere.util.Env;
 import org.syvasoft.tallyfrontcrusher.model.MTripSheet;
 
 public class CalloutTripSheetOpeningEntries implements IColumnCallout {
@@ -23,6 +26,8 @@ public class CalloutTripSheetOpeningEntries implements IColumnCallout {
 			
 		Timestamp dateReport = (Timestamp) mTab.getValue(MTripSheet.COLUMNNAME_DateReport);
 		int vehicle_ID = (int) mTab.getValue(MTripSheet.COLUMNNAME_Vehicle_ID);
+				
+		String dieselIssue = MSysConfig.getValue("TF_DIESEL_ISSUE_FROM_TRIPSHEET", "N");		
 		
 		//Get Opening Meter				
 		BigDecimal openingMeter = MTripSheet.getOpeningMeter(vehicle_ID, dateReport);		
@@ -33,8 +38,10 @@ public class CalloutTripSheetOpeningEntries implements IColumnCallout {
 		mTab.setValue(MTripSheet.COLUMNNAME_Opening_Fuel, openingFuel);
 		
 		//Set Received Fuel
-		BigDecimal receivedFuel = MTripSheet.getReceivedFuel(vehicle_ID, dateReport);
-		mTab.setValue(MTripSheet.COLUMNNAME_Received_Fuel, receivedFuel);
+		if(!dieselIssue.equals("Y")) {
+			BigDecimal receivedFuel = MTripSheet.getReceivedFuel(vehicle_ID, dateReport);
+			mTab.setValue(MTripSheet.COLUMNNAME_Received_Fuel, receivedFuel);
+		}
 		
 		return null;
 	}
