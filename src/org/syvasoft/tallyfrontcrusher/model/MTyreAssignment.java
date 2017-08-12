@@ -75,7 +75,7 @@ public class MTyreAssignment extends X_TF_TyreAssignment {
 				//Update Tyre Status info
 				if(isLatestReleasedTyreMovement()) {
 					tyre.setTF_TyreStatus_ID(MTyreStatus.getTyreStatus(MTyreStatus.TYRESTATUSTYPE_Stocked));				
-					tyre.setMounted_To(0);
+					tyre.setMounted_To_ID(0);
 					tyre.setTF_TyrePosition_ID(0);
 				}
 				tyre.calcRunningMeter();
@@ -101,7 +101,7 @@ public class MTyreAssignment extends X_TF_TyreAssignment {
 				//Update Tyre Status info
 				if(isLatestAssignedTyreMovement()) {
 					tyre.setTF_TyreStatus_ID(MTyreStatus.getTyreStatus(MTyreStatus.TYRESTATUSTYPE_Running));
-					tyre.setMounted_To(tmov.getVehicle_ID());
+					tyre.setMounted_To_ID(tmov.getVehicle_ID());
 					tyre.setTF_TyrePosition_ID(tmov.getTF_TyrePosition_ID());
 				}
 				tyre.calcRunningMeter();				
@@ -130,7 +130,7 @@ public class MTyreAssignment extends X_TF_TyreAssignment {
 			//Reverse Tyre Status info
 			if(isLatestAssignedTyreMovement()) {
 				tyre.setTF_TyreStatus_ID(MTyreStatus.getTyreStatus(MTyreStatus.TYRESTATUSTYPE_Stocked));				
-				tyre.setMounted_To(0);
+				tyre.setMounted_To_ID(0);
 				tyre.setTF_TyrePosition_ID(0);
 			}
 			tyre.calcRunningMeter();
@@ -151,7 +151,7 @@ public class MTyreAssignment extends X_TF_TyreAssignment {
 			//Reverse Tyre Status info
 			if(isLatestReleasedTyreMovement()) {
 				tyre.setTF_TyreStatus_ID(MTyreStatus.getTyreStatus(MTyreStatus.TYRESTATUSTYPE_Running));				
-				tyre.setMounted_To(getRD_From_Vehicle_ID());
+				tyre.setMounted_To_ID(getRD_From_Vehicle_ID());
 				tyre.setTF_TyrePosition_ID(getRD_TF_TyrePosition_ID());
 			}
 			tyre.calcRunningMeter();
