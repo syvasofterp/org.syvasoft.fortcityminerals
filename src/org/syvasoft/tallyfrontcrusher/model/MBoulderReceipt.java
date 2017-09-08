@@ -181,6 +181,10 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 	
 	public void reverseIt() {
 		
+		if(getSubcon_Invoice_ID()>0) {			
+			throw new AdempiereException("You cannot modify this entry before Reverse Correct Subcontractor Invoice!");
+		}
+				
 		MWarehouse warehouse = MWarehouse.get(getCtx(), getM_Warehouse_ID());
 		int defaultLocatorID = warehouse.getDefaultLocator().getM_Locator_ID();
 		String m_processMsg; 
@@ -207,9 +211,7 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 			m_processMsg = "Could not create Material Transaction (MA) [" + getM_Product().getValue() + "]";			
 			throw new AdempiereException(m_processMsg);
 		}
-		
-
-		
+				
 		if(getJobwork_Journal_ID()>0) {
 			MJournal j = new MJournal(getCtx(), getJobwork_Journal_ID(), get_TrxName());
 			j.reverseCorrectIt();
@@ -227,13 +229,7 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 			crProd.reverseIt();
 			crProd.saveEx();
 			setTF_Crusher_Production_ID(0);
-		}
-		if(getSubcon_Invoice_ID()>0) {
-			TF_MInvoice inv = new TF_MInvoice(getCtx(), getSubcon_Invoice_ID(), get_TrxName());
-			inv.reverseCorrectIt();
-			inv.saveEx();
-			setSubcon_Invoice_ID(0);			
-		}
+		}		
 		if(getTF_Quarry_Rent_ID()>0) {
 			MQuarryRent rent = new MQuarryRent(getCtx(), getTF_Quarry_Rent_ID(), get_TrxName());
 			rent.reverseIt();

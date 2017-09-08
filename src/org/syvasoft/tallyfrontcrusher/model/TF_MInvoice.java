@@ -385,7 +385,7 @@ public class TF_MInvoice extends MInvoice {
 		
 		//For Subcontract Invoice
 		int C_Project_ID = getC_Project_ID();
-		if(C_Project_ID > 0) {
+		if(C_Project_ID > 0 && getC_Project().getC_BPartner_ID() == getC_BPartner_ID()) {
 			//REVERSAL Procedure
 			//0. In Boulder Receipts, Reverse Jobwork Variance Journal & Jobwork Invoiced Price
 			//1. In Boulder Receipts, Reset Subcon Invoice ID to NULL
@@ -503,7 +503,7 @@ public class TF_MInvoice extends MInvoice {
 						exp.setDeductedAmt(exp.getDeductedAmt().add(line.getLineNetAmt()));
 						exp.saveEx();
 						//Reset Invoice ID to Expense Entry.
-						String sql = " Update TF_Jobwork_Expense SET Subcon_Invoice_ID = NULL WHERE Subcon_Invoice_ID = ? " +
+						String sql = " Update TF_Jobwork_Expense_Entry SET Subcon_Invoice_ID = NULL WHERE Subcon_Invoice_ID = ? " +
 								" AND C_ElementValue_ID = ? ";
 						ArrayList<Object> params = new ArrayList<Object>();
 						params = new ArrayList<Object>();

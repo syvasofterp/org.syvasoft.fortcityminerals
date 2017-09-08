@@ -33,7 +33,7 @@ public class X_TF_Crusher_Production extends PO implements I_TF_Crusher_Producti
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170201L;
+	private static final long serialVersionUID = 20170812L;
 
     /** Standard Constructor */
     public X_TF_Crusher_Production (Properties ctx, int TF_Crusher_Production_ID, String trxName)
@@ -451,10 +451,14 @@ public class X_TF_Crusher_Production extends PO implements I_TF_Crusher_Producti
 
 	/** Regular = R */
 	public static final String TF_BLUEMETAL_TYPE_Regular = "R";
-	/** GSB = G */
-	public static final String TF_BLUEMETAL_TYPE_GSB = "G";
-	/** WMM = W */
-	public static final String TF_BLUEMETAL_TYPE_WMM = "W";
+	/** Mix GSB = G */
+	public static final String TF_BLUEMETAL_TYPE_MixGSB = "G";
+	/** Mix WMM = W */
+	public static final String TF_BLUEMETAL_TYPE_MixWMM = "W";
+	/** Mix GSB + 40MM = G+ */
+	public static final String TF_BLUEMETAL_TYPE_MixGSBPlus40MM = "G+";
+	/** Mix WMM + 40MM = W+ */
+	public static final String TF_BLUEMETAL_TYPE_MixWMMPlus40MM = "W+";
 	/** Set Blue Metal Type.
 		@param TF_BlueMetal_Type Blue Metal Type	  */
 	public void setTF_BlueMetal_Type (String TF_BlueMetal_Type)

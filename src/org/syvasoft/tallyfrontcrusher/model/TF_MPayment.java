@@ -3,6 +3,7 @@ package org.syvasoft.tallyfrontcrusher.model;
 import java.sql.ResultSet;
 import java.util.Properties;
 
+import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.MPayment;
 import org.compiere.model.MTable;
 
@@ -130,7 +131,8 @@ public class TF_MPayment extends MPayment {
 		}
 		
 		setIsReceipt(getC_DocType().isSOTrx());
-		
+		if(getC_ElementValue_ID()==0)
+			setC_ElementValue_ID(0);
 		return super.beforeSave(newRecord);
 	}
 	
@@ -143,7 +145,11 @@ public class TF_MPayment extends MPayment {
 		return super.completeIt();
 	}
 	@Override
-	public boolean reverseCorrectIt() {
+	public boolean reverseCorrectIt() {		
+		if(getSubcon_Invoice_ID()>0) {			
+			throw new AdempiereException("You cannot modify this entry before Reverse Correct Subcontractor Invoice!");
+		}
+		
 		//Subcontract / Job Work
 		if(getC_Project_ID() > 0) {
 			MJobworkCharges.updateJobworkCharges(getCtx(), getC_Project_ID(), getC_Charge_ID(), getPayAmt().negate(), get_TrxName());

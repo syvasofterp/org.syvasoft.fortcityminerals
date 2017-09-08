@@ -26,8 +26,8 @@ public class MEmployeeSalaryIssue extends X_TF_Employee_Salary_Issue {
 		// TODO Auto-generated constructor stub
 	}
 	public void processIt(String docAction) {
-		if(getAdvance_Deduct().doubleValue() == 0 && getSalary_Paid().doubleValue() == 0)
-			throw new AdempiereException("Invalid Salary Issue Entry due to both Advance Deduct and Salary Paid are ZERO");
+		//if(getAdvance_Deduct().doubleValue() == 0 && getSalary_Paid().doubleValue() == 0)
+		//	throw new AdempiereException("Invalid Salary Issue Entry due to both Advance Deduct and Salary Paid are ZERO");
 		
 		if(DocAction.ACTION_Prepare.equals(docAction)) {
 			setDocStatus(DOCSTATUS_InProgress);
@@ -35,7 +35,7 @@ public class MEmployeeSalaryIssue extends X_TF_Employee_Salary_Issue {
 		else if(DocAction.ACTION_Complete.equals(docAction)) {
 			setDocStatus(DOCSTATUS_Completed);
 			setProcessed(true);
-						
+			
 			MGLPostingConfig glConfig = MGLPostingConfig.getMGLPostingConfig(getCtx());
 			
 			//Post Advance Deduct Adjustment journal entry

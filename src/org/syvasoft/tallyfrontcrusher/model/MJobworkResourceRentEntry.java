@@ -28,6 +28,15 @@ public class MJobworkResourceRentEntry extends X_TF_Jobwork_ResRentEntry {
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
 		MJobworkIssuedResource res = new MJobworkIssuedResource(getCtx(), getTF_Jobwork_IssuedResource_ID(), get_TrxName());
+		double amt = getContract_Amt_Act().doubleValue();
+		double price = getUnit_Price().doubleValue();
+		double qty = getQty().doubleValue();
+		
+		qty = amt / price;
+		
+		setQty(new BigDecimal(qty));
+		
+		
 		if(newRecord) {			
 			res.setQty(res.getQty().add(getQty()));
 			res.setContract_Amt_Act(res.getContract_Amt_Act().add(getContract_Amt_Act()));

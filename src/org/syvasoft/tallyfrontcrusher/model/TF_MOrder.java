@@ -406,6 +406,32 @@ public class TF_MOrder extends MOrder {
 		return bd;
 	}
 
+	/** Column name IssueToSubcontract_ID */
+    public static final String COLUMNNAME_IssueToSubcontract_ID = "IssueToSubcontract_ID";
+    public org.compiere.model.I_C_Project getIssueToSubcontract() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Project)MTable.get(getCtx(), org.compiere.model.I_C_Project.Table_Name)
+			.getPO(getIssueToSubcontract_ID(), get_TrxName());	}
+
+	/** Set Issue to Subcontract.
+		@param IssueToSubcontract_ID Issue to Subcontract	  */
+	public void setIssueToSubcontract_ID (int IssueToSubcontract_ID)
+	{
+		if (IssueToSubcontract_ID < 1) 
+			set_Value (COLUMNNAME_IssueToSubcontract_ID, null);
+		else 
+			set_Value (COLUMNNAME_IssueToSubcontract_ID, Integer.valueOf(IssueToSubcontract_ID));
+	}
+
+	/** Get Issue to Subcontract.
+		@return Issue to Subcontract	  */
+	public int getIssueToSubcontract_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_IssueToSubcontract_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
 	
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
@@ -561,7 +587,7 @@ public class TF_MOrder extends MOrder {
 			}
 			
 		}
-		
+		MJobworkItemIssue.ReverseFromPO(this);
 		return super.voidIt();
 	}
 	
@@ -572,6 +598,7 @@ public class TF_MOrder extends MOrder {
 			payment.reverseCorrectIt();
 			payment.saveEx();
 		}
+		MJobworkItemIssue.ReverseFromPO(this);
 		return super.reActivateIt();
 	}
 
