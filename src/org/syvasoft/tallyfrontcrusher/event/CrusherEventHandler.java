@@ -36,6 +36,7 @@ import org.compiere.util.Trx;
 import org.osgi.service.event.Event;
 import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MGLPostingConfig;
+import org.syvasoft.tallyfrontcrusher.model.MJobworkItemIssue;
 import org.syvasoft.tallyfrontcrusher.model.TF_MCharge;
 import org.syvasoft.tallyfrontcrusher.model.TF_MInvoice;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
@@ -97,6 +98,7 @@ public class CrusherEventHandler extends AbstractEventHandler {
 			MOrder ord = (MOrder) po;
 			if(event.getTopic().equals(IEventTopics.DOC_AFTER_COMPLETE)) {
 				createDriverTipsPayment(ord);
+				MJobworkItemIssue.IssueFromPO(ord);
 			}
 		}
 		else if (po instanceof MProduction) {

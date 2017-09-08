@@ -3,6 +3,7 @@ package org.syvasoft.tallyfrontcrusher.model;
 import java.sql.ResultSet;
 import java.util.Properties;
 
+import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.MJournal;
 import org.compiere.model.MJournalLine;
 import org.compiere.model.MPeriod;
@@ -85,6 +86,11 @@ public class MJobworkExpenseEntry extends X_TF_Jobwork_Expense_Entry {
 	
 
 	public void reverseIt() {
+		
+		if(getSubcon_Invoice_ID()>0) {			
+			throw new AdempiereException("You cannot modify this entry before Reverse Correct Subcontractor Invoice!");
+		}
+		
 		if(getGL_Journal_ID()>0) {
 			MJournal j = new MJournal(getCtx(), getGL_Journal_ID(), get_TrxName());
 			j.reverseCorrectIt();

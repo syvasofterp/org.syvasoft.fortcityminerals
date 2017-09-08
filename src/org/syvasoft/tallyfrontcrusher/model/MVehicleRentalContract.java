@@ -123,18 +123,24 @@ public class MVehicleRentalContract extends X_TF_Vehicle_Rental_Contract {
 		BigDecimal closingMeter = DB.getSQLValueBD(get_TrxName(), sql, rentalContractID);			
 		if(closingMeter != null)
 			setClosing_Meter(closingMeter);
+		else
+			setClosing_Meter(BigDecimal.ZERO);
 		
 		//Set Running Meter
 		sql = "SELECT SUM(Running_Meter) FROM TF_TripSheet WHERE TF_Vehicle_Rental_Contract_ID = ? AND Processed='Y'";
 		BigDecimal runningMeter = DB.getSQLValueBD(get_TrxName(), sql, rentalContractID);
 		if(runningMeter != null)
 			setRunning_Meter(runningMeter);
+		else
+			setRunning_Meter(BigDecimal.ZERO);
 		
 		//Set Issued Fuel
 		sql = "SELECT SUM(Received_Fuel) FROM TF_TripSheet WHERE TF_Vehicle_Rental_Contract_ID = ? AND Processed='Y'";
 		BigDecimal receivedFuel = DB.getSQLValueBD(get_TrxName(), sql, rentalContractID);
 		if(receivedFuel != null)
 			setIssued_Fuel(receivedFuel);
+		else
+			setIssued_Fuel(BigDecimal.ZERO);
 		
 		if(CONTRACTBASE_Meter.equals(getContractBase())) {
 			setQty(getRunning_Meter());

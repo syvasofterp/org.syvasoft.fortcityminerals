@@ -311,7 +311,7 @@ public class CreateInvoiceForJobWork extends SvrProcess {
 						MJobworkIssuedItems issuedItem = items.get(0);
 						whereClause = " C_Project_ID = ? AND Vehicle_ID = ? AND Processed='Y' AND  DocStatus = 'CO' AND " + 
 								" DateReport >= ? AND DateReport <= ? AND TF_Jobwork_IssuedResource_ID = ? AND Subcon_Invoice_ID IS NULL ";
-						sql = " SELECT SUM(Received_Fuel) FROM TF_TripSheet WHERE " + whereClause;
+						sql = " SELECT SUM(Expensed_Fuel) FROM TF_TripSheet WHERE " + whereClause;
 						BigDecimal issuedQty = DB.getSQLValueBD(get_TrxName(), sql, jobWork.getC_Project_ID(), res.getM_Product_ID(),
 									m_DateTrx_1, m_DateTrx_2, res.getTF_Jobwork_IssuedResource_ID());
 						if(issuedQty != null && issuedQty.doubleValue() > 0) {
@@ -333,7 +333,8 @@ public class CreateInvoiceForJobWork extends SvrProcess {
 							invLine.saveEx();
 							
 							//Add Deducted Qty to Jobwork Issued Item
-							issuedItem.setQtyDeducted(issuedItem.getQtyDeducted().add(issuedQty));
+							issuedItem.set_TrxName(get_TrxName());
+							issuedItem.setQtyDeducted(issuedItem.getQtyDeducted().add(issuedQty));							
 							issuedItem.saveEx();
 						}
 					}

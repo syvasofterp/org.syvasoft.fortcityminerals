@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.MBPartner;
 import org.compiere.model.MSysConfig;
 import org.compiere.model.MWarehouse;
@@ -87,7 +88,7 @@ public class MTripSheet extends X_TF_TripSheet {
 
 	private void issueDiesel() {
 		String dieselIssue = MSysConfig.getValue("TF_DIESEL_ISSUE_FROM_TRIPSHEET", "N");
-		if(dieselIssue.equals("Y")) {
+		if(dieselIssue.equals("Y") && getReceived_Fuel().doubleValue() > 0) {
 			MFuelIssue issue = new MFuelIssue(getCtx(), 0, get_TrxName());
 			issue.setDateAcct(getDateReport());
 			issue.setM_Warehouse_ID(Env.getContextAsInt(getCtx(), "#M_Warehouse_ID"));
@@ -112,16 +113,20 @@ public class MTripSheet extends X_TF_TripSheet {
 			setDocStatus(DOCSTATUS_Completed);
 			setProcessed(true);
 			
-			String sql = "UPDATE TF_Fuel_Issue SET TF_TripSheet_ID = ?" +  
-					"  WHERE TF_TripSheet_ID IS NULL AND Vehicle_ID = ? " +  
-					" AND DateAcct <= ? AND DocStatus = 'CO' ";			
-			Object[] obj = new Object[3];
-			obj[0] = getTF_TripSheet_ID();
-			obj[1] = getVehicle_ID();
-			obj[2] = getDateReport();			
-			DB.executeUpdateEx(sql,obj, get_TrxName());
-			
-			issueDiesel();
+			String dieselIssue = MSysConfig.getValue("TF_DIESEL_ISSUE_FROM_TRIPSHEET", "N");
+			if(dieselIssue.equals("N")) { 
+				String sql = "UPDATE TF_Fuel_Issue SET TF_TripSheet_ID = ?" +  
+						"  WHERE TF_TripSheet_ID IS NULL AND Vehicle_ID = ? " +  
+						" AND DateAcct <= ? AND DocStatus = 'CO' ";			
+				Object[] obj = new Object[3];
+				obj[0] = getTF_TripSheet_ID();
+				obj[1] = getVehicle_ID();
+				obj[2] = getDateReport();			
+				DB.executeUpdateEx(sql,obj, get_TrxName());
+			}
+			else {
+				issueDiesel();
+			}
 			
 			if(getTotal_Wage().doubleValue() != 0 && getC_BPartner_ID() > 0){
 				// Create Wage Entry
@@ -159,19 +164,14 @@ public class MTripSheet extends X_TF_TripSheet {
 						glConfig.getFuel_Product_ID(), glConfig.getFuel_Product().getC_UOM_ID(), getExpensed_Fuel() , get_TrxName());
 				
 			}
-			
-			
-			//Update Rental Contract Fields in Job Work
-			//if(issuedResource != null && !issuedResource.isOperatorWageIncluded()) {				
-			//	issuedResource.setOperatorTotalWage(issuedResource.getOperatorTotalWage().add(getTotal_Wage()));
-			//	issuedResource.saveEx();
-				
-			//}
-			
+						
 		}
 	}
 	
 	public void reverseIt() {
+		if(getSubcon_Invoice_ID()>0) {			
+			throw new AdempiereException("You cannot modify this entry before Reverse Correct Subcontractor Invoice!");
+		}
 		if(getTF_Labour_Wage_ID()>0) {
 			MLabourWage wage = new MLabourWage(getCtx(), getTF_Labour_Wage_ID(), get_TrxName());
 			wage.reverseIt();
@@ -181,7 +181,7 @@ public class MTripSheet extends X_TF_TripSheet {
 			wage.deleteEx(true);
 		}
 		String dieselIssue = MSysConfig.getValue("TF_DIESEL_ISSUE_FROM_TRIPSHEET", "N");
-		if(dieselIssue.equals("Y")) {
+		if(dieselIssue.equals("Y") && getReceived_Fuel().doubleValue() > 0) {
 			List<MFuelIssue> issues = new Query(getCtx(), MFuelIssue.Table_Name, "DocStatus='CO' AND TF_TripSheet_ID=?", get_TrxName())
 				.setParameters(getTF_TripSheet_ID()).list();
 			for(MFuelIssue issue : issues) {
