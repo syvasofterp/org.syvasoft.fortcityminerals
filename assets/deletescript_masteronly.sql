@@ -62,6 +62,8 @@ UPDATE TF_Employee_Salary_Issue SET C_Payment_ID = NULL;
 UPDATE TF_TripSheet SET TF_Vehicle_Rental_Contract_ID = NULL;
 UPDATE C_Invoice SET TF_Vehicle_Rental_Contract_ID = NULL;
 
+UPDATE M_Transaction SET TF_Boulder_Receipt_ID = NULL;
+
 DELETE FROM TF_Boulder_Receipt_Line;
 DELETE FROM TF_Boulder_Receipt;
 DELETE FROM TF_Employee_Salary;
@@ -69,9 +71,12 @@ DELETE FROM TF_Vehicle_Rent;
 DELETE FROM TF_Quarry_Rent;
 DELETE FROM TF_Fuel_Issue;
 
+UPDATE tf_TripSheet SET tf_jobwork_issuedresource_id =NULL;
+
 --SubContract Tables
 DELETE FROM TF_Jobwork_Expense;
 DELETE FROM TF_Jobwork_Charges;
+DELETE FROM tf_jobwork_resrententry;
 DELETE FROM TF_Jobwork_IssuedResource;
 DELETE FROM TF_Jobwork_IssuedItems;
 DELETE FROM TF_Jobwork_ReceivedItems;
@@ -122,7 +127,7 @@ delete from c_paymentallocate WHERE ad_client_id=1000000;;
 delete from c_bankstatementline WHERE ad_client_id=1000000;;
 delete from c_bankstatement WHERE ad_client_id=1000000;;
 Update c_invoice set c_Payment_ID = null WHERE ad_client_id=1000000;;
-Update c_order set c_Payment_ID= null WHERE ad_client_id=1000000;;
+Update c_order set c_Payment_ID= null, tf_drivertips_pay_id = null WHERE ad_client_id=1000000;;
 Update c_order set c_opportunity_ID= null WHERE ad_client_id=1000000;;
 delete from c_contactactivity WHERE ad_client_id=1000000;;
 delete from c_opportunity WHERE ad_client_id=1000000;;
@@ -134,11 +139,15 @@ delete from c_payment WHERE ad_client_id=1000000;;
 delete from c_paymentbatch  WHERE ad_client_id=1000000;;
 Update M_INOUTLINE Set C_Orderline_ID = null, M_RMALine_ID=null WHERE ad_client_id=1000000;;
 Update M_INOUT Set C_Order_ID = null, C_Invoice_ID=null, M_RMA_ID=null WHERE ad_client_id=1000000;;
+UPDATE C_Payment SET C_Invoice_ID = null WHERE ad_client_id=1000000;;
 Update C_INVOICE Set M_RMA_ID = null WHERE ad_client_id=1000000;;
 update R_Request set m_rma_id = null WHERE ad_client_id=1000000;;
 delete from m_rmatax WHERE ad_client_id=1000000;;
 delete from M_RMAline WHERE ad_client_id=1000000;;
 delete from M_RMA WHERE ad_client_id=1000000;;
+UPDATE C_BPartner SET C_Invoice_ID = null WHERE ad_Client_ID = 1000000;
+UPDATE tf_jobwork_expense_entry set SubCon_Invoice_id = null;
+UPDATE TF_TripSheet SET SubCon_invoice_ID = null;
 delete from c_Invoice WHERE ad_client_id=1000000;
 delete from PP_MRP WHERE ad_client_id=1000000;;
 delete from m_requisitionline  WHERE ad_client_id=1000000;;
@@ -149,11 +158,13 @@ delete from c_ordertax  WHERE ad_client_id=1000000;;
 update r_request set c_order_id = null, M_inout_id = null WHERE ad_client_id=1000000;;
 update r_requestaction set c_order_id = null, M_inout_id = null WHERE ad_client_id=1000000;;
 delete from c_order WHERE ad_client_id=1000000;;
+UPDATE tf_jobwork_expense_entry SET GL_Journal_ID = null;
 delete from fact_acct WHERE ad_client_id=1000000;;
 delete from fact_acct_summary WHERE ad_client_id=1000000;;
 delete from gl_journalbatch WHERE ad_client_id=1000000;;
-delete from gl_journal WHERE ad_client_id=1000000;; 
 delete from gl_journalline WHERE ad_client_id=1000000;; 
+delete from gl_journal WHERE ad_client_id=1000000;; 
+
 --delete from m_storage WHERE ad_client_id=1000000;;  -- use this for ADempiere
 delete from m_storageonhand WHERE ad_client_id=1000000;;
 delete from m_storagereservation WHERE ad_client_id=1000000;;

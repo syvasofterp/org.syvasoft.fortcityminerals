@@ -8,6 +8,7 @@ import java.util.Properties;
 import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.Query;
 import org.compiere.util.DB;
+import org.compiere.util.Env;
 import org.compiere.util.Trx;
 
 public class MTyre extends X_TF_Tyre {
@@ -29,32 +30,38 @@ public class MTyre extends X_TF_Tyre {
 
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
+		boolean ok = super.beforeSave(newRecord);
 		if(getCurrent_TyreType_ID()==0)
 			setCurrent_TyreType_ID(getPurchased_TyreType_ID());
-		
-		return true;
+		//if(newRecord) {
+		//	createTyreLifeRecords();
+		//}		
+		return ok;
 	}
 
 	@Override
-	protected boolean afterSave(boolean newRecord, boolean success) {		
-		if(newRecord) {
-			createTyreLifeRecords();
-		}
+	protected boolean afterSave(boolean newRecord, boolean success) {
+		boolean ok = super.afterSave(newRecord, success);
+		
+		//if(newRecord) {
+		//	createTyreLifeRecords();
+		//}
 		//calcRunningMeter();
-		return super.afterSave(newRecord, success);
+		return ok;
 	}
 
-	private void createTyreLifeRecords() {
-		List<MTyreType> types = new Query(getCtx(), MTyreType.Table_Name, "", null)
+	public static void createTyreLifeRecords(MTyre tyre) {
+		List<MTyreType> types = new Query(tyre.getCtx(), MTyreType.Table_Name, "", null)
 			.setClient_ID() .setOnlyActiveRecords(true).setOrderBy("SeqNo").list();
 		int seq = 10;
-		String trxName = Trx.createTrxName();
-		Trx trans = Trx.get(trxName, true);
+		String trxName = tyre.get_TrxName(); // Trx.createTrxName();
+		//Trx trans = Trx.get(trxName, true);
+		//trxName = get_TrxName();
 		try {
 			for(MTyreType type : types) {
-				MTyreLife tlife = new MTyreLife(getCtx(), 0, trxName);
-				tlife.setAD_Org_ID(getAD_Org_ID());			
-				tlife.setTF_Tyre_ID(getTF_Tyre_ID());
+				MTyreLife tlife = new MTyreLife(tyre.getCtx(), 0, trxName);
+				tlife.setAD_Org_ID(tyre.getAD_Org_ID());			
+				tlife.setTF_Tyre_ID(tyre.getTF_Tyre_ID());
 				tlife.setSeqNo(seq);
 				tlife.setTF_TyreType_ID(type.getTF_TyreType_ID());
 				tlife.setTyreCost(BigDecimal.ZERO);
@@ -65,11 +72,11 @@ public class MTyre extends X_TF_Tyre {
 			}
 		}
 		catch(Exception ex) {
-			trans.rollback();
+			//trans.rollback();
 			throw new AdempiereException(ex.getMessage());
 		}
 		finally {
-			trans.commit();
+			//trans.commit();
 		}
 	}
 	

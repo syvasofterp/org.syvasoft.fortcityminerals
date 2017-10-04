@@ -192,8 +192,19 @@ delete FROM fact_acct WHERE ad_client_id=1000000;
 
 --delete from c_invoiceline WHERE ad_client_id=1000000;
 
-DELETE FROM M_Product WHERE ad_client_id=1000000 AND m_product_id>1000032 ;;
+DELETE FROM tf_tyreassignment;
+DELETE FROM tf_tyremovement;
+DELeTE FROM c_uom_conversion WHERE ad_client_id = 1000000;
+DELETE FROM TF_TYRELIFE;
+DELETE FROM TF_TYRE;
+UPDATE c_validcombination SET C_PROJECT_ID = NULL  WHERE ad_client_id = 1000000;
+DELETE FROM C_project WHERE C_PROJECT_ID != (1000000) AND ad_client_id = 1000000;
+UPDATE c_project SET JOBWORK_product_id = null where ad_client_id = 1000000;
+DELETE FROM M_Product WHERE ad_client_id=1000000 AND m_product_id > 1000032  AND  m_product_id NOT IN 
+(SELECT m_pRODUCT_id from gl_distributionline where M_product_id IS NOT NULL) 
+and m_product_id not in ( 1000086, 1000096) ;;
 --SELECT * FROM M_Product where ad_client_id=1000000 AND m_product_id>1000032 ;;
+DELETE FROM  S_Resource WHERE ad_client_id = 1000000;
 
 
 
@@ -203,7 +214,8 @@ DELETE FROM HR_EMPLOYEE WHERE ad_client_id=1000000;;
 
 DELETE FROM AD_USER WHERE AD_CLIENT_ID= 1000000 AND AD_USER_ID NOT IN (1000004, 1000019, 1000005, 1000008);
 
-DELETE FROM c_bPARTNER WHERE ad_client_id=1000000 AND C_BPARTNER_ID NOT IN (1000010,1000005, 1000007, 1000006, 1000020);
+UPDATE c_validcombination SET c_BPARTNER_ID = NULL WHERE AD_CLIENT_ID= 1000000 ; 
+DELETE FROM c_bPARTNER WHERE ad_client_id=1000000 AND C_BPARTNER_ID NOT IN (1000034, 1000028, 1000010,1000005, 1000007, 1000006, 1000020);
 
 
 --DELETE FROM adempiere.AD_Image WHERE AD_Client_ID = 1000000;
@@ -213,3 +225,10 @@ DELETE FROM c_bPARTNER WHERE ad_client_id=1000000 AND C_BPARTNER_ID NOT IN (1000
 -- DELETE FROM  M_Product_Category WHERE AD_Client_ID = 1000000 and M_Product_Category_ID=1000029;
 
 -- DELETE FROM  M_Warehouse  WHERE AD_Client_ID = 1000000 and M_Warehouse_ID NOT IN (1000001,1000000);
+
+DELETE FROM tf_quarry;
+UPDATE C_validcombination SET user1_id = null WHERE AD_Client_ID = 1000000;
+
+DELETE FROM C_ElementValue WHERE C_Element_ID=1000001 
+
+
