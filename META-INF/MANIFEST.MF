@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Tallyfrontcrusher
-Bundle-SymbolicName: org.syvasoft.tallyfrontcrusher
+Bundle-Name: BlueStoneCrusher
+Bundle-SymbolicName: org.syvasoft.bluestonecrusher;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.adempiere.base;bundle-version="4.1.0",
