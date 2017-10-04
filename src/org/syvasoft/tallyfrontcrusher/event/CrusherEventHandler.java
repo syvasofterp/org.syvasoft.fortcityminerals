@@ -37,6 +37,7 @@ import org.osgi.service.event.Event;
 import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MGLPostingConfig;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkItemIssue;
+import org.syvasoft.tallyfrontcrusher.model.MTyre;
 import org.syvasoft.tallyfrontcrusher.model.TF_MCharge;
 import org.syvasoft.tallyfrontcrusher.model.TF_MInvoice;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
@@ -54,6 +55,7 @@ public class CrusherEventHandler extends AbstractEventHandler {
 		registerTableEvent(IEventTopics.DOC_BEFORE_PREPARE, MProduction.Table_Name);
 		registerTableEvent(IEventTopics.PO_BEFORE_CHANGE, MPayment.Table_Name);
 		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MTransaction.Table_Name);
+		registerTableEvent(IEventTopics.PO_AFTER_NEW, MTyre.Table_Name);
 		registerEvent(IEventTopics.AFTER_LOGIN);		
 
 	}
@@ -182,6 +184,12 @@ public class CrusherEventHandler extends AbstractEventHandler {
 				BigDecimal onHandQty = MStorageOnHand.getQtyOnHandForLocator(trans.getM_Product_ID(), trans.getM_Locator_ID(), 
 						trans.getM_AttributeSetInstance_ID(), null);
 				trans.set_ValueOfColumn("Opening_Qty", onHandQty);
+			}
+		}
+		else if (po instanceof MTyre) {
+			MTyre tyre = (MTyre) po;
+			if(IEventTopics.PO_AFTER_NEW.equals(event.getTopic())) {
+				MTyre.createTyreLifeRecords(tyre);				
 			}
 		}
 	}
