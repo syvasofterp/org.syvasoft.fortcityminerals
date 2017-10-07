@@ -44,7 +44,9 @@ import org.syvasoft.tallyfrontcrusher.model.MVehicleRent;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentalContract;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleType;
+import org.syvasoft.tallyfrontcrusher.model.TF_MBankAccount;
 import org.syvasoft.tallyfrontcrusher.model.TF_MCharge;
+import org.syvasoft.tallyfrontcrusher.model.TF_MElementValue;
 import org.syvasoft.tallyfrontcrusher.model.TF_MInvoice;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
 import org.syvasoft.tallyfrontcrusher.model.TF_MPayment;
@@ -146,6 +148,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return MTyreLife.class;
 		else if (MJobworkResourceRentEntry.Table_Name.equals(tableName))
 			return MJobworkResourceRentEntry.class;
+		else if (TF_MElementValue.Table_Name.equals(tableName))
+			return TF_MElementValue.class;
+		else if (TF_MBankAccount.Table_Name.equals(tableName))
+			return TF_MBankAccount.class;
 		return null;
 	}
 
@@ -242,6 +248,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MTyreLife(ctx, Record_ID, trxName);
 		else if (MJobworkResourceRentEntry.Table_Name.equals(tableName))
 			return new MJobworkResourceRentEntry(ctx, Record_ID, trxName);
+		else if (TF_MElementValue.Table_Name.equals(tableName))
+			return new TF_MElementValue(ctx, Record_ID, trxName);
+		else if (TF_MBankAccount.Table_Name.equals(tableName))
+			return new TF_MBankAccount(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -338,6 +348,11 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MTyreLife(ctx, rs, trxName);
 		else if (MJobworkResourceRentEntry.Table_Name.equals(tableName))
 			return new MJobworkResourceRentEntry(ctx, rs, trxName);
+		else if (TF_MElementValue.Table_Name.equals(tableName))
+			return new TF_MElementValue(ctx, rs, trxName);
+		else if (TF_MBankAccount.Table_Name.equals(tableName))
+			return new TF_MBankAccount(ctx, rs, trxName);
+		
 		return null;
 	}
 

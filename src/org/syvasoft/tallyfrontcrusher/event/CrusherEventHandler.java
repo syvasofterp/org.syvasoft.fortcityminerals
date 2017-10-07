@@ -31,6 +31,7 @@ import org.compiere.process.ProcessInfo;
 import org.compiere.process.ProcessInfoParameter;
 import org.compiere.process.RollUpCosts;
 import org.compiere.util.CLogger;
+import org.compiere.util.DB;
 import org.compiere.util.Env;
 import org.compiere.util.Trx;
 import org.osgi.service.event.Event;
@@ -65,6 +66,9 @@ public class CrusherEventHandler extends AbstractEventHandler {
 		if(event.getTopic().equals(IEventTopics.AFTER_LOGIN)) {
 			String dieselIssue = MSysConfig.getValue("TF_DIESEL_ISSUE_FROM_TRIPSHEET", "N");
 			Env.setContext(Env.getCtx(), "#DieselIssue", dieselIssue);
+			String sql = "SELECT C_Element_ID FROM C_Element WHERE AD_Client_ID =? AND ElementType='A'";
+			int COA_ID = DB.getSQLValue(null, sql, Env.getAD_Client_ID(Env.getCtx()));
+			Env.setContext(Env.getCtx(), "#C_Element_ID", COA_ID);
 			return;
 		}
 		
