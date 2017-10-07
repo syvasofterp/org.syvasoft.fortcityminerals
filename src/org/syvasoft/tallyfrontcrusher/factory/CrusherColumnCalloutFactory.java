@@ -7,6 +7,7 @@ import org.adempiere.base.IColumnCallout;
 import org.adempiere.base.IColumnCalloutFactory;
 import org.compiere.model.MPayment;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutBoulderReceipt_JobWork;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutElementValue_AccountGroup;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutEmployeeSalary;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutEmployeeSalaryIssue_CalcBalanceAmts;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutEmployeeSalaryIssue_SetOpenAmt;
@@ -41,6 +42,7 @@ import org.syvasoft.tallyfrontcrusher.model.MTripSheet;
 import org.syvasoft.tallyfrontcrusher.model.MTyreAssignment;
 import org.syvasoft.tallyfrontcrusher.model.MTyreStatusChange;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentalContract;
+import org.syvasoft.tallyfrontcrusher.model.TF_MElementValue;
 import org.syvasoft.tallyfrontcrusher.model.TF_MInvoice;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
 
@@ -162,6 +164,10 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		if(tableName.equals(MJobworkResourceRentEntry.Table_Name) && (columnName.equals(MJobworkResourceRentEntry.COLUMNNAME_Qty))
 				|| (columnName.equals(MJobworkResourceRentEntry.COLUMNNAME_Unit_Price)))
 				list.add(new CalloutMJobworkResourceRentEntry_CalcContractAmt());
+		
+		//C_ElementValue - Update Account Type and Account Sign from Account Group.
+		if(tableName.equals(TF_MElementValue.Table_Name) && columnName.equals(TF_MElementValue.COLUMNNAME_AccountGroup_ID))
+			list.add(new CalloutElementValue_AccountGroup());
 		
 		return list != null ? list.toArray(new IColumnCallout[0]) : new IColumnCallout[0];
 	}
