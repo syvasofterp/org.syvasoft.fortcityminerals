@@ -44,6 +44,7 @@ import org.syvasoft.tallyfrontcrusher.model.MVehicleRent;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentalContract;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleType;
+import org.syvasoft.tallyfrontcrusher.model.TF_MBPartner;
 import org.syvasoft.tallyfrontcrusher.model.TF_MBankAccount;
 import org.syvasoft.tallyfrontcrusher.model.TF_MCharge;
 import org.syvasoft.tallyfrontcrusher.model.TF_MElementValue;
@@ -152,6 +153,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return TF_MElementValue.class;
 		else if (TF_MBankAccount.Table_Name.equals(tableName))
 			return TF_MBankAccount.class;
+		else if (TF_MBPartner.Table_Name.equals(tableName)) 
+			return TF_MBPartner.class;
 		return null;
 	}
 
@@ -252,6 +255,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new TF_MElementValue(ctx, Record_ID, trxName);
 		else if (TF_MBankAccount.Table_Name.equals(tableName))
 			return new TF_MBankAccount(ctx, Record_ID, trxName);
+		else if (TF_MBPartner.Table_Name.equals(tableName)) 
+			return new TF_MBPartner(ctx, Record_ID, trxName);		
 		return null;
 	}
 
@@ -352,7 +357,9 @@ public class CrusherModelFactory implements IModelFactory {
 			return new TF_MElementValue(ctx, rs, trxName);
 		else if (TF_MBankAccount.Table_Name.equals(tableName))
 			return new TF_MBankAccount(ctx, rs, trxName);
-		
+		else if (TF_MBPartner.Table_Name.equals(tableName)) 
+			return new TF_MBPartner(ctx, rs, trxName);
+			
 		return null;
 	}
 
