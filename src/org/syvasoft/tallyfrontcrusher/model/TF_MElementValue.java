@@ -9,6 +9,7 @@ import org.compiere.model.MTable;
 import org.compiere.model.MTree;
 import org.compiere.model.X_I_ElementValue;
 import org.compiere.util.DB;
+import org.compiere.util.Env;
 
 public class TF_MElementValue extends MElementValue {
 
@@ -64,6 +65,15 @@ public class TF_MElementValue extends MElementValue {
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
+	}
+
+	@Override
+	protected boolean beforeSave(boolean newRecord) {		
+		boolean ok = super.beforeSave(newRecord);
+		if(getC_Element_ID() == 0) {
+			setC_Element_ID(Env.getContextAsInt(getCtx(), "#C_Element_ID"));
+		}
+		return ok;
 	}
 
 	@Override
