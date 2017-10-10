@@ -122,7 +122,7 @@ public class TF_MBankAccount extends MBankAccount {
 		if(!getBankAccountType().equals(TF_MBankAccount.BANKACCOUNTTYPE_Cash) && getBankInTransit_ID()==0) {
 			setBankInTransit_ID(createBankCashAccount(getValue() + " In-Transfer", getName() + " In-Transfer"));
 		}
-		else if (getBankAccountType().equals(TF_MBankAccount.BANKACCOUNTTYPE_Cash) && getBankInTransit_ID()==0){
+		else if (getBankAccountType().equals(TF_MBankAccount.BANKACCOUNTTYPE_Cash)){
 			setBankInTransit_ID(getBankAsset_ID());
 		}
 		return super.beforeSave(newRecord);
