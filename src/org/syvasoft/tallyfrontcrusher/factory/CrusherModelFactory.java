@@ -9,6 +9,7 @@ import org.compiere.util.Env;
 import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MCrusherProduction;
 import org.syvasoft.tallyfrontcrusher.model.MCrusherProductionConfig;
+import org.syvasoft.tallyfrontcrusher.model.MDestination;
 import org.syvasoft.tallyfrontcrusher.model.MEmpSalaryConfig;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalary;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryAdvance;
@@ -32,6 +33,7 @@ import org.syvasoft.tallyfrontcrusher.model.MLabourWageIssue;
 import org.syvasoft.tallyfrontcrusher.model.MQuarry;
 import org.syvasoft.tallyfrontcrusher.model.MQuarryRent;
 import org.syvasoft.tallyfrontcrusher.model.MQuarryRentConfig;
+import org.syvasoft.tallyfrontcrusher.model.MRentedVehicle;
 import org.syvasoft.tallyfrontcrusher.model.MTripSheet;
 import org.syvasoft.tallyfrontcrusher.model.MTyre;
 import org.syvasoft.tallyfrontcrusher.model.MTyreAssignment;
@@ -66,9 +68,7 @@ public class CrusherModelFactory implements IModelFactory {
 		else if (MEmpSalaryConfig.Table_Name.equals(tableName))
 			return MEmpSalaryConfig.class;
 		else if (MEmployeeSalary.Table_Name.equals(tableName))
-			return MEmployeeSalary.class;
-		else if (MVehicleRentConfig.Table_Name.equals(tableName))
-			return MVehicleRentConfig.class;
+			return MEmployeeSalary.class;		
 		else if (MVehicleRent.Table_Name.equals(tableName))
 			return MVehicleRent.class;
 		else if (MQuarryRentConfig.Table_Name.equals(tableName))
@@ -155,6 +155,12 @@ public class CrusherModelFactory implements IModelFactory {
 			return TF_MBankAccount.class;
 		else if (TF_MBPartner.Table_Name.equals(tableName)) 
 			return TF_MBPartner.class;
+		else if (MDestination.Table_Name.equals(tableName)) 
+			return MDestination.class;
+		else if (MRentedVehicle.Table_Name.equals(tableName)) 
+			return MRentedVehicle.class;
+		else if (MVehicleRentConfig.Table_Name.equals(tableName)) 
+			return MVehicleRentConfig.class;
 		return null;
 	}
 
@@ -168,9 +174,7 @@ public class CrusherModelFactory implements IModelFactory {
 		else if (MEmpSalaryConfig.Table_Name.equals(tableName))
 			return new MEmpSalaryConfig(ctx, Record_ID, trxName);
 		else if (MEmployeeSalary.Table_Name.equals(tableName))
-			return new MEmployeeSalary(ctx, Record_ID, trxName);
-		else if (MVehicleRentConfig.Table_Name.equals(tableName))
-			return new MVehicleRentConfig(ctx, Record_ID, trxName);
+			return new MEmployeeSalary(ctx, Record_ID, trxName);		
 		else if (MVehicleRent.Table_Name.equals(tableName))
 			return new MVehicleRent(ctx, Record_ID, trxName);
 		else if (MQuarryRentConfig.Table_Name.equals(tableName))
@@ -256,7 +260,14 @@ public class CrusherModelFactory implements IModelFactory {
 		else if (TF_MBankAccount.Table_Name.equals(tableName))
 			return new TF_MBankAccount(ctx, Record_ID, trxName);
 		else if (TF_MBPartner.Table_Name.equals(tableName)) 
-			return new TF_MBPartner(ctx, Record_ID, trxName);		
+			return new TF_MBPartner(ctx, Record_ID, trxName);
+		else if (MDestination.Table_Name.equals(tableName)) 
+			return new MDestination(ctx, Record_ID, trxName);
+		else if (MRentedVehicle.Table_Name.equals(tableName)) 
+			return new MRentedVehicle(ctx, Record_ID, trxName);
+		else if (MVehicleRentConfig.Table_Name.equals(tableName)) 
+			return new MVehicleRentConfig(ctx, Record_ID, trxName);
+		
 		return null;
 	}
 
@@ -270,9 +281,7 @@ public class CrusherModelFactory implements IModelFactory {
 		else if (MEmpSalaryConfig.Table_Name.equals(tableName))
 			return new MEmpSalaryConfig(ctx, rs, trxName);
 		else if (MEmployeeSalary.Table_Name.equals(tableName))
-			return new MEmployeeSalary(ctx, rs, trxName);
-		else if (MVehicleRentConfig.Table_Name.equals(tableName))
-			return new MVehicleRentConfig(ctx, rs, trxName);
+			return new MEmployeeSalary(ctx, rs, trxName);		
 		else if (MVehicleRent.Table_Name.equals(tableName))
 			return new MVehicleRent(ctx, rs, trxName);
 		else if (MQuarryRentConfig.Table_Name.equals(tableName))
@@ -359,7 +368,12 @@ public class CrusherModelFactory implements IModelFactory {
 			return new TF_MBankAccount(ctx, rs, trxName);
 		else if (TF_MBPartner.Table_Name.equals(tableName)) 
 			return new TF_MBPartner(ctx, rs, trxName);
-			
+		else if (MDestination.Table_Name.equals(tableName)) 
+			return new MDestination(ctx, rs, trxName);
+		else if (MRentedVehicle.Table_Name.equals(tableName)) 
+			return new MRentedVehicle(ctx, rs, trxName);
+		else if (MVehicleRentConfig.Table_Name.equals(tableName)) 
+			return new MVehicleRentConfig(ctx, rs, trxName);
 		return null;
 	}
 
