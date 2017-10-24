@@ -19,7 +19,10 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutMJobworkResourceRentEntry_C
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_CalcAmt;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_SetPrice;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_SetVehicleNo;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_CalcRentAmount;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_Destination;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_POSCashBP;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_RentedVehicle;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPaymentCashType;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutRentalContract_ResourceType;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutRentalContract_VehicleNo;
@@ -174,7 +177,19 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		//TF_VehicleRent_TajConfig - Get default for destination from Destination Master
 		if(tableName.equals(MVehicleRentConfig.Table_Name) && columnName.equals(MVehicleRentConfig.COLUMNNAME_TF_Destination_ID))
 			list.add(new CalloutVehicleRentConfig_Destination());
-			
+		
+		if(tableName.equals(TF_MOrder.Table_Name) && (columnName.equals(TF_MOrder.COLUMNNAME_TF_Destination_ID) ||
+				columnName.equals(TF_MOrder.COLUMNNAME_TF_RentedVehicle_ID))) {
+			list.add(new CalloutOrder_Destination());
+			list.add(new CalloutOrder_RentedVehicle());
+			list.add(new CalloutOrder_CalcRentAmount());
+		}
+		
+		if(tableName.equals(TF_MOrder.Table_Name) && (columnName.equals(TF_MOrder.COLUMNNAME_Distance) ||
+				columnName.equals(TF_MOrder.COLUMNNAME_Rate))) {			
+			list.add(new CalloutOrder_CalcRentAmount());
+		}
+		
 		return list != null ? list.toArray(new IColumnCallout[0]) : new IColumnCallout[0];
 	}
 

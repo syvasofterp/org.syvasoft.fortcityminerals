@@ -52,6 +52,7 @@ import org.syvasoft.tallyfrontcrusher.model.TF_MCharge;
 import org.syvasoft.tallyfrontcrusher.model.TF_MElementValue;
 import org.syvasoft.tallyfrontcrusher.model.TF_MInvoice;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
+import org.syvasoft.tallyfrontcrusher.model.TF_MOrderLine;
 import org.syvasoft.tallyfrontcrusher.model.TF_MPayment;
 import org.syvasoft.tallyfrontcrusher.model.TF_MProject;
 import org.syvasoft.tallyfrontcrusher.model.TF_MResource;
@@ -87,6 +88,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return TF_MInvoice.class;
 		else if (TF_MOrder.Table_Name.equals(tableName))			
 			return TF_MOrder.class;
+		else if (TF_MOrderLine.Table_Name.equals(tableName))			
+			return TF_MOrderLine.class;
 		else if (MFuelIssue.Table_Name.equals(tableName))
 			return MFuelIssue.class;
 		else if (MLabourWage.Table_Name.equals(tableName))
@@ -193,6 +196,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new TF_MInvoice(ctx, Record_ID, trxName);
 		else if (TF_MOrder.Table_Name.equals(tableName))
 			return new TF_MOrder(ctx, Record_ID, trxName);
+		else if (TF_MOrderLine.Table_Name.equals(tableName))
+			return new TF_MOrderLine(ctx, Record_ID, trxName);
 		else if (MFuelIssue.Table_Name.equals(tableName))
 			return new MFuelIssue(ctx, Record_ID, trxName);
 		else if (MLabourWage.Table_Name.equals(tableName))			
@@ -300,6 +305,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new TF_MInvoice(ctx, rs, trxName);
 		else if (TF_MOrder.Table_Name.equals(tableName))
 			return new TF_MOrder(ctx, rs, trxName);
+		else if (TF_MOrderLine.Table_Name.equals(tableName))
+			return new TF_MOrderLine(ctx, rs, trxName);
 		else if (MFuelIssue.Table_Name.equals(tableName))
 			return new MFuelIssue(ctx, rs, trxName);
 		else if (MLabourWage.Table_Name.equals(tableName))			

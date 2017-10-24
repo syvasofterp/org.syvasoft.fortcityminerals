@@ -6,14 +6,20 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Properties;
 
+import org.adempiere.exceptions.AdempiereException;
+import org.compiere.model.MBPartner;
 import org.compiere.model.MInOut;
+import org.compiere.model.MInvoiceLine;
 import org.compiere.model.MOrder;
 import org.compiere.model.MOrderLine;
+import org.compiere.model.MPriceList;
 import org.compiere.model.MProductPrice;
 import org.compiere.model.MProductPricing;
 import org.compiere.model.MResource;
+import org.compiere.model.MSysConfig;
 import org.compiere.model.MTable;
 import org.compiere.model.Query;
+import org.compiere.process.DocAction;
 import org.compiere.util.AdempiereUserError;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
@@ -433,6 +439,139 @@ public class TF_MOrder extends MOrder {
 		return ii.intValue();
 	}
 	
+	/** Column name TF_Destination_ID */
+    public static final String COLUMNNAME_TF_Destination_ID = "TF_Destination_ID";
+    /** Set Destination.
+	@param TF_Destination_ID Destination	  */
+	public void setTF_Destination_ID (int TF_Destination_ID)
+	{
+		if (TF_Destination_ID < 1) 
+			set_Value (COLUMNNAME_TF_Destination_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_Destination_ID, Integer.valueOf(TF_Destination_ID));
+	}
+	
+	/** Get Destination.
+		@return Destination	  */
+	public int getTF_Destination_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Destination_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Column name Distance */
+    public static final String COLUMNNAME_Distance = "Distance";
+    /** Set Distance (km).
+	@param Distance Distance (km)	  */
+	public void setDistance (BigDecimal Distance)
+	{
+		set_Value (COLUMNNAME_Distance, Distance);
+	}
+	
+	/** Get Distance (km).
+		@return Distance (km)	  */
+	public BigDecimal getDistance () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Distance);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Column name Tonnage */
+    public static final String COLUMNNAME_Tonnage = "Tonnage";
+    /** Set Tonnage.
+	@param Tonnage Tonnage	  */
+	public void setTonnage (BigDecimal Tonnage)
+	{
+		set_Value (COLUMNNAME_Tonnage, Tonnage);
+	}
+	
+	/** Get Tonnage.
+		@return Tonnage	  */
+	public BigDecimal getTonnage () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Tonnage);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Column name TF_RentedVehicle_ID */
+    public static final String COLUMNNAME_TF_RentedVehicle_ID = "TF_RentedVehicle_ID";
+    /** Set Rented Vehicle.
+	@param TF_RentedVehicle_ID Rented Vehicle	  */
+	public void setTF_RentedVehicle_ID (int TF_RentedVehicle_ID)
+	{
+		if (TF_RentedVehicle_ID < 1) 
+			set_Value (COLUMNNAME_TF_RentedVehicle_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_RentedVehicle_ID, Integer.valueOf(TF_RentedVehicle_ID));
+	}
+	
+	/** Get Rented Vehicle.
+		@return Rented Vehicle	  */
+	public int getTF_RentedVehicle_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_RentedVehicle_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Column name Rate */
+    public static final String COLUMNNAME_Rate = "Rate";
+    /** Set Rate / ton / km.
+	@param Rate 
+	Rate per tone and  km
+	  */
+	public void setRate (BigDecimal Rate)
+	{
+		set_Value (COLUMNNAME_Rate, Rate);
+	}
+	
+	/** Get Rate / ton / km.
+		@return Rate per tone and  km
+	  */
+	public BigDecimal getRate () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Rate);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+	
+    /** Column name TransporterInvoice_ID */
+    public static final String COLUMNNAME_TransporterInvoice_ID = "TransporterInvoice_ID";
+	public org.compiere.model.I_C_Invoice getTransporterInvoice() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Invoice)MTable.get(getCtx(), org.compiere.model.I_C_Invoice.Table_Name)
+			.getPO(getTransporterInvoice_ID(), get_TrxName());	}
+
+	/** Set Transporter Invoice.
+		@param TransporterInvoice_ID Transporter Invoice	  */
+	public void setTransporterInvoice_ID (int TransporterInvoice_ID)
+	{
+		if (TransporterInvoice_ID < 1) 
+			set_Value (COLUMNNAME_TransporterInvoice_ID, null);
+		else 
+			set_Value (COLUMNNAME_TransporterInvoice_ID, Integer.valueOf(TransporterInvoice_ID));
+	}
+
+	/** Get Transporter Invoice.
+		@return Transporter Invoice	  */
+	public int getTransporterInvoice_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TransporterInvoice_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	
+    
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
 		success = super.afterSave(newRecord, success);
@@ -550,6 +689,13 @@ public class TF_MOrder extends MOrder {
 	}
 
 	@Override
+	public String completeIt() {
+		String msg = super.completeIt();
+		createTransporterInvoice();
+		return msg;
+	}
+
+	@Override
 	protected boolean beforeSave(boolean newRecord) {
 		if(getVehicle_ID()>0 && getRent_Amt().doubleValue()==0) {
 			throw new AdempiereUserError("Invalid Rent Amount");
@@ -588,20 +734,127 @@ public class TF_MOrder extends MOrder {
 			
 		}
 		MJobworkItemIssue.ReverseFromPO(this);
+		reverseTransporterInvoice();
 		return super.voidIt();
 	}
 	
 	@Override
 	public boolean reActivateIt() {
+		//Only for POS Purchase
+		//For POS Sales, Core already has this functionality.
+		if(getC_DocType_ID() == 1000050) {
+			//MR/Shipment reverse Correct
+			List<MInOut> inOutList = new Query(getCtx(), MInOut.Table_Name, "C_Order_ID=? AND DocStatus=?", get_TrxName())
+				.setClient_ID().setParameters(getC_Order_ID(),DOCSTATUS_Completed).list();
+			for(MInOut inout : inOutList) {
+				if(!inout.reverseCorrectIt())
+					return false;				
+				inout.saveEx();
+			}
+			
+			//Invoice reverse Correct
+			List<TF_MInvoice> invList = new Query(getCtx(), TF_MInvoice.Table_Name, "C_Order_ID=? AND DocStatus=?", get_TrxName())
+				.setClient_ID().setParameters(getC_Order_ID(), DOCSTATUS_Completed).list();
+			for(TF_MInvoice inv : invList) {
+				if(!inv.reverseCorrectIt())
+					return false;
+				inv.saveEx();
+			}
+			
+		}
+		
 		if(getTF_DriverTips_Pay_ID() > 0) {
 			TF_MPayment payment = new TF_MPayment(getCtx(), getTF_DriverTips_Pay_ID(), get_TrxName());
 			payment.reverseCorrectIt();
 			payment.saveEx();
 		}
 		MJobworkItemIssue.ReverseFromPO(this);
+		reverseTransporterInvoice();
 		return super.reActivateIt();
 	}
 
+	public void createTransporterInvoice() {
+		if(getRent_Amt().doubleValue() > 0 && getTF_RentedVehicle_ID() == 0)
+			throw new AdempiereException("Please Select Rented Vehicle or Reset Rent (Amount) to ZERO!");
+		if(getTF_RentedVehicle_ID() > 0 && getRent_Amt().doubleValue() ==0)
+			throw new AdempiereException("Rent (Amount) should be greater ZERO!");
+		
+		MRentedVehicle vehicle = new MRentedVehicle(getCtx(), getTF_RentedVehicle_ID(), get_TrxName());
+		MBPartner bp = new MBPartner(getCtx(), vehicle.getC_BPartner_ID(), get_TrxName());
+		//Invoice Header
+		TF_MInvoice invoice = new TF_MInvoice(getCtx(), 0, get_TrxName());
+		invoice.setClientOrg(getAD_Client_ID(), getAD_Org_ID());
+		invoice.setC_DocTypeTarget_ID(getC_DocTypeTarget().getC_DocTypeInvoice_ID());			
+		invoice.setDateInvoiced(getDateOrdered());
+		invoice.setDateAcct(getDateOrdered());
+		//
+		invoice.setSalesRep_ID(Env.getAD_User_ID(getCtx()));
+		//
+		invoice.setBPartner(bp);
+		invoice.setIsSOTrx(false);		
+		
+		//Price List
+		int m_M_PriceList_ID = Env.getContextAsInt(getCtx(), "#M_PriceList_ID");
+		if(bp.getPO_PriceList_ID() > 0)
+			m_M_PriceList_ID = bp.getPO_PriceList_ID();			
+		invoice.setM_PriceList_ID(m_M_PriceList_ID);
+		invoice.setC_Currency_ID(MPriceList.get(getCtx(), m_M_PriceList_ID, get_TrxName()).getC_Currency_ID());
+		
+		//Financial Dimension - Profit Center
+		invoice.setUser1_ID(getUser1_ID());
+		
+		invoice.saveEx();
+		//End Invoice Header
+		
+		//Invoice Line - Vehicle Rental Charge
+		MInvoiceLine invLine = new MInvoiceLine(invoice);
+		invLine.setM_Product_ID(vehicle.getM_Product_ID(), true);
+		invLine.setDescription("Vehicle Rent");
+		
+		String hdrDescription = "";
+		MDestination dest = new MDestination(getCtx(), getTF_Destination_ID(), get_TrxName());
+		if(getTF_Destination_ID()>0) {
+			invLine.setQty(getDistance());		
+			invLine.setPriceActual(getRate().multiply(getTonnage()));
+			invLine.setPriceList(getRate().multiply(getTonnage()));
+			invLine.setPriceLimit(getRate().multiply(getTonnage()));
+			invLine.setPriceEntered(getRate().multiply(getTonnage()));
+			hdrDescription = "Source : " + dest.getName() + ", Tonnage : " + getTonnage().doubleValue()
+					+ ", Rate/ton/km : " + getRate().doubleValue();
+		}
+		else {
+			int load_uom_id = MSysConfig.getIntValue("LOAD_UOM", 1000072, getAD_Client_ID());
+			invLine.setC_UOM_ID(load_uom_id);
+			invLine.setQty(BigDecimal.ONE);
+			invLine.setPriceActual(getRent_Amt());
+			invLine.setPriceList(getRent_Amt());
+			invLine.setPriceLimit(getRent_Amt());
+			invLine.setPriceEntered(getRent_Amt());
+			hdrDescription = "Tonnage : " + getTonnage().doubleValue();
+		}		
+		invLine.saveEx();
+		
+		invoice.setDescription(hdrDescription);
+		invoice.saveEx();
+		
+		//DocAction
+		if (!invoice.processIt(DocAction.ACTION_Complete))
+			throw new AdempiereException("Failed when processing document - " + invoice.getProcessMsg());
+		invoice.saveEx();
+		//End DocAction
+		
+		setTransporterInvoice_ID(invoice.getC_Invoice_ID());
+		
+	}
+	
+	public void reverseTransporterInvoice() {
+		if(getTransporterInvoice_ID() > 0 ) {
+			TF_MInvoice inv = new TF_MInvoice(getCtx(), getTransporterInvoice_ID(), get_TrxName());
+			inv.reverseCorrectIt();
+			inv.saveEx();
+		}
+	}
+	
 	public static MProductPricing getProductPricing(int M_Product_ID, int M_PriceList_ID, int C_BPartner_ID, 
 			BigDecimal Qty,	Timestamp priceDate, boolean isSOTrx) {
 		//Get Unit Price from Latest Price List.
@@ -638,4 +891,21 @@ public class TF_MOrder extends MOrder {
 		return prodPrice;
 	}
 	
+	public static MProductPrice updateProductPricing(int M_Product_ID, int M_PriceList_ID, int C_BPartner_ID, 
+			BigDecimal Qty, BigDecimal price, Timestamp priceDate, boolean isSOTrx) {
+		//Get Unit Price from Latest Price List.
+		String sql = "SELECT plv.M_PriceList_Version_ID "
+				+ "FROM M_PriceList_Version plv "
+				+ "WHERE plv.M_PriceList_ID=? "	
+				+ " AND plv.ValidFrom <= ? "
+				+ "ORDER BY plv.ValidFrom DESC";
+		MProductPrice prodPrice = null;
+		int M_PriceList_Version_ID = DB.getSQLValueEx(null, sql, M_PriceList_ID, priceDate);
+		prodPrice = MProductPrice.get(Env.getCtx(), M_PriceList_Version_ID, M_Product_ID, null);
+		if(prodPrice != null) {						
+			prodPrice.setPrices(price, price, price);		
+			prodPrice.saveEx();	
+		}
+		return prodPrice;
+	}
 }
