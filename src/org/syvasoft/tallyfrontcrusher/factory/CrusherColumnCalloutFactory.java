@@ -6,6 +6,7 @@ import java.util.List;
 import org.adempiere.base.IColumnCallout;
 import org.adempiere.base.IColumnCalloutFactory;
 import org.compiere.model.MPayment;
+import org.jfree.chart.block.ColumnArrangement;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutBoulderReceipt_JobWork;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutElementValue_AccountGroup;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutEmployeeSalary;
@@ -36,6 +37,8 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutTyreAssignment_CalcRunningM
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTyreAssignment_ReleaseTyreMovement;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTyreStatusChange_Tyre;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutVehicleRentConfig_Destination;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutWeighmentEntry_CalcNetWeight;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutWeighmentEntry_Vehicle;
 import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalary;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryIssue;
@@ -47,6 +50,7 @@ import org.syvasoft.tallyfrontcrusher.model.MTyreAssignment;
 import org.syvasoft.tallyfrontcrusher.model.MTyreStatusChange;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentalContract;
+import org.syvasoft.tallyfrontcrusher.model.MWeighmentEntry;
 import org.syvasoft.tallyfrontcrusher.model.TF_MElementValue;
 import org.syvasoft.tallyfrontcrusher.model.TF_MInvoice;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
@@ -188,6 +192,16 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		if(tableName.equals(TF_MOrder.Table_Name) && (columnName.equals(TF_MOrder.COLUMNNAME_Distance) ||
 				columnName.equals(TF_MOrder.COLUMNNAME_Rate))) {			
 			list.add(new CalloutOrder_CalcRentAmount());
+		}
+		
+		if(tableName.equals(MWeighmentEntry.Table_Name)) {
+			if(columnName.equals(MWeighmentEntry.COLUMNNAME_TareWeight) || 
+					columnName.equals(MWeighmentEntry.COLUMNNAME_GrossWeight)) {
+						list.add(new CalloutWeighmentEntry_CalcNetWeight());
+					}
+			if(columnName.equals(MWeighmentEntry.COLUMNNAME_TF_RentedVehicle_ID)) {
+				list.add(new CalloutWeighmentEntry_Vehicle());
+			}
 		}
 		
 		return list != null ? list.toArray(new IColumnCallout[0]) : new IColumnCallout[0];
