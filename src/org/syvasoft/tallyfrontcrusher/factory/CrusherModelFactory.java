@@ -46,6 +46,7 @@ import org.syvasoft.tallyfrontcrusher.model.MVehicleRent;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentalContract;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleType;
+import org.syvasoft.tallyfrontcrusher.model.MWeighmentEntry;
 import org.syvasoft.tallyfrontcrusher.model.TF_MBPartner;
 import org.syvasoft.tallyfrontcrusher.model.TF_MBankAccount;
 import org.syvasoft.tallyfrontcrusher.model.TF_MCharge;
@@ -164,6 +165,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return MRentedVehicle.class;
 		else if (MVehicleRentConfig.Table_Name.equals(tableName)) 
 			return MVehicleRentConfig.class;
+		else if (MWeighmentEntry.Table_Name.equals(tableName)) 
+			return MWeighmentEntry.class;
 		return null;
 	}
 
@@ -272,7 +275,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MRentedVehicle(ctx, Record_ID, trxName);
 		else if (MVehicleRentConfig.Table_Name.equals(tableName)) 
 			return new MVehicleRentConfig(ctx, Record_ID, trxName);
-		
+		else if (MWeighmentEntry.Table_Name.equals(tableName)) 
+			return new MWeighmentEntry(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -381,6 +385,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MRentedVehicle(ctx, rs, trxName);
 		else if (MVehicleRentConfig.Table_Name.equals(tableName)) 
 			return new MVehicleRentConfig(ctx, rs, trxName);
+		else if (MWeighmentEntry.Table_Name.equals(tableName)) 
+			return new MWeighmentEntry(ctx, rs, trxName);
 		return null;
 	}
 
