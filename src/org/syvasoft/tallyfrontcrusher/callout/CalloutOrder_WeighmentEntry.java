@@ -70,6 +70,8 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Price, price);			
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Amt, price.multiply(qty));
 			
+			if(weighment.getTF_RentedVehicle_ID() > 0)
+				mTab.setValue(TF_MOrder.COLUMNNAME_TF_RentedVehicle_ID, weighment.getTF_RentedVehicle_ID());
 			
 		}
 		return null;

@@ -27,8 +27,8 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		if(getGrossWeight().doubleValue() > 0 && getTareWeight().doubleValue() <=0)
 			throw new AdempiereException("Tare Weight should be greater than ZERO!");
 		
-		if(getGrossWeight().doubleValue() < 0)
-			throw new AdempiereException("Gross Weight cannot be less than ZERO!");
+		if(getNetWeight().doubleValue() < 0)
+			throw new AdempiereException("Gross Weight should be greater Tare Weight!");
 		
 		if(getTareWeight().doubleValue() > 0 
 				&& is_ValueChanged(COLUMNNAME_TareWeight)) {
