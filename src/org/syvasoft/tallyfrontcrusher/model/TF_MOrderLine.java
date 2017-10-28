@@ -89,7 +89,8 @@ public class TF_MOrderLine extends MOrderLine {
 		return ok;
 	}
 
-	private void updateOrderTonnage() {
+	private void updateOrderTonnage() {		
+		
 		int tonnage_uom_id = MSysConfig.getIntValue("TONNAGE_UOM", 1000069, getAD_Client_ID());
 		String sql = " SELECT SUM(QtyEntered) FROM C_OrderLine WHERE C_Order_ID=? AND C_UOM_ID=?";
 		BigDecimal tonnage = DB.getSQLValueBD(get_TrxName(), sql, getC_Order_ID(), tonnage_uom_id);
@@ -100,7 +101,7 @@ public class TF_MOrderLine extends MOrderLine {
 		DB.executeUpdate(sql, get_TrxName());
 				
 		sql = "UPDATE C_Order SET Rent_Amt = Distance * Rate * Tonnage WHERE C_Order_ID = " + getC_Order_ID()
-			+ " AND TF_Destination_ID IS NOT NULL AND TF_RentedVehicle_ID IS NOT NULL";
+			+ " AND TF_Destination_ID IS NOT NULL AND TF_RentedVehicle_ID IS NOT NULL AND IsLumpSumRent='N'";
 		DB.executeUpdate(sql, get_TrxName());
 		
 	}
