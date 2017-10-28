@@ -24,6 +24,8 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_CalcRentAmount;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_Destination;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_POSCashBP;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_RentedVehicle;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_SetTonnage;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_WeighmentEntry;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPaymentCashType;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutRentalContract_ResourceType;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutRentalContract_VehicleNo;
@@ -190,7 +192,7 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		}
 		
 		if(tableName.equals(TF_MOrder.Table_Name) && (columnName.equals(TF_MOrder.COLUMNNAME_Distance) ||
-				columnName.equals(TF_MOrder.COLUMNNAME_Rate))) {			
+				columnName.equals(TF_MOrder.COLUMNNAME_Rate) || columnName.equals(TF_MOrder.COLUMNNAME_IsLumpSumRent))) {			
 			list.add(new CalloutOrder_CalcRentAmount());
 		}
 		
@@ -202,6 +204,15 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 			if(columnName.equals(MWeighmentEntry.COLUMNNAME_TF_RentedVehicle_ID)) {
 				list.add(new CalloutWeighmentEntry_Vehicle());
 			}
+		}
+		
+		if(tableName.equals(TF_MOrder.Table_Name) && columnName.equals(TF_MOrder.COLUMNNAME_TF_WeighmentEntry_ID)) {
+			list.add(new CalloutOrder_WeighmentEntry());
+		}
+		
+		if(tableName.equals(TF_MOrder.Table_Name) && columnName.equals(TF_MOrder.COLUMNNAME_Item1_Qty)) {
+			list.add(new CalloutOrder_SetTonnage());
+			list.add(new CalloutOrder_CalcRentAmount());
 		}
 		
 		return list != null ? list.toArray(new IColumnCallout[0]) : new IColumnCallout[0];

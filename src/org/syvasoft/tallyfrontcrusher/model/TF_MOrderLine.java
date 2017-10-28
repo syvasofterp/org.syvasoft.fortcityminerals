@@ -61,8 +61,10 @@ public class TF_MOrderLine extends MOrderLine {
 	protected boolean afterSave(boolean newRecord, boolean success) {		
 		Boolean ok = super.afterSave(newRecord, success);
 		updateOrderTonnage();
-		TF_MOrder.updateProductPricing(getM_Product_ID(), getC_Order().getM_PriceList_ID(), getC_BPartner_ID(), 
-				getQtyEntered(), getPriceEntered(), getC_Order().getDateOrdered(), getC_Order().isSOTrx());
+		if(isUpdatePrice()) {
+			TF_MOrder.updateProductPricing(getM_Product_ID(), getC_Order().getM_PriceList_ID(), getC_BPartner_ID(), 
+					getQtyEntered(), getPriceEntered(), getC_Order().getDateOrdered(), getC_Order().isSOTrx());
+		}
 		return ok;
 	}	
 	

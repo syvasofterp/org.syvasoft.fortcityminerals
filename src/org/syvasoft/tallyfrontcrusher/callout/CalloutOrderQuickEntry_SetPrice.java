@@ -7,7 +7,9 @@ import java.util.Properties;
 import org.adempiere.base.IColumnCallout;
 import org.compiere.model.GridField;
 import org.compiere.model.GridTab;
+import org.compiere.model.MProduct;
 import org.compiere.model.MProductPricing;
+import org.compiere.model.MTax;
 import org.compiere.util.Env;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
 
@@ -34,7 +36,13 @@ public class CalloutOrderQuickEntry_SetPrice implements IColumnCallout {
 			if(price == null)
 				price = BigDecimal.ZERO;
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Price, price);
-			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Amt, price.multiply(qty));			
+			if(qty != null)
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Amt, price.multiply(qty));
+			
+			MProduct prod = MProduct.get(ctx, product_ID);
+			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_UOM_ID, prod.getC_UOM_ID());
+			int defaultTaxID = Env.getContextAsInt(ctx, "#C_Tax_ID");
+			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Tax_ID, defaultTaxID);
 		}
 		
 		if(mField.getColumnName().equals(TF_MOrder.COLUMNNAME_Item2_ID) && value != null
