@@ -60,5 +60,13 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		return ok;
 	}
 	
+	public void close() {
+		setStatus(STATUS_Closed);
+		setProcessed(true);		
+	}
+	public void reverse() {
+		setStatus(STATUS_Completed);		
+		setProcessed(false);
+	}
 	
 }

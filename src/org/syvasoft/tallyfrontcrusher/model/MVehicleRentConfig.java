@@ -31,7 +31,7 @@ public class MVehicleRentConfig extends X_TF_VehicleRent_TajConfig {
 		List<MVehicleRentConfig> rentConfigs = new Query(Env.getCtx(), Table_Name, whereClause, null)
 				.setOnlyActiveRecords(true).setParameters(TF_RentedVehicle_ID, TF_Destination_ID).list();
 		if(rentConfigs.size() > 0)
-			return rentConfigs.get(0).getDistance();
+			return rentConfigs.get(0).getRate();
 		else
 			return BigDecimal.ZERO;
 	}

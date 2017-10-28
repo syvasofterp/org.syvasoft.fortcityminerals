@@ -15,9 +15,11 @@ public class CalloutOrder_CalcRentAmount implements IColumnCallout {
 		BigDecimal distance = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Distance);
 		BigDecimal rate = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Rate);
 		BigDecimal tonnage = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Tonnage);;
-		
-		BigDecimal rent = distance.multiply(rate).multiply(tonnage);
-		mTab.setValue(TF_MOrder.COLUMNNAME_Rent_Amt, rent);		
+		Boolean isLumpSumRent = mTab.getValueAsBoolean(TF_MOrder.COLUMNNAME_IsLumpSumRent);
+		if(!isLumpSumRent) {
+			BigDecimal rent = distance.multiply(rate).multiply(tonnage);
+			mTab.setValue(TF_MOrder.COLUMNNAME_Rent_Amt, rent);
+		}
 		return null;
 	}
 

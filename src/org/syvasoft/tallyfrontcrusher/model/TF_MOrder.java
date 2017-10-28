@@ -117,6 +117,114 @@ public class TF_MOrder extends MOrder {
 		return ii.intValue();
 	}
 	
+	/** Column name Item1_UOM_ID */
+    public static final String COLUMNNAME_Item1_UOM_ID = "Item1_UOM_ID";
+    public org.compiere.model.I_C_UOM getItem1_UOM() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_UOM)MTable.get(getCtx(), org.compiere.model.I_C_UOM.Table_Name)
+			.getPO(getItem1_UOM_ID(), get_TrxName());	}
+
+	/** Set UOM.
+		@param Item1_UOM_ID UOM	  */
+	public void setItem1_UOM_ID (int Item1_UOM_ID)
+	{
+		if (Item1_UOM_ID < 1) 
+			set_Value (COLUMNNAME_Item1_UOM_ID, null);
+		else 
+			set_Value (COLUMNNAME_Item1_UOM_ID, Integer.valueOf(Item1_UOM_ID));
+	}
+
+	/** Get UOM.
+		@return UOM	  */
+	public int getItem1_UOM_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Item1_UOM_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+	
+	/** Column name Item1_Tax_ID */
+    public static final String COLUMNNAME_Item1_Tax_ID = "Item1_Tax_ID";
+    
+    public org.compiere.model.I_C_Tax getItem1_Tax() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Tax)MTable.get(getCtx(), org.compiere.model.I_C_Tax.Table_Name)
+			.getPO(getItem1_Tax_ID(), get_TrxName());	}
+
+	/** Set Tax.
+		@param Item1_Tax_ID 
+		Tax Identifier
+	  */
+	public void setItem1_Tax_ID (int Item1_Tax_ID)
+	{
+		if (Item1_Tax_ID < 1) 
+			set_Value (COLUMNNAME_Item1_Tax_ID, null);
+		else 
+			set_Value (COLUMNNAME_Item1_Tax_ID, Integer.valueOf(Item1_Tax_ID));
+	}
+
+	/** Get Tax.
+		@return Tax Identifier
+	  */
+	public int getItem1_Tax_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Item1_Tax_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+	
+	/** Column name Item1_IsUpdatePrice */
+    public static final String COLUMNNAME_Item1_IsUpdatePrice = "Item1_IsUpdatePrice";
+    /** Set Update Price.
+	@param Item1_IsUpdatePrice 
+	Update Price into Price List
+	  */
+	public void setItem1_IsUpdatePrice (boolean Item1_IsUpdatePrice)
+	{
+		set_Value (COLUMNNAME_Item1_IsUpdatePrice, Boolean.valueOf(Item1_IsUpdatePrice));
+	}
+	
+	/** Get Update Price.
+		@return Update Price into Price List
+	  */
+	public boolean isItem1_IsUpdatePrice () 
+	{
+		Object oo = get_Value(COLUMNNAME_Item1_IsUpdatePrice);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+    /** Column name IsLumpSumRent */
+    public static final String COLUMNNAME_IsLumpSumRent = "IsLumpSumRent";
+    
+	/** Set Lump Sum Rent.
+	@param IsLumpSumRent Lump Sum Rent	  */
+	public void setIsLumpSumRent (boolean IsLumpSumRent)
+	{
+		set_Value (COLUMNNAME_IsLumpSumRent, Boolean.valueOf(IsLumpSumRent));
+	}
+	
+	/** Get Lump Sum Rent.
+		@return Lump Sum Rent	  */
+	public boolean isLumpSumRent () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsLumpSumRent);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+    
 	/** Column name Item1_Price */
     public static final String COLUMNNAME_Item1_Price = "Item1_Price";
     
@@ -365,6 +473,28 @@ public class TF_MOrder extends MOrder {
 			 return Env.ZERO;
 		return bd;
 	}
+	
+	/** Column name TF_WeighmentEntry_ID */
+    public static final String COLUMNNAME_TF_WeighmentEntry_ID = "TF_WeighmentEntry_ID";
+    /** Set Weighment Entry.
+	@param TF_WeighmentEntry_ID Weighment Entry	  */
+	public void setTF_WeighmentEntry_ID (int TF_WeighmentEntry_ID)
+	{
+		if (TF_WeighmentEntry_ID < 1) 
+			set_Value (COLUMNNAME_TF_WeighmentEntry_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_WeighmentEntry_ID, Integer.valueOf(TF_WeighmentEntry_ID));
+	}
+	
+	/** Get Weighment Entry.
+		@return Weighment Entry	  */
+	public int getTF_WeighmentEntry_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_WeighmentEntry_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
     
 	 /** Column name TF_DriverTips_Pay_ID */
     public static final String COLUMNNAME_TF_DriverTips_Pay_ID = "TF_DriverTips_Pay_ID";
@@ -594,10 +724,10 @@ public class TF_MOrder extends MOrder {
 	}
 	
 	public void updateQuickOrderLines() {
-		MOrderLine ordLine = null;
+		TF_MOrderLine ordLine = null;
 		//Delete empty item lines
 		if(is_ValueChanged(COLUMNNAME_Item1_ID) || (getItem1_ID() == 0 && getItem1_C_OrderLine_ID() > 0)) {
-			ordLine = new MOrderLine(getCtx(), getItem1_C_OrderLine_ID(), get_TrxName());
+			ordLine = new TF_MOrderLine(getCtx(), getItem1_C_OrderLine_ID(), get_TrxName());
 			if(ordLine.get_ID() > 0) {
 				DB.executeUpdate("UPDATE C_Order SET " + COLUMNNAME_Item1_C_OrderLine_ID + " = NULL " +
 						" WHERE C_Order_ID =" + getC_Order_ID(), get_TrxName());
@@ -607,7 +737,7 @@ public class TF_MOrder extends MOrder {
 			}
 		}
 		if(is_ValueChanged(COLUMNNAME_Item2_ID) || (getItem2_ID() == 0 && getItem2_C_OrderLine_ID() > 0)) {
-			ordLine = new MOrderLine(getCtx(), getItem2_C_OrderLine_ID(), get_TrxName());
+			ordLine = new TF_MOrderLine(getCtx(), getItem2_C_OrderLine_ID(), get_TrxName());
 			if(ordLine.get_ID() > 0) {
 				DB.executeUpdate("UPDATE C_Order SET " + COLUMNNAME_Item2_C_OrderLine_ID + " = NULL " +
 						" WHERE C_Order_ID =" + getC_Order_ID(), get_TrxName());
@@ -623,12 +753,17 @@ public class TF_MOrder extends MOrder {
 				|| is_ValueChanged(COLUMNNAME_Item1_Price) || getItem1_C_OrderLine_ID() == 0)) {
 			
 			if(getItem1_C_OrderLine_ID() > 0) 
-				ordLine = new MOrderLine(getCtx(), getItem1_C_OrderLine_ID(), get_TrxName());
+				ordLine = new TF_MOrderLine(getCtx(), getItem1_C_OrderLine_ID(), get_TrxName());
 			else
-				ordLine = new MOrderLine(this);
+				ordLine = new TF_MOrderLine(this);
 			TF_MOrder.addProductPricingIfNot(getItem1_ID(), getM_PriceList_ID(), getC_BPartner_ID(), getItem1_Qty(), getItem1_Price(), 
 					getDateOrdered(), getC_DocType().isSOTrx());
-			setOrderLine(ordLine, getItem1_ID(), getItem1_Qty(), getItem1_Price());									
+			setOrderLine(ordLine, getItem1_ID(), getItem1_Qty(), getItem1_Price());
+			
+			ordLine.setC_Tax_ID(getItem1_Tax_ID());			
+			ordLine.setIsUpdatePrice(isItem1_IsUpdatePrice());
+			ordLine.setC_UOM_ID(getItem1_UOM_ID());
+			
 			ordLine.saveEx();			
 			DB.executeUpdate("UPDATE C_Order SET " + COLUMNNAME_Item1_C_OrderLine_ID + " = "
 				+ ordLine.getC_OrderLine_ID() + " WHERE C_Order_ID = " + getC_Order_ID(), get_TrxName());	
@@ -638,9 +773,9 @@ public class TF_MOrder extends MOrder {
 				|| is_ValueChanged(COLUMNNAME_Item2_Price) || getItem2_C_OrderLine_ID() == 0)) {
 			
 			if(getItem2_C_OrderLine_ID() > 0)
-				ordLine = new MOrderLine(getCtx(), getItem2_C_OrderLine_ID(), get_TrxName());
+				ordLine = new TF_MOrderLine(getCtx(), getItem2_C_OrderLine_ID(), get_TrxName());
 			else
-				ordLine = new MOrderLine(this);
+				ordLine = new TF_MOrderLine(this);
 			TF_MOrder.addProductPricingIfNot(getItem2_ID(), getM_PriceList_ID(), getC_BPartner_ID(), getItem2_Qty(), getItem2_Price(), 
 					getDateOrdered(), getC_DocType().isSOTrx());
 			setOrderLine(ordLine, getItem2_ID(), getItem2_Qty(), getItem2_Price());									
@@ -692,6 +827,7 @@ public class TF_MOrder extends MOrder {
 	public String completeIt() {
 		String msg = super.completeIt();
 		createTransporterInvoice();
+		closeWeighmentEntry();
 		return msg;
 	}
 
@@ -735,6 +871,7 @@ public class TF_MOrder extends MOrder {
 		}
 		MJobworkItemIssue.ReverseFromPO(this);
 		reverseTransporterInvoice();
+		reverseWeighmentEntry();
 		return super.voidIt();
 	}
 	
@@ -770,6 +907,7 @@ public class TF_MOrder extends MOrder {
 		}
 		MJobworkItemIssue.ReverseFromPO(this);
 		reverseTransporterInvoice();
+		reverseWeighmentEntry();
 		return super.reActivateIt();
 	}
 
@@ -812,14 +950,22 @@ public class TF_MOrder extends MOrder {
 		invLine.setDescription("Vehicle Rent");
 		
 		String hdrDescription = "";
+		
+			
 		MDestination dest = new MDestination(getCtx(), getTF_Destination_ID(), get_TrxName());
-		if(getTF_Destination_ID()>0) {
+		if(isSOTrx()) {
+			hdrDescription = "Destination : " + dest.getName();
+		}
+		else {
+			hdrDescription = "Source : " + dest.getName();
+		}
+		if(!isLumpSumRent()) {
 			invLine.setQty(getDistance());		
 			invLine.setPriceActual(getRate().multiply(getTonnage()));
 			invLine.setPriceList(getRate().multiply(getTonnage()));
 			invLine.setPriceLimit(getRate().multiply(getTonnage()));
 			invLine.setPriceEntered(getRate().multiply(getTonnage()));
-			hdrDescription = "Source : " + dest.getName() + ", Tonnage : " + getTonnage().doubleValue()
+			hdrDescription = hdrDescription + ", Tonnage : " + getTonnage().doubleValue()
 					+ ", Rate/ton/km : " + getRate().doubleValue();
 		}
 		else {
@@ -830,7 +976,7 @@ public class TF_MOrder extends MOrder {
 			invLine.setPriceList(getRent_Amt());
 			invLine.setPriceLimit(getRent_Amt());
 			invLine.setPriceEntered(getRent_Amt());
-			hdrDescription = "Tonnage : " + getTonnage().doubleValue();
+			hdrDescription = hdrDescription + ", Tonnage : " + getTonnage().doubleValue();
 		}		
 		invLine.saveEx();
 		
@@ -855,6 +1001,22 @@ public class TF_MOrder extends MOrder {
 		}
 	}
 	
+	public void closeWeighmentEntry()
+	{
+		if(getTF_WeighmentEntry_ID() > 0) {
+			MWeighmentEntry weighment = new MWeighmentEntry(getCtx(), getTF_WeighmentEntry_ID(), get_TrxName());
+			weighment.close();
+			weighment.saveEx();
+		}
+	}
+	
+	public void reverseWeighmentEntry() {
+		if(getTF_WeighmentEntry_ID() > 0) {
+			MWeighmentEntry weighment = new MWeighmentEntry(getCtx(), getTF_WeighmentEntry_ID(), get_TrxName());
+			weighment.reverse();
+			weighment.saveEx();
+		}
+	}
 	public static MProductPricing getProductPricing(int M_Product_ID, int M_PriceList_ID, int C_BPartner_ID, 
 			BigDecimal Qty,	Timestamp priceDate, boolean isSOTrx) {
 		//Get Unit Price from Latest Price List.
