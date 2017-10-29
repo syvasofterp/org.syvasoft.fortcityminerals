@@ -1,9 +1,11 @@
 package org.syvasoft.tallyfrontcrusher.model;
 
 import java.sql.ResultSet;
+import java.util.List;
 import java.util.Properties;
 
 import org.compiere.model.MProduct;
+import org.compiere.model.Query;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
 
@@ -43,8 +45,25 @@ public class MRentedVehicle extends X_TF_RentedVehicle {
 		prod.saveEx();
 		if(getM_Product_ID() == 0) {
 			DB.executeUpdate("UPDATE TF_RentedVehicle SET M_Product_ID = " + prod.getM_Product_ID() +
-					" WHERE TF_RentedVehicle_ID = " + getTF_RentedVehicle_ID(), get_TrxName());
+					" WHERE TF_RentedVehicle_ID = " + getTF_RentedVehicle_ID(), get_TrxName());			
 		}
+		
+		//Add all the destinations to the Rent Configuration with the default rate.
+		if(newRecord) {
+			List<MDestination> destinations = new Query(getCtx(), MDestination.Table_Name, "AD_Org_ID IN (0,?)", get_TrxName())
+					.setOnlyActiveRecords(true).setParameters(getAD_Org_ID()).setOrderBy("Name").list();
+			for(MDestination dest : destinations) {
+				MVehicleRentConfig rentConfig = new MVehicleRentConfig(getCtx(), 0, get_TrxName());
+				rentConfig.setAD_Org_ID(getAD_Org_ID());
+				rentConfig.setM_Product_ID(prod.getM_Product_ID());
+				rentConfig.setTF_Destination_ID(dest.getTF_Destination_ID());
+				rentConfig.setRate(dest.getRate());
+				rentConfig.setIsActive(true);
+				rentConfig.saveEx();
+			}
+			
+		}
+		
 		return ok;
 	}
 
