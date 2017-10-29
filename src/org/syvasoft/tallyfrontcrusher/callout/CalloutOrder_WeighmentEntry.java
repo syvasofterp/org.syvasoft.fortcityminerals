@@ -73,6 +73,9 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 			if(weighment.getTF_RentedVehicle_ID() > 0)
 				mTab.setValue(TF_MOrder.COLUMNNAME_TF_RentedVehicle_ID, weighment.getTF_RentedVehicle_ID());
 			
+			if(weighment.getTF_Destination_ID() > 0)
+				mTab.setValue(TF_MOrder.COLUMNNAME_TF_Destination_ID, weighment.getTF_Destination_ID());
+			
 		}
 		return null;
 	}
