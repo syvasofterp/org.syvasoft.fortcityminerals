@@ -33,7 +33,7 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20171025L;
+	private static final long serialVersionUID = 20171029L;
 
     /** Standard Constructor */
     public X_TF_WeighmentEntry (Properties ctx, int TF_WeighmentEntry_ID, String trxName)
@@ -45,6 +45,7 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 			setM_Product_ID (0);
 			setProcessed (false);
 			setStatus (null);
+// IP
 			setTF_WeighmentEntry_ID (0);
 			setWeighmentEntryType (null);
         } */
@@ -196,15 +197,15 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return (String)get_Value(COLUMNNAME_DocumentNo);
 	}
 
-	/** Set Gross Weight.
-		@param GrossWeight Gross Weight	  */
+	/** Set Gross Weight (Kg).
+		@param GrossWeight Gross Weight (Kg)	  */
 	public void setGrossWeight (BigDecimal GrossWeight)
 	{
 		set_Value (COLUMNNAME_GrossWeight, GrossWeight);
 	}
 
-	/** Get Gross Weight.
-		@return Gross Weight	  */
+	/** Get Gross Weight (Kg).
+		@return Gross Weight (Kg)	  */
 	public BigDecimal getGrossWeight () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_GrossWeight);
@@ -255,15 +256,15 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return ii.intValue();
 	}
 
-	/** Set Net Weight.
-		@param NetWeight Net Weight	  */
+	/** Set Net Weight (Kg).
+		@param NetWeight Net Weight (Kg)	  */
 	public void setNetWeight (BigDecimal NetWeight)
 	{
 		set_Value (COLUMNNAME_NetWeight, NetWeight);
 	}
 
-	/** Get Net Weight.
-		@return Net Weight	  */
+	/** Get Net Weight (Kg).
+		@return Net Weight (Kg)	  */
 	public BigDecimal getNetWeight () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_NetWeight);
@@ -302,6 +303,8 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public static final String STATUS_Completed = "CO";
 	/** Closed = CL */
 	public static final String STATUS_Closed = "CL";
+	/** Voided = VO */
+	public static final String STATUS_Voided = "VO";
 	/** Set Status.
 		@param Status Status	  */
 	public void setStatus (String Status)
@@ -317,15 +320,15 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return (String)get_Value(COLUMNNAME_Status);
 	}
 
-	/** Set Tare Weight.
-		@param TareWeight Tare Weight	  */
+	/** Set Tare Weight (Kg).
+		@param TareWeight Tare Weight (Kg)	  */
 	public void setTareWeight (BigDecimal TareWeight)
 	{
 		set_Value (COLUMNNAME_TareWeight, TareWeight);
 	}
 
-	/** Get Tare Weight.
-		@return Tare Weight	  */
+	/** Get Tare Weight (Kg).
+		@return Tare Weight (Kg)	  */
 	public BigDecimal getTareWeight () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_TareWeight);
@@ -368,6 +371,31 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public int getTF_Boulder_Receipt_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Boulder_Receipt_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public I_TF_Destination getTF_Destination() throws RuntimeException
+    {
+		return (I_TF_Destination)MTable.get(getCtx(), I_TF_Destination.Table_Name)
+			.getPO(getTF_Destination_ID(), get_TrxName());	}
+
+	/** Set Destination.
+		@param TF_Destination_ID Destination	  */
+	public void setTF_Destination_ID (int TF_Destination_ID)
+	{
+		if (TF_Destination_ID < 1) 
+			set_Value (COLUMNNAME_TF_Destination_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_Destination_ID, Integer.valueOf(TF_Destination_ID));
+	}
+
+	/** Get Destination.
+		@return Destination	  */
+	public int getTF_Destination_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Destination_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();

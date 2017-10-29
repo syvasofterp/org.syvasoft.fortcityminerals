@@ -154,10 +154,10 @@ public interface I_TF_WeighmentEntry
     /** Column name GrossWeight */
     public static final String COLUMNNAME_GrossWeight = "GrossWeight";
 
-	/** Set Gross Weight	  */
+	/** Set Gross Weight (Kg)	  */
 	public void setGrossWeight (BigDecimal GrossWeight);
 
-	/** Get Gross Weight	  */
+	/** Get Gross Weight (Kg)	  */
 	public BigDecimal getGrossWeight();
 
     /** Column name GrossWeightTime */
@@ -200,10 +200,10 @@ public interface I_TF_WeighmentEntry
     /** Column name NetWeight */
     public static final String COLUMNNAME_NetWeight = "NetWeight";
 
-	/** Set Net Weight	  */
+	/** Set Net Weight (Kg)	  */
 	public void setNetWeight (BigDecimal NetWeight);
 
-	/** Get Net Weight	  */
+	/** Get Net Weight (Kg)	  */
 	public BigDecimal getNetWeight();
 
     /** Column name Processed */
@@ -231,10 +231,10 @@ public interface I_TF_WeighmentEntry
     /** Column name TareWeight */
     public static final String COLUMNNAME_TareWeight = "TareWeight";
 
-	/** Set Tare Weight	  */
+	/** Set Tare Weight (Kg)	  */
 	public void setTareWeight (BigDecimal TareWeight);
 
-	/** Get Tare Weight	  */
+	/** Get Tare Weight (Kg)	  */
 	public BigDecimal getTareWeight();
 
     /** Column name TareWeightTime */
@@ -256,6 +256,17 @@ public interface I_TF_WeighmentEntry
 	public int getTF_Boulder_Receipt_ID();
 
 	public I_TF_Boulder_Receipt getTF_Boulder_Receipt() throws RuntimeException;
+
+    /** Column name TF_Destination_ID */
+    public static final String COLUMNNAME_TF_Destination_ID = "TF_Destination_ID";
+
+	/** Set Destination	  */
+	public void setTF_Destination_ID (int TF_Destination_ID);
+
+	/** Get Destination	  */
+	public int getTF_Destination_ID();
+
+	public I_TF_Destination getTF_Destination() throws RuntimeException;
 
     /** Column name TF_Quarry_ID */
     public static final String COLUMNNAME_TF_Quarry_ID = "TF_Quarry_ID";
