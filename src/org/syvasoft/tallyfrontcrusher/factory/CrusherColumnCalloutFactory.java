@@ -27,6 +27,10 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_RentedVehicle;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_SetTonnage;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_WeighmentEntry;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPaymentCashType;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_DocumentType;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_ElementValue;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_Org;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_TFBPartner;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutRentalContract_ResourceType;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutRentalContract_VehicleNo;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetFuelExpensed;
@@ -56,6 +60,7 @@ import org.syvasoft.tallyfrontcrusher.model.MWeighmentEntry;
 import org.syvasoft.tallyfrontcrusher.model.TF_MElementValue;
 import org.syvasoft.tallyfrontcrusher.model.TF_MInvoice;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
+import org.syvasoft.tallyfrontcrusher.model.TF_MPayment;
 
 public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 
@@ -106,9 +111,18 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 			list.add(new CalloutTripSheetJobwork());
 		
 		//C_Payment - Cash Type
-		if(tableName.equals(MPayment.Table_Name) && (columnName.equals("CashType")))
-			list.add(new CalloutPaymentCashType());
-		
+		//if(tableName.equals(MPayment.Table_Name) && (columnName.equals("CashType")))
+		//	list.add(new CalloutPaymentCashType());
+		if(tableName.equals(MPayment.Table_Name)) { 
+			if(columnName.equals(TF_MPayment.COLUMNNAME_TF_BPartner_ID)) 
+				list.add(new CalloutPayment_TFBPartner());
+			if(columnName.equals(TF_MPayment.COLUMNNAME_C_ElementValue_ID))
+				list.add(new CalloutPayment_ElementValue());
+			if(columnName.equals(TF_MPayment.COLUMNNAME_C_DocType_ID))
+				list.add(new CalloutPayment_DocumentType());
+			if(columnName.equals(TF_MPayment.COLUMNNAME_AD_Org_ID))
+				list.add(new CalloutPayment_Org());
+		}
 		//TF_Employee_Salary - Load Salary Config
 		if(tableName.equals(MEmployeeSalary.Table_Name) && (columnName.equals(MEmployeeSalary.COLUMNNAME_C_BPartner_ID)
 				|| columnName.equals(MEmployeeSalary.COLUMNNAME_DateAcct) || columnName.equals(MEmployeeSalary.COLUMNNAME_Present_Days)))
