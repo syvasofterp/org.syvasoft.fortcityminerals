@@ -114,7 +114,57 @@ public class TF_MPayment extends MPayment {
 	}
 
 	
+	/** Column name TF_BPartner_ID */
+    public static final String COLUMNNAME_TF_BPartner_ID = "TF_BPartner_ID";
+    public org.compiere.model.I_C_BPartner getTF_BPartner() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_BPartner)MTable.get(getCtx(), org.compiere.model.I_C_BPartner.Table_Name)
+			.getPO(getTF_BPartner_ID(), get_TrxName());	}
+
+	/** Set Customer / Vendor.
+		@param TF_BPartner_ID Customer / Vendor	  */
+	public void setTF_BPartner_ID (int TF_BPartner_ID)
+	{
+		if (TF_BPartner_ID < 1) 
+			set_Value (COLUMNNAME_TF_BPartner_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_BPartner_ID, Integer.valueOf(TF_BPartner_ID));
+	}
+
+	/** Get Customer / Vendor.
+		@return Customer / Vendor	  */
+	public int getTF_BPartner_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_BPartner_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
 	
+	/** Column name IsQuickEntry */
+    public static final String COLUMNNAME_IsQuickEntry = "IsQuickEntry";
+	/** Set Quick Entry.
+	@param IsQuickEntry Quick Entry	  */
+	public void setIsQuickEntry (boolean IsQuickEntry)
+	{
+		set_Value (COLUMNNAME_IsQuickEntry, Boolean.valueOf(IsQuickEntry));
+	}
+	
+	/** Get Quick Entry.
+		@return Quick Entry	  */
+	public boolean isQuickEntry () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsQuickEntry);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+    
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {
 		
@@ -133,6 +183,9 @@ public class TF_MPayment extends MPayment {
 		setIsReceipt(getC_DocType().isSOTrx());
 		if(getC_ElementValue_ID()==0)
 			setC_ElementValue_ID(0);
+		if(getC_Invoice_ID() > 0 && isReceipt() != getC_Invoice().isSOTrx())
+			throw new AdempiereException("Invalid Invoice for the selected Document Type!");
+			
 		return super.beforeSave(newRecord);
 	}
 	
