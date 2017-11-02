@@ -23,14 +23,14 @@ import org.compiere.model.*;
 
 /** Generated Model for TF_GLPosting_Config
  *  @author iDempiere (generated) 
- *  @version Release 3.1 - $Id$ */
+ *  @version Release 4.1 - $Id$ */
 public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, I_Persistent 
 {
 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170616L;
+	private static final long serialVersionUID = 20171102L;
 
     /** Standard Constructor */
     public X_TF_GLPosting_Config (Properties ctx, int TF_GLPosting_Config_ID, String trxName)
@@ -182,6 +182,31 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	public int getFuelExpense_Charge_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_FuelExpense_Charge_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_ElementValue getInterBankInTransit() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getInterBankInTransit_ID(), get_TrxName());	}
+
+	/** Set Inter Bank In Transit.
+		@param InterBankInTransit_ID Inter Bank In Transit	  */
+	public void setInterBankInTransit_ID (int InterBankInTransit_ID)
+	{
+		if (InterBankInTransit_ID < 1) 
+			set_Value (COLUMNNAME_InterBankInTransit_ID, null);
+		else 
+			set_Value (COLUMNNAME_InterBankInTransit_ID, Integer.valueOf(InterBankInTransit_ID));
+	}
+
+	/** Get Inter Bank In Transit.
+		@return Inter Bank In Transit	  */
+	public int getInterBankInTransit_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_InterBankInTransit_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
