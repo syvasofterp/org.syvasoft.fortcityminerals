@@ -23,7 +23,7 @@ import org.compiere.util.KeyNamePair;
 
 /** Generated Interface for TF_GLPosting_Config
  *  @author iDempiere (generated) 
- *  @version Release 3.1
+ *  @version Release 4.1
  */
 @SuppressWarnings("all")
 public interface I_TF_GLPosting_Config 
@@ -135,6 +135,17 @@ public interface I_TF_GLPosting_Config
 	public int getFuelExpense_Charge_ID();
 
 	public org.compiere.model.I_C_Charge getFuelExpense_Charge() throws RuntimeException;
+
+    /** Column name InterBankInTransit_ID */
+    public static final String COLUMNNAME_InterBankInTransit_ID = "InterBankInTransit_ID";
+
+	/** Set Inter Bank In Transit	  */
+	public void setInterBankInTransit_ID (int InterBankInTransit_ID);
+
+	/** Get Inter Bank In Transit	  */
+	public int getInterBankInTransit_ID();
+
+	public org.compiere.model.I_C_ElementValue getInterBankInTransit() throws RuntimeException;
 
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";

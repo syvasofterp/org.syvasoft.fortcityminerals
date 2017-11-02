@@ -29,6 +29,7 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_WeighmentEntry;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPaymentCashType;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_DocumentType;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_ElementValue;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_FromToBankAccount;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_Org;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_TFBPartner;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutRentalContract_ResourceType;
@@ -122,6 +123,9 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 				list.add(new CalloutPayment_DocumentType());
 			if(columnName.equals(TF_MPayment.COLUMNNAME_AD_Org_ID))
 				list.add(new CalloutPayment_Org());
+			if(columnName.equals(TF_MPayment.COLUMNNAME_FromTo_BankAccount_ID) || 
+					columnName.equals(TF_MPayment.COLUMNNAME_IsInterCashBookEntry))
+				list.add(new CalloutPayment_FromToBankAccount());
 		}
 		//TF_Employee_Salary - Load Salary Config
 		if(tableName.equals(MEmployeeSalary.Table_Name) && (columnName.equals(MEmployeeSalary.COLUMNNAME_C_BPartner_ID)
