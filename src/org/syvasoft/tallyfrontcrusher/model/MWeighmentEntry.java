@@ -37,7 +37,7 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 			setStatus(STATUS_InProgress);
 			
 			if (getGrossWeight().doubleValue() > 0)
-				setStatus(STATUS_Completed);
+				setStatus(STATUS_Unbilled);
 		}
 		else if(getTareWeight().doubleValue() == 0) {
 			setTareWeightTime(null);
@@ -48,7 +48,7 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 				&& is_ValueChanged(COLUMNNAME_GrossWeight) ) {
 			Timestamp grossWeightTime = new Timestamp(System.currentTimeMillis());
 			setGrossWeightTime(grossWeightTime);		
-			setStatus(STATUS_Completed);
+			setStatus(STATUS_Unbilled);
 		}
 		else if(getGrossWeight().doubleValue() == 0) {
 			setGrossWeightTime(null);
@@ -61,11 +61,11 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 	}
 	
 	public void close() {
-		setStatus(STATUS_Closed);
+		setStatus(STATUS_Billed);
 		setProcessed(true);		
 	}
 	public void reverse() {
-		setStatus(STATUS_Completed);		
+		setStatus(STATUS_Unbilled);		
 		setProcessed(false);
 	}
 	
