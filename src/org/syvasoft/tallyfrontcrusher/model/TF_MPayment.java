@@ -218,10 +218,41 @@ public class TF_MPayment extends MPayment {
 		return false;
 	}
     
+	/** Column name IsAutocomplete */
+    public static final String COLUMNNAME_IsAutocomplete = "IsAutocomplete";
+    /** Set Autocomplete.
+	@param IsAutocomplete 
+	Automatic completion for textfields
+	  */
+	public void setIsAutocomplete (boolean IsAutocomplete)
+	{
+		set_Value (COLUMNNAME_IsAutocomplete, Boolean.valueOf(IsAutocomplete));
+	}
+	
+	/** Get Autocomplete.
+		@return Automatic completion for textfields
+	  */
+	public boolean isAutocomplete () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsAutocomplete);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+	
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {
 		
-		return super.afterSave(newRecord, success);
+		boolean ok = super.afterSave(newRecord, success);
+		if(isAutocomplete() && getDocStatus().equals(DOCSTATUS_Drafted)) {
+			if(!processIt(DocAction.ACTION_Complete))
+				throw new AdempiereException("Failed when processing document - " + getProcessMsg());			
+		}
+		return ok;
 	}
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
