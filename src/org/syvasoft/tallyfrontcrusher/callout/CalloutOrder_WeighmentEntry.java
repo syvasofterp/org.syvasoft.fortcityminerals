@@ -42,8 +42,11 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 			}
 			MBPartner bp = new MBPartner(ctx, bPartner_id, null);
 			int priceList_id = Env.getContextAsInt(ctx, "#M_PriceList_ID");
-			if(bp.getPO_PriceList_ID() > 0) {
+			if(bp.getPO_PriceList_ID() > 0 && !isSOTrx) {
 				priceList_id = bp.getPO_PriceList_ID();
+			}
+			else if( bp.getM_PriceList_ID() > 0 && isSOTrx) {
+				priceList_id = bp.getM_PriceList_ID();
 			}
 			
 			mTab.setValue(TF_MOrder.COLUMNNAME_M_PriceList_ID, priceList_id);
