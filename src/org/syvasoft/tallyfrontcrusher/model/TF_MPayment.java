@@ -248,7 +248,7 @@ public class TF_MPayment extends MPayment {
 	protected boolean afterSave(boolean newRecord, boolean success) {
 		
 		boolean ok = super.afterSave(newRecord, success);
-		if(isAutocomplete() && getDocStatus().equals(DOCSTATUS_Drafted)) {
+		if(isAutocomplete() && (getDocStatus().equals(DOCSTATUS_Drafted) || getDocStatus().equals(DOCSTATUS_InProgress))) {
 			if(!processIt(DocAction.ACTION_Complete))
 				throw new AdempiereException("Failed when processing document - " + getProcessMsg());			
 		}
