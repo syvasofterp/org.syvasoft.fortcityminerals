@@ -92,8 +92,9 @@ public class TF_MOrderLine extends MOrderLine {
 	private void updateOrderTonnage() {		
 		
 		int tonnage_uom_id = MSysConfig.getIntValue("TONNAGE_UOM", 1000069, getAD_Client_ID());
-		String sql = " SELECT SUM(QtyEntered) FROM C_OrderLine WHERE C_Order_ID=? AND C_UOM_ID=?";
-		BigDecimal tonnage = DB.getSQLValueBD(get_TrxName(), sql, getC_Order_ID(), tonnage_uom_id);
+		int kg_uom_id = MSysConfig.getIntValue("KG_UOM", 1000070, getAD_Client_ID());
+		String sql = " SELECT SUM(CASE WHEN C_UOM_ID = ? THEN QtyEntered/1000 ELSE QtyEntered END) FROM C_OrderLine WHERE C_Order_ID=? AND C_UOM_ID IN (?,?)";
+		BigDecimal tonnage = DB.getSQLValueBD(get_TrxName(), sql, kg_uom_id, getC_Order_ID(), tonnage_uom_id,kg_uom_id);
 		if(tonnage == null)
 			tonnage = BigDecimal.ZERO;
 		

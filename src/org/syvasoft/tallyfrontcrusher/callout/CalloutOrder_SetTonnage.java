@@ -17,9 +17,14 @@ public class CalloutOrder_SetTonnage implements IColumnCallout {
 		if(mTab.getValue(TF_MOrder.COLUMNNAME_Item1_UOM_ID) != null) {
 			int uom_id = (int) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_UOM_ID);
 			int tonnage_uom_id = MSysConfig.getIntValue("TONNAGE_UOM", 1000069, Env.getAD_Client_ID(ctx));
+			int kg_uom_id = MSysConfig.getIntValue("KG_UOM", 1000070, Env.getAD_Client_ID(ctx));
 			if(uom_id == tonnage_uom_id) {
 				BigDecimal qty = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_Qty);
 				mTab.setValue(TF_MOrder.COLUMNNAME_Tonnage, qty);
+			}
+			else if(uom_id == kg_uom_id) {
+				BigDecimal qty = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_Qty);
+				mTab.setValue(TF_MOrder.COLUMNNAME_Tonnage, qty.divide(new BigDecimal(1000)));
 			}
 		}
 		return null;
