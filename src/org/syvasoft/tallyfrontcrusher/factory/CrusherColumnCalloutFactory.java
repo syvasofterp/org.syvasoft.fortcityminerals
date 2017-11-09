@@ -22,9 +22,11 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_CalcAmt;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_SetPrice;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_SetVehicleNo;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_CalcRentAmount;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_CalcRentPayable;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_Destination;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_POSCashBP;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_RentedVehicle;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_SOUnitPriceRent;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_SetTonnage;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_WeighmentEntry;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPaymentCashType;
@@ -209,11 +211,13 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 			list.add(new CalloutOrder_Destination());
 			list.add(new CalloutOrder_RentedVehicle());
 			list.add(new CalloutOrder_CalcRentAmount());
+			list.add(new CalloutOrder_SOUnitPriceRent());
 		}
 		
 		if(tableName.equals(TF_MOrder.Table_Name) && (columnName.equals(TF_MOrder.COLUMNNAME_Distance) ||
 				columnName.equals(TF_MOrder.COLUMNNAME_Rate) || columnName.equals(TF_MOrder.COLUMNNAME_IsLumpSumRent))) {			
 			list.add(new CalloutOrder_CalcRentAmount());
+			list.add(new CalloutOrder_SOUnitPriceRent());
 		}
 		
 		if(tableName.equals(MWeighmentEntry.Table_Name)) {
@@ -228,11 +232,28 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		
 		if(tableName.equals(TF_MOrder.Table_Name) && columnName.equals(TF_MOrder.COLUMNNAME_TF_WeighmentEntry_ID)) {
 			list.add(new CalloutOrder_WeighmentEntry());
+			list.add(new CalloutOrder_SOUnitPriceRent());
 		}
 		
 		if(tableName.equals(TF_MOrder.Table_Name) && columnName.equals(TF_MOrder.COLUMNNAME_Item1_Qty)) {
 			list.add(new CalloutOrder_SetTonnage());
 			list.add(new CalloutOrder_CalcRentAmount());
+			list.add(new CalloutOrder_SOUnitPriceRent());
+			list.add(new CalloutOrder_CalcRentPayable());
+		}
+		
+		if(tableName.equals(TF_MOrder.Table_Name) && columnName.equals(TF_MOrder.COLUMNNAME_Rent_Amt)) {			
+			list.add(new CalloutOrder_SOUnitPriceRent());
+			list.add(new CalloutOrder_CalcRentPayable());
+		}
+		
+		if(tableName.equals(TF_MOrder.Table_Name) && (columnName.equals(TF_MOrder.COLUMNNAME_IsRentBreakup)
+				|| columnName.equals(TF_MOrder.COLUMNNAME_Item1_UnitPrice)) ) {
+			list.add(new CalloutOrder_SOUnitPriceRent());
+		}
+		
+		if(tableName.equals(TF_MOrder.Table_Name) && columnName.equals(TF_MOrder.COLUMNNAME_RentMargin)) {
+			list.add(new CalloutOrder_CalcRentPayable());
 		}
 		
 		if(tableName.equals(TF_MJournal.Table_Name) && columnName.equals(TF_MJournal.COLUMNNAME_IsQuickEntry)) {
