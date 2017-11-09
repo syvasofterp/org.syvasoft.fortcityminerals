@@ -70,7 +70,8 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 					qty, weighment.getGrossWeightTime(), isSOTrx);
 			BigDecimal price = pp.getPriceStd();
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Qty, qty);
-			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Price, price);			
+			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Price, price);
+			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_UnitPrice, price);
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Amt, price.multiply(qty));
 			
 			if(weighment.getTF_RentedVehicle_ID() > 0)

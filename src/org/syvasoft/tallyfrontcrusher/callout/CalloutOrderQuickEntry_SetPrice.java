@@ -36,6 +36,7 @@ public class CalloutOrderQuickEntry_SetPrice implements IColumnCallout {
 			if(price == null)
 				price = BigDecimal.ZERO;
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Price, price);
+			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_UnitPrice, price);
 			if(qty != null)
 				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Amt, price.multiply(qty));
 			

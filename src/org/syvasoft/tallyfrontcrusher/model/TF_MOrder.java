@@ -700,8 +700,110 @@ public class TF_MOrder extends MOrder {
 		return ii.intValue();
 	}
 
+	/** Column name Item1_UnitPrice */
+    public static final String COLUMNNAME_Item1_UnitPrice = "Item1_UnitPrice";
+    /** Set Unit Price.
+	@param Item1_UnitPrice Unit Price	  */
+	public void setItem1_UnitPrice (BigDecimal Item1_UnitPrice)
+	{
+		set_Value (COLUMNNAME_Item1_UnitPrice, Item1_UnitPrice);
+	}
 	
-    
+	/** Get Unit Price.
+		@return Unit Price	  */
+	public BigDecimal getItem1_UnitPrice () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Item1_UnitPrice);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+	
+	/** Column name Item1_UnitRent */
+    public static final String COLUMNNAME_Item1_UnitRent = "Item1_UnitRent";
+    /** Set Unit Rent.
+	@param Item1_UnitRent Unit Rent	  */
+	public void setItem1_UnitRent (BigDecimal Item1_UnitRent)
+	{
+		set_Value (COLUMNNAME_Item1_UnitRent, Item1_UnitRent);
+	}
+	
+	/** Get Unit Rent.
+		@return Unit Rent	  */
+	public BigDecimal getItem1_UnitRent () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Item1_UnitRent);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+	
+	/** Column name RentMargin */
+    public static final String COLUMNNAME_RentMargin = "RentMargin";
+    /** Set Rent Margin.
+	@param RentMargin Rent Margin	  */
+	public void setRentMargin (BigDecimal RentMargin)
+	{
+		set_Value (COLUMNNAME_RentMargin, RentMargin);
+	}
+	
+	/** Get Rent Margin.
+		@return Rent Margin	  */
+	public BigDecimal getRentMargin () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_RentMargin);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+	
+	/** Column name RentPayable */
+    public static final String COLUMNNAME_RentPayable = "RentPayable";
+    /** Set Rent Payable.
+	@param RentPayable 
+	Rent Payable for Transporter
+  */
+	public void setRentPayable (BigDecimal RentPayable)
+	{
+		set_Value (COLUMNNAME_RentPayable, RentPayable);
+	}
+	
+	/** Get Rent Payable.
+		@return Rent Payable for Transporter
+	  */
+	public BigDecimal getRentPayable () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_RentPayable);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+	
+    /** Column name IsRentBreakup */
+    public static final String COLUMNNAME_IsRentBreakup = "IsRentBreakup";
+
+    /** Set Show Rent Breakup.
+	@param IsRentBreakup Show Rent Breakup	  */
+	public void setIsRentBreakup (boolean IsRentBreakup)
+	{
+		set_Value (COLUMNNAME_IsRentBreakup, Boolean.valueOf(IsRentBreakup));
+	}
+	
+	/** Get Show Rent Breakup.
+		@return Show Rent Breakup	  */
+	public boolean isRentBreakup () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsRentBreakup);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
 		success = super.afterSave(newRecord, success);
