@@ -30,7 +30,7 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20171102L;
+	private static final long serialVersionUID = 20171110L;
 
     /** Standard Constructor */
     public X_TF_GLPosting_Config (Properties ctx, int TF_GLPosting_Config_ID, String trxName)
@@ -529,6 +529,31 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	public int getTipsExpenseAcct_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_TipsExpenseAcct_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_DocType getTransporterInvoiceDocType() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_DocType)MTable.get(getCtx(), org.compiere.model.I_C_DocType.Table_Name)
+			.getPO(getTransporterInvoiceDocType_ID(), get_TrxName());	}
+
+	/** Set Transporter Invoice Doc Type.
+		@param TransporterInvoiceDocType_ID Transporter Invoice Doc Type	  */
+	public void setTransporterInvoiceDocType_ID (int TransporterInvoiceDocType_ID)
+	{
+		if (TransporterInvoiceDocType_ID < 1) 
+			set_Value (COLUMNNAME_TransporterInvoiceDocType_ID, null);
+		else 
+			set_Value (COLUMNNAME_TransporterInvoiceDocType_ID, Integer.valueOf(TransporterInvoiceDocType_ID));
+	}
+
+	/** Get Transporter Invoice Doc Type.
+		@return Transporter Invoice Doc Type	  */
+	public int getTransporterInvoiceDocType_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TransporterInvoiceDocType_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();

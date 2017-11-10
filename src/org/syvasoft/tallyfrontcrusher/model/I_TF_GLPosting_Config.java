@@ -310,6 +310,17 @@ public interface I_TF_GLPosting_Config
 
 	public org.compiere.model.I_C_ElementValue getTipsExpenseAcct() throws RuntimeException;
 
+    /** Column name TransporterInvoiceDocType_ID */
+    public static final String COLUMNNAME_TransporterInvoiceDocType_ID = "TransporterInvoiceDocType_ID";
+
+	/** Set Transporter Invoice Doc Type	  */
+	public void setTransporterInvoiceDocType_ID (int TransporterInvoiceDocType_ID);
+
+	/** Get Transporter Invoice Doc Type	  */
+	public int getTransporterInvoiceDocType_ID();
+
+	public org.compiere.model.I_C_DocType getTransporterInvoiceDocType() throws RuntimeException;
+
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";
 
