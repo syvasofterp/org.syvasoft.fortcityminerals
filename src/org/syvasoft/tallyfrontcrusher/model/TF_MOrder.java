@@ -1066,6 +1066,8 @@ public class TF_MOrder extends MOrder {
 	}
 
 	public void createTransporterInvoice() {
+		if(getTF_RentedVehicle_ID() == 0)
+			return;
 		if(getRent_Amt().doubleValue() > 0 && getTF_RentedVehicle_ID() == 0)
 			throw new AdempiereException("Please Select Rented Vehicle or Reset Rent (Amount) to ZERO!");
 		if(getTF_RentedVehicle_ID() > 0 && getRent_Amt().doubleValue() ==0)
