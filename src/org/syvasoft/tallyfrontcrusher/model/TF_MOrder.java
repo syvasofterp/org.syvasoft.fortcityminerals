@@ -1,6 +1,7 @@
 package org.syvasoft.tallyfrontcrusher.model;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.List;
@@ -809,6 +810,12 @@ public class TF_MOrder extends MOrder {
 		success = super.afterSave(newRecord, success);
 		updateQuickOrderLines();
 		updateVehicleRentLine();
+		
+		if(isItem1_IsUpdatePrice() && isSOTrx()) {
+			TF_MOrder.updateProductPricing(getItem1_ID(), getM_PriceList_ID(), getC_BPartner_ID(), 
+					getItem1_Qty(), getItem1_UnitPrice(), getDateOrdered(), isSOTrx());
+		}
+		
 		return success;
 	}
 	
@@ -862,8 +869,12 @@ public class TF_MOrder extends MOrder {
 					getDateOrdered(), getC_DocType().isSOTrx());
 			setOrderLine(ordLine, getItem1_ID(), getItem1_Qty(), getItem1_Price());
 			
-			ordLine.setC_Tax_ID(getItem1_Tax_ID());			
-			ordLine.setIsUpdatePrice(isItem1_IsUpdatePrice());
+			ordLine.setC_Tax_ID(getItem1_Tax_ID());
+			
+			//For SO, From header itself, price is updated.
+			if(!isSOTrx())
+				ordLine.setIsUpdatePrice(isItem1_IsUpdatePrice());
+			
 			ordLine.setC_UOM_ID(getItem1_UOM_ID());
 			
 			ordLine.saveEx();			
@@ -1052,7 +1063,6 @@ public class TF_MOrder extends MOrder {
 		invLine.setDescription("Vehicle Rent");
 		
 		String hdrDescription = "";
-		
 			
 		MDestination dest = new MDestination(getCtx(), getTF_Destination_ID(), get_TrxName());
 		if(isSOTrx()) {
@@ -1062,22 +1072,32 @@ public class TF_MOrder extends MOrder {
 			hdrDescription = "Source : " + dest.getName();
 		}
 		if(!isLumpSumRent()) {
-			invLine.setQty(getDistance());		
-			invLine.setPriceActual(getRate().multiply(getTonnage()));
-			invLine.setPriceList(getRate().multiply(getTonnage()));
-			invLine.setPriceLimit(getRate().multiply(getTonnage()));
-			invLine.setPriceEntered(getRate().multiply(getTonnage()));
+			invLine.setQty(getDistance());
+			BigDecimal price = getRate().multiply(getTonnage());
+			BigDecimal rate = getRate();
+			if(isSOTrx()) {
+				price = getRentPayable().divide(getDistance(), 2, RoundingMode.HALF_UP);
+				rate = price.divide(getTonnage(), 2, RoundingMode.HALF_UP);
+			}
+			invLine.setPriceActual(price);
+			invLine.setPriceList(price);
+			invLine.setPriceLimit(price);
+			invLine.setPriceEntered(price);
 			hdrDescription = hdrDescription + ", Tonnage : " + getTonnage().doubleValue()
-					+ ", Rate/ton/km : " + getRate().doubleValue();
+					+ ", Rate/ton/km : " + rate.doubleValue();
 		}
 		else {
 			int load_uom_id = MSysConfig.getIntValue("LOAD_UOM", 1000072, getAD_Client_ID());
 			invLine.setC_UOM_ID(load_uom_id);
 			invLine.setQty(BigDecimal.ONE);
-			invLine.setPriceActual(getRent_Amt());
-			invLine.setPriceList(getRent_Amt());
-			invLine.setPriceLimit(getRent_Amt());
-			invLine.setPriceEntered(getRent_Amt());
+			BigDecimal price = getRent_Amt();
+			if(isSOTrx()) {
+				price = getRentPayable();
+			}
+			invLine.setPriceActual(price);
+			invLine.setPriceList(price);
+			invLine.setPriceLimit(price);
+			invLine.setPriceEntered(price);
 			hdrDescription = hdrDescription + ", Tonnage : " + getTonnage().doubleValue();
 		}		
 		invLine.saveEx();
