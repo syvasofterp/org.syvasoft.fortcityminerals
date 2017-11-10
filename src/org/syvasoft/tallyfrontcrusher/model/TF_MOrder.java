@@ -809,8 +809,8 @@ public class TF_MOrder extends MOrder {
 	protected boolean afterSave(boolean newRecord, boolean success) {		
 		success = super.afterSave(newRecord, success);
 		updateQuickOrderLines();
-		updateVehicleRentLine();
-		
+		//updateVehicleRentLine();
+		updateRentedVehicleRentLine();
 		if(isItem1_IsUpdatePrice() && isSOTrx()) {
 			TF_MOrder.updateProductPricing(getItem1_ID(), getM_PriceList_ID(), getC_BPartner_ID(), 
 					getItem1_Qty(), getItem1_UnitPrice(), getDateOrdered(), isSOTrx());
@@ -936,6 +936,47 @@ public class TF_MOrder extends MOrder {
 		}
 	}
 
+	public void updateRentedVehicleRentLine() {
+		MOrderLine ordLine = null;
+		//Delete empty item lines
+		if(!isRentBreakup() || is_ValueChanged(COLUMNNAME_TF_RentedVehicle_ID) || (getTF_RentedVehicle_ID() == 0 && getVehicle_C_OrderLine_ID() > 0)) {
+			ordLine = new MOrderLine(getCtx(), getVehicle_C_OrderLine_ID(), get_TrxName());
+			if(ordLine.get_ID() > 0) {
+				ordLine.setQtyReserved(BigDecimal.ZERO);
+				ordLine.delete(false);
+				DB.executeUpdate("UPDATE C_Order SET " + COLUMNNAME_Vehicle_C_OrderLine_ID + " = NULL " +
+						" WHERE C_Order_ID =" + getC_Order_ID(), get_TrxName());
+				setVehicle_C_OrderLine_ID(0);
+			}			
+		}//End Delete
+		
+		//Update modified Vehicle Rent line.		
+		//Vehicle Rent
+		if(isRentBreakup())
+		 if(getTF_RentedVehicle_ID() > 0 && (is_ValueChanged(COLUMNNAME_TF_RentedVehicle_ID) || is_ValueChanged(COLUMNNAME_Rent_Amt)
+				|| getVehicle_C_OrderLine_ID() == 0)) {
+			
+			if(getVehicle_C_OrderLine_ID() > 0) 
+				ordLine = new MOrderLine(getCtx(), getVehicle_C_OrderLine_ID(), get_TrxName());
+			else
+				ordLine = new MOrderLine(this);
+			MRentedVehicle rentVehicle = new MRentedVehicle(getCtx(), getTF_RentedVehicle_ID(), get_TrxName());
+			int productID = rentVehicle.getM_Product_ID();
+			TF_MOrder.addProductPricingIfNot(productID, getM_PriceList_ID(), getC_BPartner_ID(), BigDecimal.ONE, getRent_Amt(), 
+					getDateOrdered(), getC_DocType().isSOTrx());
+			setOrderLine(ordLine, productID, BigDecimal.ONE, getRent_Amt());
+			int load_uom_id = MSysConfig.getIntValue("LOAD_UOM", 1000072, getAD_Client_ID());
+			ordLine.setC_UOM_ID(load_uom_id);
+			
+			//MResource res = MResource.get(getCtx(), getVehicle().getS_Resource_ID());
+			//ordLine.setUser1_ID(res.get_ValueAsInt("C_ElementValue_ID"));
+			ordLine.setDescription("Vehicle Rent");
+			ordLine.saveEx();
+			DB.executeUpdate("UPDATE C_Order SET " + COLUMNNAME_Vehicle_C_OrderLine_ID + " = "
+				+ ordLine.getC_OrderLine_ID() + " WHERE C_Order_ID = " + getC_Order_ID(), get_TrxName());	
+		}
+	}
+	
 	@Override
 	public String completeIt() {
 		String msg = super.completeIt();
@@ -1035,7 +1076,7 @@ public class TF_MOrder extends MOrder {
 		//Invoice Header
 		TF_MInvoice invoice = new TF_MInvoice(getCtx(), 0, get_TrxName());
 		invoice.setClientOrg(getAD_Client_ID(), getAD_Org_ID());
-		invoice.setC_DocTypeTarget_ID(getC_DocTypeTarget().getC_DocTypeInvoice_ID());			
+		invoice.setC_DocTypeTarget_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getTransporterInvoiceDocType_ID());			
 		invoice.setDateInvoiced(getDateOrdered());
 		invoice.setDateAcct(getDateOrdered());
 		//

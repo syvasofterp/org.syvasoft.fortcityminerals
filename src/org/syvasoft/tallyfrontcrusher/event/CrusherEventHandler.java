@@ -81,6 +81,8 @@ public class CrusherEventHandler extends AbstractEventHandler {
 						payment.set_ValueOfColumn(TF_MPayment.COLUMNNAME_CashType, TF_MPayment.CASHTYPE_CustomerPayment);					
 					else
 						payment.set_ValueOfColumn(TF_MPayment.COLUMNNAME_CashType, TF_MPayment.CASHTYPE_VendorPayment);
+					
+					payment.set_ValueOfColumn(TF_MPayment.COLUMNNAME_TF_BPartner_ID, payment.getC_BPartner_ID());
 				}
 			}
 		}
