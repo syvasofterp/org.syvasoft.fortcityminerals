@@ -21,10 +21,10 @@ SELECT
 	END AccountHead,
 
 	CASE 
-	 WHEN p.C_Invoice_ID IS NOT NULL AND p.IsReceipt='Y' THEN 'Sales Invoice : ' || i.DocumentNo || ' | '
-	 WHEN p.C_Invoice_ID IS NOT NULL AND p.IsReceipt='N' THEN 'Purchase Invoice : ' || i.DocumentNo || ' | '
+	 WHEN p.C_Invoice_ID IS NOT NULL AND p.IsReceipt='Y' THEN 'Sales Invoice : ' || i.DocumentNo 
+	 WHEN p.C_Invoice_ID IS NOT NULL AND p.IsReceipt='N' THEN 'Purchase Invoice : ' || i.DocumentNo 
 	 ELSE '' 
-	END || p.Description Description,
+	END || COALESCE(' | ' || p.Description,'') Description,
 	CASE
 	 WHEN p.IsReceipt = 'Y' THEN PayAmt
 	 ELSE NULL

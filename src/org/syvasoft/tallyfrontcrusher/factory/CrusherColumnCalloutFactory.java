@@ -12,6 +12,7 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutElementValue_AccountGroup;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutEmployeeSalary;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutEmployeeSalaryIssue_CalcBalanceAmts;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutEmployeeSalaryIssue_SetOpenAmt;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutFuelIssue_CalcAmount;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutInvoiceHeaderItemAmount;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutJournal_QuickEntryMode;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutLabourWage;
@@ -52,6 +53,7 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutWeighmentEntry_Vehicle;
 import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalary;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryIssue;
+import org.syvasoft.tallyfrontcrusher.model.MFuelIssue;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkResourceRentEntry;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWage;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWageIssue;
@@ -235,7 +237,8 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 			list.add(new CalloutOrder_SOUnitPriceRent());
 		}
 		
-		if(tableName.equals(TF_MOrder.Table_Name) && columnName.equals(TF_MOrder.COLUMNNAME_Item1_Qty)) {
+		if(tableName.equals(TF_MOrder.Table_Name) && (columnName.equals(TF_MOrder.COLUMNNAME_Item1_Qty)
+					|| columnName.equals(TF_MOrder.COLUMNNAME_Item1_ID))) {
 			list.add(new CalloutOrder_SetTonnage());
 			list.add(new CalloutOrder_CalcRentAmount());
 			list.add(new CalloutOrder_SOUnitPriceRent());
@@ -248,7 +251,8 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		}
 		
 		if(tableName.equals(TF_MOrder.Table_Name) && (columnName.equals(TF_MOrder.COLUMNNAME_IsRentBreakup)
-				|| columnName.equals(TF_MOrder.COLUMNNAME_Item1_UnitPrice)) ) {
+				|| columnName.equals(TF_MOrder.COLUMNNAME_Item1_UnitPrice)
+				|| columnName.equals(TF_MOrder.COLUMNNAME_IsRentInclusive)) ) {
 			list.add(new CalloutOrder_SOUnitPriceRent());
 		}
 		
@@ -258,6 +262,10 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		
 		if(tableName.equals(TF_MJournal.Table_Name) && columnName.equals(TF_MJournal.COLUMNNAME_IsQuickEntry)) {
 			list.add(new CalloutJournal_QuickEntryMode());
+		}
+		if(tableName.equals(MFuelIssue.Table_Name) && (columnName.equals(MFuelIssue.COLUMNNAME_Qty)
+				|| columnName.equals(MFuelIssue.COLUMNNAME_Rate))) {
+			list.add(new CalloutFuelIssue_CalcAmount());
 		}
 		return list != null ? list.toArray(new IColumnCallout[0]) : new IColumnCallout[0];
 	}

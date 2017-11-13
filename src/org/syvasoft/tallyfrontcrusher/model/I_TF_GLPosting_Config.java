@@ -110,6 +110,17 @@ public interface I_TF_GLPosting_Config
 	  */
 	public int getCreatedBy();
 
+    /** Column name DebitNote_DocType_ID */
+    public static final String COLUMNNAME_DebitNote_DocType_ID = "DebitNote_DocType_ID";
+
+	/** Set Debit Note Document Type	  */
+	public void setDebitNote_DocType_ID (int DebitNote_DocType_ID);
+
+	/** Get Debit Note Document Type	  */
+	public int getDebitNote_DocType_ID();
+
+	public org.compiere.model.I_C_DocType getDebitNote_DocType() throws RuntimeException;
+
     /** Column name Fuel_Product_ID */
     public static final String COLUMNNAME_Fuel_Product_ID = "Fuel_Product_ID";
 
