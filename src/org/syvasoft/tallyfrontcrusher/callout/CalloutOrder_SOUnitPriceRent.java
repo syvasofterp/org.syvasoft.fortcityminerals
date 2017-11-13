@@ -23,9 +23,23 @@ public class CalloutOrder_SOUnitPriceRent implements IColumnCallout {
 			BigDecimal unitRent = rentAmount.divide(qty,2,RoundingMode.HALF_UP);
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_UnitRent, unitRent);
 			BigDecimal price = unitPrice;
-			boolean isRentBreakup = (boolean) mTab.getValue(TF_MOrder.COLUMNNAME_IsRentBreakup);
-			if(!isRentBreakup) {
-				price = unitPrice.add(unitRent);
+			boolean isRentBreakup = mTab.getValueAsBoolean(TF_MOrder.COLUMNNAME_IsRentBreakup);
+			boolean isRentInclusive = mTab.getValueAsBoolean(TF_MOrder.COLUMNNAME_IsRentInclusive);
+			if(isRentInclusive) { 
+				if(isRentBreakup) {
+					price = unitPrice.subtract(unitRent);
+				}
+				else {
+					price = unitPrice;
+				}
+			}
+			else {
+				if(isRentBreakup) {
+					price = unitPrice;
+				}
+				else {
+					price = unitPrice.add(unitRent);
+				}
 			}
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Price, price);		
 		}
