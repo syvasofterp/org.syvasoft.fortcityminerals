@@ -26,14 +26,14 @@ import org.compiere.util.Env;
 
 /** Generated Model for TF_Fuel_Issue
  *  @author iDempiere (generated) 
- *  @version Release 3.1 - $Id$ */
+ *  @version Release 4.1 - $Id$ */
 public class X_TF_Fuel_Issue extends PO implements I_TF_Fuel_Issue, I_Persistent 
 {
 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170810L;
+	private static final long serialVersionUID = 20171112L;
 
     /** Standard Constructor */
     public X_TF_Fuel_Issue (Properties ctx, int TF_Fuel_Issue_ID, String trxName)
@@ -105,7 +105,7 @@ public class X_TF_Fuel_Issue extends PO implements I_TF_Fuel_Issue, I_Persistent
 		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
 			.getPO(getC_ElementValue_ID(), get_TrxName());	}
 
-	/** Set Profit Center.
+	/** Set Account Element.
 		@param C_ElementValue_ID 
 		Account Element
 	  */
@@ -117,7 +117,7 @@ public class X_TF_Fuel_Issue extends PO implements I_TF_Fuel_Issue, I_Persistent
 			set_Value (COLUMNNAME_C_ElementValue_ID, Integer.valueOf(C_ElementValue_ID));
 	}
 
-	/** Get Profit Center.
+	/** Get Account Element.
 		@return Account Element
 	  */
 	public int getC_ElementValue_ID () 
@@ -171,6 +171,31 @@ public class X_TF_Fuel_Issue extends PO implements I_TF_Fuel_Issue, I_Persistent
 	public Timestamp getDateAcct () 
 	{
 		return (Timestamp)get_Value(COLUMNNAME_DateAcct);
+	}
+
+	public org.compiere.model.I_C_Invoice getDebitNote_Invoice() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Invoice)MTable.get(getCtx(), org.compiere.model.I_C_Invoice.Table_Name)
+			.getPO(getDebitNote_Invoice_ID(), get_TrxName());	}
+
+	/** Set Debit Note.
+		@param DebitNote_Invoice_ID Debit Note	  */
+	public void setDebitNote_Invoice_ID (int DebitNote_Invoice_ID)
+	{
+		if (DebitNote_Invoice_ID < 1) 
+			set_Value (COLUMNNAME_DebitNote_Invoice_ID, null);
+		else 
+			set_Value (COLUMNNAME_DebitNote_Invoice_ID, Integer.valueOf(DebitNote_Invoice_ID));
+	}
+
+	/** Get Debit Note.
+		@return Debit Note	  */
+	public int getDebitNote_Invoice_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_DebitNote_Invoice_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	/** Set Description.
@@ -337,9 +362,9 @@ public class X_TF_Fuel_Issue extends PO implements I_TF_Fuel_Issue, I_Persistent
 		return ii.intValue();
 	}
 
-	/** Set Fuel.
+	/** Set Product.
 		@param M_Product_ID 
-		Fuel
+		Product, Service, Item
 	  */
 	public void setM_Product_ID (int M_Product_ID)
 	{
@@ -349,8 +374,8 @@ public class X_TF_Fuel_Issue extends PO implements I_TF_Fuel_Issue, I_Persistent
 			set_Value (COLUMNNAME_M_Product_ID, Integer.valueOf(M_Product_ID));
 	}
 
-	/** Get Fuel.
-		@return Fuel
+	/** Get Product.
+		@return Product, Service, Item
 	  */
 	public int getM_Product_ID () 
 	{

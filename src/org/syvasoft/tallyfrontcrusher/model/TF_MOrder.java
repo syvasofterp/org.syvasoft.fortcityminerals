@@ -804,7 +804,32 @@ public class TF_MOrder extends MOrder {
 		return false;
 	}
 
+	/** Column name IsRentInclusive */
+    public static final String COLUMNNAME_IsRentInclusive = "IsRentInclusive";
+    /** Set Rent Inclusive.
+	@param IsRentInclusive 
+	Whether Unit Price includes rent?
+  */
+	public void setIsRentInclusive (boolean IsRentInclusive)
+	{
+		set_Value (COLUMNNAME_IsRentInclusive, Boolean.valueOf(IsRentInclusive));
+	}
 	
+	/** Get Rent Inclusive.
+		@return Whether Unit Price includes rent?
+	  */
+	public boolean isRentInclusive () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsRentInclusive);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+		
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
 		success = super.afterSave(newRecord, success);
@@ -1066,12 +1091,12 @@ public class TF_MOrder extends MOrder {
 	}
 
 	public void createTransporterInvoice() {
-		if(getTF_RentedVehicle_ID() == 0)
+		if(getTF_RentedVehicle_ID() == 0 || getRent_Amt().doubleValue() == 0)
 			return;
-		if(getRent_Amt().doubleValue() > 0 && getTF_RentedVehicle_ID() == 0)
-			throw new AdempiereException("Please Select Rented Vehicle or Reset Rent (Amount) to ZERO!");
-		if(getTF_RentedVehicle_ID() > 0 && getRent_Amt().doubleValue() ==0)
-			throw new AdempiereException("Rent (Amount) should be greater ZERO!");
+		//if(getRent_Amt().doubleValue() > 0 && getTF_RentedVehicle_ID() == 0)
+		//	throw new AdempiereException("Please Select Rented Vehicle or Reset Rent (Amount) to ZERO!");
+		//if(getTF_RentedVehicle_ID() > 0 && getRent_Amt().doubleValue() ==0)
+		//	throw new AdempiereException("Rent (Amount) should be greater ZERO!");
 		
 		MRentedVehicle vehicle = new MRentedVehicle(getCtx(), getTF_RentedVehicle_ID(), get_TrxName());
 		MBPartner bp = new MBPartner(getCtx(), vehicle.getC_BPartner_ID(), get_TrxName());

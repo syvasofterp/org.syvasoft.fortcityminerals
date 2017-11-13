@@ -23,7 +23,7 @@ import org.compiere.util.KeyNamePair;
 
 /** Generated Interface for TF_Fuel_Issue
  *  @author iDempiere (generated) 
- *  @version Release 3.1
+ *  @version Release 4.1
  */
 @SuppressWarnings("all")
 public interface I_TF_Fuel_Issue 
@@ -80,12 +80,12 @@ public interface I_TF_Fuel_Issue
     /** Column name C_ElementValue_ID */
     public static final String COLUMNNAME_C_ElementValue_ID = "C_ElementValue_ID";
 
-	/** Set Profit Center.
+	/** Set Account Element.
 	  * Account Element
 	  */
 	public void setC_ElementValue_ID (int C_ElementValue_ID);
 
-	/** Get Profit Center.
+	/** Get Account Element.
 	  * Account Element
 	  */
 	public int getC_ElementValue_ID();
@@ -135,6 +135,17 @@ public interface I_TF_Fuel_Issue
 	  * Accounting Date
 	  */
 	public Timestamp getDateAcct();
+
+    /** Column name DebitNote_Invoice_ID */
+    public static final String COLUMNNAME_DebitNote_Invoice_ID = "DebitNote_Invoice_ID";
+
+	/** Set Debit Note	  */
+	public void setDebitNote_Invoice_ID (int DebitNote_Invoice_ID);
+
+	/** Get Debit Note	  */
+	public int getDebitNote_Invoice_ID();
+
+	public org.compiere.model.I_C_Invoice getDebitNote_Invoice() throws RuntimeException;
 
     /** Column name Description */
     public static final String COLUMNNAME_Description = "Description";
@@ -234,13 +245,13 @@ public interface I_TF_Fuel_Issue
     /** Column name M_Product_ID */
     public static final String COLUMNNAME_M_Product_ID = "M_Product_ID";
 
-	/** Set Fuel.
-	  * Fuel
+	/** Set Product.
+	  * Product, Service, Item
 	  */
 	public void setM_Product_ID (int M_Product_ID);
 
-	/** Get Fuel.
-	  * Fuel
+	/** Get Product.
+	  * Product, Service, Item
 	  */
 	public int getM_Product_ID();
 

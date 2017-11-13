@@ -30,7 +30,7 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20171110L;
+	private static final long serialVersionUID = 20171113L;
 
     /** Standard Constructor */
     public X_TF_GLPosting_Config (Properties ctx, int TF_GLPosting_Config_ID, String trxName)
@@ -129,6 +129,31 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	public int getC_BankAccount_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_C_BankAccount_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_DocType getDebitNote_DocType() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_DocType)MTable.get(getCtx(), org.compiere.model.I_C_DocType.Table_Name)
+			.getPO(getDebitNote_DocType_ID(), get_TrxName());	}
+
+	/** Set Debit Note Document Type.
+		@param DebitNote_DocType_ID Debit Note Document Type	  */
+	public void setDebitNote_DocType_ID (int DebitNote_DocType_ID)
+	{
+		if (DebitNote_DocType_ID < 1) 
+			set_Value (COLUMNNAME_DebitNote_DocType_ID, null);
+		else 
+			set_Value (COLUMNNAME_DebitNote_DocType_ID, Integer.valueOf(DebitNote_DocType_ID));
+	}
+
+	/** Get Debit Note Document Type.
+		@return Debit Note Document Type	  */
+	public int getDebitNote_DocType_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_DebitNote_DocType_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
