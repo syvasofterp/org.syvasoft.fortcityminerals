@@ -387,6 +387,31 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 		return ii.intValue();
 	}
 
+	public org.compiere.model.I_C_DocType getMaterialIssue_DocType() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_DocType)MTable.get(getCtx(), org.compiere.model.I_C_DocType.Table_Name)
+			.getPO(getMaterialIssue_DocType_ID(), get_TrxName());	}
+
+	/** Set Material Issue Doc Type.
+		@param MaterialIssue_DocType_ID Material Issue Doc Type	  */
+	public void setMaterialIssue_DocType_ID (int MaterialIssue_DocType_ID)
+	{
+		if (MaterialIssue_DocType_ID < 1) 
+			set_Value (COLUMNNAME_MaterialIssue_DocType_ID, null);
+		else 
+			set_Value (COLUMNNAME_MaterialIssue_DocType_ID, Integer.valueOf(MaterialIssue_DocType_ID));
+	}
+
+	/** Get Material Issue Doc Type.
+		@return Material Issue Doc Type	  */
+	public int getMaterialIssue_DocType_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_MaterialIssue_DocType_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	public org.compiere.model.I_C_ElementValue getQuarryExp_A() throws RuntimeException
     {
 		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)

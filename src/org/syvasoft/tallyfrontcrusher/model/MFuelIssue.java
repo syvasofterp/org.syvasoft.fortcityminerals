@@ -10,6 +10,8 @@ import org.compiere.model.MAcctSchema;
 import org.compiere.model.MBPartner;
 import org.compiere.model.MClient;
 import org.compiere.model.MCost;
+import org.compiere.model.MInOut;
+import org.compiere.model.MInOutLine;
 import org.compiere.model.MInventory;
 import org.compiere.model.MInventoryLine;
 import org.compiere.model.MInvoiceLine;
@@ -17,6 +19,7 @@ import org.compiere.model.MPriceList;
 import org.compiere.model.MProduct;
 import org.compiere.model.MResource;
 import org.compiere.model.MSysConfig;
+import org.compiere.model.MTax;
 import org.compiere.model.MWarehouse;
 import org.compiere.model.Query;
 import org.compiere.process.DocAction;
@@ -87,93 +90,124 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 			setDocStatus(DOCSTATUS_Completed);
 			setProcessed(true);
 			
-			//Post Inventory Use Inventory for Fuel Expense.
-			MWarehouse wh = (MWarehouse) getM_Warehouse();
-			//Inventory Use Header
-			MInventory inv = new MInventory(wh, get_TrxName());
-			inv.setC_DocType_ID(1000026);
-			String desc = "Diesel Issued to " +  getVehicle().getName(); 
-			inv.setDescription(desc);
-			inv.setMovementDate(getDateAcct());
-			inv.setUser1_ID(getC_ElementValue_ID());			
-			inv.setDocStatus(DOCSTATUS_Drafted);
-			inv.saveEx();
-			
-			//Inventory Use Line
-			MInventoryLine line = new MInventoryLine(inv, wh.getDefaultLocator().get_ID(), getM_Product_ID(), 0, null, null, getQty());
-			line.setC_Charge_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getFuelExpense_Charge_ID());
-			line.setDescription(desc);
-			//line.setCurrentCostPrice(getRate());
-			line.saveEx();
-			
-			//Complete Inventory Use Document
-			inv.processIt(docAction);
-			inv.saveEx();
-			
-			//Update Inventory Use ID back to Fuel Issue Entry.
-			setM_Inventory_ID(inv.getM_Inventory_ID());	
-			
-			createDebitNote();			
+			MRentedVehicle rv = new Query(getCtx(), MRentedVehicle.Table_Name, "M_Product_ID=?", get_TrxName())
+					.setParameters(getVehicle_ID()).first();
+			if(rv != null) {
+				createDebitNote(rv);
+			}
+			else {
+				createInternalUseInventory(docAction);
+			}
+						
 		}
 	}
 	
-	private void createDebitNote() {
-		MRentedVehicle rv = new Query(getCtx(), MRentedVehicle.Table_Name, "M_Product_ID=?", get_TrxName())
-				.setParameters(getVehicle_ID()).first();
-		if(rv != null) {
-			//Invoice Header
-			TF_MInvoice invoice = new TF_MInvoice(getCtx(), 0, get_TrxName());
-			invoice.setClientOrg(getAD_Client_ID(), getAD_Org_ID());
-			invoice.setC_DocTypeTarget_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getDebitNote_DocType_ID());			
-			invoice.setDateInvoiced(getDateAcct());
-			invoice.setDateAcct(getDateAcct());
-			//
-			invoice.setSalesRep_ID(Env.getAD_User_ID(getCtx()));
-			//
-			TF_MBPartner bp = new TF_MBPartner(getCtx(), rv.getC_BPartner_ID(), get_TrxName());
-			invoice.setBPartner(bp);
-			invoice.setIsSOTrx(false);		
-			
-			invoice.setDescription("Ref: Fuel Issue Entry : " + getDocumentNo());
-			
-			//Price List
-			int m_M_PriceList_ID = Env.getContextAsInt(getCtx(), "#M_PriceList_ID");
-			if(bp.getPO_PriceList_ID() > 0)
-				m_M_PriceList_ID = bp.getPO_PriceList_ID();			
-			invoice.setM_PriceList_ID(m_M_PriceList_ID);
-			invoice.setC_Currency_ID(MPriceList.get(getCtx(), m_M_PriceList_ID, get_TrxName()).getC_Currency_ID());
-			
-			//Financial Dimension - Profit Center
-			invoice.setUser1_ID(getC_ElementValue_ID());
-			
-			invoice.saveEx();
-			//End Invoice Header
-			
-			//Invoice Line - Vehicle Rental Charge
-			MInvoiceLine invLine = new MInvoiceLine(invoice);
-			invLine.setM_Product_ID(getM_Product_ID(), true);
-			invLine.setDescription("Diesel Issued to " + rv.getVehicleNo());
-			
-			
-			invLine.setQty(getQty());
-			BigDecimal price = getRate();			
-			
-			invLine.setPriceActual(price);
-			invLine.setPriceList(price);
-			invLine.setPriceLimit(price);
-			invLine.setPriceEntered(price);
+	private void createInternalUseInventory(String docAction) {
+		//Post Inventory Use Inventory for Fuel Expense.
+		MWarehouse wh = (MWarehouse) getM_Warehouse();
+		//Inventory Use Header
+		MInventory inv = new MInventory(wh, get_TrxName());
+		inv.setC_DocType_ID(1000026);
+		String desc = "Diesel Issued to " +  getVehicle().getName(); 
+		inv.setDescription(desc);
+		inv.setMovementDate(getDateAcct());
+		inv.setUser1_ID(getC_ElementValue_ID());			
+		inv.setDocStatus(DOCSTATUS_Drafted);
+		inv.saveEx();
+		
+		//Inventory Use Line
+		MInventoryLine line = new MInventoryLine(inv, wh.getDefaultLocator().get_ID(), getM_Product_ID(), 0, null, null, getQty());
+		line.setC_Charge_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getFuelExpense_Charge_ID());
+		line.setDescription(desc);
+		//line.setCurrentCostPrice(getRate());
+		line.saveEx();
+		
+		//Complete Inventory Use Document
+		inv.processIt(docAction);
+		inv.saveEx();
+		
+		//Update Inventory Use ID back to Fuel Issue Entry.
+		setM_Inventory_ID(inv.getM_Inventory_ID());	
+	}
+	
+	private void createDebitNote(MRentedVehicle rv) {	
+		
+		TF_MBPartner bp = new TF_MBPartner(getCtx(), rv.getC_BPartner_ID(), get_TrxName());
+		
+		//Debit Note Header
+		TF_MInvoice invoice = new TF_MInvoice(getCtx(), 0, get_TrxName());
+		invoice.setClientOrg(getAD_Client_ID(), getAD_Org_ID());
+		invoice.setC_DocTypeTarget_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getDebitNote_DocType_ID());			
+		invoice.setDateInvoiced(getDateAcct());
+		invoice.setDateAcct(getDateAcct());
+		//
+		invoice.setSalesRep_ID(Env.getAD_User_ID(getCtx()));
+		//
+		
+		invoice.setBPartner(bp);
+		invoice.setIsSOTrx(false);		
+		
+		invoice.setDescription("Ref: Fuel Issue Entry : " + getDocumentNo());
+		
+		//Price List
+		int m_M_PriceList_ID = Env.getContextAsInt(getCtx(), "#M_PriceList_ID");
+		if(bp.getPO_PriceList_ID() > 0)
+			m_M_PriceList_ID = bp.getPO_PriceList_ID();			
+		invoice.setM_PriceList_ID(m_M_PriceList_ID);
+		invoice.setC_Currency_ID(MPriceList.get(getCtx(), m_M_PriceList_ID, get_TrxName()).getC_Currency_ID());
+		
+		//Financial Dimension - Profit Center
+		invoice.setUser1_ID(getC_ElementValue_ID());
+		
+		invoice.saveEx();
+		//End Invoice Header
+		
+		//Invoice Line - Vehicle Rental Charge
+		MInvoiceLine invLine = new MInvoiceLine(invoice);
+		invLine.setM_Product_ID(getM_Product_ID(), true);
+		invLine.setDescription("Diesel Issued to " + rv.getVehicleNo());
+		
+		
+		invLine.setQty(getQty());
+		BigDecimal price = getRate();			
+		
+		invLine.setPriceActual(price);
+		invLine.setPriceList(price);
+		invLine.setPriceLimit(price);
+		invLine.setPriceEntered(price);
+		
+		invLine.setC_Tax_ID(1000000);
 				
-			invLine.saveEx();
-						
-						
-			//DocAction
-			if (!invoice.processIt(DocAction.ACTION_Complete))
-				throw new AdempiereException("Failed when processing document - " + invoice.getProcessMsg());
-			invoice.saveEx();
-			//End DocAction
-			
-			setDebitNote_Invoice_ID(invoice.getC_Invoice_ID());			
-		}
+		//Material Issue
+		MInOut inout = new MInOut(invoice, MGLPostingConfig.getMGLPostingConfig(getCtx()).getMaterialIssue_DocType_ID(), getDateAcct(), getM_Warehouse_ID());
+		inout.setDescription(invoice.getDescription());
+		inout.saveEx(get_TrxName());
+		
+		//Material Issue Line
+		MInOutLine ioLine = new MInOutLine(inout);
+		MWarehouse wh = (MWarehouse) getM_Warehouse();
+		ioLine.setInvoiceLine(invLine, wh.getDefaultLocator().get_ID(), getQty());
+		ioLine.setQty(getQty());
+		ioLine.saveEx(get_TrxName());
+		
+		//Material Issue DocAction
+		if (!inout.processIt(DocAction.ACTION_Complete))
+			throw new AdempiereException("Failed when processing document - " + invoice.getProcessMsg());
+		inout.saveEx();
+		//End DocAction
+		
+		invLine.setM_InOutLine_ID(ioLine.getM_InOutLine_ID());
+		invLine.saveEx();
+		
+		//Debit Note DocAction
+		if (!invoice.processIt(DocAction.ACTION_Complete))
+			throw new AdempiereException("Failed when processing document - " + invoice.getProcessMsg());
+		invoice.saveEx();
+		//End DocAction
+		
+		setDebitNote_Invoice_ID(invoice.getC_Invoice_ID());
+		setM_InOut_ID(inout.getM_InOut_ID());
+		
 	}
 	
 	public void reverseIt() {
@@ -183,16 +217,22 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 			inv.saveEx();
 			setDebitNote_Invoice_ID(0);
 		}
+		if(getM_InOut_ID() > 0) {
+			MInOut io = new MInOut(getCtx(), getM_InOut_ID(), get_TrxName());
+			io.reverseCorrectIt();
+			io.saveEx();
+			setM_InOut_ID(0);
+		}
 		if(getM_Inventory_ID() > 0) {
 			MInventory inv = new MInventory(getCtx(), getM_Inventory_ID(), get_TrxName());
 			if(!inv.getDocStatus().equals(DOCSTATUS_Reversed)) {
 				inv.reverseCorrectIt();
 				inv.saveEx();
 			}
-			setQty(BigDecimal.ZERO);
-			setM_Inventory_ID(0);
-			setProcessed(false);
-			setDocStatus(DOCSTATUS_Drafted);
-		}		
+			setM_Inventory_ID(0);			
+		}
+		setQty(BigDecimal.ZERO);			
+		setProcessed(false);
+		setDocStatus(DOCSTATUS_Drafted);
 	}
 }
