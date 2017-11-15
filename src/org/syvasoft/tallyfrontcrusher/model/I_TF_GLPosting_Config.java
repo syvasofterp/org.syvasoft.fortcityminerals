@@ -237,6 +237,17 @@ public interface I_TF_GLPosting_Config
 
 	public org.compiere.model.I_C_ElementValue getLoan() throws RuntimeException;
 
+    /** Column name MaterialIssue_DocType_ID */
+    public static final String COLUMNNAME_MaterialIssue_DocType_ID = "MaterialIssue_DocType_ID";
+
+	/** Set Material Issue Doc Type	  */
+	public void setMaterialIssue_DocType_ID (int MaterialIssue_DocType_ID);
+
+	/** Get Material Issue Doc Type	  */
+	public int getMaterialIssue_DocType_ID();
+
+	public org.compiere.model.I_C_DocType getMaterialIssue_DocType() throws RuntimeException;
+
     /** Column name QuarryExp_Acct */
     public static final String COLUMNNAME_QuarryExp_Acct = "QuarryExp_Acct";
 
