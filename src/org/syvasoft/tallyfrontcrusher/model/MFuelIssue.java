@@ -165,7 +165,7 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 		//Invoice Line - Vehicle Rental Charge
 		MInvoiceLine invLine = new MInvoiceLine(invoice);
 		invLine.setM_Product_ID(getM_Product_ID(), true);
-		invLine.setDescription("Diesel Issued to " + rv.getVehicleNo());
+		invLine.setDescription("Fuel Issued to " + rv.getVehicleNo());
 		
 		
 		invLine.setQty(getQty());
