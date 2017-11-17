@@ -21,6 +21,7 @@ public class CalloutPayment_FromToBankAccount implements IColumnCallout {
 			if(!isInter) { 
 				mTab.setValue(TF_MPayment.COLUMNNAME_FromTo_BankAccount_ID, 0);	
 				mTab.setValue(TF_MPayment.COLUMNNAME_C_ElementValue_ID, 0);
+				mTab.setValue(TF_MPayment.COLUMNNAME_Description, null);
 			}
 		}
 		if(mTab.getValue(TF_MPayment.COLUMNNAME_FromTo_BankAccount_ID) != null) {
@@ -31,8 +32,20 @@ public class CalloutPayment_FromToBankAccount implements IColumnCallout {
 			MUser user = MUser.get(ctx, Env.getAD_User_ID(ctx));				
 			int bPartnerID = user.getC_BPartner_ID();
 			mTab.setValue(TF_MPayment.COLUMNNAME_C_BPartner_ID, bPartnerID);
+			
+			boolean isReceipt = mTab.getValueAsBoolean(TF_MPayment.COLUMNNAME_IsReceipt);
+			int ac1 = (int) mTab.getValue(TF_MPayment.COLUMNNAME_C_BankAccount_ID);
+			int ac2 = (int) mTab.getValue(TF_MPayment.COLUMNNAME_FromTo_BankAccount_ID);
+			String desc = "";
+			if(isReceipt) {
+				desc = TF_MPayment.getInterCashBookDescription(ac2, ac1);
+			}
+			else {
+				desc = TF_MPayment.getInterCashBookDescription(ac1, ac2);
+			}
+			mTab.setValue(TF_MPayment.COLUMNNAME_Description, desc);
 		}
-		mTab.setValue(TF_MPayment.COLUMNNAME_C_ElementValue_ID, ElementValue_ID);
+		mTab.setValue(TF_MPayment.COLUMNNAME_C_ElementValue_ID, ElementValue_ID);		
 		return null;
 	}
 
