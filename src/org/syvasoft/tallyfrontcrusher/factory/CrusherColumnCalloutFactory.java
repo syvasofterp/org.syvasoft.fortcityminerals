@@ -130,7 +130,8 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 			if(columnName.equals(TF_MPayment.COLUMNNAME_AD_Org_ID))
 				list.add(new CalloutPayment_Org());
 			if(columnName.equals(TF_MPayment.COLUMNNAME_FromTo_BankAccount_ID) || 
-					columnName.equals(TF_MPayment.COLUMNNAME_IsInterCashBookEntry))
+					columnName.equals(TF_MPayment.COLUMNNAME_IsInterCashBookEntry) || 
+					columnName.equals(TF_MPayment.COLUMNNAME_C_DocType_ID))
 				list.add(new CalloutPayment_FromToBankAccount());
 		}
 		//TF_Employee_Salary - Load Salary Config

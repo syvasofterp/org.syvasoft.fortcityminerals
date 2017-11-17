@@ -9,6 +9,7 @@ import org.compiere.model.MPayment;
 import org.compiere.model.MTable;
 import org.compiere.model.Query;
 import org.compiere.process.DocAction;
+import org.compiere.util.Env;
 
 public class TF_MPayment extends MPayment {
 
@@ -363,6 +364,13 @@ public class TF_MPayment extends MPayment {
 		
 		return true;
 		
+	}
+	
+	public static String getInterCashBookDescription(int fromBank_ID, int toBank_ID) {
+		TF_MBankAccount ac1 = new TF_MBankAccount(Env.getCtx(), fromBank_ID, null);
+		TF_MBankAccount ac2 = new TF_MBankAccount(Env.getCtx(), toBank_ID, null);
+		String desc = "Cash transferred from " + ac1.getName() + " to " + ac2.getName();
+		return desc;
 	}
 	
 }
