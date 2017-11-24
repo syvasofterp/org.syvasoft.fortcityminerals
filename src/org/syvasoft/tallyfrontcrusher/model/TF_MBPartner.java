@@ -1,16 +1,23 @@
 package org.syvasoft.tallyfrontcrusher.model;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.Properties;
 
+import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.I_C_Location;
 import org.compiere.model.MBPartner;
 import org.compiere.model.MBPartnerLocation;
+import org.compiere.model.MInvoiceLine;
 import org.compiere.model.MLocation;
+import org.compiere.model.MPriceList;
 import org.compiere.model.MTable;
 import org.compiere.model.MUser;
 import org.compiere.model.Query;
 import org.compiere.model.X_I_BPartner;
+import org.compiere.process.DocAction;
 import org.compiere.util.DB;
+import org.compiere.util.Env;
 
 
 public class TF_MBPartner extends MBPartner {
@@ -301,6 +308,90 @@ public class TF_MBPartner extends MBPartner {
 		return (String)get_Value(COLUMNNAME_Phone);
 	}
     
+	/** Column name OpeningDate */
+    public static final String COLUMNNAME_OpeningDate = "OpeningDate";
+    
+    /** Set AS On.
+	@param OpeningDate AS On	  */
+	public void setOpeningDate (Timestamp OpeningDate)
+	{
+		set_Value (COLUMNNAME_OpeningDate, OpeningDate);
+	}
+	
+	/** Get AS On.
+		@return AS On	  */
+	public Timestamp getOpeningDate () 
+	{
+		return (Timestamp)get_Value(COLUMNNAME_OpeningDate);
+	}
+
+	/** Column name DebitBalance */
+    public static final String COLUMNNAME_DebitBalance = "DebitBalance";
+    /** Set Debit Balance.
+	@param DebitBalance Debit Balance	  */
+	public void setDebitBalance (BigDecimal DebitBalance)
+	{
+		set_Value (COLUMNNAME_DebitBalance, DebitBalance);
+	}
+	
+	/** Get Debit Balance.
+		@return Debit Balance	  */
+	public BigDecimal getDebitBalance () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_DebitBalance);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+	
+	/** Column name CreditBalance */
+    public static final String COLUMNNAME_CreditBalance = "CreditBalance";
+    /** Set Credit Balance.
+	@param CreditBalance Credit Balance	  */
+	public void setCreditBalance (BigDecimal CreditBalance)
+	{
+		set_Value (COLUMNNAME_CreditBalance, CreditBalance);
+	}
+	
+	/** Get Credit Balance.
+		@return Credit Balance	  */
+	public BigDecimal getCreditBalance () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_CreditBalance);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Column name C_Invoice_ID */
+    public static final String COLUMNNAME_C_Invoice_ID = "C_Invoice_ID";
+    public org.compiere.model.I_C_Invoice getC_Invoice() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Invoice)MTable.get(getCtx(), org.compiere.model.I_C_Invoice.Table_Name)
+			.getPO(getC_Invoice_ID(), get_TrxName());	}
+
+	/** Set Invoice.
+		@param C_Invoice_ID 
+		Invoice Identifier
+	  */
+	public void setC_Invoice_ID (int C_Invoice_ID)
+	{
+		if (C_Invoice_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_C_Invoice_ID, null);
+		else 
+			set_ValueNoCheck (COLUMNNAME_C_Invoice_ID, Integer.valueOf(C_Invoice_ID));
+	}
+
+	/** Get Invoice.
+		@return Invoice Identifier
+	  */
+	public int getC_Invoice_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_Invoice_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
 	
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
@@ -353,9 +444,96 @@ public class TF_MBPartner extends MBPartner {
 				"  WHERE C_BPartner_ID = " + getC_BPartner_ID(), get_TrxName());
 		}			
 		
+		setOpeningBalance(newRecord);
+		
 		return ok;
 	}
 	
-	
+	public void setOpeningBalance(boolean newRecord) {
+		if(newRecord || is_ValueChanged(COLUMNNAME_DebitBalance) || is_ValueChanged(COLUMNNAME_CreditBalance)
+				|| is_ValueChanged(COLUMNNAME_OpeningDate)) {
+			if(getC_Invoice_ID() > 0) {
+				TF_MInvoice prevInv = new TF_MInvoice(getCtx(), getC_Invoice_ID(), get_TrxName());
+				if(prevInv.getDocStatus().equals(TF_MInvoice.DOCSTATUS_Completed)) {
+					if (!prevInv.processIt(DocAction.ACTION_Reverse_Correct))
+						throw new AdempiereException("Failed when processing document - " + prevInv.getProcessMsg());
+					prevInv.saveEx();
+				}								
+			}
+			
+			BigDecimal DebitAmt = getDebitBalance();
+			BigDecimal CreditAmt = getCreditBalance();
+			boolean isSOTrx;			
+			int m_C_DocTypeTarget_ID;
+			int C_ElementValue_ID;
+						
+			
+			MGLPostingConfig glConfig = MGLPostingConfig.getMGLPostingConfig(getCtx());
+			if(DebitAmt.doubleValue()!=0) {
+				m_C_DocTypeTarget_ID = glConfig.getBP_DebitDocType_ID();
+				C_ElementValue_ID = glConfig.getBP_DebitBalanceAcct_ID();
+				isSOTrx = true;
+			}				
+			else if(CreditAmt.doubleValue() != 0) {
+				m_C_DocTypeTarget_ID = glConfig.getBP_CreditDocType_ID();
+				C_ElementValue_ID = glConfig.getBP_CreditBalanceAcct_ID();
+				isSOTrx = false;
+			}
+			else {
+				DB.executeUpdate("UPDATE C_BPartner SET C_Invoice_ID=NULL  WHERE C_BPartner_ID ="
+						+ getC_BPartner_ID(), get_TrxName());
+				return;
+			}
+				
+			
+			if(getAD_Org_ID() == 0) {
+				throw new AdempiereException("Opening Balance cannot be set for Global Business Partner (Organization=*)!");
+			}
+			
+			//Invoice Header
+			TF_MInvoice invoice = new TF_MInvoice(getCtx(), 0, get_TrxName());
+			invoice.setClientOrg(getAD_Client_ID(), getAD_Org_ID());
+			invoice.setC_DocTypeTarget_ID(m_C_DocTypeTarget_ID);			
+			invoice.setDateInvoiced(getOpeningDate());
+			invoice.setDateAcct(getOpeningDate());
+			//
+			invoice.setSalesRep_ID(Env.getAD_User_ID(getCtx()));
+			//
+			invoice.setBPartner(this);
+			invoice.setIsSOTrx(isSOTrx);		
+			
+			
+			//Price List
+			int m_M_PriceList_ID = Env.getContextAsInt(getCtx(), "#M_PriceList_ID");
+			if(getPO_PriceList_ID() > 0)
+				m_M_PriceList_ID = getPO_PriceList_ID();			
+			invoice.setM_PriceList_ID(m_M_PriceList_ID);
+			invoice.setC_Currency_ID(MPriceList.get(getCtx(), m_M_PriceList_ID, get_TrxName()).getC_Currency_ID());
+			invoice.setDescription("Opening Balance Entered");
+			invoice.saveEx();
+			//End Invoice Header
+			
+			//Invoice Line
+			MInvoiceLine invLine = new MInvoiceLine(invoice);
+			TF_MCharge chrg = TF_MCharge.createChargeFromAccount(getCtx(), C_ElementValue_ID, null);
+			invLine.setC_Charge_ID(chrg.getC_Charge_ID());			
+			invLine.setQty(BigDecimal.ONE);
+			if(isSOTrx)
+				invLine.setPrice(DebitAmt);
+			else
+				invLine.setPrice(CreditAmt);
+			invLine.saveEx();
+			//End Invoice Line
+			
+			//DocAction
+			if (!invoice.processIt(DocAction.ACTION_Complete))
+				throw new AdempiereException("Failed when processing document - " + invoice.getProcessMsg());
+			invoice.saveEx();
+			
+			DB.executeUpdate("UPDATE C_BPartner SET C_Invoice_ID=" + invoice.getC_Invoice_ID() + " WHERE C_BPartner_ID ="
+					+ getC_BPartner_ID(), get_TrxName());
+			
+		}
+	}
 	
 }

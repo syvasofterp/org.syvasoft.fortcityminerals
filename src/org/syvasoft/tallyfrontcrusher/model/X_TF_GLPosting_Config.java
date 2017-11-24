@@ -30,7 +30,7 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20171113L;
+	private static final long serialVersionUID = 20171124L;
 
     /** Standard Constructor */
     public X_TF_GLPosting_Config (Properties ctx, int TF_GLPosting_Config_ID, String trxName)
@@ -77,6 +77,112 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
         .append(get_ID()).append("]");
       return sb.toString();
     }
+
+	public org.compiere.model.I_C_ElementValue getBP_CreditBalanceAcct() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getBP_CreditBalanceAcct_ID(), get_TrxName());	}
+
+	/** Set BP Credit Balance Account.
+		@param BP_CreditBalanceAcct_ID BP Credit Balance Account	  */
+	public void setBP_CreditBalanceAcct_ID (int BP_CreditBalanceAcct_ID)
+	{
+		if (BP_CreditBalanceAcct_ID < 1) 
+			set_Value (COLUMNNAME_BP_CreditBalanceAcct_ID, null);
+		else 
+			set_Value (COLUMNNAME_BP_CreditBalanceAcct_ID, Integer.valueOf(BP_CreditBalanceAcct_ID));
+	}
+
+	/** Get BP Credit Balance Account.
+		@return BP Credit Balance Account	  */
+	public int getBP_CreditBalanceAcct_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_BP_CreditBalanceAcct_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_DocType getBP_CreditDocType() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_DocType)MTable.get(getCtx(), org.compiere.model.I_C_DocType.Table_Name)
+			.getPO(getBP_CreditDocType_ID(), get_TrxName());	}
+
+	/** Set Opening Vendor Inv Document Type.
+		@param BP_CreditDocType_ID 
+		Document Type used for setting opening balance for vendor
+	  */
+	public void setBP_CreditDocType_ID (int BP_CreditDocType_ID)
+	{
+		if (BP_CreditDocType_ID < 1) 
+			set_Value (COLUMNNAME_BP_CreditDocType_ID, null);
+		else 
+			set_Value (COLUMNNAME_BP_CreditDocType_ID, Integer.valueOf(BP_CreditDocType_ID));
+	}
+
+	/** Get Opening Vendor Inv Document Type.
+		@return Document Type used for setting opening balance for vendor
+	  */
+	public int getBP_CreditDocType_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_BP_CreditDocType_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_ElementValue getBP_DebitBalanceAcct() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getBP_DebitBalanceAcct_ID(), get_TrxName());	}
+
+	/** Set BP Debit Balance Account.
+		@param BP_DebitBalanceAcct_ID BP Debit Balance Account	  */
+	public void setBP_DebitBalanceAcct_ID (int BP_DebitBalanceAcct_ID)
+	{
+		if (BP_DebitBalanceAcct_ID < 1) 
+			set_Value (COLUMNNAME_BP_DebitBalanceAcct_ID, null);
+		else 
+			set_Value (COLUMNNAME_BP_DebitBalanceAcct_ID, Integer.valueOf(BP_DebitBalanceAcct_ID));
+	}
+
+	/** Get BP Debit Balance Account.
+		@return BP Debit Balance Account	  */
+	public int getBP_DebitBalanceAcct_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_BP_DebitBalanceAcct_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_DocType getBP_DebitDocType() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_DocType)MTable.get(getCtx(), org.compiere.model.I_C_DocType.Table_Name)
+			.getPO(getBP_DebitDocType_ID(), get_TrxName());	}
+
+	/** Set Opening Cust. Inv Document Type.
+		@param BP_DebitDocType_ID 
+		Document Type used for setting opening balance for customer
+	  */
+	public void setBP_DebitDocType_ID (int BP_DebitDocType_ID)
+	{
+		if (BP_DebitDocType_ID < 1) 
+			set_Value (COLUMNNAME_BP_DebitDocType_ID, null);
+		else 
+			set_Value (COLUMNNAME_BP_DebitDocType_ID, Integer.valueOf(BP_DebitDocType_ID));
+	}
+
+	/** Get Opening Cust. Inv Document Type.
+		@return Document Type used for setting opening balance for customer
+	  */
+	public int getBP_DebitDocType_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_BP_DebitDocType_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
 
 	public org.compiere.model.I_C_AcctSchema getC_AcctSchema() throws RuntimeException
     {
