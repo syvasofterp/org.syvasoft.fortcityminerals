@@ -64,6 +64,58 @@ public interface I_TF_GLPosting_Config
 	  */
 	public int getAD_Org_ID();
 
+    /** Column name BP_CreditBalanceAcct_ID */
+    public static final String COLUMNNAME_BP_CreditBalanceAcct_ID = "BP_CreditBalanceAcct_ID";
+
+	/** Set BP Credit Balance Account	  */
+	public void setBP_CreditBalanceAcct_ID (int BP_CreditBalanceAcct_ID);
+
+	/** Get BP Credit Balance Account	  */
+	public int getBP_CreditBalanceAcct_ID();
+
+	public org.compiere.model.I_C_ElementValue getBP_CreditBalanceAcct() throws RuntimeException;
+
+    /** Column name BP_CreditDocType_ID */
+    public static final String COLUMNNAME_BP_CreditDocType_ID = "BP_CreditDocType_ID";
+
+	/** Set Opening Vendor Inv Document Type.
+	  * Document Type used for setting opening balance for vendor
+	  */
+	public void setBP_CreditDocType_ID (int BP_CreditDocType_ID);
+
+	/** Get Opening Vendor Inv Document Type.
+	  * Document Type used for setting opening balance for vendor
+	  */
+	public int getBP_CreditDocType_ID();
+
+	public org.compiere.model.I_C_DocType getBP_CreditDocType() throws RuntimeException;
+
+    /** Column name BP_DebitBalanceAcct_ID */
+    public static final String COLUMNNAME_BP_DebitBalanceAcct_ID = "BP_DebitBalanceAcct_ID";
+
+	/** Set BP Debit Balance Account	  */
+	public void setBP_DebitBalanceAcct_ID (int BP_DebitBalanceAcct_ID);
+
+	/** Get BP Debit Balance Account	  */
+	public int getBP_DebitBalanceAcct_ID();
+
+	public org.compiere.model.I_C_ElementValue getBP_DebitBalanceAcct() throws RuntimeException;
+
+    /** Column name BP_DebitDocType_ID */
+    public static final String COLUMNNAME_BP_DebitDocType_ID = "BP_DebitDocType_ID";
+
+	/** Set Opening Cust. Inv Document Type.
+	  * Document Type used for setting opening balance for customer
+	  */
+	public void setBP_DebitDocType_ID (int BP_DebitDocType_ID);
+
+	/** Get Opening Cust. Inv Document Type.
+	  * Document Type used for setting opening balance for customer
+	  */
+	public int getBP_DebitDocType_ID();
+
+	public org.compiere.model.I_C_DocType getBP_DebitDocType() throws RuntimeException;
+
     /** Column name C_AcctSchema_ID */
     public static final String COLUMNNAME_C_AcctSchema_ID = "C_AcctSchema_ID";
 
