@@ -6,7 +6,9 @@ import java.util.Properties;
 import org.adempiere.base.IModelFactory;
 import org.compiere.model.PO;
 import org.compiere.util.Env;
+import org.syvasoft.tallyfrontcrusher.model.MBPOpeningBalance;
 import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
+import org.syvasoft.tallyfrontcrusher.model.MCOAOpeningBalance;
 import org.syvasoft.tallyfrontcrusher.model.MCrusherProduction;
 import org.syvasoft.tallyfrontcrusher.model.MCrusherProductionConfig;
 import org.syvasoft.tallyfrontcrusher.model.MDestination;
@@ -170,6 +172,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return MWeighmentEntry.class;
 		else if (TF_MJournal.Table_Name.equals(tableName)) 
 			return TF_MJournal.class;
+		else if (MCOAOpeningBalance.Table_Name.equals(tableName))
+			return MCOAOpeningBalance.class;
+		else if (MBPOpeningBalance.Table_Name.equals(tableName))
+			return MBPOpeningBalance.class;
 		return null;
 	}
 
@@ -282,6 +288,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MWeighmentEntry(ctx, Record_ID, trxName);
 		else if (TF_MJournal.Table_Name.equals(tableName)) 
 			return new TF_MJournal(ctx, Record_ID, trxName);
+		else if (MCOAOpeningBalance.Table_Name.equals(tableName))
+			return new MCOAOpeningBalance(ctx, Record_ID, trxName);
+		else if (MBPOpeningBalance.Table_Name.equals(tableName))
+			return new MBPOpeningBalance(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -394,6 +404,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MWeighmentEntry(ctx, rs, trxName);
 		else if (TF_MJournal.Table_Name.equals(tableName)) 
 			return new TF_MJournal(ctx, rs, trxName);
+		else if (MCOAOpeningBalance.Table_Name.equals(tableName))
+			return new MCOAOpeningBalance(ctx, rs, trxName);
+		else if (MBPOpeningBalance.Table_Name.equals(tableName))
+			return new MBPOpeningBalance(ctx, rs, trxName);
 		return null;
 	}
 

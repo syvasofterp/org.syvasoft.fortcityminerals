@@ -202,7 +202,8 @@ public class TF_MJournal extends MJournal {
 	protected boolean afterSave(boolean newRecord, boolean success) {
 		// TODO Auto-generated method stub
 		boolean ok = super.afterSave(newRecord, success);
-		updateQuickEntryLines(newRecord);
+		if(!isProcessed())
+			updateQuickEntryLines(newRecord);
 		return ok;
 	}
 	
