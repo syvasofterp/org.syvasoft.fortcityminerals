@@ -30,7 +30,7 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20171124L;
+	private static final long serialVersionUID = 20171125L;
 
     /** Standard Constructor */
     public X_TF_GLPosting_Config (Properties ctx, int TF_GLPosting_Config_ID, String trxName)
@@ -513,6 +513,34 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	public int getMaterialIssue_DocType_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_MaterialIssue_DocType_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_ElementValue getOpeningBalAcct() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getOpeningBalAcct_ID(), get_TrxName());	}
+
+	/** Set Opening Balance Offset Account.
+		@param OpeningBalAcct_ID 
+		Offset Account
+	  */
+	public void setOpeningBalAcct_ID (int OpeningBalAcct_ID)
+	{
+		if (OpeningBalAcct_ID < 1) 
+			set_Value (COLUMNNAME_OpeningBalAcct_ID, null);
+		else 
+			set_Value (COLUMNNAME_OpeningBalAcct_ID, Integer.valueOf(OpeningBalAcct_ID));
+	}
+
+	/** Get Opening Balance Offset Account.
+		@return Offset Account
+	  */
+	public int getOpeningBalAcct_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_OpeningBalAcct_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();

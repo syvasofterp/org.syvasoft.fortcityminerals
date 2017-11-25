@@ -1,13 +1,19 @@
 package org.syvasoft.tallyfrontcrusher.model;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.Properties;
 
+import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.MElement;
 import org.compiere.model.MElementValue;
+import org.compiere.model.MJournal;
+import org.compiere.model.MPeriod;
 import org.compiere.model.MTable;
 import org.compiere.model.MTree;
 import org.compiere.model.X_I_ElementValue;
+import org.compiere.process.DocAction;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
 
@@ -66,7 +72,8 @@ public class TF_MElementValue extends MElementValue {
 			 return 0;
 		return ii.intValue();
 	}
-
+    
+	
 	@Override
 	protected boolean beforeSave(boolean newRecord) {		
 		boolean ok = super.beforeSave(newRecord);
@@ -93,7 +100,5 @@ public class TF_MElementValue extends MElementValue {
 		}
 		return ok;
 	}
-
-	
 
 }

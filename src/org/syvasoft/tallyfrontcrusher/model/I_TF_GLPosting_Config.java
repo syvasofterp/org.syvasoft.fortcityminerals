@@ -300,6 +300,21 @@ public interface I_TF_GLPosting_Config
 
 	public org.compiere.model.I_C_DocType getMaterialIssue_DocType() throws RuntimeException;
 
+    /** Column name OpeningBalAcct_ID */
+    public static final String COLUMNNAME_OpeningBalAcct_ID = "OpeningBalAcct_ID";
+
+	/** Set Opening Balance Offset Account.
+	  * Offset Account
+	  */
+	public void setOpeningBalAcct_ID (int OpeningBalAcct_ID);
+
+	/** Get Opening Balance Offset Account.
+	  * Offset Account
+	  */
+	public int getOpeningBalAcct_ID();
+
+	public org.compiere.model.I_C_ElementValue getOpeningBalAcct() throws RuntimeException;
+
     /** Column name QuarryExp_Acct */
     public static final String COLUMNNAME_QuarryExp_Acct = "QuarryExp_Acct";
 
