@@ -206,6 +206,19 @@ public interface I_TF_WeighmentEntry
 	/** Get Net Weight (Kg)	  */
 	public BigDecimal getNetWeight();
 
+    /** Column name PaymentRule */
+    public static final String COLUMNNAME_PaymentRule = "PaymentRule";
+
+	/** Set Payment Rule.
+	  * How you pay the invoice
+	  */
+	public void setPaymentRule (String PaymentRule);
+
+	/** Get Payment Rule.
+	  * How you pay the invoice
+	  */
+	public String getPaymentRule();
+
     /** Column name Processed */
     public static final String COLUMNNAME_Processed = "Processed";
 
