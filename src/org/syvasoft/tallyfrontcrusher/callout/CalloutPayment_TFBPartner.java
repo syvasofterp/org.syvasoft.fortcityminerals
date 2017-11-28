@@ -7,6 +7,7 @@ import org.compiere.model.GridField;
 import org.compiere.model.GridTab;
 import org.compiere.model.MUser;
 import org.compiere.util.Env;
+import org.syvasoft.tallyfrontcrusher.model.TF_MBPartner;
 import org.syvasoft.tallyfrontcrusher.model.TF_MPayment;
 
 public class CalloutPayment_TFBPartner implements IColumnCallout {
@@ -14,15 +15,19 @@ public class CalloutPayment_TFBPartner implements IColumnCallout {
 	@Override
 	public String start(Properties ctx, int WindowNo, GridTab mTab, GridField mField, Object value, Object oldValue) {
 		int bPartnerID = 0;
+		boolean isEmployee = false;
 		if(mTab.getValue(TF_MPayment.COLUMNNAME_TF_BPartner_ID) != null) {
 			bPartnerID = (int) mTab.getValue(TF_MPayment.COLUMNNAME_TF_BPartner_ID);
+			TF_MBPartner bp = new TF_MBPartner(ctx, bPartnerID, null);
+			isEmployee = bp.isEmployee();			
 		}
 		else {
 			MUser user = MUser.get(ctx, Env.getAD_User_ID(ctx));				
-			bPartnerID = user.getC_BPartner_ID();
+			bPartnerID = user.getC_BPartner_ID();			
 		}
+		Env.setContext(ctx, WindowNo, "IsEmployee", isEmployee);
 		mTab.setValue(TF_MPayment.COLUMNNAME_C_BPartner_ID, bPartnerID);
-		
+				
 		return null;
 	}
 
