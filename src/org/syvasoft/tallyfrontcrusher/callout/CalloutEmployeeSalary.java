@@ -1,6 +1,7 @@
 package org.syvasoft.tallyfrontcrusher.callout;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.Properties;
 
@@ -10,6 +11,7 @@ import org.compiere.model.GridTab;
 import org.syvasoft.tallyfrontcrusher.model.MEmpSalaryConfig;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalary;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryAdvance;
+import org.syvasoft.tallyfrontcrusher.model.TF_MBPartner;
 
 public class CalloutEmployeeSalary implements IColumnCallout {
 
@@ -34,16 +36,20 @@ public class CalloutEmployeeSalary implements IColumnCallout {
 			Timestamp dateAcct = null;
 			dateAcct = (Timestamp) mTab.getValue(MEmployeeSalary.COLUMNNAME_DateAcct);		
 			int bpartner_ID = (int)  mTab.getValue(MEmployeeSalary.COLUMNNAME_C_BPartner_ID);
-			MEmpSalaryConfig salaryConfig = MEmpSalaryConfig.getEmpSalaryConfig(ctx, bpartner_ID, dateAcct);
+			TF_MBPartner bp = new TF_MBPartner(ctx, bpartner_ID, null);
+			stdDays = bp.getStd_Days();
+			stdWage = bp.getStd_Wage();
 			
-			if(salaryConfig != null && isCalculated) {
-				stdDays = salaryConfig.getStd_Days();
-				stdWage = salaryConfig.getStd_Wage();
-			}
+			//MEmpSalaryConfig salaryConfig = MEmpSalaryConfig.getEmpSalaryConfig(ctx, bpartner_ID, dateAcct);
+			
+			//if(salaryConfig != null && isCalculated) {
+			//	stdDays = salaryConfig.getStd_Days();
+			//	stdWage = salaryConfig.getStd_Wage();
+			//}
 			
 			BigDecimal earnedSalary = BigDecimal.ZERO;
 			if(stdDays.doubleValue() !=0  && isCalculated)
-				earnedSalary = stdWage.multiply(presentDays.divide(stdDays));
+				earnedSalary = stdWage.multiply(presentDays.divide(stdDays, 2, RoundingMode.HALF_UP));
 			
 			mTab.setValue(MEmployeeSalary.COLUMNNAME_Std_Days, stdDays);
 			mTab.setValue(MEmployeeSalary.COLUMNNAME_Std_Wage, stdWage);

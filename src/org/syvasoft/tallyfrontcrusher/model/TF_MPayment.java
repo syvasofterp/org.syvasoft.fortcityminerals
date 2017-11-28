@@ -1,5 +1,6 @@
 package org.syvasoft.tallyfrontcrusher.model;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.util.Properties;
 
@@ -243,6 +244,132 @@ public class TF_MPayment extends MPayment {
 			return "Y".equals(oo);
 		}
 		return false;
+	}
+	
+    /** Column name Salary_Amt */
+    public static final String COLUMNNAME_Salary_Amt = "Salary_Amt";
+    /** Set Earned Salary.
+	@param Salary_Amt Earned Salary	  */
+	public void setSalary_Amt (BigDecimal Salary_Amt)
+	{
+		set_Value (COLUMNNAME_Salary_Amt, Salary_Amt);
+	}
+	
+	/** Get Earned Salary.
+		@return Earned Salary	  */
+	public BigDecimal getSalary_Amt () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Salary_Amt);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+	
+    /** Column name Advance_Paid */
+    public static final String COLUMNNAME_Advance_Paid = "Advance_Paid";
+    /** Set Advance Paid.
+	@param Advance_Paid Advance Paid	  */
+	public void setAdvance_Paid (BigDecimal Advance_Paid)
+	{
+		set_Value (COLUMNNAME_Advance_Paid, Advance_Paid);
+	}
+	
+	/** Get Advance Paid.
+		@return Advance Paid	  */
+	public BigDecimal getAdvance_Paid () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Advance_Paid);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+    /** Column name Advance_Deduct */
+    public static final String COLUMNNAME_Advance_Deduct = "Advance_Deduct";
+    
+    /** Set Deduct Advance.
+	@param Advance_Deduct Deduct Advance	  */
+	public void setAdvance_Deduct (BigDecimal Advance_Deduct)
+	{
+		set_Value (COLUMNNAME_Advance_Deduct, Advance_Deduct);
+	}
+	
+	/** Get Deduct Advance.
+		@return Deduct Advance	  */
+	public BigDecimal getAdvance_Deduct () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Advance_Deduct);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+	
+	/** Column name Advance_Balance */
+    public static final String COLUMNNAME_Advance_Balance = "Advance_Balance";
+    /** Set Balance Advance.
+	@param Advance_Balance Balance Advance	  */
+	public void setAdvance_Balance (BigDecimal Advance_Balance)
+	{
+		set_Value (COLUMNNAME_Advance_Balance, Advance_Balance);
+	}
+	
+	/** Get Balance Advance.
+		@return Balance Advance	  */
+	public BigDecimal getAdvance_Balance () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Advance_Balance);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+    /** Column name Salary_Payable */
+    public static final String COLUMNNAME_Salary_Payable = "Salary_Payable";
+    /** Set Balance Salary.
+	@param Salary_Payable Balance Salary	  */
+	public void setSalary_Payable (BigDecimal Salary_Payable)
+	{
+		set_Value (COLUMNNAME_Salary_Payable, Salary_Payable);
+	}
+	
+	/** Get Balance Salary.
+		@return Balance Salary	  */
+	public BigDecimal getSalary_Payable () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Salary_Payable);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+	
+	/** Column name EmpAdv_Journal_ID */
+    public static final String COLUMNNAME_EmpAdv_Journal_ID = "EmpAdv_Journal_ID";
+    public org.compiere.model.I_GL_Journal getEmpAdv_Journal() throws RuntimeException
+    {
+		return (org.compiere.model.I_GL_Journal)MTable.get(getCtx(), org.compiere.model.I_GL_Journal.Table_Name)
+			.getPO(getEmpAdv_Journal_ID(), get_TrxName());	}
+
+	/** Set Advance Deduction Journal.
+		@param EmpAdv_Journal_ID 
+		Advance Deduction Journal
+	  */
+	public void setEmpAdv_Journal_ID (int EmpAdv_Journal_ID)
+	{
+		if (EmpAdv_Journal_ID < 1) 
+			set_Value (COLUMNNAME_EmpAdv_Journal_ID, null);
+		else 
+			set_Value (COLUMNNAME_EmpAdv_Journal_ID, Integer.valueOf(EmpAdv_Journal_ID));
+	}
+
+	/** Get Advance Deduction Journal.
+		@return Advance Deduction Journal
+	  */
+	public int getEmpAdv_Journal_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_EmpAdv_Journal_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 	
 	@Override
