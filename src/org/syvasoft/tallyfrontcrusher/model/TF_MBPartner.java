@@ -393,6 +393,46 @@ public class TF_MBPartner extends MBPartner {
 		return ii.intValue();
 	}
 	
+	 /** Column name Std_Days */
+    public static final String COLUMNNAME_Std_Days = "Std_Days";
+    /** Set Standard Days.
+	@param Std_Days Standard Days	  */
+	public void setStd_Days (BigDecimal Std_Days)
+	{
+		set_Value (COLUMNNAME_Std_Days, Std_Days);
+	}
+	
+	/** Get Standard Days.
+		@return Standard Days	  */
+	public BigDecimal getStd_Days () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Std_Days);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+	
+	/** Set Standard Wage.
+	@param Std_Wage Standard Wage	  */
+	public void setStd_Wage (BigDecimal Std_Wage)
+	{
+		set_Value (COLUMNNAME_Std_Wage, Std_Wage);
+	}
+	
+	/** Get Standard Wage.
+		@return Standard Wage	  */
+	public BigDecimal getStd_Wage () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Std_Wage);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+    
+    /** Column name Std_Wage */
+    public static final String COLUMNNAME_Std_Wage = "Std_Wage";
+	
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
 		boolean ok = super.afterSave(newRecord, success);
