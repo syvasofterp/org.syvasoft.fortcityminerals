@@ -181,6 +181,7 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 		//Material Issue
 		MInOut inout = new MInOut(invoice, MGLPostingConfig.getMGLPostingConfig(getCtx()).getMaterialIssue_DocType_ID(), getDateAcct(), getM_Warehouse_ID());
 		inout.setDescription(invoice.getDescription());
+		inout.setMovementType(MInOut.MOVEMENTTYPE_VendorReturns);
 		inout.saveEx(get_TrxName());
 		
 		//Material Issue Line
