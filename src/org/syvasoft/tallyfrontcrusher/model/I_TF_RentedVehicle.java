@@ -169,10 +169,10 @@ public interface I_TF_RentedVehicle
     /** Column name TareWeight */
     public static final String COLUMNNAME_TareWeight = "TareWeight";
 
-	/** Set Tare Weight (Ton)	  */
+	/** Set Tare Weight (Kg)	  */
 	public void setTareWeight (BigDecimal TareWeight);
 
-	/** Get Tare Weight (Ton)	  */
+	/** Get Tare Weight (Kg)	  */
 	public BigDecimal getTareWeight();
 
     /** Column name TF_RentedVehicle_ID */
@@ -217,4 +217,13 @@ public interface I_TF_RentedVehicle
 
 	/** Get Vehicle No	  */
 	public String getVehicleNo();
+
+    /** Column name VehicleSOPOType */
+    public static final String COLUMNNAME_VehicleSOPOType = "VehicleSOPOType";
+
+	/** Set Vehicle SO/PO Type	  */
+	public void setVehicleSOPOType (String VehicleSOPOType);
+
+	/** Get Vehicle SO/PO Type	  */
+	public String getVehicleSOPOType();
 }

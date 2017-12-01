@@ -30,9 +30,9 @@ public class MEmployeeSalary extends X_TF_Employee_Salary {
 
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
-		if(isCalculated() && getStd_Days().doubleValue()!=0) {			
-			setSalary_Amt(getStd_Wage().multiply(getPresent_Days().divide(getStd_Days())));
-		}
+		//if(isCalculated() && getStd_Days().doubleValue()!=0) {			
+		//	setSalary_Amt(getStd_Wage().multiply(getPresent_Days().divide(getStd_Days())));
+		//}
 		if(getSalary_Amt().doubleValue() == 0 )			
 			throw new AdempiereException("Invalid Earned Salary");
 		
@@ -58,7 +58,12 @@ public class MEmployeeSalary extends X_TF_Employee_Salary {
 			
 			//Posting GL journal for Employee Salary 
 			MJournal j = new MJournal(getCtx(), 0, get_TrxName());
-			j.setDescription("Generated from Employee Salary Entry - " + getDocumentNo());
+			j.setAD_Org_ID(getAD_Org_ID());
+			String description = "Salary Entry #" + getDocumentNo();
+			if(getDescription() != null)
+				description = getDescription() + " | " + description;
+				
+			j.setDescription(description);
 			j.setC_AcctSchema_ID(Env.getContextAsInt(getCtx(), "$C_AcctSchema_ID"));
 			j.setC_Currency_ID(Env.getContextAsInt(getCtx(), "$C_Currency_ID"));
 			j.setPostingType(MJournal.POSTINGTYPE_Actual);

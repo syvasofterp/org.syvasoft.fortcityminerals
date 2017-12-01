@@ -23,6 +23,11 @@ public class CalloutPayment_FromToBankAccount implements IColumnCallout {
 				mTab.setValue(TF_MPayment.COLUMNNAME_C_ElementValue_ID, 0);
 				mTab.setValue(TF_MPayment.COLUMNNAME_Description, null);
 			}
+			else {
+				Env.setContext(ctx, WindowNo, "IsEmployee", false);
+				mTab.setValue(TF_MPayment.COLUMNNAME_TF_BPartner_ID, 0);
+				mTab.setValue(TF_MPayment.COLUMNNAME_Description, null);
+			}
 		}
 		if(mTab.getValue(TF_MPayment.COLUMNNAME_FromTo_BankAccount_ID) != null) {
 			ElementValue_ID = MGLPostingConfig.getMGLPostingConfig(ctx).getInterBankInTransit_ID();

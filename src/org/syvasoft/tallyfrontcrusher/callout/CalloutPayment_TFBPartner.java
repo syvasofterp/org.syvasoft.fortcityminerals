@@ -25,7 +25,7 @@ public class CalloutPayment_TFBPartner implements IColumnCallout {
 			MUser user = MUser.get(ctx, Env.getAD_User_ID(ctx));				
 			bPartnerID = user.getC_BPartner_ID();			
 		}
-		Env.setContext(ctx, WindowNo, "IsEmployee", isEmployee);
+		mTab.setValue(TF_MPayment.COLUMNNAME_IsEmployee, isEmployee);
 		mTab.setValue(TF_MPayment.COLUMNNAME_C_BPartner_ID, bPartnerID);
 				
 		return null;

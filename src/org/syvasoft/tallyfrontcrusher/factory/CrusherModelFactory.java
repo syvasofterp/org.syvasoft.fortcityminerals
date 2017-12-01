@@ -18,6 +18,7 @@ import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryAdvance;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryIssue;
 import org.syvasoft.tallyfrontcrusher.model.MFuelIssue;
 import org.syvasoft.tallyfrontcrusher.model.MGLPostingConfig;
+import org.syvasoft.tallyfrontcrusher.model.MInterOrgCashTransfer;
 import org.syvasoft.tallyfrontcrusher.model.MItemReceiptOtherSrc;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkCharges;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkExpense;
@@ -176,6 +177,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return MCOAOpeningBalance.class;
 		else if (MBPOpeningBalance.Table_Name.equals(tableName))
 			return MBPOpeningBalance.class;
+		else if (MInterOrgCashTransfer.Table_Name.equals(tableName))
+			return MInterOrgCashTransfer.class;
 		return null;
 	}
 
@@ -292,6 +295,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MCOAOpeningBalance(ctx, Record_ID, trxName);
 		else if (MBPOpeningBalance.Table_Name.equals(tableName))
 			return new MBPOpeningBalance(ctx, Record_ID, trxName);
+		else if (MInterOrgCashTransfer.Table_Name.equals(tableName))
+			return new MInterOrgCashTransfer(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -408,6 +413,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MCOAOpeningBalance(ctx, rs, trxName);
 		else if (MBPOpeningBalance.Table_Name.equals(tableName))
 			return new MBPOpeningBalance(ctx, rs, trxName);
+		else if (MInterOrgCashTransfer.Table_Name.equals(tableName))
+			return new MInterOrgCashTransfer(ctx, rs, trxName);
 		return null;
 	}
 
