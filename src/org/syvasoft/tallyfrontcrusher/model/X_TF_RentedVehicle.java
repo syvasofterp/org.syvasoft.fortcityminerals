@@ -22,6 +22,7 @@ import java.sql.ResultSet;
 import java.util.Properties;
 import org.compiere.model.*;
 import org.compiere.util.Env;
+import org.compiere.util.KeyNamePair;
 
 /** Generated Model for TF_RentedVehicle
  *  @author iDempiere (generated) 
@@ -32,7 +33,7 @@ public class X_TF_RentedVehicle extends PO implements I_TF_RentedVehicle, I_Pers
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20171013L;
+	private static final long serialVersionUID = 20171130L;
 
     /** Standard Constructor */
     public X_TF_RentedVehicle (Properties ctx, int TF_RentedVehicle_ID, String trxName)
@@ -205,15 +206,15 @@ public class X_TF_RentedVehicle extends PO implements I_TF_RentedVehicle, I_Pers
 		return ii.intValue();
 	}
 
-	/** Set Tare Weight (Ton).
-		@param TareWeight Tare Weight (Ton)	  */
+	/** Set Tare Weight (Kg).
+		@param TareWeight Tare Weight (Kg)	  */
 	public void setTareWeight (BigDecimal TareWeight)
 	{
 		set_Value (COLUMNNAME_TareWeight, TareWeight);
 	}
 
-	/** Get Tare Weight (Ton).
-		@return Tare Weight (Ton)	  */
+	/** Get Tare Weight (Kg).
+		@return Tare Weight (Kg)	  */
 	public BigDecimal getTareWeight () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_TareWeight);
@@ -268,5 +269,34 @@ public class X_TF_RentedVehicle extends PO implements I_TF_RentedVehicle, I_Pers
 	public String getVehicleNo () 
 	{
 		return (String)get_Value(COLUMNNAME_VehicleNo);
+	}
+
+    /** Get Record ID/ColumnName
+        @return ID/ColumnName pair
+      */
+    public KeyNamePair getKeyNamePair() 
+    {
+        return new KeyNamePair(get_ID(), getVehicleNo());
+    }
+
+	/** Both = B */
+	public static final String VEHICLESOPOTYPE_Both = "B";
+	/** Purchase = P */
+	public static final String VEHICLESOPOTYPE_Purchase = "P";
+	/** Sales = S */
+	public static final String VEHICLESOPOTYPE_Sales = "S";
+	/** Set Vehicle SO/PO Type.
+		@param VehicleSOPOType Vehicle SO/PO Type	  */
+	public void setVehicleSOPOType (String VehicleSOPOType)
+	{
+
+		set_Value (COLUMNNAME_VehicleSOPOType, VehicleSOPOType);
+	}
+
+	/** Get Vehicle SO/PO Type.
+		@return Vehicle SO/PO Type	  */
+	public String getVehicleSOPOType () 
+	{
+		return (String)get_Value(COLUMNNAME_VehicleSOPOType);
 	}
 }
