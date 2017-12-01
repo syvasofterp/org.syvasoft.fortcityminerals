@@ -31,6 +31,7 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_SOUnitPriceRent;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_SetTonnage;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_WeighmentEntry;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPaymentCashType;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_CalcSalaryBalannceAmts;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_DocumentType;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_ElementValue;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_FromToBankAccount;
@@ -123,8 +124,12 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		if(tableName.equals(MPayment.Table_Name)) { 
 			if(columnName.equals(TF_MPayment.COLUMNNAME_TF_BPartner_ID)) 
 				list.add(new CalloutPayment_TFBPartner());
-			if(columnName.equals(TF_MPayment.COLUMNNAME_C_ElementValue_ID))
+			if(columnName.equals(TF_MPayment.COLUMNNAME_C_ElementValue_ID) || columnName.equals(TF_MPayment.COLUMNNAME_DateTrx)) {
 				list.add(new CalloutPayment_ElementValue());
+				list.add(new CalloutPayment_CalcSalaryBalannceAmts());
+			}
+			if(columnName.equals(TF_MPayment.COLUMNNAME_Advance_Deduct) || columnName.equals(TF_MPayment.COLUMNNAME_PayAmt))
+				list.add(new CalloutPayment_CalcSalaryBalannceAmts());
 			if(columnName.equals(TF_MPayment.COLUMNNAME_C_DocType_ID))
 				list.add(new CalloutPayment_DocumentType());
 			if(columnName.equals(TF_MPayment.COLUMNNAME_AD_Org_ID))
@@ -136,7 +141,9 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		}
 		//TF_Employee_Salary - Load Salary Config
 		if(tableName.equals(MEmployeeSalary.Table_Name) && (columnName.equals(MEmployeeSalary.COLUMNNAME_C_BPartner_ID)
-				|| columnName.equals(MEmployeeSalary.COLUMNNAME_DateAcct) || columnName.equals(MEmployeeSalary.COLUMNNAME_Present_Days)))
+				|| columnName.equals(MEmployeeSalary.COLUMNNAME_DateAcct) || columnName.equals(MEmployeeSalary.COLUMNNAME_Present_Days)
+				|| columnName.equals(MEmployeeSalary.COLUMNNAME_IsCalculated) 
+				))
 			list.add(new CalloutEmployeeSalary());
 		
 		//TF_Labour_Wage - Load Wage Config

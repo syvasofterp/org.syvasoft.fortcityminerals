@@ -47,9 +47,11 @@ public class CalloutEmployeeSalary implements IColumnCallout {
 			//	stdWage = salaryConfig.getStd_Wage();
 			//}
 			
-			BigDecimal earnedSalary = BigDecimal.ZERO;
+			BigDecimal earnedSalary = (BigDecimal) mTab.getValue(MEmployeeSalary.COLUMNNAME_Salary_Amt);
 			if(stdDays.doubleValue() !=0  && isCalculated)
 				earnedSalary = stdWage.multiply(presentDays.divide(stdDays, 2, RoundingMode.HALF_UP));
+			else if(isCalculated)
+				earnedSalary = BigDecimal.ZERO;				
 			
 			mTab.setValue(MEmployeeSalary.COLUMNNAME_Std_Days, stdDays);
 			mTab.setValue(MEmployeeSalary.COLUMNNAME_Std_Wage, stdWage);

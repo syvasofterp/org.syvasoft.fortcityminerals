@@ -6,10 +6,13 @@ import java.util.Properties;
 
 import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.MDocTypeCounter;
+import org.compiere.model.MJournalLine;
 import org.compiere.model.MPayment;
+import org.compiere.model.MPeriod;
 import org.compiere.model.MTable;
 import org.compiere.model.Query;
 import org.compiere.process.DocAction;
+import org.compiere.util.DB;
 import org.compiere.util.Env;
 
 public class TF_MPayment extends MPayment {
@@ -372,6 +375,55 @@ public class TF_MPayment extends MPayment {
 		return ii.intValue();
 	}
 	
+	/** Column name IsEmployee */
+    public static final String COLUMNNAME_IsEmployee = "IsEmployee";
+    /** Set Employee.
+	@param IsEmployee 
+	Indicates if  this Business Partner is an employee
+  */
+	public void setIsEmployee (boolean IsEmployee)
+	{
+		set_Value (COLUMNNAME_IsEmployee, Boolean.valueOf(IsEmployee));
+	}
+	
+	/** Get Employee.
+		@return Indicates if  this Business Partner is an employee
+	  */
+	public boolean isEmployee () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsEmployee);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+    /** Column name IsSalaryPayment */
+    public static final String COLUMNNAME_IsSalaryPayment = "IsSalaryPayment";
+    /** Set Salary Payment.
+	@param IsSalaryPayment Salary Payment	  */
+	public void setIsSalaryPayment (boolean IsSalaryPayment)
+	{
+		set_Value (COLUMNNAME_IsSalaryPayment, Boolean.valueOf(IsSalaryPayment));
+	}
+	
+	/** Get Salary Payment.
+		@return Salary Payment	  */
+	public boolean isSalaryPayment () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsSalaryPayment);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+	
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {
 		
@@ -414,6 +466,8 @@ public class TF_MPayment extends MPayment {
 		}		
 		String msg = super.completeIt();
 		createInterCashBookEntry();
+		if(isEmployee())
+			postAdvanceAdjustmentJournal();
 		return msg;
 	}
 	@Override
@@ -425,7 +479,10 @@ public class TF_MPayment extends MPayment {
 		//Subcontract / Job Work
 		if(getC_Project_ID() > 0) {
 			MJobworkCharges.updateJobworkCharges(getCtx(), getC_Project_ID(), getC_Charge_ID(), getPayAmt().negate(), get_TrxName());
-		}		
+		}
+		
+		reverseAdvanceAdjustmentJournal();
+		
 		boolean ok = super.reverseCorrectIt();
 		ok = ok && reverseInterCashBookEntry();
 		return ok;
@@ -500,4 +557,68 @@ public class TF_MPayment extends MPayment {
 		return desc;
 	}
 	
+	public void postAdvanceAdjustmentJournal() {
+		//Posting Opening Balance GL journal 
+		int m_C_DocTypeTarget_ID = 1000000;
+		MGLPostingConfig glConfig = MGLPostingConfig.getMGLPostingConfig(getCtx());
+		TF_MJournal j = new TF_MJournal(getCtx(), 0, get_TrxName());
+		j.setDescription("Advance Deducted from Cash Book Entry #" + getDocumentNo());
+		j.setAD_Org_ID(getAD_Org_ID());
+		j.setC_AcctSchema_ID(Env.getContextAsInt(getCtx(), "$C_AcctSchema_ID"));
+		j.setC_Currency_ID(Env.getContextAsInt(getCtx(), "$C_Currency_ID"));
+		j.setPostingType(TF_MJournal.POSTINGTYPE_Actual);
+		j.setC_DocType_ID(m_C_DocTypeTarget_ID);
+		j.setDateDoc(getDateTrx());
+		j.setDateAcct(getDateAcct());
+		j.setDocStatus(TF_MJournal.DOCSTATUS_Drafted);
+		MPeriod period = MPeriod.get(getCtx(), getDateAcct());
+		j.setC_Period_ID(period.getC_Period_ID());
+		j.setGL_Category_ID(1000000);
+		j.setC_ConversionType_ID(114);
+		//j.setIsQuickEntry(true);
+		//j.setAmount(getAdvance_Deduct());
+		//j.setTF_DebitAcct_ID(getC_ElementValue_ID());
+		//j.setTF_CreditAcct_ID(glConfig.getSalariesAdvanceAcct_ID());
+		j.saveEx();
+		
+		//Salaries Payable Dr.
+		MJournalLine jl;				
+		jl = new MJournalLine(j);
+		jl.setLine(10);			
+		jl.setAccount_ID(getC_ElementValue_ID());
+		jl.setC_BPartner_ID(getC_BPartner_ID());		
+		jl.setAmtSourceDr(getAdvance_Deduct());
+		jl.setAmtAcctDr(getAdvance_Deduct());
+		jl.setIsGenerated(true);
+		jl.saveEx();
+		
+		//
+		jl = new MJournalLine(j);
+		jl.setLine(10);			
+		jl.setAccount_ID(glConfig.getSalariesAdvanceAcct_ID());
+		jl.setC_BPartner_ID(getC_BPartner_ID());		
+		jl.setAmtSourceCr(getAdvance_Deduct());
+		jl.setAmtAcctCr(getAdvance_Deduct());
+		jl.setIsGenerated(true);
+		jl.saveEx();
+		
+		//DocAction
+		if (!j.processIt(DocAction.ACTION_Complete))
+			throw new AdempiereException("Failed when processing document - " + j.getProcessMsg());
+		j.saveEx();
+		
+		DB.executeUpdate("UPDATE C_Payment SET " + COLUMNNAME_EmpAdv_Journal_ID +"="+ j.getGL_Journal_ID() + " WHERE C_Payment_ID="
+				+ getC_Payment_ID() , get_TrxName());
+	}
+	
+	public void reverseAdvanceAdjustmentJournal() {
+		if(getEmpAdv_Journal_ID() > 0) {
+			TF_MJournal j = new TF_MJournal(getCtx(), getEmpAdv_Journal_ID(), get_TrxName());
+			if(j.getDocStatus().equals(TF_MInvoice.DOCSTATUS_Completed)) {
+				if (!j.processIt(DocAction.ACTION_Reverse_Correct))
+					throw new AdempiereException("Failed when processing document - " + j.getProcessMsg());
+				j.saveEx();
+			}
+		}
+	}
 }

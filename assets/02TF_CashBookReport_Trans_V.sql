@@ -14,6 +14,8 @@ SELECT
 	 WHEN p.FromTo_BankAccount_ID IS NOT NULL THEN 
 		(SELECT b.AccountNo || ' ' || c.Name FROM C_BankAccount b INNER JOIN C_Bank c ON b.C_Bank_ID = c.C_Bank_ID
 		WHERE b.C_BankAccount_ID = p.FromTo_BankAccount_ID)
+	 WHEN EXISTS(SELECT p.C_ElementValue_ID FROM TF_GLPosting_Config WHERE p.C_ElementValue_ID IN 
+		(SalaryPayable_Acct, SalariesAdvanceAcct_ID)) THEN bp.Name
 	 WHEN p.C_ElementValue_ID IS NOT NULL THEN c.Name
 	 WHEN bp.IsPOSCashBP='Y' AND p.IsReceipt='Y' THEN 'Cash Sales'
 	 WHEN bp.IsPOSCashBP='Y' AND p.IsReceipt='N' THEN 'Cash Purchase'
@@ -24,7 +26,7 @@ SELECT
 	 WHEN p.C_Invoice_ID IS NOT NULL AND p.IsReceipt='Y' THEN 'Sales Invoice : ' || i.DocumentNo 
 	 WHEN p.C_Invoice_ID IS NOT NULL AND p.IsReceipt='N' THEN 'Purchase Invoice : ' || i.DocumentNo 
 	 ELSE '' 
-	END || COALESCE(' | ' || p.Description,'') Description,
+	END || COALESCE(' ' || p.Description,'') Description,
 	CASE
 	 WHEN p.IsReceipt = 'Y' THEN PayAmt
 	 ELSE NULL

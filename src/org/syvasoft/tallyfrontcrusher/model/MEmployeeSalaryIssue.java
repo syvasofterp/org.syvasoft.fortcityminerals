@@ -41,6 +41,7 @@ public class MEmployeeSalaryIssue extends X_TF_Employee_Salary_Issue {
 			//Post Advance Deduct Adjustment journal entry
 			if(getAdvance_Deduct().doubleValue()>0 || getLoan_Deduct().doubleValue()>0) {
 				MJournal j = new MJournal(getCtx(), 0, get_TrxName());
+				j.setAD_Org_ID(getAD_Org_ID());
 				j.setDescription("Generated from Employee Salary Issue Entry - " + getDocumentNo());
 				j.setC_AcctSchema_ID(Env.getContextAsInt(getCtx(), "$C_AcctSchema_ID"));
 				j.setC_Currency_ID(Env.getContextAsInt(getCtx(), "$C_Currency_ID"));
