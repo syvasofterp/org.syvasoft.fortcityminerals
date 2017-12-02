@@ -42,7 +42,14 @@ public class MInterOrgCashTransfer extends X_TF_OrgCashTransfer_Config {
 		
 		return super.beforeSave(newRecord);
 	}
+
+	@Override
+	protected boolean afterSave(boolean newRecord, boolean success) {
+		TF_MCharge.createChargeFromAccount(getCtx(), getSrc_Acct_ID(), null);
+		TF_MCharge.createChargeFromAccount(getCtx(), getDest_Acct_ID(), null);
+		return super.afterSave(newRecord, success);
+	}
 	
-	
+		
 	
 }

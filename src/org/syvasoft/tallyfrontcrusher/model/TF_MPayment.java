@@ -466,6 +466,7 @@ public class TF_MPayment extends MPayment {
 		}		
 		String msg = super.completeIt();
 		createInterCashBookEntry();
+		createInterOrgCashBookEntry();
 		if(isEmployee())
 			postAdvanceAdjustmentJournal();
 		return msg;
@@ -488,6 +489,7 @@ public class TF_MPayment extends MPayment {
 		return ok;
 	}
 	
+	//Intra Organization / Within the Organization.
 	public void createInterCashBookEntry() {
 		if(!isInterCashBookEntry() || getRef_Payment_ID() > 0)
 			return;
@@ -532,9 +534,10 @@ public class TF_MPayment extends MPayment {
 		
 	}
 	
-	
+	//Intra/Inter Organization
 	public boolean reverseInterCashBookEntry() {
-		if(!isInterCashBookEntry())
+		//if(!isInterCashBookEntry())
+		if(getRef_Payment_ID() == 0)
 			return true;
 		
 		//Call this method before current document is reversed.
@@ -621,4 +624,82 @@ public class TF_MPayment extends MPayment {
 			}
 		}
 	}
+	
+	public void createInterOrgCashBookEntry() {
+		
+		if(getRef_Payment_ID() > 0)
+			return;						
+		
+		int counterOrgID=0;
+		int counterCashID=0;
+		int counterAcctID=0;
+		String whereClause = "Src_BankAccount_ID = ? AND Dest_Acct_ID = ? AND IsActive='Y'";
+		MInterOrgCashTransfer config = new Query(getCtx(), MInterOrgCashTransfer.Table_Name, whereClause, get_TrxName())
+				.setParameters(getC_BankAccount_ID(), getC_ElementValue_ID()).first();
+		if(config == null) {
+			whereClause = "Dest_BankAccount_ID = ? AND Src_Acct_ID = ? AND Direction='B' AND IsActive='Y'";
+			config = new Query(getCtx(), MInterOrgCashTransfer.Table_Name, whereClause, get_TrxName())
+					.setParameters(getC_BankAccount_ID(), getC_ElementValue_ID()).first();
+			if(config != null) {
+				counterOrgID = config.getSrc_Org_ID();
+				counterCashID = config.getSrc_BankAccount_ID();
+				counterAcctID = config.getDest_Acct_ID();
+			}
+		}
+		else {
+			counterOrgID = config.getDest_Org_ID();
+			counterCashID = config.getDest_BankAccount_ID();
+			counterAcctID = config.getSrc_Acct_ID();
+		}
+		
+		//It is not Inter Org Cash Transfer
+		if(config == null)
+			return;
+						
+		
+		//It Is Inter Org Cash Transfer		
+		
+		MDocTypeCounter counterDoc = new Query(getCtx(), MDocTypeCounter.Table_Name, "C_DocType_ID=? OR Counter_C_DocType_ID=?", null)
+				.setClient_ID().setParameters(getC_DocType_ID(), getC_DocType_ID()).first();
+		int c_doctype_id = 0;
+		
+		if(counterDoc != null ) {
+			if(getC_DocType_ID() == counterDoc.getC_DocType_ID())
+				c_doctype_id = counterDoc.getCounter_C_DocType_ID();
+			else
+				c_doctype_id = counterDoc.getC_DocType_ID();
+		}
+		
+		
+		
+		TF_MPayment payment = new TF_MPayment(getCtx(), 0, get_TrxName());
+		payment.setAD_Org_ID(counterOrgID);
+		payment.setRef_Payment_ID(getC_Payment_ID());
+		payment.setDateTrx(getDateTrx());
+		payment.setDateAcct(getDateAcct());		
+		payment.setC_BankAccount_ID(counterCashID);
+		payment.setC_DocType_ID(c_doctype_id);
+		payment.setIsReceipt(!isReceipt());
+		payment.setC_ElementValue_ID(counterAcctID);
+		TF_MCharge charge = TF_MCharge.createChargeFromAccount(getCtx(), getC_ElementValue_ID(), null);
+		if(charge != null )
+			setC_Charge_ID(charge.get_ID());		
+		payment.setUser1_ID(getUser1_ID());
+		payment.setUser2_ID(getUser2_ID());
+		payment.setC_BPartner_ID(getC_BPartner_ID());		
+		payment.setC_Currency_ID(getC_Currency_ID());
+		payment.setPayAmt(getPayAmt());
+		payment.setTenderType(getTenderType());
+		payment.setDescription(getDescription());		
+		payment.saveEx();
+		
+		if(!payment.processIt(DocAction.ACTION_Complete))
+			throw new AdempiereException("Failed when processing document - " + payment.getProcessMsg());
+		payment.saveEx();
+		
+		setRef_Payment_ID(payment.getC_Payment_ID());
+		
+	}
+	
+		
 }
