@@ -13,6 +13,8 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutEmployeeSalary;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutEmployeeSalaryIssue_CalcBalanceAmts;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutEmployeeSalaryIssue_SetOpenAmt;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutFuelIssue_CalcAmount;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutInterOrgCash_DestAccount;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutInterOrgCash_SrcOrg;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutInvoiceHeaderItemAmount;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutJournal_QuickEntryMode;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutLabourWage;
@@ -55,6 +57,7 @@ import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalary;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryIssue;
 import org.syvasoft.tallyfrontcrusher.model.MFuelIssue;
+import org.syvasoft.tallyfrontcrusher.model.MInterOrgCashTransfer;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkResourceRentEntry;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWage;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWageIssue;
@@ -275,6 +278,14 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 				|| columnName.equals(MFuelIssue.COLUMNNAME_Rate))) {
 			list.add(new CalloutFuelIssue_CalcAmount());
 		}
+		
+		if(tableName.equals(MInterOrgCashTransfer.Table_Name)) {
+			if(columnName.equals(MInterOrgCashTransfer.COLUMNNAME_Dest_Acct_ID))
+				list.add(new CalloutInterOrgCash_DestAccount());
+			if(columnName.equals(MInterOrgCashTransfer.COLUMNNAME_Src_Org_ID))
+				list.add(new CalloutInterOrgCash_SrcOrg());
+		}
+		
 		return list != null ? list.toArray(new IColumnCallout[0]) : new IColumnCallout[0];
 	}
 
