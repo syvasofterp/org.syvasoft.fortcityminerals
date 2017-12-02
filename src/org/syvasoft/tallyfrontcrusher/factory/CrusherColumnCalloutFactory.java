@@ -39,6 +39,7 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_ElementValue;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_FromToBankAccount;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_Org;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_TFBPartner;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutProduct_CalcTotalValue;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutRentalContract_ResourceType;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutRentalContract_VehicleNo;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetFuelExpensed;
@@ -72,6 +73,7 @@ import org.syvasoft.tallyfrontcrusher.model.TF_MInvoice;
 import org.syvasoft.tallyfrontcrusher.model.TF_MJournal;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
 import org.syvasoft.tallyfrontcrusher.model.TF_MPayment;
+import org.syvasoft.tallyfrontcrusher.model.TF_MProduct;
 
 public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 
@@ -285,6 +287,11 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 			if(columnName.equals(MInterOrgCashTransfer.COLUMNNAME_Src_Org_ID))
 				list.add(new CalloutInterOrgCash_SrcOrg());
 		}
+		
+		//if(tableName.equals(TF_MProduct.Table_Name)) {
+		//	if(columnName.equals(TF_MProduct.COLUMNNAME_Qty) || columnName.equals(TF_MProduct.COLUMNNAME_Price))
+		//		list.add(new CalloutProduct_CalcTotalValue());
+		//}
 		
 		return list != null ? list.toArray(new IColumnCallout[0]) : new IColumnCallout[0];
 	}
