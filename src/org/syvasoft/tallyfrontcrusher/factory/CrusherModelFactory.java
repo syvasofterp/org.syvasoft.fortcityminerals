@@ -59,6 +59,7 @@ import org.syvasoft.tallyfrontcrusher.model.TF_MJournal;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrderLine;
 import org.syvasoft.tallyfrontcrusher.model.TF_MPayment;
+import org.syvasoft.tallyfrontcrusher.model.TF_MProduct;
 import org.syvasoft.tallyfrontcrusher.model.TF_MProject;
 import org.syvasoft.tallyfrontcrusher.model.TF_MResource;
 import org.syvasoft.tallyfrontcrusher.model.TF_MResourceType;
@@ -179,6 +180,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return MBPOpeningBalance.class;
 		else if (MInterOrgCashTransfer.Table_Name.equals(tableName))
 			return MInterOrgCashTransfer.class;
+		else if (TF_MProduct.Table_Name.equals(tableName))
+			return TF_MProduct.class;
 		return null;
 	}
 
@@ -297,6 +300,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MBPOpeningBalance(ctx, Record_ID, trxName);
 		else if (MInterOrgCashTransfer.Table_Name.equals(tableName))
 			return new MInterOrgCashTransfer(ctx, Record_ID, trxName);
+		else if (TF_MProduct.Table_Name.equals(tableName))
+			return new TF_MProduct(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -415,6 +420,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MBPOpeningBalance(ctx, rs, trxName);
 		else if (MInterOrgCashTransfer.Table_Name.equals(tableName))
 			return new MInterOrgCashTransfer(ctx, rs, trxName);
+		else if (TF_MProduct.Table_Name.equals(tableName))
+			return new TF_MProduct(ctx, rs, trxName);
 		return null;
 	}
 
