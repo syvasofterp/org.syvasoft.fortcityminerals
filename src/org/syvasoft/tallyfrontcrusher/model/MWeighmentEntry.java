@@ -32,8 +32,8 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		
 		if(getTareWeight().doubleValue() > 0 
 				&& is_ValueChanged(COLUMNNAME_TareWeight)) {
-			Timestamp tareWeightTime = new Timestamp(System.currentTimeMillis());
-			setTareWeightTime(tareWeightTime);
+			//Timestamp tareWeightTime = new Timestamp(System.currentTimeMillis());
+			//setTareWeightTime(tareWeightTime);
 			setStatus(STATUS_InProgress);
 			
 			if (getGrossWeight().doubleValue() > 0)
@@ -46,12 +46,12 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		
 		if(getGrossWeight().doubleValue() > 0 
 				&& is_ValueChanged(COLUMNNAME_GrossWeight) ) {
-			Timestamp grossWeightTime = new Timestamp(System.currentTimeMillis());
-			setGrossWeightTime(grossWeightTime);		
+			//Timestamp grossWeightTime = new Timestamp(System.currentTimeMillis());
+			//setGrossWeightTime(grossWeightTime);		
 			setStatus(STATUS_Unbilled);
 		}
 		else if(getGrossWeight().doubleValue() == 0) {
-			setGrossWeightTime(null);
+			//setGrossWeightTime(null);
 			setStatus(STATUS_InProgress);
 		}
 	
