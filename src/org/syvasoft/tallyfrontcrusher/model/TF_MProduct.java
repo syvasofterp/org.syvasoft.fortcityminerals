@@ -184,19 +184,19 @@ public class TF_MProduct extends MProduct {
 	}
 	
 	public void setOpeningBalance(boolean newRecord) {
-		//if(newRecord || is_ValueChanged(COLUMNNAME_Price)
-		//		|| is_ValueChanged(COLUMNNAME_OpeningDate)) {
-		//	if(getM_Inventory_ID() > 0) {
-		//		MInventory prevInv = new MInventory(getCtx(), getCostAdj_Inventory_ID(), get_TrxName());
-		//		if (!prevInv.processIt(DocAction.ACTION_Reverse_Correct))
-		//			throw new AdempiereException("Failed when processing document - " + prevInv.getProcessMsg());
-		//		prevInv.saveEx();
-		//		//Update Inventory ID back to Product Master.
-		//		DB.executeUpdate("UPDATE M_Product SET CostAdj_Inventory_ID=NULL WHERE M_Product_ID ="
-		//				+ getM_Product_ID(), get_TrxName());
-		//	}			
-		//	setOpeningCost(newRecord);
-		//}
+		if(newRecord || is_ValueChanged(COLUMNNAME_Price)
+				|| is_ValueChanged(COLUMNNAME_OpeningDate)) {
+			//if(getM_Inventory_ID() > 0) {
+			//	MInventory prevInv = new MInventory(getCtx(), getCostAdj_Inventory_ID(), get_TrxName());
+			//	if (!prevInv.processIt(DocAction.ACTION_Reverse_Correct))
+			//		throw new AdempiereException("Failed when processing document - " + prevInv.getProcessMsg());
+			//	prevInv.saveEx();
+			//	//Update Inventory ID back to Product Master.
+			//	DB.executeUpdate("UPDATE M_Product SET CostAdj_Inventory_ID=NULL WHERE M_Product_ID ="
+			//			+ getM_Product_ID(), get_TrxName());
+			//}			
+			setOpeningCost(newRecord);
+		}
 		
 		
 		if(newRecord || is_ValueChanged(COLUMNNAME_Qty)
@@ -251,7 +251,7 @@ public class TF_MProduct extends MProduct {
 		MInventoryLine costingLine = new MInventoryLine(getCtx(), 0, get_TrxName());
 		costingLine.setM_Inventory_ID(inv.getM_Inventory_ID());
 		costingLine.setM_Product_ID(getM_Product_ID());		
-		costingLine.setCurrentCostPrice(cost.getCurrentCostPrice());
+		costingLine.setCurrentCostPrice(cost==null?BigDecimal.ZERO:cost.getCurrentCostPrice());
 		costingLine.setNewCostPrice(getPrice());
 		costingLine.setM_Locator_ID(M_Locator_ID);
 		costingLine.setAD_Org_ID(getAD_Org_ID());
@@ -259,9 +259,11 @@ public class TF_MProduct extends MProduct {
 		costingLine.saveEx();
 		//Inventory Line	
 		
+		//inv.processIt(DocAction.ACTION_Prepare);
 		inv.processIt(DocAction.ACTION_Complete);
 		inv.saveEx();
-		
+					
+				
 		//Update Inventory ID back to Product Master.
 		DB.executeUpdate("UPDATE M_Product SET CostAdj_Inventory_ID=" + inv.getM_Inventory_ID() + " WHERE M_Product_ID ="
 				+ getM_Product_ID(), get_TrxName());
