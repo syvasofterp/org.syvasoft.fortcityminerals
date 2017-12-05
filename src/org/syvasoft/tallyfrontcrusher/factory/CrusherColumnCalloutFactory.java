@@ -31,6 +31,7 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_POSCashBP;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_RentedVehicle;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_SOUnitPriceRent;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_SetTonnage;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_Warehouse;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_WeighmentEntry;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPaymentCashType;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_CalcSalaryBalannceAmts;
@@ -233,6 +234,10 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 				columnName.equals(TF_MOrder.COLUMNNAME_Rate) || columnName.equals(TF_MOrder.COLUMNNAME_IsLumpSumRent))) {			
 			list.add(new CalloutOrder_CalcRentAmount());
 			list.add(new CalloutOrder_SOUnitPriceRent());
+		}
+		
+		if(tableName.equals(TF_MOrder.Table_Name) && columnName.equals(TF_MOrder.COLUMNNAME_M_Warehouse_ID)) {
+			list.add(new CalloutOrder_Warehouse());
 		}
 		
 		if(tableName.equals(MWeighmentEntry.Table_Name)) {

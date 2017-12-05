@@ -292,6 +292,57 @@ public class TF_MProject extends MProject {
 		return (String)get_Value(COLUMNNAME_DocAction);
 	}
 	
+	/** Column name SubcontractType */
+    public static final String COLUMNNAME_SubcontractType = "SubcontractType";
+    /** Crusher Production = CP */
+	public static final String SUBCONTRACTTYPE_CrusherProduction = "CP";
+	/** Quarry Producton = QP */
+	public static final String SUBCONTRACTTYPE_QuarryProducton = "QP";
+	/** Set Subcontract Type.
+		@param SubcontractType Subcontract Type	  */
+	public void setSubcontractType (String SubcontractType)
+	{
+
+		set_Value (COLUMNNAME_SubcontractType, SubcontractType);
+	}
+
+	/** Get Subcontract Type.
+		@return Subcontract Type	  */
+	public String getSubcontractType () 
+	{
+		return (String)get_Value(COLUMNNAME_SubcontractType);
+	}
+
+	/** Column name M_Warehouse_ID */
+    public static final String COLUMNNAME_M_Warehouse_ID = "M_Warehouse_ID";
+    public org.compiere.model.I_M_Warehouse getM_Warehouse() throws RuntimeException
+    {
+		return (org.compiere.model.I_M_Warehouse)MTable.get(getCtx(), org.compiere.model.I_M_Warehouse.Table_Name)
+			.getPO(getM_Warehouse_ID(), get_TrxName());	}
+
+	/** Set Warehouse.
+		@param M_Warehouse_ID 
+		Storage Warehouse and Service Point
+	  */
+	public void setM_Warehouse_ID (int M_Warehouse_ID)
+	{
+		if (M_Warehouse_ID < 1) 
+			set_Value (COLUMNNAME_M_Warehouse_ID, null);
+		else 
+			set_Value (COLUMNNAME_M_Warehouse_ID, Integer.valueOf(M_Warehouse_ID));
+	}
+
+	/** Get Warehouse.
+		@return Storage Warehouse and Service Point
+	  */
+	public int getM_Warehouse_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_M_Warehouse_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+	
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
 		if(getDocumentNo() != null && (getValue() == null || getValue().length()==0))
