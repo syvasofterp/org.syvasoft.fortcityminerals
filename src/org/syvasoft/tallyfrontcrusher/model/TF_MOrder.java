@@ -10,6 +10,7 @@ import java.util.Properties;
 import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.MBPartner;
 import org.compiere.model.MInOut;
+import org.compiere.model.MInOutLine;
 import org.compiere.model.MInvoiceLine;
 import org.compiere.model.MOrder;
 import org.compiere.model.MOrderLine;
@@ -19,6 +20,7 @@ import org.compiere.model.MProductPricing;
 import org.compiere.model.MResource;
 import org.compiere.model.MSysConfig;
 import org.compiere.model.MTable;
+import org.compiere.model.MWarehouse;
 import org.compiere.model.Query;
 import org.compiere.process.DocAction;
 import org.compiere.util.AdempiereUserError;
@@ -829,6 +831,60 @@ public class TF_MOrder extends MOrder {
 		}
 		return false;
 	}
+	
+	/** Column name Subcon_Invoice_ID */
+    public static final String COLUMNNAME_Subcon_Invoice_ID = "Subcon_Invoice_ID";
+    public org.compiere.model.I_C_Invoice getSubcon_Invoice() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Invoice)MTable.get(getCtx(), org.compiere.model.I_C_Invoice.Table_Name)
+			.getPO(getSubcon_Invoice_ID(), get_TrxName());	}
+
+	/** Set Subcontractor Invoice.
+		@param Subcon_Invoice_ID Subcontractor Invoice	  */
+	public void setSubcon_Invoice_ID (int Subcon_Invoice_ID)
+	{
+		if (Subcon_Invoice_ID < 1) 
+			set_Value (COLUMNNAME_Subcon_Invoice_ID, null);
+		else 
+			set_Value (COLUMNNAME_Subcon_Invoice_ID, Integer.valueOf(Subcon_Invoice_ID));
+	}
+
+	/** Get Subcontractor Invoice.
+		@return Subcontractor Invoice	  */
+	public int getSubcon_Invoice_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Subcon_Invoice_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+	
+    /** Column name Subcon_Receipt_ID */
+    public static final String COLUMNNAME_Subcon_Receipt_ID = "Subcon_Receipt_ID";
+    public org.compiere.model.I_M_InOut getSubcon_Receipt() throws RuntimeException
+    {
+		return (org.compiere.model.I_M_InOut)MTable.get(getCtx(), org.compiere.model.I_M_InOut.Table_Name)
+			.getPO(getSubcon_Receipt_ID(), get_TrxName());	}
+
+	/** Set Subcontractor Material Receipt.
+		@param Subcon_Receipt_ID Subcontractor Material Receipt	  */
+	public void setSubcon_Receipt_ID (int Subcon_Receipt_ID)
+	{
+		if (Subcon_Receipt_ID < 1) 
+			set_Value (COLUMNNAME_Subcon_Receipt_ID, null);
+		else 
+			set_Value (COLUMNNAME_Subcon_Receipt_ID, Integer.valueOf(Subcon_Receipt_ID));
+	}
+
+	/** Get Subcontractor Material Receipt.
+		@return Subcontractor Material Receipt	  */
+	public int getSubcon_Receipt_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Subcon_Receipt_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
 		
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
@@ -1004,9 +1060,10 @@ public class TF_MOrder extends MOrder {
 	
 	@Override
 	public String completeIt() {
+		createSubcontractPurchaseEntry();
 		String msg = super.completeIt();
 		createTransporterInvoice();
-		closeWeighmentEntry();
+		closeWeighmentEntry();		
 		return msg;
 	}
 
@@ -1051,6 +1108,7 @@ public class TF_MOrder extends MOrder {
 		MJobworkItemIssue.ReverseFromPO(this);
 		reverseTransporterInvoice();
 		reverseWeighmentEntry();
+		reverseSubcontractPurchaseEntry();
 		return super.voidIt();
 	}
 	
@@ -1087,6 +1145,7 @@ public class TF_MOrder extends MOrder {
 		MJobworkItemIssue.ReverseFromPO(this);
 		reverseTransporterInvoice();
 		reverseWeighmentEntry();
+		reverseSubcontractPurchaseEntry();
 		return super.reActivateIt();
 	}
 
@@ -1260,4 +1319,112 @@ public class TF_MOrder extends MOrder {
 		}
 		return prodPrice;
 	}
+	
+	
+	public void createSubcontractPurchaseEntry() {
+		if(getC_Project_ID() == 0 || !isSOTrx())
+			return;
+		
+		TF_MProject proj = new TF_MProject(getCtx(), getC_Project_ID(), get_TrxName());
+		if(!TF_MProject.SUBCONTRACTTYPE_CrusherProduction.equals(proj.getSubcontractType()))
+			return;
+		
+		//Crusher Production Subcontract Purchase		
+		BigDecimal purchasePrice = MJobworkProductPrice.getPrice(getCtx(), getC_Project_ID(), getItem1_ID(), getDateAcct()) ;
+		if(purchasePrice == null)
+			throw new AdempiereException("Please setup Contract Price for " + getItem1().getName() + "!");
+		
+		TF_MBPartner bp = new TF_MBPartner(getCtx(), proj.getC_BPartner_ID(), get_TrxName());
+		
+		//Debit Note Header
+		TF_MInvoice invoice = new TF_MInvoice(getCtx(), 0, get_TrxName());
+		invoice.setClientOrg(getAD_Client_ID(), getAD_Org_ID());
+		invoice.setC_DocTypeTarget_ID(1000005);	// AP Invoice		
+		invoice.setDateInvoiced(getDateOrdered());
+		invoice.setDateAcct(getDateAcct());
+		//
+		invoice.setSalesRep_ID(Env.getAD_User_ID(getCtx()));
+		//
+		
+		invoice.setBPartner(bp);
+		invoice.setIsSOTrx(false);		
+		
+		invoice.setDescription("Created from Sales: " + getDocumentNo());
+		
+		//Price List
+		int m_M_PriceList_ID = Env.getContextAsInt(getCtx(), "#M_PriceList_ID");
+		if(bp.getPO_PriceList_ID() > 0)
+			m_M_PriceList_ID = bp.getPO_PriceList_ID();			
+		invoice.setM_PriceList_ID(m_M_PriceList_ID);
+		invoice.setC_Currency_ID(MPriceList.get(getCtx(), m_M_PriceList_ID, get_TrxName()).getC_Currency_ID());
+		
+		//Financial Dimension - Profit Center
+		invoice.setUser1_ID(getUser1_ID());
+		
+		invoice.saveEx();
+		//End Invoice Header
+		
+		//Invoice Line - Vehicle Rental Charge
+		MInvoiceLine invLine = new MInvoiceLine(invoice);
+		invLine.setM_Product_ID(getItem1_ID() , true);
+				
+		
+		invLine.setQty(getItem1_Qty());					
+		
+		invLine.setPriceActual(purchasePrice);
+		invLine.setPriceList(purchasePrice);
+		invLine.setPriceLimit(purchasePrice);
+		invLine.setPriceEntered(purchasePrice);
+		
+		invLine.setC_Tax_ID(1000000);
+				
+		//MM Receipt
+		MInOut inout = new MInOut(invoice, 1000014, getDateAcct(), getM_Warehouse_ID());
+		inout.setDescription(invoice.getDescription());
+		inout.setMovementType(MInOut.MOVEMENTTYPE_VendorReceipts);
+		inout.saveEx(get_TrxName());
+		
+		//Material Issue Line
+		MInOutLine ioLine = new MInOutLine(inout);
+		MWarehouse wh = (MWarehouse) getM_Warehouse();
+		ioLine.setInvoiceLine(invLine, wh.getDefaultLocator().get_ID(), getItem1_Qty());
+		ioLine.setQty(getItem1_Qty());
+		ioLine.saveEx(get_TrxName());
+		
+		//Material Receipt DocAction
+		if (!inout.processIt(DocAction.ACTION_Complete))
+			throw new AdempiereException("Failed when processing document - " + invoice.getProcessMsg());
+		inout.saveEx();
+		//End DocAction
+		
+		invLine.setM_InOutLine_ID(ioLine.getM_InOutLine_ID());
+		invLine.saveEx();
+		
+		//Debit Note DocAction
+		if (!invoice.processIt(DocAction.ACTION_Complete))
+			throw new AdempiereException("Failed when processing document - " + invoice.getProcessMsg());
+		invoice.saveEx();
+		//End DocAction
+		
+		setSubcon_Invoice_ID(invoice.getC_Invoice_ID());
+		setSubcon_Receipt_ID(inout.getM_InOut_ID());
+		
+	}
+	
+	public void reverseSubcontractPurchaseEntry() {
+		if(getSubcon_Invoice_ID() > 0) {			
+			TF_MInvoice inv = new TF_MInvoice(getCtx(), getSubcon_Invoice_ID(), get_TrxName());			
+			inv.reverseCorrectIt();
+			inv.saveEx();
+			setSubcon_Invoice_ID(0);
+		}
+		if(getSubcon_Receipt_ID() > 0) {
+			MInOut io = new MInOut(getCtx(), getSubcon_Receipt_ID(), get_TrxName());
+			io.reverseCorrectIt();
+			io.saveEx();
+			setSubcon_Receipt_ID(0);
+		}
+		
+	}
+	
 }
