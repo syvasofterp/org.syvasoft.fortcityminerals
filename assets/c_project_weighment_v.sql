@@ -1,4 +1,4 @@
-﻿-- View: c_project_weighment_v
+-- View: c_project_weighment_v
 
 -- DROP VIEW c_project_weighment_v;
 
@@ -29,12 +29,14 @@ CREATE OR REPLACE VIEW c_project_weighment_v AS
     u.name AS uom_name,
     pr.unit_price,
     pr.docstatus,
-    pr.processed
+    pr.processed,
+    pr.SubcontractType,
+    pr.M_Warehouse_ID
    FROM c_project pr
      JOIN c_bpartner bp ON pr.c_bpartner_id = bp.c_bpartner_id
      JOIN c_paymentterm pt ON pt.c_paymentterm_id = pr.c_paymentterm_id
      JOIN c_currency cur ON cur.c_currency_id = pr.c_currency_id
-     JOIN m_product pd ON pd.m_product_id = pr.jobwork_product_id
+     LEFT JOIN m_product pd ON pd.m_product_id = pr.jobwork_product_id
      JOIN c_uom u ON u.c_uom_id = pr.c_uom_id
   WHERE pr.docstatus::text = 'IP'::text;
 
