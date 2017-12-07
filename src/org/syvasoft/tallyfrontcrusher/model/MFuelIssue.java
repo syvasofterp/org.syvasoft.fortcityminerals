@@ -60,7 +60,7 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 		//setRate(cost.getCurrentCostPrice());
 		
 		//if(isCalculated()) {			
-			setAmt(getQty().multiply(getRate()));
+			//setAmt(getQty().multiply(getRate()));
 		//}
 		
 		//if(is_ValueChanged(COLUMNNAME_M_Product_ID) || is_ValueChanged(COLUMNNAME_Qty)) {
@@ -89,11 +89,18 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 		else if(DocAction.ACTION_Complete.equals(docAction)) {
 			setDocStatus(DOCSTATUS_Completed);
 			setProcessed(true);
+			MRentedVehicle rv = null;
+			TF_MProject proj = null;
 			
-			MRentedVehicle rv = new Query(getCtx(), MRentedVehicle.Table_Name, "M_Product_ID=?", get_TrxName())
-					.setParameters(getVehicle_ID()).first();
-			if(rv != null) {
-				createDebitNote(rv);
+			if(getVehicle_ID() > 0)
+				rv = new Query(getCtx(), MRentedVehicle.Table_Name, "M_Product_ID=?", get_TrxName())
+						.setParameters(getVehicle_ID()).first();
+			else if(getC_Project_ID() > 0)
+				proj = new TF_MProject(getCtx(), getC_Project_ID(), get_TrxName());
+			
+			
+			if(rv != null || proj != null) {
+				createDebitNote(rv, proj);
 			}
 			else {
 				createInternalUseInventory(docAction);
@@ -130,9 +137,14 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 		setM_Inventory_ID(inv.getM_Inventory_ID());	
 	}
 	
-	private void createDebitNote(MRentedVehicle rv) {	
+	private void createDebitNote(MRentedVehicle rv, TF_MProject proj) {	
+		int bPartnerID = 0;
+		if(rv != null)
+			bPartnerID = rv.getC_BPartner_ID();
+		else
+			bPartnerID = proj.getC_BPartner_ID();
 		
-		TF_MBPartner bp = new TF_MBPartner(getCtx(), rv.getC_BPartner_ID(), get_TrxName());
+		TF_MBPartner bp = new TF_MBPartner(getCtx(), bPartnerID, get_TrxName());
 		
 		//Debit Note Header
 		TF_MInvoice invoice = new TF_MInvoice(getCtx(), 0, get_TrxName());
@@ -147,7 +159,16 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 		invoice.setBPartner(bp);
 		invoice.setIsSOTrx(false);		
 		
-		invoice.setDescription("Ref: Fuel Issue Entry : " + getDocumentNo());
+		String description = "";			
+		if(getM_Product_ID() > 0)
+			description = "Fuel/Material Issue Entry:";
+		
+		if(getAccount_ID() > 0)
+			description = "Expense Issue Entry:";
+		
+		invoice.setDescription(description + getDocumentNo());
+		if(getDescription() != null)			 		
+			invoice.addDescription(getDescription());
 		
 		//Price List
 		int m_M_PriceList_ID = Env.getContextAsInt(getCtx(), "#M_PriceList_ID");
@@ -158,46 +179,70 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 		
 		//Financial Dimension - Profit Center
 		invoice.setUser1_ID(getC_ElementValue_ID());
+		invoice.setC_Project_ID(getC_Project_ID());
 		
 		invoice.saveEx();
 		//End Invoice Header
 		
 		//Invoice Line - Vehicle Rental Charge
 		MInvoiceLine invLine = new MInvoiceLine(invoice);
-		invLine.setM_Product_ID(getM_Product_ID(), true);
-		invLine.setDescription("Fuel Issued to " + rv.getVehicleNo());
 		
+		if(getM_Product_ID() > 0) {
+			invLine.setM_Product_ID(getM_Product_ID(), true);
+			invLine.setQty(getQty());
+			BigDecimal price = getRate();			
+			
+			invLine.setPriceActual(price);
+			invLine.setPriceList(price);
+			invLine.setPriceLimit(price);
+			invLine.setPriceEntered(price);
+		}
 		
-		invLine.setQty(getQty());
-		BigDecimal price = getRate();			
-		
-		invLine.setPriceActual(price);
-		invLine.setPriceList(price);
-		invLine.setPriceLimit(price);
-		invLine.setPriceEntered(price);
+		if(rv != null)
+			invLine.setDescription("Fuel / Material Issued to " + rv.getVehicleNo());
+		else if(proj != null && getM_Product_ID() > 0)
+			invLine.setDescription("Fuel / Material Issued to " + proj.getName() + " Subcontract");
+		else {
+			TF_MCharge ch = TF_MCharge.createChargeFromAccount(getCtx(), getAccount_ID(), null);
+			invLine.setC_Charge_ID(ch.getC_Charge_ID());
+			invLine.setC_UOM_ID(getC_UOM_ID());
+			invLine.setQty(BigDecimal.ONE);
+			BigDecimal price = getAmt(); 			
+			
+			invLine.setPriceActual(price);
+			invLine.setPriceList(price);
+			invLine.setPriceLimit(price);
+			invLine.setPriceEntered(price);
+			invLine.setDescription("Expense incurred to " + proj.getName() + " Subcontract");
+			
+		}
 		
 		invLine.setC_Tax_ID(1000000);
+		
+		if(getM_Product_ID() > 0) { 
+			//Material Issue
+			MInOut inout = new MInOut(invoice, MGLPostingConfig.getMGLPostingConfig(getCtx()).getMaterialIssue_DocType_ID(), getDateAcct(), getM_Warehouse_ID());
+			inout.setDescription(invoice.getDescription());
+			inout.setMovementType(MInOut.MOVEMENTTYPE_VendorReturns);
+			inout.saveEx(get_TrxName());
+			
+			//Material Issue Line
+			MInOutLine ioLine = new MInOutLine(inout);
+			MWarehouse wh = (MWarehouse) getM_Warehouse();
+			ioLine.setInvoiceLine(invLine, wh.getDefaultLocator().get_ID(), getQty());
+			ioLine.setQty(getQty());
+			ioLine.saveEx(get_TrxName());
+			
+			//Material Issue DocAction
+			if (!inout.processIt(DocAction.ACTION_Complete))
+				throw new AdempiereException("Failed when processing document - " + invoice.getProcessMsg());
+			inout.saveEx();
+			//End DocAction
+			
+			invLine.setM_InOutLine_ID(ioLine.getM_InOutLine_ID());
+			setM_InOut_ID(inout.getM_InOut_ID());
+		}
 				
-		//Material Issue
-		MInOut inout = new MInOut(invoice, MGLPostingConfig.getMGLPostingConfig(getCtx()).getMaterialIssue_DocType_ID(), getDateAcct(), getM_Warehouse_ID());
-		inout.setDescription(invoice.getDescription());
-		inout.setMovementType(MInOut.MOVEMENTTYPE_VendorReturns);
-		inout.saveEx(get_TrxName());
-		
-		//Material Issue Line
-		MInOutLine ioLine = new MInOutLine(inout);
-		MWarehouse wh = (MWarehouse) getM_Warehouse();
-		ioLine.setInvoiceLine(invLine, wh.getDefaultLocator().get_ID(), getQty());
-		ioLine.setQty(getQty());
-		ioLine.saveEx(get_TrxName());
-		
-		//Material Issue DocAction
-		if (!inout.processIt(DocAction.ACTION_Complete))
-			throw new AdempiereException("Failed when processing document - " + invoice.getProcessMsg());
-		inout.saveEx();
-		//End DocAction
-		
-		invLine.setM_InOutLine_ID(ioLine.getM_InOutLine_ID());
 		invLine.saveEx();
 		
 		//Debit Note DocAction
@@ -206,8 +251,7 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 		invoice.saveEx();
 		//End DocAction
 		
-		setDebitNote_Invoice_ID(invoice.getC_Invoice_ID());
-		setM_InOut_ID(inout.getM_InOut_ID());
+		setDebitNote_Invoice_ID(invoice.getC_Invoice_ID());		
 		
 	}
 	

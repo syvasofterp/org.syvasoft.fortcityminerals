@@ -59,7 +59,7 @@ public class CalloutPayment_ElementValue implements IColumnCallout {
 		else if(isSalaryAdvance) {
 			description = "Advance Paid";
 		}
-		else if(mTab.getValueAsBoolean(TF_MPayment.COLUMNNAME_IsInterCashBookEntry)) {
+		else if(mTab.getValue(TF_MPayment.COLUMNNAME_FromTo_BankAccount_ID) != null) {
 			//do not change description.
 			description = (String) mTab.getValue(TF_MPayment.COLUMNNAME_Description); 
 		}

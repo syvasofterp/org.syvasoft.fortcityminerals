@@ -43,6 +43,21 @@ public interface I_TF_Fuel_Issue
 
     /** Load Meta Data */
 
+    /** Column name Account_ID */
+    public static final String COLUMNNAME_Account_ID = "Account_ID";
+
+	/** Set Account.
+	  * Account used
+	  */
+	public void setAccount_ID (int Account_ID);
+
+	/** Get Account.
+	  * Account used
+	  */
+	public int getAccount_ID();
+
+	public org.compiere.model.I_C_ElementValue getAccount() throws RuntimeException;
+
     /** Column name AD_Client_ID */
     public static final String COLUMNNAME_AD_Client_ID = "AD_Client_ID";
 
@@ -91,6 +106,21 @@ public interface I_TF_Fuel_Issue
 	public int getC_ElementValue_ID();
 
 	public org.compiere.model.I_C_ElementValue getC_ElementValue() throws RuntimeException;
+
+    /** Column name C_Project_ID */
+    public static final String COLUMNNAME_C_Project_ID = "C_Project_ID";
+
+	/** Set Project.
+	  * Financial Project
+	  */
+	public void setC_Project_ID (int C_Project_ID);
+
+	/** Get Project.
+	  * Financial Project
+	  */
+	public int getC_Project_ID();
+
+	public org.compiere.model.I_C_Project getC_Project() throws RuntimeException;
 
     /** Column name C_UOM_ID */
     public static final String COLUMNNAME_C_UOM_ID = "C_UOM_ID";

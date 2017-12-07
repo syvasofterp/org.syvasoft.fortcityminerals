@@ -23,7 +23,7 @@ public class CalloutOrder_Warehouse implements IColumnCallout {
 		if(proj != null)
 			projectID = proj.getC_Project_ID();
 		
-		mTab.setValue(TF_MOrder.COLUMNNAME_C_Project_ID, projectID);
+		mTab.setValue(TF_MOrder.COLUMNNAME_C_Project_ID, projectID!=0?projectID:null);
 		
 		return null;
 	}
