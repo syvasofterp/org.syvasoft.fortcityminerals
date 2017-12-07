@@ -1,0 +1,76 @@
+package org.syvasoft.tallyfrontcrusher.model;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.Properties;
+
+import org.compiere.model.Query;
+import org.compiere.util.DB;
+import org.compiere.util.Env;
+import org.compiere.util.Trx;
+
+public class MSubcontractMaterialMovement extends X_TF_RMSubcon_Movement {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2861377545557568568L;
+
+	public MSubcontractMaterialMovement(Properties ctx, ResultSet rs, String trxName) {
+		super(ctx, rs, trxName);
+		// TODO Auto-generated constructor stub
+	}
+
+	public MSubcontractMaterialMovement(Properties ctx, int TF_RMSubcon_Movement_ID, String trxName) {
+		super(ctx, TF_RMSubcon_Movement_ID, trxName);
+		// TODO Auto-generated constructor stub
+	}
+	
+	public static void createRawmaterialMovementsFromWeighment(String trxName) {
+		String whereClause = "C_Project_ID IS NOT NULL AND Status='CO' AND Processed='N' AND TareWeightTime IS NOT NULL AND GrossWeightTime IS NOT NULL";
+		List<MWeighmentEntry> wEntries = new Query(Env.getCtx(), MWeighmentEntry.Table_Name, whereClause, trxName)
+				.list();
+		for(MWeighmentEntry entry : wEntries) {
+			MSubcontractMaterialMovement mov = new MSubcontractMaterialMovement(Env.getCtx(), 0, trxName);
+			mov.setAD_Org_ID(entry.getAD_Org_ID());
+			mov.setC_Project_ID(entry.getC_Project_ID());
+			mov.setC_BPartner_ID(entry.getC_BPartner_ID());
+			mov.setM_Product_ID(entry.getM_Product_ID());
+			mov.setTF_WeighmentEntry_ID(entry.getTF_WeighmentEntry_ID());
+			mov.setMovementDate(entry.getGrossWeightTime());
+			mov.setQty_Receipt(new BigDecimal(entry.getNetWeight().doubleValue()/1000));
+			mov.setProcessed(true);
+			mov.saveEx();
+			entry.setStatus(MWeighmentEntry.STATUS_Billed);
+			entry.setProcessed(true);
+			entry.saveEx();			
+		}
+	}
+
+	public static void createMaterialMovement(String trxName, Timestamp dateAcct, int C_Project_ID,  int C_Invoice_ID, 
+			int C_BPartner_ID, int M_Product_ID, BigDecimal QtyPayment) {
+		MSubcontractMaterialMovement mov = new MSubcontractMaterialMovement(Env.getCtx(), 0, trxName);
+		mov.setMovementDate(dateAcct);
+		mov.setC_Project_ID(C_Project_ID);
+		mov.setC_Invoice_ID(C_Invoice_ID);
+		mov.setC_BPartner_ID(C_BPartner_ID);
+		mov.setM_Product_ID(M_Product_ID);
+		mov.setQty_Payment(QtyPayment);
+		mov.setProcessed(true);
+		mov.saveEx();
+	}
+	
+	public static void deleteWeighmentMovement(int TF_WeighmentEntry_ID, String trxName) {
+		String sql = "DELETE FROM TF_RMSubcon_Movement WHERE TF_ WeighmentEntry_ID = " + TF_WeighmentEntry_ID;
+		DB.executeUpdate(sql, trxName);
+	}
+	
+	public static void deleteInvoiceMovement(int C_Invoice_ID, String trxName) {
+		String sql = "DELETE FROM TF_RMSubcon_Movement WHERE C_Invoice_ID = " + C_Invoice_ID;
+		DB.executeUpdate(sql, trxName);
+	}	
+	
+}

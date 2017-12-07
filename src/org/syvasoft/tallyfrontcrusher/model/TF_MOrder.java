@@ -1072,7 +1072,12 @@ public class TF_MOrder extends MOrder {
 		if(getVehicle_ID()>0 && getRent_Amt().doubleValue()==0) {
 			throw new AdempiereUserError("Invalid Rent Amount");
 		}
-			
+		
+		TF_MProject proj = new Query(getCtx(), TF_MProject.Table_Name, "M_Warehouse_ID=? AND DocStatus='IP'", null)
+				.setParameters(getM_Warehouse_ID()).first();
+		if(proj != null && getC_Project_ID() == 0)
+			setC_Project_ID(proj.getC_Project_ID());
+		
 		return super.beforeSave(newRecord);
 	}
 
@@ -1324,9 +1329,10 @@ public class TF_MOrder extends MOrder {
 	public void createSubcontractPurchaseEntry() {
 		if(getC_Project_ID() == 0 || !isSOTrx())
 			return;
-		
+				
 		TF_MProject proj = new TF_MProject(getCtx(), getC_Project_ID(), get_TrxName());
-		if(!TF_MProject.SUBCONTRACTTYPE_CrusherProduction.equals(proj.getSubcontractType()))
+		if(!TF_MProject.SUBCONTRACTTYPE_CrusherProduction.equals(proj.getSubcontractType()) &&
+				proj.getM_Warehouse_ID() != getM_Warehouse_ID())
 			return;
 		
 		//Crusher Production Subcontract Purchase		
@@ -1405,10 +1411,10 @@ public class TF_MOrder extends MOrder {
 			throw new AdempiereException("Failed when processing document - " + invoice.getProcessMsg());
 		invoice.saveEx();
 		//End DocAction
-		
+		MSubcontractMaterialMovement.createMaterialMovement(get_TrxName(), getDateAcct(), getC_Project_ID(),
+				invoice.getC_Invoice_ID(), invoice.getC_BPartner_ID(), getItem1_ID(), getItem1_Qty());
 		setSubcon_Invoice_ID(invoice.getC_Invoice_ID());
-		setSubcon_Receipt_ID(inout.getM_InOut_ID());
-		
+		setSubcon_Receipt_ID(inout.getM_InOut_ID());		
 	}
 	
 	public void reverseSubcontractPurchaseEntry() {
@@ -1416,6 +1422,7 @@ public class TF_MOrder extends MOrder {
 			TF_MInvoice inv = new TF_MInvoice(getCtx(), getSubcon_Invoice_ID(), get_TrxName());			
 			inv.reverseCorrectIt();
 			inv.saveEx();
+			MSubcontractMaterialMovement.deleteInvoiceMovement(inv.getC_Invoice_ID(), get_TrxName());
 			setSubcon_Invoice_ID(0);
 		}
 		if(getSubcon_Receipt_ID() > 0) {

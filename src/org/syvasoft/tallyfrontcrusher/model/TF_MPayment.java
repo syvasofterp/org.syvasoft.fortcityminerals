@@ -213,14 +213,14 @@ public class TF_MPayment extends MPayment {
 		@return Inter Cash Book Entry	  */
 	public boolean isInterCashBookEntry () 
 	{
-		Object oo = get_Value(COLUMNNAME_IsInterCashBookEntry);
-		if (oo != null) 
-		{
-			 if (oo instanceof Boolean) 
-				 return ((Boolean)oo).booleanValue(); 
-			return "Y".equals(oo);
-		}
-		return false;
+		//Object oo = get_Value(COLUMNNAME_IsInterCashBookEntry);
+		//if (oo != null) 
+		//{
+		//	 if (oo instanceof Boolean) 
+		//		 return ((Boolean)oo).booleanValue(); 
+		//	return "Y".equals(oo);
+		//}
+		return getFromTo_BankAccount_ID()>0;
 	}
     
 	/** Column name IsAutocomplete */

@@ -16,11 +16,11 @@ public class CalloutPayment_FromToBankAccount implements IColumnCallout {
 	@Override
 	public String start(Properties ctx, int WindowNo, GridTab mTab, GridField mField, Object value, Object oldValue) {
 		int ElementValue_ID = 0;		
-		if(mField.getColumnName().equals(TF_MPayment.COLUMNNAME_IsInterCashBookEntry)) {
-			boolean isInter = (boolean) mTab.getValue(TF_MPayment.COLUMNNAME_IsInterCashBookEntry);
+		if(mField.getColumnName().equals(TF_MPayment.COLUMNNAME_FromTo_BankAccount_ID)) {
+			boolean isInter = mTab.getValue(TF_MPayment.COLUMNNAME_FromTo_BankAccount_ID) != null;
 			if(!isInter) { 
-				mTab.setValue(TF_MPayment.COLUMNNAME_FromTo_BankAccount_ID, 0);	
-				mTab.setValue(TF_MPayment.COLUMNNAME_C_ElementValue_ID, 0);
+				mTab.setValue(TF_MPayment.COLUMNNAME_FromTo_BankAccount_ID, null);	
+				mTab.setValue(TF_MPayment.COLUMNNAME_C_ElementValue_ID, null);
 				mTab.setValue(TF_MPayment.COLUMNNAME_Description, null);
 			}
 			else {
