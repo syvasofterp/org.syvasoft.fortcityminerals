@@ -14,13 +14,14 @@ public class CalloutPayment_Org implements IColumnCallout {
 
 	@Override
 	public String start(Properties ctx, int WindowNo, GridTab mTab, GridField mField, Object value, Object oldValue) {
-		if(mTab.getValue(TF_MPayment.COLUMNNAME_AD_Org_ID) != null) {
-			int orgId = (int) mTab.getValue(TF_MPayment.COLUMNNAME_AD_Org_ID);
-			List<MBankAccount> accts = new Query(ctx, MBankAccount.Table_Name, "AD_Org_ID=?", null)
-					.setOnlyActiveRecords(true).setParameters(orgId).setOrderBy("IsDefault DESC, BankAccountType").list();
-			if(accts.size() > 0)
-				mTab.setValue(TF_MPayment.COLUMNNAME_C_BankAccount_ID, accts.get(0).getC_BankAccount_ID());
-		}
+		/// Commented to preserve previous entry's bank account to current entry.
+		//if(mTab.getValue(TF_MPayment.COLUMNNAME_AD_Org_ID) != null) {
+		//	int orgId = (int) mTab.getValue(TF_MPayment.COLUMNNAME_AD_Org_ID);
+		//	List<MBankAccount> accts = new Query(ctx, MBankAccount.Table_Name, "AD_Org_ID=?", null)
+		//			.setOnlyActiveRecords(true).setParameters(orgId).setOrderBy("IsDefault DESC, BankAccountType").list();
+		//	if(accts.size() > 0)
+		//		mTab.setValue(TF_MPayment.COLUMNNAME_C_BankAccount_ID, accts.get(0).getC_BankAccount_ID());
+		//}
 		return null;
 	}
 
