@@ -54,8 +54,6 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 			//setGrossWeightTime(null);
 			setStatus(STATUS_InProgress);
 		}
-	
-		
 		
 		return ok;
 	}
