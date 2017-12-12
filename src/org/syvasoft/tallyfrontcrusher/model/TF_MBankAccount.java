@@ -269,6 +269,7 @@ public class TF_MBankAccount extends MBankAccount {
 			 acct.setIsSummary(false);
 			 acct.setIsBankAccount(true);
 			 acct.setIsDocControlled(true);
+			 acct.setDefaultOrg_ID(getAD_Org_ID());
 			 acct.saveEx();
 		 return acct.getC_ElementValue_ID();
 		}

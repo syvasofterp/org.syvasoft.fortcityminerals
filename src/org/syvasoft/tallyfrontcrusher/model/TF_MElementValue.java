@@ -72,7 +72,28 @@ public class TF_MElementValue extends MElementValue {
 			 return 0;
 		return ii.intValue();
 	}
-    
+
+	/** Column name DefaultOrg_ID */
+    public static final String COLUMNNAME_DefaultOrg_ID = "DefaultOrg_ID";
+    /** Set Default Org.
+	@param DefaultOrg_ID Default Org	  */
+	public void setDefaultOrg_ID (int DefaultOrg_ID)
+	{
+		if (DefaultOrg_ID < 1) 
+			set_Value (COLUMNNAME_DefaultOrg_ID, null);
+		else 
+			set_Value (COLUMNNAME_DefaultOrg_ID, Integer.valueOf(DefaultOrg_ID));
+	}
+	
+	/** Get Default Org.
+		@return Default Org	  */
+	public int getDefaultOrg_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_DefaultOrg_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
 	
 	@Override
 	protected boolean beforeSave(boolean newRecord) {		

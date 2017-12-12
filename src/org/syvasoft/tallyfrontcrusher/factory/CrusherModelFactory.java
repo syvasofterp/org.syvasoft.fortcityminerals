@@ -19,6 +19,8 @@ import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryIssue;
 import org.syvasoft.tallyfrontcrusher.model.MFuelIssue;
 import org.syvasoft.tallyfrontcrusher.model.MGLPostingConfig;
 import org.syvasoft.tallyfrontcrusher.model.MInterOrgCashTransfer;
+import org.syvasoft.tallyfrontcrusher.model.MInvestmentReceipt;
+import org.syvasoft.tallyfrontcrusher.model.MInvestmentStructure;
 import org.syvasoft.tallyfrontcrusher.model.MItemReceiptOtherSrc;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkCharges;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkExpense;
@@ -37,6 +39,8 @@ import org.syvasoft.tallyfrontcrusher.model.MQuarry;
 import org.syvasoft.tallyfrontcrusher.model.MQuarryRent;
 import org.syvasoft.tallyfrontcrusher.model.MQuarryRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MRentedVehicle;
+import org.syvasoft.tallyfrontcrusher.model.MShareholder;
+import org.syvasoft.tallyfrontcrusher.model.MShareholderType;
 import org.syvasoft.tallyfrontcrusher.model.MSubcontractMaterialMovement;
 import org.syvasoft.tallyfrontcrusher.model.MTripSheet;
 import org.syvasoft.tallyfrontcrusher.model.MTyre;
@@ -185,6 +189,14 @@ public class CrusherModelFactory implements IModelFactory {
 			return TF_MProduct.class;
 		else if (MSubcontractMaterialMovement.Table_Name.equals(tableName))
 			return MSubcontractMaterialMovement.class;
+		else if (MShareholderType.Table_Name.equals(tableName))
+			return MShareholderType.class;
+		else if (MShareholder.Table_Name.equals(tableName))
+			return MShareholder.class;
+		else if (MInvestmentStructure.Table_Name.equals(tableName))
+			return MInvestmentStructure.class;
+		else if (MInvestmentReceipt.Table_Name.equals(tableName))
+			return MInvestmentReceipt.class;
 		return null;
 	}
 
@@ -307,6 +319,14 @@ public class CrusherModelFactory implements IModelFactory {
 			return new TF_MProduct(ctx, Record_ID, trxName);
 		else if (MSubcontractMaterialMovement.Table_Name.equals(tableName))
 			return new MSubcontractMaterialMovement(ctx, Record_ID, trxName);
+		else if (MShareholderType.Table_Name.equals(tableName))
+			return new MShareholderType(ctx, Record_ID, trxName); 
+		else if (MShareholder.Table_Name.equals(tableName))
+			return new MShareholder(ctx, Record_ID, trxName);
+		else if (MInvestmentStructure.Table_Name.equals(tableName))
+			return new MInvestmentStructure(ctx, Record_ID, trxName);
+		else if (MInvestmentReceipt.Table_Name.equals(tableName))
+			return new MInvestmentReceipt(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -429,6 +449,14 @@ public class CrusherModelFactory implements IModelFactory {
 			return new TF_MProduct(ctx, rs, trxName);
 		else if (MSubcontractMaterialMovement.Table_Name.equals(tableName))
 			return new MSubcontractMaterialMovement(ctx, rs, trxName);
+		else if (MShareholderType.Table_Name.equals(tableName))
+			return new MShareholderType(ctx, rs, trxName); 
+		else if (MShareholder.Table_Name.equals(tableName))
+			return new MShareholder(ctx, rs, trxName);
+		else if (MInvestmentStructure.Table_Name.equals(tableName))
+			return new MInvestmentStructure(ctx, rs, trxName);
+		else if (MInvestmentReceipt.Table_Name.equals(tableName))
+			return new MInvestmentReceipt(ctx, rs, trxName);
 		return null;
 	}
 
