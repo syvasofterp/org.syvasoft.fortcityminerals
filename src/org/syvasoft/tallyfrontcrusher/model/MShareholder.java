@@ -80,8 +80,8 @@ public class MShareholder extends X_TF_Shareholder {
 	
 	public static void updateInvestmentReceived(int AD_Org_ID, String trxName) {
 		String sql = "UPDATE TF_Shareholder s SET Investment_Received = " +
-				" COALESCE(ROUND((SELECT SUM(Paid_Amount) FROM TF_InvestmentStructure i " +
-				" WHERE i.AD_Org_ID = s.AD_Org_ID) * InvestmentShare / 100,2),0) " +
+				" COALESCE(ROUND((SELECT SUM(PayAmt) FROM TF_InvestmentReceipt i " +
+				" WHERE i.AD_Org_ID = s.AD_Org_ID AND i.TF_Shareholder_ID = s.TF_Shareholder_ID),2),0) " +
 				" WHERE	AD_Org_ID = " + AD_Org_ID;		
 		DB.executeUpdate(sql, trxName);
 	}

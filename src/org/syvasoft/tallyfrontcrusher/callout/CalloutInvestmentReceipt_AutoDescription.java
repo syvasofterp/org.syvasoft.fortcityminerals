@@ -32,9 +32,9 @@ public class CalloutInvestmentReceipt_AutoDescription implements IColumnCallout 
 		BigDecimal amt = BigDecimal.ZERO;
 		BigDecimal amt2 = BigDecimal.ZERO;
 		String sql = "SELECT  Round(((SELECT Payable_Amount FROM TF_InvestmentStructure i WHERE i.AD_Org_ID = s.AD_Org_ID " +
-				" AND i.C_ElementValue_ID = " + C_ElementValue_ID + " ) - COALESCE((SELECT SUM(PayAmt) FROM TF_InvestmentReceipt r " +
+				" AND i.C_ElementValue_ID = " + C_ElementValue_ID + " ) * s.InvestmentShare / 100 - COALESCE((SELECT SUM(PayAmt) FROM TF_InvestmentReceipt r " +
 				"  WHERE r.TF_Shareholder_ID = s.TF_Shareholder_ID AND r.C_ElementValue_ID = "+ C_ElementValue_ID + " AND " +
-				" r.DocStatus = 'CO' AND Processed ='Y'),0)) * s.InvestmentShare / 100, 2) " +
+				" r.DocStatus = 'CO' AND Processed ='Y'),0)), 2) " +
 				" FROM 	TF_Shareholder s  WHERE s.TF_Shareholder_ID = ?" ;
 				
 		amt = DB.getSQLValueBD(null, sql, TF_Shareholder_ID);

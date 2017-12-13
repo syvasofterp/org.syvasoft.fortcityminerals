@@ -109,14 +109,14 @@ public interface I_TF_InvestmentReceipt
 
 	public org.compiere.model.I_C_Payment getC_Payment() throws RuntimeException;
 
-    /** Column name C_PaymentReceipt_id */
-    public static final String COLUMNNAME_C_PaymentReceipt_id = "C_PaymentReceipt_id";
+    /** Column name C_PaymentReceipt_ID */
+    public static final String COLUMNNAME_C_PaymentReceipt_ID = "C_PaymentReceipt_ID";
 
 	/** Set Cash Book Receipt	  */
-	public void setC_PaymentReceipt_id (int C_PaymentReceipt_id);
+	public void setC_PaymentReceipt_ID (int C_PaymentReceipt_ID);
 
 	/** Get Cash Book Receipt	  */
-	public int getC_PaymentReceipt_id();
+	public int getC_PaymentReceipt_ID();
 
 	public org.compiere.model.I_C_Payment getC_PaymentReceipt() throws RuntimeException;
 

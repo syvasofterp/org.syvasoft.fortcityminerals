@@ -33,7 +33,7 @@ public class X_TF_InvestmentReceipt extends PO implements I_TF_InvestmentReceipt
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20171212L;
+	private static final long serialVersionUID = 20171213L;
 
     /** Standard Constructor */
     public X_TF_InvestmentReceipt (Properties ctx, int TF_InvestmentReceipt_ID, String trxName)
@@ -167,20 +167,23 @@ public class X_TF_InvestmentReceipt extends PO implements I_TF_InvestmentReceipt
 	public org.compiere.model.I_C_Payment getC_PaymentReceipt() throws RuntimeException
     {
 		return (org.compiere.model.I_C_Payment)MTable.get(getCtx(), org.compiere.model.I_C_Payment.Table_Name)
-			.getPO(getC_PaymentReceipt_id(), get_TrxName());	}
+			.getPO(getC_PaymentReceipt_ID(), get_TrxName());	}
 
 	/** Set Cash Book Receipt.
-		@param C_PaymentReceipt_id Cash Book Receipt	  */
-	public void setC_PaymentReceipt_id (int C_PaymentReceipt_id)
+		@param C_PaymentReceipt_ID Cash Book Receipt	  */
+	public void setC_PaymentReceipt_ID (int C_PaymentReceipt_ID)
 	{
-		set_Value (COLUMNNAME_C_PaymentReceipt_id, Integer.valueOf(C_PaymentReceipt_id));
+		if (C_PaymentReceipt_ID < 1) 
+			set_Value (COLUMNNAME_C_PaymentReceipt_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_PaymentReceipt_ID, Integer.valueOf(C_PaymentReceipt_ID));
 	}
 
 	/** Get Cash Book Receipt.
 		@return Cash Book Receipt	  */
-	public int getC_PaymentReceipt_id () 
+	public int getC_PaymentReceipt_ID () 
 	{
-		Integer ii = (Integer)get_Value(COLUMNNAME_C_PaymentReceipt_id);
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_PaymentReceipt_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
