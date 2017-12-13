@@ -2,6 +2,7 @@ package org.syvasoft.tallyfrontcrusher.model;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.Properties;
 
 import org.adempiere.exceptions.AdempiereException;
@@ -424,6 +425,49 @@ public class TF_MPayment extends MPayment {
 		return false;
 	}
 	
+	/** Column name IsBankAccount */
+    public static final String COLUMNNAME_IsBankAccount = "IsBankAccount";
+    /** Set Bank Account.
+	@param IsBankAccount 
+	Indicates if this is the Bank Account
+  */
+	public void setIsBankAccount (boolean IsBankAccount)
+	{
+		set_Value (COLUMNNAME_IsBankAccount, Boolean.valueOf(IsBankAccount));
+	}
+	
+	/** Get Bank Account.
+		@return Indicates if this is the Bank Account
+	  */
+	public boolean isBankAccount () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsBankAccount);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+	
+    /** Column name DateBankTrx */
+    public static final String COLUMNNAME_DateBankTrx = "DateBankTrx";
+    /** Set Bank Trx Date.
+	@param DateBankTrx Bank Trx Date	  */
+	public void setDateBankTrx (Timestamp DateBankTrx)
+	{
+		set_Value (COLUMNNAME_DateBankTrx, DateBankTrx);
+	}
+	
+	/** Get Bank Trx Date.
+		@return Bank Trx Date	  */
+	public Timestamp getDateBankTrx () 
+	{
+		return (Timestamp)get_Value(COLUMNNAME_DateBankTrx);
+	}
+
+	
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {
 		
@@ -445,6 +489,12 @@ public class TF_MPayment extends MPayment {
 		}
 		
 		setIsReceipt(getC_DocType().isSOTrx());
+		
+		if(getDateBankTrx() == null) {
+			setIsBankAccount(!getC_BankAccount().getBankAccountType().equals(TF_MBankAccount.BANKACCOUNTTYPE_Cash));
+			if(isBankAccount())
+				throw new AdempiereException("Bank Trx Date is mandatory!");
+		}
 		
 		if(getC_ElementValue_ID()==0)
 			setC_ElementValue_ID(0);
@@ -681,9 +731,9 @@ public class TF_MPayment extends MPayment {
 		payment.setC_DocType_ID(c_doctype_id);
 		payment.setIsReceipt(!isReceipt());
 		payment.setC_ElementValue_ID(counterAcctID);
-		TF_MCharge charge = TF_MCharge.createChargeFromAccount(getCtx(), getC_ElementValue_ID(), null);
+		TF_MCharge charge = TF_MCharge.createChargeFromAccount(getCtx(), payment.getC_ElementValue_ID(), null);
 		if(charge != null )
-			setC_Charge_ID(charge.get_ID());		
+			payment.setC_Charge_ID(charge.get_ID());		
 		payment.setUser1_ID(getUser1_ID());
 		payment.setUser2_ID(getUser2_ID());
 		payment.setC_BPartner_ID(getC_BPartner_ID());		
