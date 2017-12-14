@@ -64,6 +64,15 @@ public interface I_TF_InvestmentStructure
 	  */
 	public int getAD_Org_ID();
 
+    /** Column name Balance */
+    public static final String COLUMNNAME_Balance = "Balance";
+
+	/** Set Balance	  */
+	public void setBalance (BigDecimal Balance);
+
+	/** Get Balance	  */
+	public BigDecimal getBalance();
+
     /** Column name C_ElementValue_ID */
     public static final String COLUMNNAME_C_ElementValue_ID = "C_ElementValue_ID";
 
@@ -95,6 +104,19 @@ public interface I_TF_InvestmentStructure
 	  */
 	public int getCreatedBy();
 
+    /** Column name DateAcct */
+    public static final String COLUMNNAME_DateAcct = "DateAcct";
+
+	/** Set Account Date.
+	  * Accounting Date
+	  */
+	public void setDateAcct (Timestamp DateAcct);
+
+	/** Get Account Date.
+	  * Accounting Date
+	  */
+	public Timestamp getDateAcct();
+
     /** Column name Description */
     public static final String COLUMNNAME_Description = "Description";
 
@@ -107,6 +129,21 @@ public interface I_TF_InvestmentStructure
 	  * Optional short description of the record
 	  */
 	public String getDescription();
+
+    /** Column name GL_Journal_ID */
+    public static final String COLUMNNAME_GL_Journal_ID = "GL_Journal_ID";
+
+	/** Set Journal.
+	  * General Ledger Journal
+	  */
+	public void setGL_Journal_ID (int GL_Journal_ID);
+
+	/** Get Journal.
+	  * General Ledger Journal
+	  */
+	public int getGL_Journal_ID();
+
+	public org.compiere.model.I_GL_Journal getGL_Journal() throws RuntimeException;
 
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";

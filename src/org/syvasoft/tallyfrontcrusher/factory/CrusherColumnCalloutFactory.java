@@ -309,7 +309,8 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 			if(columnName.equals(MInvestmentReceipt.COLUMNNAME_TF_Shareholder_ID) || 
 					columnName.equals(MInvestmentReceipt.COLUMNNAME_C_BankAccount_ID) ||
 					columnName.equals(MInvestmentReceipt.COLUMNNAME_C_ElementValue_ID) ||
-					columnName.equals(MInvestmentReceipt.COLUMNNAME_PayAmt))
+					columnName.equals(MInvestmentReceipt.COLUMNNAME_PayAmt) ||
+					columnName.equals(MInvestmentReceipt.COLUMNNAME_InvestmentReceiptType))
 				list.add(new CalloutInvestmentReceipt_AutoDescription());
 		}
 		

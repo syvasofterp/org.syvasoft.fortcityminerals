@@ -33,7 +33,7 @@ public class X_TF_InvestmentReceipt extends PO implements I_TF_InvestmentReceipt
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20171213L;
+	private static final long serialVersionUID = 20171214L;
 
     /** Standard Constructor */
     public X_TF_InvestmentReceipt (Properties ctx, int TF_InvestmentReceipt_ID, String trxName)
@@ -46,6 +46,8 @@ public class X_TF_InvestmentReceipt extends PO implements I_TF_InvestmentReceipt
 			setDateAcct (new Timestamp( System.currentTimeMillis() ));
 // @DateAcct@
 			setDocumentNo (null);
+			setInvestmentReceiptType (null);
+// B
 			setProcessed (false);
 			setTF_InvestmentReceipt_ID (0);
 			setTF_Shareholder_ID (0);
@@ -288,6 +290,27 @@ public class X_TF_InvestmentReceipt extends PO implements I_TF_InvestmentReceipt
 	public String getDocumentNo () 
 	{
 		return (String)get_Value(COLUMNNAME_DocumentNo);
+	}
+
+	/** Capital A/c to Initial Expense A/c = B */
+	public static final String INVESTMENTRECEIPTTYPE_CapitalACToInitialExpenseAC = "B";
+	/** Capital A/c to Cash A/c = C */
+	public static final String INVESTMENTRECEIPTTYPE_CapitalACToCashAC = "C";
+	/** Cash A/c to Initial Expense A/c = P */
+	public static final String INVESTMENTRECEIPTTYPE_CashACToInitialExpenseAC = "P";
+	/** Set Investment Receipt Type.
+		@param InvestmentReceiptType Investment Receipt Type	  */
+	public void setInvestmentReceiptType (String InvestmentReceiptType)
+	{
+
+		set_Value (COLUMNNAME_InvestmentReceiptType, InvestmentReceiptType);
+	}
+
+	/** Get Investment Receipt Type.
+		@return Investment Receipt Type	  */
+	public String getInvestmentReceiptType () 
+	{
+		return (String)get_Value(COLUMNNAME_InvestmentReceiptType);
 	}
 
 	/** Set Amount Payable.

@@ -32,7 +32,7 @@ public class X_TF_Shareholder extends PO implements I_TF_Shareholder, I_Persiste
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20171211L;
+	private static final long serialVersionUID = 20171214L;
 
     /** Standard Constructor */
     public X_TF_Shareholder (Properties ctx, int TF_Shareholder_ID, String trxName)
@@ -100,6 +100,22 @@ public class X_TF_Shareholder extends PO implements I_TF_Shareholder, I_Persiste
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
+	}
+
+	/** Set Balance.
+		@param Balance Balance	  */
+	public void setBalance (BigDecimal Balance)
+	{
+		throw new IllegalArgumentException ("Balance is virtual column");	}
+
+	/** Get Balance.
+		@return Balance	  */
+	public BigDecimal getBalance () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Balance);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
 	}
 
 	public org.compiere.model.I_C_ElementValue getCapitalAcct() throws RuntimeException
@@ -273,9 +289,9 @@ public class X_TF_Shareholder extends PO implements I_TF_Shareholder, I_Persiste
 	public void setTF_ShareholderType_ID (int TF_ShareholderType_ID)
 	{
 		if (TF_ShareholderType_ID < 1) 
-			set_ValueNoCheck (COLUMNNAME_TF_ShareholderType_ID, null);
+			set_Value (COLUMNNAME_TF_ShareholderType_ID, null);
 		else 
-			set_ValueNoCheck (COLUMNNAME_TF_ShareholderType_ID, Integer.valueOf(TF_ShareholderType_ID));
+			set_Value (COLUMNNAME_TF_ShareholderType_ID, Integer.valueOf(TF_ShareholderType_ID));
 	}
 
 	/** Get Shareholder Type.
@@ -286,5 +302,22 @@ public class X_TF_Shareholder extends PO implements I_TF_Shareholder, I_Persiste
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
+	}
+
+	/** Set Unallocated Amt.
+		@param UnallocatedAmt Unallocated Amt	  */
+	public void setUnallocatedAmt (BigDecimal UnallocatedAmt)
+	{
+		set_Value (COLUMNNAME_UnallocatedAmt, UnallocatedAmt);
+	}
+
+	/** Get Unallocated Amt.
+		@return Unallocated Amt	  */
+	public BigDecimal getUnallocatedAmt () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_UnallocatedAmt);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
 	}
 }
