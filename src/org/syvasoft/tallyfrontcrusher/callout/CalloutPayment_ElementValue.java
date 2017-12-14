@@ -10,6 +10,7 @@ import org.compiere.model.GridTab;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
 import org.syvasoft.tallyfrontcrusher.model.MGLPostingConfig;
+import org.syvasoft.tallyfrontcrusher.model.TF_MElementValue;
 import org.syvasoft.tallyfrontcrusher.model.TF_MPayment;
 
 public class CalloutPayment_ElementValue implements IColumnCallout {
@@ -21,9 +22,10 @@ public class CalloutPayment_ElementValue implements IColumnCallout {
 		boolean isReceipt = mTab.getValueAsBoolean(TF_MPayment.COLUMNNAME_IsReceipt);
 		MGLPostingConfig glConfig = MGLPostingConfig.getMGLPostingConfig(ctx);
 		String description = null;
+		int acct_id = 0;
 		if(mTab.getValue(TF_MPayment.COLUMNNAME_C_ElementValue_ID) != null) {
 			mTab.setValue(TF_MPayment.COLUMNNAME_C_Invoice_ID, 0);
-			int acct_id = (int) mTab.getValue(TF_MPayment.COLUMNNAME_C_ElementValue_ID);
+			acct_id = (int) mTab.getValue(TF_MPayment.COLUMNNAME_C_ElementValue_ID);
 			isSalaryPayment = glConfig.getSalaryPayable_Acct() == acct_id && !isReceipt;
 			isSalaryAdvance = glConfig.getSalariesAdvanceAcct_ID() == acct_id && !isReceipt;
 		}
@@ -62,9 +64,17 @@ public class CalloutPayment_ElementValue implements IColumnCallout {
 		else if(mTab.getValue(TF_MPayment.COLUMNNAME_FromTo_BankAccount_ID) != null) {
 			//do not change description.
 			description = (String) mTab.getValue(TF_MPayment.COLUMNNAME_Description); 
-		}
-		else {
+		}		
+		else {			
 			description = null;
+			if(acct_id > 0) {
+				TF_MElementValue acct = new TF_MElementValue(ctx, acct_id, null);
+				if(!isReceipt)
+					description = "Cash Paid to " + acct.getName();
+				else
+					description = "Cash Received from " + acct.getName();
+			}
+			
 		}
 		
 		mTab.setValue(TF_MPayment.COLUMNNAME_Description, description);		
