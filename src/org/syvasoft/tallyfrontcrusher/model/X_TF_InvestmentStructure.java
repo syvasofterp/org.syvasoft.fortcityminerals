@@ -19,6 +19,7 @@ package org.syvasoft.tallyfrontcrusher.model;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.Properties;
 import org.compiere.model.*;
 import org.compiere.util.Env;
@@ -32,7 +33,7 @@ public class X_TF_InvestmentStructure extends PO implements I_TF_InvestmentStruc
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20171212L;
+	private static final long serialVersionUID = 20171214L;
 
     /** Standard Constructor */
     public X_TF_InvestmentStructure (Properties ctx, int TF_InvestmentStructure_ID, String trxName)
@@ -73,6 +74,22 @@ public class X_TF_InvestmentStructure extends PO implements I_TF_InvestmentStruc
       return sb.toString();
     }
 
+	/** Set Balance.
+		@param Balance Balance	  */
+	public void setBalance (BigDecimal Balance)
+	{
+		throw new IllegalArgumentException ("Balance is virtual column");	}
+
+	/** Get Balance.
+		@return Balance	  */
+	public BigDecimal getBalance () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Balance);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
 	public org.compiere.model.I_C_ElementValue getC_ElementValue() throws RuntimeException
     {
 		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
@@ -101,6 +118,23 @@ public class X_TF_InvestmentStructure extends PO implements I_TF_InvestmentStruc
 		return ii.intValue();
 	}
 
+	/** Set Account Date.
+		@param DateAcct 
+		Accounting Date
+	  */
+	public void setDateAcct (Timestamp DateAcct)
+	{
+		set_Value (COLUMNNAME_DateAcct, DateAcct);
+	}
+
+	/** Get Account Date.
+		@return Accounting Date
+	  */
+	public Timestamp getDateAcct () 
+	{
+		return (Timestamp)get_Value(COLUMNNAME_DateAcct);
+	}
+
 	/** Set Description.
 		@param Description 
 		Optional short description of the record
@@ -116,6 +150,34 @@ public class X_TF_InvestmentStructure extends PO implements I_TF_InvestmentStruc
 	public String getDescription () 
 	{
 		return (String)get_Value(COLUMNNAME_Description);
+	}
+
+	public org.compiere.model.I_GL_Journal getGL_Journal() throws RuntimeException
+    {
+		return (org.compiere.model.I_GL_Journal)MTable.get(getCtx(), org.compiere.model.I_GL_Journal.Table_Name)
+			.getPO(getGL_Journal_ID(), get_TrxName());	}
+
+	/** Set Journal.
+		@param GL_Journal_ID 
+		General Ledger Journal
+	  */
+	public void setGL_Journal_ID (int GL_Journal_ID)
+	{
+		if (GL_Journal_ID < 1) 
+			set_Value (COLUMNNAME_GL_Journal_ID, null);
+		else 
+			set_Value (COLUMNNAME_GL_Journal_ID, Integer.valueOf(GL_Journal_ID));
+	}
+
+	/** Get Journal.
+		@return General Ledger Journal
+	  */
+	public int getGL_Journal_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_GL_Journal_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	/** Set Amount Paid.

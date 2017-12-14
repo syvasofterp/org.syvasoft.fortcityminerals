@@ -20,6 +20,10 @@ public class CalloutInvestmentReceipt_AutoDescription implements IColumnCallout 
 		int C_BankAccount_ID = 0;
 		int C_ElementValue_ID = 0;
 		String description=null;
+		String invReceiptType = (String) mTab.getValue(MInvestmentReceipt.COLUMNNAME_InvestmentReceiptType);
+		if(invReceiptType.equals(MInvestmentReceipt.INVESTMENTRECEIPTTYPE_CapitalACToCashAC))
+			mTab.setValue(MInvestmentReceipt.COLUMNNAME_C_ElementValue_ID, null);
+			
 		if(mTab.getValue(MInvestmentReceipt.COLUMNNAME_TF_Shareholder_ID) != null)
 			TF_Shareholder_ID = (int) mTab.getValue(MInvestmentReceipt.COLUMNNAME_TF_Shareholder_ID);
 		if(mTab.getValue(MInvestmentReceipt.COLUMNNAME_C_BankAccount_ID) != null)
@@ -38,6 +42,8 @@ public class CalloutInvestmentReceipt_AutoDescription implements IColumnCallout 
 				" FROM 	TF_Shareholder s  WHERE s.TF_Shareholder_ID = ?" ;
 				
 		amt = DB.getSQLValueBD(null, sql, TF_Shareholder_ID);
+		if(amt == null)
+			amt = BigDecimal.ZERO;
 		if(!mField.getColumnName().equals(MInvestmentReceipt.COLUMNNAME_PayAmt)) {
 		
 			mTab.setValue(MInvestmentReceipt.COLUMNNAME_PayAmt, amt);
@@ -45,13 +51,16 @@ public class CalloutInvestmentReceipt_AutoDescription implements IColumnCallout 
 			
 		}
 		else {
-			amt2 = (BigDecimal) mTab.getValue(MInvestmentReceipt.COLUMNNAME_PayAmt);			
-			mTab.setValue(MInvestmentReceipt.COLUMNNAME_Payable_Amount, amt.subtract(amt2));
+			amt2 = (BigDecimal) mTab.getValue(MInvestmentReceipt.COLUMNNAME_PayAmt);
+			if(C_ElementValue_ID != 0)
+				mTab.setValue(MInvestmentReceipt.COLUMNNAME_Payable_Amount, amt.subtract(amt2));
 			amt = amt2;
 		}
 				
 		if(TF_Shareholder_ID != 0 && C_BankAccount_ID != 0 && C_ElementValue_ID != 0)
 			description = sh.getName() + " paid Rs." + amt.toString() + " for " + acct.getName();
+		else if(TF_Shareholder_ID != 0 && C_BankAccount_ID != 0 && C_ElementValue_ID == 0)
+			description = sh.getName() + " paid Rs." + amt.toString() + " for initial expenses";
 		
 		mTab.setValue(MInvestmentReceipt.COLUMNNAME_Description, description);
 				

@@ -188,6 +188,15 @@ public interface I_TF_InvestmentReceipt
 	  */
 	public String getDocumentNo();
 
+    /** Column name InvestmentReceiptType */
+    public static final String COLUMNNAME_InvestmentReceiptType = "InvestmentReceiptType";
+
+	/** Set Investment Receipt Type	  */
+	public void setInvestmentReceiptType (String InvestmentReceiptType);
+
+	/** Get Investment Receipt Type	  */
+	public String getInvestmentReceiptType();
+
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";
 

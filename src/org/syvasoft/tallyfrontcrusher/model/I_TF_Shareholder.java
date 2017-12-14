@@ -75,6 +75,15 @@ public interface I_TF_Shareholder
 	  */
 	public int getAD_Org_ID();
 
+    /** Column name Balance */
+    public static final String COLUMNNAME_Balance = "Balance";
+
+	/** Set Balance	  */
+	public void setBalance (BigDecimal Balance);
+
+	/** Get Balance	  */
+	public BigDecimal getBalance();
+
     /** Column name CapitalAcct_ID */
     public static final String COLUMNNAME_CapitalAcct_ID = "CapitalAcct_ID";
 
@@ -205,6 +214,15 @@ public interface I_TF_Shareholder
 	public int getTF_ShareholderType_ID();
 
 	public I_TF_ShareholderType getTF_ShareholderType() throws RuntimeException;
+
+    /** Column name UnallocatedAmt */
+    public static final String COLUMNNAME_UnallocatedAmt = "UnallocatedAmt";
+
+	/** Set Unallocated Amt	  */
+	public void setUnallocatedAmt (BigDecimal UnallocatedAmt);
+
+	/** Get Unallocated Amt	  */
+	public BigDecimal getUnallocatedAmt();
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";

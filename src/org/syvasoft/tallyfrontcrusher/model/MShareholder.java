@@ -62,8 +62,8 @@ public class MShareholder extends X_TF_Shareholder {
 			 acct.setPostBudget(true);
 			 acct.setPostStatistical(true);
 			 acct.setIsSummary(false);
-			 acct.setIsBankAccount(true);
-			 acct.setIsDocControlled(true);
+			 acct.setIsBankAccount(false);
+			 acct.setIsDocControlled(false);
 			 acct.setDefaultOrg_ID(getAD_Org_ID());
 			 acct.saveEx();
 		 return acct.getC_ElementValue_ID();
@@ -75,15 +75,25 @@ public class MShareholder extends X_TF_Shareholder {
 				" COALESCE(ROUND((SELECT SUM(Payable_Amount) FROM TF_InvestmentStructure i " +
 				" WHERE i.AD_Org_ID = s.AD_Org_ID) * InvestmentShare / 100,2),0) " +
 				" WHERE	AD_Org_ID = " + AD_Org_ID;		
-		DB.executeUpdate(sql, trxName);		
+		DB.executeUpdate(sql, trxName);
 	}
 	
 	public static void updateInvestmentReceived(int AD_Org_ID, String trxName) {
 		String sql = "UPDATE TF_Shareholder s SET Investment_Received = " +
 				" COALESCE(ROUND((SELECT SUM(PayAmt) FROM TF_InvestmentReceipt i " +
-				" WHERE i.AD_Org_ID = s.AD_Org_ID AND i.TF_Shareholder_ID = s.TF_Shareholder_ID),2),0) " +
+				" WHERE i.AD_Org_ID = s.AD_Org_ID AND i.TF_Shareholder_ID = s.TF_Shareholder_ID"
+				+ " AND i.DocStatus = 'CO' AND InvestmentReceiptType IN ('B','C') ),2),0) " +
 				" WHERE	AD_Org_ID = " + AD_Org_ID;		
-		DB.executeUpdate(sql, trxName);
+		DB.executeUpdate(sql, trxName);				
+	}
+	
+	public static void updateUnallocatedAmt(int AD_Org_ID, String trxName) {
+		String sql = "UPDATE TF_Shareholder s SET UnallocatedAmt = " +
+				" COALESCE((SELECT SUM ( CASE WHEN InvestmentReceiptType = 'C' THEN r.PayAmt ELSE r.PayAmt * -1 END )  " +
+				" FROM TF_InvestmentReceipt r WHERE r.TF_Shareholder_ID = s.TF_Shareholder_ID AND "
+				+ " s.AD_Org_ID = r.AD_Org_ID AND r.DocStatus = 'CO' AND r.InvestmentReceiptType IN ('C','P')),0)" +
+				" WHERE	s.AD_Org_ID = " + AD_Org_ID;		
+		DB.executeUpdate(sql, trxName);	
 	}
 	
 }
