@@ -18,6 +18,7 @@ import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryAdvance;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryIssue;
 import org.syvasoft.tallyfrontcrusher.model.MFuelIssue;
 import org.syvasoft.tallyfrontcrusher.model.MGLPostingConfig;
+import org.syvasoft.tallyfrontcrusher.model.MHomePageShortcuts;
 import org.syvasoft.tallyfrontcrusher.model.MInterOrgCashTransfer;
 import org.syvasoft.tallyfrontcrusher.model.MInvestmentReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MInvestmentStructure;
@@ -197,6 +198,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return MInvestmentStructure.class;
 		else if (MInvestmentReceipt.Table_Name.equals(tableName))
 			return MInvestmentReceipt.class;
+		//else if (MHomePageShortcuts.Table_Name.equals(tableName))
+		//	return MHomePageShortcuts.class;
 		return null;
 	}
 
@@ -327,6 +330,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MInvestmentStructure(ctx, Record_ID, trxName);
 		else if (MInvestmentReceipt.Table_Name.equals(tableName))
 			return new MInvestmentReceipt(ctx, Record_ID, trxName);
+		//else if (MHomePageShortcuts.Table_Name.equals(tableName))
+		//	return new MHomePageShortcuts(ctx, Record_ID, tableName);
 		return null;
 	}
 
@@ -457,6 +462,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MInvestmentStructure(ctx, rs, trxName);
 		else if (MInvestmentReceipt.Table_Name.equals(tableName))
 			return new MInvestmentReceipt(ctx, rs, trxName);
+		//else if (MHomePageShortcuts.Table_Name.equals(tableName))
+		//	return new MHomePageShortcuts(ctx, rs, tableName);
 		return null;
 	}
 

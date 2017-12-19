@@ -84,7 +84,7 @@ public class MInvestmentStructure extends X_TF_InvestmentStructure {
 		MJournalLine jl;			
 		jl = new MJournalLine(j);
 		jl.setLine(10);			
-		jl.setAccount_ID(getC_ElementValue_ID());
+		jl.setAccount_ID(getC_ElementValue_ID());		
 		jl.setDescription("Initial Expense Payable for " + getC_ElementValue().getName());
 		jl.setAmtSourceCr(getPayable_Amount());
 		jl.setAmtAcctCr(getPayable_Amount());
@@ -98,7 +98,7 @@ public class MInvestmentStructure extends X_TF_InvestmentStructure {
 			jl = new MJournalLine(j);
 			line = line + 10;
 			jl.setLine(line);			
-			jl.setAccount_ID(partner.getCapitalAcct_ID());
+			jl.setAccount_ID(partner.getCapitalAcct_ID());			
 			jl.setDescription(" Initial Expense Receivable for " + getC_ElementValue().getName());
 			
 			double perecent = partner.getInvestmentShare().doubleValue() / 100;

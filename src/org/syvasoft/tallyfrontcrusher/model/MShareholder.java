@@ -30,7 +30,7 @@ public class MShareholder extends X_TF_Shareholder {
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
 		if(getCapitalAcct_ID() == 0) {
-			setCapitalAcct_ID(createBankCashAccount(getName(), getName()));
+			setCapitalAcct_ID(createAccount(getName(), getName()));
 		}
 		return super.beforeSave(newRecord);
 	}
@@ -42,9 +42,9 @@ public class MShareholder extends X_TF_Shareholder {
 		return super.afterSave(newRecord, success);
 	}
 
-	private int createBankCashAccount(String value, String name) {
+	private int createAccount(String value, String name) {
 		int elementID = Env.getContextAsInt(getCtx(), "#C_Element_ID");
-		String where = "C_Element_ID = ? AND Value=?";
+		String where = "C_Element_ID = ? AND UPPER(TRIM(Value))=UPPER(TRIM(?))";
 		List<TF_MElementValue> accts = new Query(getCtx(), TF_MElementValue.Table_Name, where, get_TrxName())
 				.setClient_ID().setParameters(elementID, name).list();
 		if(accts.size() > 0 ) {
@@ -66,6 +66,7 @@ public class MShareholder extends X_TF_Shareholder {
 			 acct.setIsDocControlled(false);
 			 acct.setDefaultOrg_ID(getAD_Org_ID());
 			 acct.saveEx();
+			// TF_MCharge.createChargeFromAccount(getCtx(), acct.getC_ElementValue_ID(), get_TrxName());
 		 return acct.getC_ElementValue_ID();
 		}
 	}

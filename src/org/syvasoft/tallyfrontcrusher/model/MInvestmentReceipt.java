@@ -27,6 +27,15 @@ public class MInvestmentReceipt extends X_TF_InvestmentReceipt {
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override
+	protected boolean afterSave(boolean newRecord, boolean success) {
+		if(newRecord) {
+			TF_MCharge.createChargeFromAccount(getCtx(), getTF_Shareholder().getCapitalAcct_ID(), get_TrxName());
+			TF_MCharge.createChargeFromAccount(getCtx(), getC_ElementValue_ID(), get_TrxName());
+		}
+		return super.afterSave(newRecord, success);
+	}
+
 	public void processIt(String docAction) {
 		if(DocAction.ACTION_Prepare.equals(docAction)) {
 			setDocStatus(DOCSTATUS_InProgress);
@@ -47,7 +56,7 @@ public class MInvestmentReceipt extends X_TF_InvestmentReceipt {
 				payment.setC_DocType_ID(1000008);
 				payment.setIsReceipt(true);
 				payment.setC_ElementValue_ID(getTF_Shareholder().getCapitalAcct_ID());
-				TF_MCharge charge = TF_MCharge.createChargeFromAccount(getCtx(), getC_ElementValue_ID(), null);
+				TF_MCharge charge = TF_MCharge.createChargeFromAccount(getCtx(), payment.getC_ElementValue_ID(), get_TrxName());
 				if(charge != null )
 					payment.setC_Charge_ID(charge.get_ID());			
 						
@@ -75,7 +84,7 @@ public class MInvestmentReceipt extends X_TF_InvestmentReceipt {
 				payment.setC_DocType_ID(1000009);
 				payment.setIsReceipt(false);
 				payment.setC_ElementValue_ID(getC_ElementValue_ID());
-				TF_MCharge charge = TF_MCharge.createChargeFromAccount(getCtx(), payment.getC_ElementValue_ID(), null);
+				TF_MCharge charge = TF_MCharge.createChargeFromAccount(getCtx(), payment.getC_ElementValue_ID(), get_TrxName());
 				if(charge != null )
 					payment.setC_Charge_ID(charge.get_ID());			
 				payment.setC_BPartner_ID(bPartnerID);		

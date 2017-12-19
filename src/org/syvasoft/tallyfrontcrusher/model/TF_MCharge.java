@@ -147,6 +147,7 @@ public class TF_MCharge extends MCharge {
     	if(charge == null && C_ElementValue_ID > 0) {
     		charge = new TF_MCharge(ctx, 0, trxName);
     		MElementValue acct = new MElementValue(ctx, C_ElementValue_ID, trxName);
+    		charge.setAD_Org_ID(0);
     		charge.setName(acct.getName());
     		charge.setC_ElementValue_ID(C_ElementValue_ID);
     		charge.saveEx();
