@@ -51,8 +51,9 @@ public class TF_MElementValue extends MElementValue {
     public org.compiere.model.I_C_ElementValue getAccountGroup() throws RuntimeException
     {
 		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
-			.getPO(getAccountGroup_ID(), get_TrxName());	}
-
+			.getPO(getAccountGroup_ID(), get_TrxName());	
+	}
+    
 	/** Set Account Group.
 		@param AccountGroup_ID Account Group	  */
 	public void setAccountGroup_ID (int AccountGroup_ID)
@@ -100,6 +101,14 @@ public class TF_MElementValue extends MElementValue {
 		boolean ok = super.beforeSave(newRecord);
 		if(getC_Element_ID() == 0) {
 			setC_Element_ID(Env.getContextAsInt(getCtx(), "#C_Element_ID"));
+		}
+		if(newRecord) {
+			String sql = "SELECT o.Name FROM C_ElementValue e INNER JOIN AD_Org o ON e.DefaultOrg_ID = o.AD_Org_ID " +
+			" WHERE C_Element_ID = ? AND UPPER(TRIM(e.Value)) = UPPER(TRIM(?)) ";
+			String orgName = DB.getSQLValueString(get_TrxName(), sql, getC_Element_ID(), getValue());
+			if(orgName != null) {
+				throw new AdempiereException("This account head is already existed under " + orgName + " organization!" );
+			}
 		}
 		return ok;
 	}
