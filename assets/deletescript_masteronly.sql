@@ -65,6 +65,8 @@ UPDATE C_Invoice SET TF_Vehicle_Rental_Contract_ID = NULL;
 UPDATE M_Transaction SET TF_Boulder_Receipt_ID = NULL;
 
 DELETE FROM TF_Boulder_Receipt_Line;
+delete from m_costhistory WHERE ad_client_id=1000000;;
+delete from m_costdetail WHERE ad_client_id=1000000;;
 DELETE FROM TF_Boulder_Receipt;
 DELETE FROM TF_Employee_Salary;
 DELETE FROM TF_Vehicle_Rent;
@@ -72,6 +74,7 @@ DELETE FROM TF_Quarry_Rent;
 DELETE FROM TF_Fuel_Issue;
 
 UPDATE tf_TripSheet SET tf_jobwork_issuedresource_id =NULL;
+
 
 --SubContract Tables
 DELETE FROM TF_Jobwork_Expense;
@@ -82,8 +85,29 @@ DELETE FROM TF_Jobwork_IssuedItems;
 DELETE FROM TF_Jobwork_ReceivedItems;
 DELETE FROM TF_Jobwork_ProductPrice;
 DELETE FROM TF_Jobwork_ItemIssue;
+delete from fact_acct WHERE ad_client_id=1000000;;
+delete from fact_acct_summary WHERE ad_client_id=1000000;;
+DELETE FROM c_recurring WHERE ad_client_id=1000000;;
+UPDATE tf_jobwork_expense_entry set SubCon_Invoice_id = null, GL_Journal_ID = null;
+DELETE FROM tf_jobwork_expense_entry WHERE AD_client_ID = 1000000;
+UPDATE C_Payment SET EmpAdv_Journal_ID = null, C_Project_ID = null WHERE AD_client_ID = 1000000;
+UPDATE TF_TripSheet SET SubCon_invoice_ID = null WHERE AD_client_ID = 1000000;;
+UPDATE tf_coaopeningbalance SET GL_Journal_ID = null WHERE AD_client_ID = 1000000;;
+UPDATE tf_investmentstructure SET GL_Journal_ID = null WHERE AD_client_ID = 1000000;;
+UPDATE TF_InvestmentReceipt SET GL_Journal_ID = null WHERE AD_client_ID = 1000000;;
+delete from gl_journalbatch WHERE ad_client_id=1000000 ;
+delete from gl_journalline WHERE ad_client_id=1000000; 
+delete from gl_journal WHERE ad_client_id=1000000;; 
 DELETE from c_validcombination WHERE C_Project_ID IN (SELECT C_Project_ID FROM C_Project WHERE C_Project_id !=1000000 AND ad_client_id=1000000);
-DELETE FROM  C_Project WHERE C_Project_id !=1000000 AND ad_client_id=1000000;;
+UPDATE C_Invoice SET C_Project_ID = null, tf_weighmententry_id = null WHERE AD_client_ID = 1000000;
+UPDATE m_inventory SET C_Project_ID = null WHERE AD_Client_ID = 1000000;
+DELETE FROM TF_TripSheet WHERE ad_client_id=1000000;
+UPDATE C_Order SET tf_weighmententry_id = null, C_PROJECT_id = NULL, IssueToSubcontract_ID= null, SUBCON_invoice_id = null,
+TransporterInvoice_ID = null
+ WHERE AD_client_ID = 1000000;
+DELETE FROM tf_rmsubcon_movement WHERE AD_client_ID = 1000000;
+DELETE FROM tf_weighmententry WHERE ad_client_id=1000000;
+--DELETE FROM  C_Project WHERE C_Project_id !=1000000 AND ad_client_id=1000000;;
 
 
 
@@ -133,8 +157,10 @@ delete from c_contactactivity WHERE ad_client_id=1000000;;
 delete from c_opportunity WHERE ad_client_id=1000000;;
 delete from c_depositbatchline WHERE ad_client_id=1000000;;
 delete from c_depositbatch WHERE ad_client_id=1000000;;
-delete from c_orderpayschedule ;
+delete from c_orderpayschedule WHERE ad_client_id=1000000;
 delete from c_paymenttransaction WHERE ad_client_id=1000000;;
+UPDATE c_bankaccount SET C_Payment_ID = null WHERE ad_client_id=1000000;;
+DELETE FROM tf_investmentreceipt WHERE ad_client_id=1000000;;
 delete from c_payment WHERE ad_client_id=1000000;;
 delete from c_paymentbatch  WHERE ad_client_id=1000000;;
 Update M_INOUTLINE Set C_Orderline_ID = null, M_RMALine_ID=null WHERE ad_client_id=1000000;;
@@ -148,6 +174,7 @@ delete from M_RMA WHERE ad_client_id=1000000;;
 UPDATE C_BPartner SET C_Invoice_ID = null WHERE ad_Client_ID = 1000000;
 UPDATE tf_jobwork_expense_entry set SubCon_Invoice_id = null;
 UPDATE TF_TripSheet SET SubCon_invoice_ID = null;
+delete from tf_bpopeningbalance WHERE ad_client_id=1000000;
 delete from c_Invoice WHERE ad_client_id=1000000;
 delete from PP_MRP WHERE ad_client_id=1000000;;
 delete from m_requisitionline  WHERE ad_client_id=1000000;;
@@ -283,6 +310,18 @@ DELETE FROM TF_Labour_Wage_Issue;
 DELETE FROM TF_Employee_Salary_Issue;
 
 DELETE FROM TF_Vehicle_Rental_Contract;
+DELETE FROM TF_Shareholder;
+DELETE FROM TF_InvestmentStructure;
+
+
+-- Master ----
+UPDATE c_elementvalue SET C_BankAccount_ID = nuLL WHERE ad_client_id=1000000;
+DELETE FROM tf_orgcashtransfer_config WHERE ad_client_id=1000000;
+DELETE FROM C_BankAccount WHERE ad_client_id=1000000;
+DELETE FROM C_Bank WHERE ad_client_id=1000000;
+
+
+
 
 -- Document Seq Resetting ----
 -- CashBook 
