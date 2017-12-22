@@ -177,6 +177,15 @@ public interface I_TF_Shareholder
 	  */
 	public String getName();
 
+    /** Column name NameOutstanding */
+    public static final String COLUMNNAME_NameOutstanding = "NameOutstanding";
+
+	/** Set Name + Outstanding Balance	  */
+	public void setNameOutstanding (String NameOutstanding);
+
+	/** Get Name + Outstanding Balance	  */
+	public String getNameOutstanding();
+
     /** Column name ProfitShare */
     public static final String COLUMNNAME_ProfitShare = "ProfitShare";
 
@@ -203,6 +212,17 @@ public interface I_TF_Shareholder
 
 	/** Get TF_Shareholder_UU	  */
 	public String getTF_Shareholder_UU();
+
+    /** Column name TF_ShareholderMain_ID */
+    public static final String COLUMNNAME_TF_ShareholderMain_ID = "TF_ShareholderMain_ID";
+
+	/** Set Main Shareholder	  */
+	public void setTF_ShareholderMain_ID (int TF_ShareholderMain_ID);
+
+	/** Get Main Shareholder	  */
+	public int getTF_ShareholderMain_ID();
+
+	public I_TF_Shareholder getTF_ShareholderMain() throws RuntimeException;
 
     /** Column name TF_ShareholderType_ID */
     public static final String COLUMNNAME_TF_ShareholderType_ID = "TF_ShareholderType_ID";
