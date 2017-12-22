@@ -32,7 +32,7 @@ public class X_TF_Shareholder extends PO implements I_TF_Shareholder, I_Persiste
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20171214L;
+	private static final long serialVersionUID = 20171220L;
 
     /** Standard Constructor */
     public X_TF_Shareholder (Properties ctx, int TF_Shareholder_ID, String trxName)
@@ -228,6 +228,19 @@ public class X_TF_Shareholder extends PO implements I_TF_Shareholder, I_Persiste
 		return (String)get_Value(COLUMNNAME_Name);
 	}
 
+	/** Set Name + Outstanding Balance.
+		@param NameOutstanding Name + Outstanding Balance	  */
+	public void setNameOutstanding (String NameOutstanding)
+	{
+		throw new IllegalArgumentException ("NameOutstanding is virtual column");	}
+
+	/** Get Name + Outstanding Balance.
+		@return Name + Outstanding Balance	  */
+	public String getNameOutstanding () 
+	{
+		return (String)get_Value(COLUMNNAME_NameOutstanding);
+	}
+
 	/** Set Profit Share (%).
 		@param ProfitShare Profit Share (%)	  */
 	public void setProfitShare (BigDecimal ProfitShare)
@@ -277,6 +290,31 @@ public class X_TF_Shareholder extends PO implements I_TF_Shareholder, I_Persiste
 	public String getTF_Shareholder_UU () 
 	{
 		return (String)get_Value(COLUMNNAME_TF_Shareholder_UU);
+	}
+
+	public I_TF_Shareholder getTF_ShareholderMain() throws RuntimeException
+    {
+		return (I_TF_Shareholder)MTable.get(getCtx(), I_TF_Shareholder.Table_Name)
+			.getPO(getTF_ShareholderMain_ID(), get_TrxName());	}
+
+	/** Set Main Shareholder.
+		@param TF_ShareholderMain_ID Main Shareholder	  */
+	public void setTF_ShareholderMain_ID (int TF_ShareholderMain_ID)
+	{
+		if (TF_ShareholderMain_ID < 1) 
+			set_Value (COLUMNNAME_TF_ShareholderMain_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_ShareholderMain_ID, Integer.valueOf(TF_ShareholderMain_ID));
+	}
+
+	/** Get Main Shareholder.
+		@return Main Shareholder	  */
+	public int getTF_ShareholderMain_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_ShareholderMain_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	public I_TF_ShareholderType getTF_ShareholderType() throws RuntimeException

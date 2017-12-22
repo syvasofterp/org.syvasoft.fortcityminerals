@@ -188,6 +188,21 @@ public interface I_TF_InvestmentReceipt
 	  */
 	public String getDocumentNo();
 
+    /** Column name GL_Journal_ID */
+    public static final String COLUMNNAME_GL_Journal_ID = "GL_Journal_ID";
+
+	/** Set Journal.
+	  * General Ledger Journal
+	  */
+	public void setGL_Journal_ID (int GL_Journal_ID);
+
+	/** Get Journal.
+	  * General Ledger Journal
+	  */
+	public int getGL_Journal_ID();
+
+	public org.compiere.model.I_GL_Journal getGL_Journal() throws RuntimeException;
+
     /** Column name InvestmentReceiptType */
     public static final String COLUMNNAME_InvestmentReceiptType = "InvestmentReceiptType";
 
