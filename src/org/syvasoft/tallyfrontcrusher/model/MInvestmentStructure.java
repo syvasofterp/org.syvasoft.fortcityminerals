@@ -51,8 +51,9 @@ public class MInvestmentStructure extends X_TF_InvestmentStructure {
 	public static void updateInvestmentPaid(int AD_Org_ID, String trxName) {
 		String sql = " UPDATE TF_InvestmentStructure s SET Paid_Amount = COALESCE((SELECT SUM(PayAmt) FROM TF_InvestmentReceipt r " +
 				" WHERE r.AD_Org_ID = s.AD_Org_ID AND r.C_ElementValue_ID = s.C_ElementValue_ID AND  r.DocStatus = 'CO' AND Processed ='Y'"
-				+ " AND r.InvestmentReceiptType IN ('B','P')),0) " +
-				" WHERE s.AD_Org_ID = " + AD_Org_ID;
+				+ " AND r.InvestmentReceiptType IN ('B','P')),0) "
+				+ " WHERE s.AD_Org_ID = " + AD_Org_ID + "  AND s.TF_InvestmentStructure_ID = (SELECT MIN(s1.TF_InvestmentStructure_ID) "
+				+ " FROM TF_InvestmentStructure s1 WHERE s1.AD_Org_ID = s.AD_Org_ID AND s.C_ElementValue_ID = s1.C_ElementValue_ID ) " ;
 		DB.executeUpdate(sql, trxName);		
 		MShareholder.updateInvestmentReceived(AD_Org_ID, trxName);
 		MShareholder.updateUnallocatedAmt(AD_Org_ID, trxName);
