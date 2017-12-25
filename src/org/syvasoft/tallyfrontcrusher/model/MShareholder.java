@@ -44,7 +44,7 @@ public class MShareholder extends X_TF_Shareholder {
 
 	private int createAccount(String value, String name) {
 		int elementID = Env.getContextAsInt(getCtx(), "#C_Element_ID");
-		String where = "C_Element_ID = ? AND UPPER(TRIM(Value))=UPPER(TRIM(?))";
+		String where = "C_Element_ID = ? AND UPPER(TRIM(Name))=UPPER(TRIM(?))";
 		List<TF_MElementValue> accts = new Query(getCtx(), TF_MElementValue.Table_Name, where, get_TrxName())
 				.setClient_ID().setParameters(elementID, name).list();
 		if(accts.size() > 0 ) {
