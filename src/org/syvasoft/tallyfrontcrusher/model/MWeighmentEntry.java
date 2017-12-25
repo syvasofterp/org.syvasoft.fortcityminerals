@@ -24,36 +24,39 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 	protected boolean beforeSave(boolean newRecord) {
 		boolean ok = super.beforeSave(newRecord);
 		
-		if(getGrossWeight().doubleValue() > 0 && getTareWeight().doubleValue() <=0)
-			throw new AdempiereException("Tare Weight should be greater than ZERO!");
+		if(getTF_RentedVehicle_ID() > 0 && (getVehicleNo() == null || getVehicleNo().length() == 0))
+				setVehicleNo(getTF_RentedVehicle().getVehicleNo());
 		
-		if(getNetWeight().doubleValue() < 0)
-			throw new AdempiereException("Gross Weight should be greater Tare Weight!");
+		//if(getGrossWeight().doubleValue() > 0 && getTareWeight().doubleValue() <=0)
+		//	throw new AdempiereException("Tare Weight should be greater than ZERO!");
 		
-		if(getTareWeight().doubleValue() > 0 
-				&& is_ValueChanged(COLUMNNAME_TareWeight)) {
+		//if(getNetWeight().doubleValue() < 0)
+		//	throw new AdempiereException("Gross Weight should be greater Tare Weight!");
+		
+		//if(getTareWeight().doubleValue() > 0 
+		//		&& is_ValueChanged(COLUMNNAME_TareWeight)) {
 			//Timestamp tareWeightTime = new Timestamp(System.currentTimeMillis());
 			//setTareWeightTime(tareWeightTime);
-			setStatus(STATUS_InProgress);
+		//	setStatus(STATUS_InProgress);
 			
-			if (getGrossWeight().doubleValue() > 0)
-				setStatus(STATUS_Unbilled);
-		}
-		else if(getTareWeight().doubleValue() == 0) {
-			setTareWeightTime(null);
-			setStatus(STATUS_InProgress);
-		}
+		//	if (getGrossWeight().doubleValue() > 0)
+		//		setStatus(STATUS_Unbilled);
+		//}
+		//else if(getTareWeight().doubleValue() == 0) {
+		//	setTareWeightTime(null);
+		//	setStatus(STATUS_InProgress);
+		//}
 		
-		if(getGrossWeight().doubleValue() > 0 
-				&& is_ValueChanged(COLUMNNAME_GrossWeight) ) {
+		//if(getGrossWeight().doubleValue() > 0 
+		//		&& is_ValueChanged(COLUMNNAME_GrossWeight) ) {
 			//Timestamp grossWeightTime = new Timestamp(System.currentTimeMillis());
 			//setGrossWeightTime(grossWeightTime);		
-			setStatus(STATUS_Unbilled);
-		}
-		else if(getGrossWeight().doubleValue() == 0) {
+		//	setStatus(STATUS_Unbilled);
+		//}
+		//else if(getGrossWeight().doubleValue() == 0) {
 			//setGrossWeightTime(null);
-			setStatus(STATUS_InProgress);
-		}
+		//	setStatus(STATUS_InProgress);
+		//}
 		
 		return ok;
 	}
