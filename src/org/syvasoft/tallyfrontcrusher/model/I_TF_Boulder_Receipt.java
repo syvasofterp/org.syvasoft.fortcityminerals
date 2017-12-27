@@ -23,7 +23,7 @@ import org.compiere.util.KeyNamePair;
 
 /** Generated Interface for TF_Boulder_Receipt
  *  @author iDempiere (generated) 
- *  @version Release 3.1
+ *  @version Release 4.1
  */
 @SuppressWarnings("all")
 public interface I_TF_Boulder_Receipt 
@@ -67,13 +67,13 @@ public interface I_TF_Boulder_Receipt
     /** Column name C_Project_ID */
     public static final String COLUMNNAME_C_Project_ID = "C_Project_ID";
 
-	/** Set Subcontract / Job Work.
-	  * Subcontract / Job Work
+	/** Set Project.
+	  * Financial Project
 	  */
 	public void setC_Project_ID (int C_Project_ID);
 
-	/** Get Subcontract / Job Work.
-	  * Subcontract / Job Work
+	/** Get Project.
+	  * Financial Project
 	  */
 	public int getC_Project_ID();
 
@@ -514,6 +514,17 @@ public interface I_TF_Boulder_Receipt
 
 	public I_TF_Quarry_Rent getTF_Quarry_Rent() throws RuntimeException;
 
+    /** Column name TF_RMSubcon_Movement_ID */
+    public static final String COLUMNNAME_TF_RMSubcon_Movement_ID = "TF_RMSubcon_Movement_ID";
+
+	/** Set Subcontract Material Movement	  */
+	public void setTF_RMSubcon_Movement_ID (int TF_RMSubcon_Movement_ID);
+
+	/** Get Subcontract Material Movement	  */
+	public int getTF_RMSubcon_Movement_ID();
+
+	public I_TF_RMSubcon_Movement getTF_RMSubcon_Movement() throws RuntimeException;
+
     /** Column name TF_Send_To */
     public static final String COLUMNNAME_TF_Send_To = "TF_Send_To";
 
@@ -533,6 +544,17 @@ public interface I_TF_Boulder_Receipt
 	public int getTF_Vehicle_Rent_ID();
 
 	public I_TF_Vehicle_Rent getTF_Vehicle_Rent() throws RuntimeException;
+
+    /** Column name TF_WeighmentEntry_ID */
+    public static final String COLUMNNAME_TF_WeighmentEntry_ID = "TF_WeighmentEntry_ID";
+
+	/** Set Weighment Entry	  */
+	public void setTF_WeighmentEntry_ID (int TF_WeighmentEntry_ID);
+
+	/** Get Weighment Entry	  */
+	public int getTF_WeighmentEntry_ID();
+
+	public I_TF_WeighmentEntry getTF_WeighmentEntry() throws RuntimeException;
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";
@@ -571,4 +593,13 @@ public interface I_TF_Boulder_Receipt
 	public int getVehicle_Rent_Journal_ID();
 
 	public org.compiere.model.I_GL_Journal getVehicle_Rent_Journal() throws RuntimeException;
+
+    /** Column name VehicleNo */
+    public static final String COLUMNNAME_VehicleNo = "VehicleNo";
+
+	/** Set Vehicle No	  */
+	public void setVehicleNo (String VehicleNo);
+
+	/** Get Vehicle No	  */
+	public String getVehicleNo();
 }

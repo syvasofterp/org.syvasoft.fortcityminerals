@@ -26,14 +26,14 @@ import org.compiere.util.Env;
 
 /** Generated Model for TF_Boulder_Receipt
  *  @author iDempiere (generated) 
- *  @version Release 3.1 - $Id$ */
+ *  @version Release 4.1 - $Id$ */
 public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_Persistent 
 {
 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170812L;
+	private static final long serialVersionUID = 20171227L;
 
     /** Standard Constructor */
     public X_TF_Boulder_Receipt (Properties ctx, int TF_Boulder_Receipt_ID, String trxName)
@@ -54,7 +54,6 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 			setJobwork_StdPrice (Env.ZERO);
 // 0
 			setM_Product_ID (0);
-// 1000099
 			setM_Warehouse_ID (0);
 			setProcessed (false);
 			setSubcontractor_ID (0);
@@ -98,9 +97,9 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 		return (org.compiere.model.I_C_Project)MTable.get(getCtx(), org.compiere.model.I_C_Project.Table_Name)
 			.getPO(getC_Project_ID(), get_TrxName());	}
 
-	/** Set Subcontract / Job Work.
+	/** Set Project.
 		@param C_Project_ID 
-		Subcontract / Job Work
+		Financial Project
 	  */
 	public void setC_Project_ID (int C_Project_ID)
 	{
@@ -110,8 +109,8 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 			set_Value (COLUMNNAME_C_Project_ID, Integer.valueOf(C_Project_ID));
 	}
 
-	/** Get Subcontract / Job Work.
-		@return Subcontract / Job Work
+	/** Get Project.
+		@return Financial Project
 	  */
 	public int getC_Project_ID () 
 	{
@@ -960,10 +959,37 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 		return ii.intValue();
 	}
 
+	public I_TF_RMSubcon_Movement getTF_RMSubcon_Movement() throws RuntimeException
+    {
+		return (I_TF_RMSubcon_Movement)MTable.get(getCtx(), I_TF_RMSubcon_Movement.Table_Name)
+			.getPO(getTF_RMSubcon_Movement_ID(), get_TrxName());	}
+
+	/** Set Subcontract Material Movement.
+		@param TF_RMSubcon_Movement_ID Subcontract Material Movement	  */
+	public void setTF_RMSubcon_Movement_ID (int TF_RMSubcon_Movement_ID)
+	{
+		if (TF_RMSubcon_Movement_ID < 1) 
+			set_Value (COLUMNNAME_TF_RMSubcon_Movement_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_RMSubcon_Movement_ID, Integer.valueOf(TF_RMSubcon_Movement_ID));
+	}
+
+	/** Get Subcontract Material Movement.
+		@return Subcontract Material Movement	  */
+	public int getTF_RMSubcon_Movement_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_RMSubcon_Movement_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	/** Production = P */
 	public static final String TF_SEND_TO_Production = "P";
 	/** Stock = S */
 	public static final String TF_SEND_TO_Stock = "S";
+	/** Subcontract Production = T */
+	public static final String TF_SEND_TO_SubcontractProduction = "T";
 	/** Set Send To.
 		@param TF_Send_To Send To	  */
 	public void setTF_Send_To (String TF_Send_To)
@@ -999,6 +1025,31 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 	public int getTF_Vehicle_Rent_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Vehicle_Rent_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public I_TF_WeighmentEntry getTF_WeighmentEntry() throws RuntimeException
+    {
+		return (I_TF_WeighmentEntry)MTable.get(getCtx(), I_TF_WeighmentEntry.Table_Name)
+			.getPO(getTF_WeighmentEntry_ID(), get_TrxName());	}
+
+	/** Set Weighment Entry.
+		@param TF_WeighmentEntry_ID Weighment Entry	  */
+	public void setTF_WeighmentEntry_ID (int TF_WeighmentEntry_ID)
+	{
+		if (TF_WeighmentEntry_ID < 1) 
+			set_Value (COLUMNNAME_TF_WeighmentEntry_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_WeighmentEntry_ID, Integer.valueOf(TF_WeighmentEntry_ID));
+	}
+
+	/** Get Weighment Entry.
+		@return Weighment Entry	  */
+	public int getTF_WeighmentEntry_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_WeighmentEntry_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
@@ -1052,5 +1103,19 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
+	}
+
+	/** Set Vehicle No.
+		@param VehicleNo Vehicle No	  */
+	public void setVehicleNo (String VehicleNo)
+	{
+		set_Value (COLUMNNAME_VehicleNo, VehicleNo);
+	}
+
+	/** Get Vehicle No.
+		@return Vehicle No	  */
+	public String getVehicleNo () 
+	{
+		return (String)get_Value(COLUMNNAME_VehicleNo);
 	}
 }

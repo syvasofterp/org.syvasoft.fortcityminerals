@@ -8,6 +8,7 @@ import org.adempiere.base.IColumnCalloutFactory;
 import org.compiere.model.MPayment;
 import org.jfree.chart.block.ColumnArrangement;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutBoulderReceipt_JobWork;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutBoulderReceipt_Warehouse;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutElementValue_AccountGroup;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutEmployeeSalary;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutEmployeeSalaryIssue_CalcBalanceAmts;
@@ -191,8 +192,16 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 			list.add(new CalloutRentalContract_ResourceType());
 		
 		//TF_Boulder Receipt - Subcontract / Jobwork
-		if(tableName.equals(MBoulderReceipt.Table_Name) && columnName.equals(MBoulderReceipt.COLUMNNAME_C_Project_ID))
-			list.add(new CalloutBoulderReceipt_JobWork());
+		if(tableName.equals(MBoulderReceipt.Table_Name)) {
+			if(columnName.equals(MBoulderReceipt.COLUMNNAME_C_Project_ID)) {
+				list.add(new CalloutBoulderReceipt_JobWork());
+				list.add(new CalloutBoulderReceipt_Warehouse());
+			}
+			if(columnName.equals(MBoulderReceipt.COLUMNNAME_M_Warehouse_ID))
+				list.add(new CalloutBoulderReceipt_Warehouse());
+					
+		}
+			
 		
 		//TF_TyreAssignment - Tyre, Tyre Assignment Type
 		if(tableName.equals(MTyreAssignment.Table_Name) && (columnName.equals(MTyreAssignment.COLUMNNAME_TF_Tyre_ID) 

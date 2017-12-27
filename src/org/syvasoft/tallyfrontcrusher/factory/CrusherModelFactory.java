@@ -43,6 +43,7 @@ import org.syvasoft.tallyfrontcrusher.model.MRentedVehicle;
 import org.syvasoft.tallyfrontcrusher.model.MShareholder;
 import org.syvasoft.tallyfrontcrusher.model.MShareholderType;
 import org.syvasoft.tallyfrontcrusher.model.MSubcontractMaterialMovement;
+import org.syvasoft.tallyfrontcrusher.model.MSubcontractType;
 import org.syvasoft.tallyfrontcrusher.model.MTripSheet;
 import org.syvasoft.tallyfrontcrusher.model.MTyre;
 import org.syvasoft.tallyfrontcrusher.model.MTyreAssignment;
@@ -56,6 +57,7 @@ import org.syvasoft.tallyfrontcrusher.model.MVehicleRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentalContract;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleType;
 import org.syvasoft.tallyfrontcrusher.model.MWeighmentEntry;
+import org.syvasoft.tallyfrontcrusher.model.MWeighmentErrorLog;
 import org.syvasoft.tallyfrontcrusher.model.TF_MBPartner;
 import org.syvasoft.tallyfrontcrusher.model.TF_MBankAccount;
 import org.syvasoft.tallyfrontcrusher.model.TF_MCharge;
@@ -200,6 +202,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return MInvestmentReceipt.class;
 		//else if (MHomePageShortcuts.Table_Name.equals(tableName))
 		//	return MHomePageShortcuts.class;
+		else if(MSubcontractType.Table_Name.equals(tableName))
+			return MSubcontractType.class;
+		else if(MWeighmentErrorLog.Table_Name.equals(tableName))
+			return MWeighmentErrorLog.class;
 		return null;
 	}
 
@@ -332,6 +338,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MInvestmentReceipt(ctx, Record_ID, trxName);
 		//else if (MHomePageShortcuts.Table_Name.equals(tableName))
 		//	return new MHomePageShortcuts(ctx, Record_ID, tableName);
+		else if(MSubcontractType.Table_Name.equals(tableName))
+			return new MSubcontractType(ctx, Record_ID, trxName);
+		else if(MWeighmentErrorLog.Table_Name.equals(tableName))
+			return new MWeighmentErrorLog(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -464,6 +474,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MInvestmentReceipt(ctx, rs, trxName);
 		//else if (MHomePageShortcuts.Table_Name.equals(tableName))
 		//	return new MHomePageShortcuts(ctx, rs, tableName);
+		else if(MSubcontractType.Table_Name.equals(tableName))
+			return new MSubcontractType(ctx, rs, trxName);
+		else if(MWeighmentErrorLog.Table_Name.equals(tableName))
+			return new MWeighmentErrorLog(ctx, rs, trxName);
 		return null;
 	}
 

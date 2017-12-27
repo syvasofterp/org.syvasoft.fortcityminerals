@@ -1342,7 +1342,7 @@ public class TF_MOrder extends MOrder {
 		
 		TF_MBPartner bp = new TF_MBPartner(getCtx(), proj.getC_BPartner_ID(), get_TrxName());
 		
-		//Debit Note Header
+		//Invoice Header
 		TF_MInvoice invoice = new TF_MInvoice(getCtx(), 0, get_TrxName());
 		invoice.setClientOrg(getAD_Client_ID(), getAD_Org_ID());
 		invoice.setC_DocTypeTarget_ID(1000005);	// AP Invoice		
@@ -1390,7 +1390,7 @@ public class TF_MOrder extends MOrder {
 		inout.setMovementType(MInOut.MOVEMENTTYPE_VendorReceipts);
 		inout.saveEx(get_TrxName());
 		
-		//Material Issue Line
+		//Material Receipt Line
 		MInOutLine ioLine = new MInOutLine(inout);
 		MWarehouse wh = (MWarehouse) getM_Warehouse();
 		ioLine.setInvoiceLine(invLine, wh.getDefaultLocator().get_ID(), getItem1_Qty());
@@ -1406,7 +1406,7 @@ public class TF_MOrder extends MOrder {
 		invLine.setM_InOutLine_ID(ioLine.getM_InOutLine_ID());
 		invLine.saveEx();
 		
-		//Debit Note DocAction
+		//Invoice DocAction
 		if (!invoice.processIt(DocAction.ACTION_Complete))
 			throw new AdempiereException("Failed when processing document - " + invoice.getProcessMsg());
 		invoice.saveEx();
