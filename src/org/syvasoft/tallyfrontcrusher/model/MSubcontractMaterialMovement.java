@@ -50,6 +50,21 @@ public class MSubcontractMaterialMovement extends X_TF_RMSubcon_Movement {
 		}
 	}
 
+	public static int createRawmaterialMovement(String trxName, Timestamp movementDate, int AD_Org_ID, int C_Project_ID, int C_BPartner_ID, 
+			int M_Product_ID, int TF_WeighmentEntry_ID,  BigDecimal QtyReceipt) {
+		MSubcontractMaterialMovement mov = new MSubcontractMaterialMovement(Env.getCtx(), 0, trxName);
+		mov.setAD_Org_ID(AD_Org_ID);
+		mov.setC_Project_ID(C_Project_ID);
+		mov.setC_BPartner_ID(C_BPartner_ID);
+		mov.setM_Product_ID(M_Product_ID);
+		mov.setTF_WeighmentEntry_ID(TF_WeighmentEntry_ID);
+		mov.setMovementDate(movementDate);
+		mov.setQty_Receipt(QtyReceipt);
+		mov.setProcessed(true);
+		mov.saveEx();
+		return mov.getTF_RMSubcon_Movement_ID();
+	}
+	
 	public static void createMaterialMovement(String trxName, Timestamp dateAcct, int C_Project_ID,  int C_Invoice_ID, 
 			int C_BPartner_ID, int M_Product_ID, BigDecimal QtyPayment) {
 		MSubcontractMaterialMovement mov = new MSubcontractMaterialMovement(Env.getCtx(), 0, trxName);

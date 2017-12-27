@@ -298,6 +298,21 @@ public class TF_MInvoice extends MInvoice {
 		return bd;
 	}
 	
+	/** Column name VehicleNo */
+    public static final String COLUMNNAME_VehicleNo = "VehicleNo";
+    /** Set Vehicle No.
+	@param VehicleNo Vehicle No	  */
+	public void setVehicleNo (String VehicleNo)
+	{
+		set_Value (COLUMNNAME_VehicleNo, VehicleNo);
+	}
+	
+	/** Get Vehicle No.
+		@return Vehicle No	  */
+	public String getVehicleNo () 
+	{
+		return (String)get_Value(COLUMNNAME_VehicleNo);
+	}
 	
 	
 	@Override

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.util.Properties;
 
+import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.MProject;
 import org.compiere.model.MProjectType;
 import org.compiere.model.MTable;
@@ -343,6 +344,49 @@ public class TF_MProject extends MProject {
 		return ii.intValue();
 	}
 	
+	/** Column name TF_SubcontractType_ID */
+    public static final String COLUMNNAME_TF_SubcontractType_ID = "TF_SubcontractType_ID";
+    /** Set Subcontract Type.
+	@param TF_SubcontractType_ID Subcontract Type	  */
+	public void setTF_SubcontractType_ID (int TF_SubcontractType_ID)
+	{
+		if (TF_SubcontractType_ID < 1) 
+			set_Value (COLUMNNAME_TF_SubcontractType_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_SubcontractType_ID, Integer.valueOf(TF_SubcontractType_ID));
+	}
+	
+	/** Get Subcontract Type.
+		@return Subcontract Type	  */
+	public int getTF_SubcontractType_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_SubcontractType_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+    /** Column name TF_Quarry_ID */
+    public static final String COLUMNNAME_TF_Quarry_ID = "TF_Quarry_ID";
+    /** Set Quarry.
+	@param TF_Quarry_ID Quarry	  */
+	public void setTF_Quarry_ID (int TF_Quarry_ID)
+	{
+		if (TF_Quarry_ID < 1) 
+			set_Value (COLUMNNAME_TF_Quarry_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_Quarry_ID, Integer.valueOf(TF_Quarry_ID));
+	}
+	
+	/** Get Quarry.
+		@return Quarry	  */
+	public int getTF_Quarry_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Quarry_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+	
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
 		if(getDocumentNo() != null && (getValue() == null || getValue().length()==0))
@@ -355,6 +399,19 @@ public class TF_MProject extends MProject {
 		//Update Contract Amt Actual
 		if(is_ValueChanged(COLUMNNAME_QtyProcessed) || is_ValueChanged(COLUMNNAME_Unit_Price))
 			setContract_Amt_Act(getUnit_Price().multiply(getQtyProcessed()));
+		
+		
+		//1. Jobwork is Mandatory when SubcontractType.Invoice For : Jobwork
+		//2. Quarry is mandatory when SubcontractType.CreateBoulderReceipt is true
+		
+		MSubcontractType contractType = new MSubcontractType(getCtx(), getTF_SubcontractType_ID(), get_TrxName());
+		setSubcontractType(contractType.getSubcontractType());
+		if(contractType.getInvoiceFor().equals(MSubcontractType.INVOICEFOR_Jobwork) && getJobWork_Product_ID() == 0) {
+			throw new AdempiereException("The selected Subcontract Type enforces that the Jobwork is mandatory");
+		}
+		if(contractType.isCreateBoulderReceipt() && getTF_Quarry_ID() == 0) {
+			throw new AdempiereException("The selected Subcontract Type enforces that the Quarry is mandatory");
+		}
 		
 		return super.beforeSave(newRecord);
 	}

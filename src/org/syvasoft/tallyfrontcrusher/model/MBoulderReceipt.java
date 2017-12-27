@@ -12,15 +12,19 @@ import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.MAcctSchema;
 import org.compiere.model.MCostDetail;
 import org.compiere.model.MInvoice;
+import org.compiere.model.MInvoiceLine;
 import org.compiere.model.MJournal;
 import org.compiere.model.MJournalLine;
 import org.compiere.model.MPeriod;
+import org.compiere.model.MPriceList;
 import org.compiere.model.MPriceListVersion;
 import org.compiere.model.MProductPricing;
 import org.compiere.model.MStorageOnHand;
 import org.compiere.model.MTransaction;
 import org.compiere.model.MWarehouse;
+import org.compiere.model.Query;
 import org.compiere.model.MCost.QtyCost;
+import org.compiere.process.DocAction;
 import org.compiere.util.CLogger;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
@@ -71,10 +75,134 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 			}
 			
 			setJobwork_StdPrice(priceStd);
-			
 		}
+		
+		if(newRecord || is_ValueChanged(COLUMNNAME_M_Warehouse_ID)) {
+			TF_MProject proj = new Query(getCtx(), TF_MProject.Table_Name, "M_Warehouse_ID=? AND DocStatus='IP'", null)
+					.setParameters(getM_Warehouse_ID()).first();
+			if(proj != null) {
+				MSubcontractType st = new MSubcontractType(getCtx(), proj.getTF_SubcontractType_ID(), get_TrxName());
+				if(st.getSubcontractType().equals(MSubcontractType.SUBCONTRACTTYPE_CrusherProduction))
+					setTF_Send_To(TF_SEND_TO_SubcontractProduction);
+				}
+			else
+				setTF_Send_To(TF_SEND_TO_Stock); //for time being, it is set as Stock
+		}
+		
 				
 		return super.beforeSave(newRecord);
+	}
+	
+	public void createSubcontractMovement() {
+		TF_MProject proj = new Query(getCtx(), TF_MProject.Table_Name, "M_Warehouse_ID=? AND DocStatus='IP'", null)
+				.setParameters(getM_Warehouse_ID()).first();
+		if(proj != null) {
+			MSubcontractType st = new MSubcontractType(getCtx(), proj.getTF_SubcontractType_ID(), get_TrxName());
+			if(st.isTrackMaterialMovement()) {
+				int matMov_ID = MSubcontractMaterialMovement.createRawmaterialMovement(get_TrxName(), getDateAcct(), getAD_Org_ID(),
+						proj.getC_Project_ID(), proj.getC_BPartner_ID(), getM_Product_ID(), getTF_WeighmentEntry_ID(), getQtyReceived());
+				setTF_RMSubcon_Movement_ID(matMov_ID);
+			}
+		}
+			
+	}
+	public void createFromWeighmentEntry(MWeighmentEntry entry) {
+		setAD_Org_ID(entry.getAD_Org_ID());
+		setDateReceipt(entry.getTareWeightTime());
+		setDateAcct(entry.getTareWeightTime());
+		setC_Project_ID(entry.getC_Project_ID());
+		setSubcontractor_ID(entry.getC_BPartner_ID());
+		TF_MProject proj = new TF_MProject(getCtx(), entry.getC_Project_ID(), get_TrxName());
+		setTF_Quarry_ID(proj.getTF_Quarry_ID());
+		setM_Product_ID(entry.getM_Product_ID());
+		setJobWork_Product_ID(proj.getJobWork_Product_ID());
+		setQtyReceived( new BigDecimal(entry.getNetWeight().doubleValue()/1000));
+		setC_UOM_ID(proj.getC_UOM_ID());
+		setM_Warehouse_ID(entry.getM_Warehouse_ID());
+		setDescription(entry.getDescription());
+		setVehicleNo(entry.getVehicleNo());
+		setDocStatus(DOCSTATUS_Drafted);
+		setDocAction(DOCACTION_Complete);
+		setTF_WeighmentEntry_ID(entry.getTF_WeighmentEntry_ID());		
+	}
+	
+	public void createSubcontractInvoice() {
+		TF_MProject proj = new TF_MProject(getCtx(), getC_Project_ID(), get_TrxName());
+		MSubcontractType st = new MSubcontractType(getCtx(), proj.getTF_SubcontractType_ID(), get_TrxName());
+		if(!st.isCreateBoulderReceipt())
+			return;
+		int invoiceItem_id = 0;
+		int priceItem_id = 0;
+		String priceItemName = null;
+		
+		
+		if(st.getInvoiceFor().equals(MSubcontractType.INVOICEFOR_Jobwork))
+			invoiceItem_id = getJobWork_Product_ID();
+		else
+			invoiceItem_id = getM_Product_ID();
+		
+		if(st.getInvoicePriceFrom().equals(MSubcontractType.INVOICEPRICEFROM_Jobwork)) {
+			priceItem_id = getJobWork_Product_ID();
+			priceItemName = getJobWork_Product().getName();
+		}
+		else {
+			priceItem_id = getM_Product_ID();
+			priceItemName = getM_Product().getName();
+		}
+		
+		//Crusher Production Subcontract Purchase		
+		BigDecimal purchasePrice = MJobworkProductPrice.getPrice(getCtx(), getC_Project_ID(), priceItem_id, getDateAcct()) ;
+		if(purchasePrice == null) 
+			throw new AdempiereException("Please setup Contract Price for " + priceItemName + "!");
+		
+		TF_MBPartner bp = new TF_MBPartner(getCtx(), proj.getC_BPartner_ID(), get_TrxName());
+		
+		//Purchase Invoice Header
+		TF_MInvoice invoice = new TF_MInvoice(getCtx(), 0, get_TrxName());
+		invoice.setClientOrg(getAD_Client_ID(), getAD_Org_ID());
+		invoice.setC_DocTypeTarget_ID(1000005);	// AP Invoice		
+		invoice.setDateInvoiced(getDateReceipt());
+		invoice.setDateAcct(getDateAcct());
+		//
+		invoice.setSalesRep_ID(Env.getAD_User_ID(getCtx()));
+		//
+		
+		invoice.setBPartner(bp);
+		invoice.setIsSOTrx(false);		
+		invoice.setVehicleNo(getVehicleNo());
+		
+		invoice.setDescription("Created from Boulder Receipt: " + getDocumentNo());
+		
+		//Price List
+		int m_M_PriceList_ID = Env.getContextAsInt(getCtx(), "#M_PriceList_ID");
+		if(bp.getPO_PriceList_ID() > 0)
+			m_M_PriceList_ID = bp.getPO_PriceList_ID();			
+		invoice.setM_PriceList_ID(m_M_PriceList_ID);
+		invoice.setC_Currency_ID(MPriceList.get(getCtx(), m_M_PriceList_ID, get_TrxName()).getC_Currency_ID());
+				
+		invoice.saveEx();
+		//End Invoice Header
+		
+		//Invoice Line - Vehicle Rental Charge
+		MInvoiceLine invLine = new MInvoiceLine(invoice);
+		invLine.setM_Product_ID(invoiceItem_id , true);				
+		
+		invLine.setQty(getQtyReceived());
+		invLine.setDescription(getDescription());
+		
+		invLine.setPriceActual(purchasePrice);
+		invLine.setPriceList(purchasePrice);
+		invLine.setPriceLimit(purchasePrice);
+		invLine.setPriceEntered(purchasePrice);
+		
+		invLine.setC_Tax_ID(1000000);
+		invLine.saveEx();
+		
+		//Invoice DocAction
+		if (!invoice.processIt(DocAction.ACTION_Complete))
+			throw new AdempiereException("Failed when processing document - " + invoice.getProcessMsg());
+		invoice.saveEx();
+		setSubcon_Invoice_ID(invoice.getC_Invoice_ID());
 	}
 	
 	public String processIt(String DocAction) {
@@ -83,9 +211,30 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 			setDocStatus(DOCSTATUS_InProgress);
 		}
 		else if(MBoulderReceipt.DOCACTION_Complete.equals(DocAction)) {
-			MWarehouse warehouse = MWarehouse.get(getCtx(), getM_Warehouse_ID());
-			int defaultLocatorID = warehouse.getDefaultLocator().getM_Locator_ID();
 			
+			MWarehouse warehouse = MWarehouse.get(getCtx(), getM_Warehouse_ID());
+			//int defaultLocatorID = warehouse.getDefaultLocator().getM_Locator_ID();
+			
+			if(getTF_Send_To().equals(TF_SEND_TO_SubcontractProduction)) {
+				createSubcontractMovement();
+				createSubcontractInvoice();
+				setDocStatus(DOCSTATUS_Completed);
+				setProcessed(true);
+				return null;
+			}
+			else {				
+				String desc = getDescription();
+				if(desc == null)
+					desc = "";
+				if(!desc.contains("ERROR:")) {
+					setDescription(desc + 
+							" | ERROR: Send to Stock is not yet implemented!");					
+				}
+				return null;
+			}	
+		}
+		return null;
+			/*
 			//Update Storage for the received Product from the Joborder.
 			if (!MStorageOnHand.add(getCtx(), getM_Warehouse_ID(),
 					defaultLocatorID,
@@ -176,15 +325,25 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 		if(TF_SEND_TO_Production.equals(getTF_Send_To())) {
 			m_processMsg = postCrusherProduction();
 		}
-		return m_processMsg;
+		
+		return m_processMsg;*/
 	}
 	
 	public void reverseIt() {
-		
+		setProcessed(false);
+		setDocStatus(DOCSTATUS_Drafted);		
 		if(getSubcon_Invoice_ID()>0) {			
-			throw new AdempiereException("You cannot modify this entry before Reverse Correct Subcontractor Invoice!");
+			//throw new AdempiereException("You cannot modify this entry before Reverse Correct Subcontractor Invoice!");
+			TF_MInvoice inv = new TF_MInvoice(getCtx(), getSubcon_Invoice_ID(), get_TrxName());			
+			inv.reverseCorrectIt();
+			inv.saveEx();
+			MSubcontractMaterialMovement mov = new MSubcontractMaterialMovement(getCtx(), getTF_RMSubcon_Movement_ID(), get_TrxName());
+			mov.deleteEx(true);
+			setSubcon_Invoice_ID(0);
+			setTF_RMSubcon_Movement_ID(0);
+			return;
 		}
-				
+		
 		MWarehouse warehouse = MWarehouse.get(getCtx(), getM_Warehouse_ID());
 		int defaultLocatorID = warehouse.getDefaultLocator().getM_Locator_ID();
 		String m_processMsg; 
@@ -240,15 +399,16 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 			rent.deleteEx(true);
 		}
 		
-		if(getC_Project_ID() > 0) {
-			TF_MProject jobWork = new TF_MProject(getCtx(), getC_Project_ID(), get_TrxName());
-			jobWork.reverseBoulderReceiptBasedFields(this);
-			jobWork.saveEx();
-		}
+		//if(getC_Project_ID() > 0) {
+		//	TF_MProject jobWork = new TF_MProject(getCtx(), getC_Project_ID(), get_TrxName());
+		//	jobWork.reverseBoulderReceiptBasedFields(this);
+		//	jobWork.saveEx();
+		//}
 		
 		setProcessed(false);
 		setDocStatus(DOCSTATUS_Drafted);		
 	}
+		
 	
 	public String postCrusherProduction() {
 		String m_processMsg = null;

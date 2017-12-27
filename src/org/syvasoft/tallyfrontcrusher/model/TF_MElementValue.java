@@ -104,8 +104,8 @@ public class TF_MElementValue extends MElementValue {
 		}
 		if(newRecord) {
 			String sql = "SELECT o.Name FROM C_ElementValue e INNER JOIN AD_Org o ON e.DefaultOrg_ID = o.AD_Org_ID " +
-			" WHERE C_Element_ID = ? AND UPPER(TRIM(e.Value)) = UPPER(TRIM(?)) ";
-			String orgName = DB.getSQLValueString(get_TrxName(), sql, getC_Element_ID(), getValue());
+			" WHERE C_Element_ID = ? AND UPPER(TRIM(e.Name)) = UPPER(TRIM(?)) ";
+			String orgName = DB.getSQLValueString(get_TrxName(), sql, getC_Element_ID(), getName());
 			if(orgName != null) {
 				throw new AdempiereException("This account head is already existed under " + orgName + " organization!" );
 			}
