@@ -18,8 +18,7 @@ public class CalloutOrder_Warehouse implements IColumnCallout {
 		if(mTab.getValue(TF_MOrder.COLUMNNAME_M_Warehouse_ID) != null)
 			warehouseID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_M_Warehouse_ID);
 		
-		TF_MProject proj = new Query(ctx, TF_MProject.Table_Name, "M_Warehouse_ID=? AND DocStatus='IP'", null)
-				.setParameters(warehouseID).first();
+		TF_MProject proj = TF_MProject.getCrusherProductionSubcontractByWarehouse(warehouseID);
 		if(proj != null)
 			projectID = proj.getC_Project_ID();
 		

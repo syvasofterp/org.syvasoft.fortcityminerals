@@ -1335,8 +1335,16 @@ public class TF_MOrder extends MOrder {
 				proj.getM_Warehouse_ID() != getM_Warehouse_ID())
 			return;
 		
+		MSubcontractType st = new MSubcontractType(getCtx(), proj.getTF_SubcontractType_ID(), get_TrxName());
+		
+		int priceItem_Id = 0;
+		if(st.getInvoicePriceFrom().equals(MSubcontractType.INVOICEPRICEFROM_Jobwork)) 
+			priceItem_Id = proj.getJobWork_Product_ID();
+		else
+			priceItem_Id = getItem1_ID();
+		
 		//Crusher Production Subcontract Purchase		
-		BigDecimal purchasePrice = MJobworkProductPrice.getPrice(getCtx(), getC_Project_ID(), getItem1_ID(), getDateAcct()) ;
+		BigDecimal purchasePrice = MJobworkProductPrice.getPrice(getCtx(), getC_Project_ID(), priceItem_Id, getDateAcct()) ;
 		if(purchasePrice == null)
 			throw new AdempiereException("Please setup Contract Price for " + getItem1().getName() + "!");
 		
@@ -1349,12 +1357,12 @@ public class TF_MOrder extends MOrder {
 		invoice.setDateInvoiced(getDateOrdered());
 		invoice.setDateAcct(getDateAcct());
 		//
-		invoice.setSalesRep_ID(Env.getAD_User_ID(getCtx()));
+		invoice.setSalesRep_ID(Env.getAD_User_ID(getCtx()));		
 		//
 		
 		invoice.setBPartner(bp);
 		invoice.setIsSOTrx(false);		
-		
+		invoice.setVehicleNo(getVehicleNo());
 		invoice.setDescription("Created from Sales: " + getDocumentNo());
 		
 		//Price List
@@ -1411,8 +1419,9 @@ public class TF_MOrder extends MOrder {
 			throw new AdempiereException("Failed when processing document - " + invoice.getProcessMsg());
 		invoice.saveEx();
 		//End DocAction
-		MSubcontractMaterialMovement.createMaterialMovement(get_TrxName(), getDateAcct(), getC_Project_ID(),
-				invoice.getC_Invoice_ID(), invoice.getC_BPartner_ID(), getItem1_ID(), getItem1_Qty());
+		if(st.isTrackMaterialMovement())
+			MSubcontractMaterialMovement.createMaterialMovement(get_TrxName(), getDateAcct(),getAD_Org_ID(), getC_Project_ID(),
+					invoice.getC_Invoice_ID(), invoice.getC_BPartner_ID(), getItem1_ID(), getItem1_Qty());
 		setSubcon_Invoice_ID(invoice.getC_Invoice_ID());
 		setSubcon_Receipt_ID(inout.getM_InOut_ID());		
 	}

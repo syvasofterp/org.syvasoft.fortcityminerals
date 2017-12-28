@@ -56,6 +56,9 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 			int uom_id = weighment.getM_Product().getC_UOM_ID();
 			int tonnage_uom_id = MSysConfig.getIntValue("TONNAGE_UOM", 1000069, Env.getAD_Client_ID(ctx));
 			
+			if(weighment.getM_Warehouse_ID() > 0)
+				mTab.setValue(TF_MOrder.COLUMNNAME_M_Warehouse_ID, weighment.getM_Warehouse_ID());
+			
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_ID, weighment.getM_Product_ID());
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Tax_ID, Env.getContext(ctx, "#C_Tax_ID"));
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_UOM_ID, uom_id);
@@ -91,7 +94,7 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 			
 			if(weighment.getPaymentRule() != null)
 				mTab.setValue(TF_MOrder.COLUMNNAME_PaymentRule, weighment.getPaymentRule());
-			
+									
 			mTab.setValue(TF_MOrder.COLUMNNAME_VehicleNo, weighment.getVehicleNo());
 		}
 		return null;

@@ -8,6 +8,7 @@ import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.MProject;
 import org.compiere.model.MProjectType;
 import org.compiere.model.MTable;
+import org.compiere.model.Query;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
 
@@ -449,6 +450,14 @@ public class TF_MProject extends MProject {
 						br.getQtyReceived().negate(), br.getC_UOM_ID(), br.get_TrxName());
 		}
 		
+	}
+	
+	public static TF_MProject getCrusherProductionSubcontractByWarehouse(int M_Warehouse_ID) {
+		TF_MProject proj = new Query(Env.getCtx(), TF_MProject.Table_Name, "M_Warehouse_ID=? AND DocStatus='IP' "
+				+ " AND C_Project.TF_SubcontractType_ID IN (SELECT a.TF_SubcontractType_ID FROM TF_SubcontractType a "
+				+ " WHERE a.SubcontractType='CP')", null)
+				.setParameters(M_Warehouse_ID).first();
+		return proj;
 	}
 
 }
