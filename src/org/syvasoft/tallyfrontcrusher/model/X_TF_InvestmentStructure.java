@@ -33,7 +33,7 @@ public class X_TF_InvestmentStructure extends PO implements I_TF_InvestmentStruc
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20171214L;
+	private static final long serialVersionUID = 20171228L;
 
     /** Standard Constructor */
     public X_TF_InvestmentStructure (Properties ctx, int TF_InvestmentStructure_ID, String trxName)
@@ -152,6 +152,39 @@ public class X_TF_InvestmentStructure extends PO implements I_TF_InvestmentStruc
 		return (String)get_Value(COLUMNNAME_Description);
 	}
 
+	/** Set Estimated Amount.
+		@param EstimatedAmount Estimated Amount	  */
+	public void setEstimatedAmount (BigDecimal EstimatedAmount)
+	{
+		set_Value (COLUMNNAME_EstimatedAmount, EstimatedAmount);
+	}
+
+	/** Get Estimated Amount.
+		@return Estimated Amount	  */
+	public BigDecimal getEstimatedAmount () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_EstimatedAmount);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set Estimated Balance.
+		@param EstimatedBalance Estimated Balance	  */
+	public void setEstimatedBalance (BigDecimal EstimatedBalance)
+	{
+		throw new IllegalArgumentException ("EstimatedBalance is virtual column");	}
+
+	/** Get Estimated Balance.
+		@return Estimated Balance	  */
+	public BigDecimal getEstimatedBalance () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_EstimatedBalance);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
 	public org.compiere.model.I_GL_Journal getGL_Journal() throws RuntimeException
     {
 		return (org.compiere.model.I_GL_Journal)MTable.get(getCtx(), org.compiere.model.I_GL_Journal.Table_Name)
@@ -175,6 +208,56 @@ public class X_TF_InvestmentStructure extends PO implements I_TF_InvestmentStruc
 	public int getGL_Journal_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_GL_Journal_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_GL_Journal getGL_JournalInvAcct() throws RuntimeException
+    {
+		return (org.compiere.model.I_GL_Journal)MTable.get(getCtx(), org.compiere.model.I_GL_Journal.Table_Name)
+			.getPO(getGL_JournalInvAcct_ID(), get_TrxName());	}
+
+	/** Set Investment a/c Adj.
+		@param GL_JournalInvAcct_ID Investment a/c Adj	  */
+	public void setGL_JournalInvAcct_ID (int GL_JournalInvAcct_ID)
+	{
+		if (GL_JournalInvAcct_ID < 1) 
+			set_Value (COLUMNNAME_GL_JournalInvAcct_ID, null);
+		else 
+			set_Value (COLUMNNAME_GL_JournalInvAcct_ID, Integer.valueOf(GL_JournalInvAcct_ID));
+	}
+
+	/** Get Investment a/c Adj.
+		@return Investment a/c Adj	  */
+	public int getGL_JournalInvAcct_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_GL_JournalInvAcct_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_GL_Journal getGL_JournalSubPartnerAdj() throws RuntimeException
+    {
+		return (org.compiere.model.I_GL_Journal)MTable.get(getCtx(), org.compiere.model.I_GL_Journal.Table_Name)
+			.getPO(getGL_JournalSubPartnerAdj_ID(), get_TrxName());	}
+
+	/** Set Sub-Shareholder a/c Adj.
+		@param GL_JournalSubPartnerAdj_ID Sub-Shareholder a/c Adj	  */
+	public void setGL_JournalSubPartnerAdj_ID (int GL_JournalSubPartnerAdj_ID)
+	{
+		if (GL_JournalSubPartnerAdj_ID < 1) 
+			set_Value (COLUMNNAME_GL_JournalSubPartnerAdj_ID, null);
+		else 
+			set_Value (COLUMNNAME_GL_JournalSubPartnerAdj_ID, Integer.valueOf(GL_JournalSubPartnerAdj_ID));
+	}
+
+	/** Get Sub-Shareholder a/c Adj.
+		@return Sub-Shareholder a/c Adj	  */
+	public int getGL_JournalSubPartnerAdj_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_GL_JournalSubPartnerAdj_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();

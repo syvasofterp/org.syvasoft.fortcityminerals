@@ -57,7 +57,11 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 			//setGrossWeightTime(null);
 		//	setStatus(STATUS_InProgress);
 		//}
-		
+		if(getTF_RentedVehicle_ID() > 0 && !getTF_RentedVehicle().getTareWeight().equals(getTareWeight())) {
+			MRentedVehicle v = new MRentedVehicle(getCtx(), getTF_RentedVehicle_ID(), get_TrxName());
+			v.setTareWeight(getTareWeight());
+			v.saveEx();
+		}
 		return ok;
 	}
 	
