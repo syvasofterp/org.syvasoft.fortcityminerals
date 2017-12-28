@@ -130,6 +130,24 @@ public interface I_TF_InvestmentStructure
 	  */
 	public String getDescription();
 
+    /** Column name EstimatedAmount */
+    public static final String COLUMNNAME_EstimatedAmount = "EstimatedAmount";
+
+	/** Set Estimated Amount	  */
+	public void setEstimatedAmount (BigDecimal EstimatedAmount);
+
+	/** Get Estimated Amount	  */
+	public BigDecimal getEstimatedAmount();
+
+    /** Column name EstimatedBalance */
+    public static final String COLUMNNAME_EstimatedBalance = "EstimatedBalance";
+
+	/** Set Estimated Balance	  */
+	public void setEstimatedBalance (BigDecimal EstimatedBalance);
+
+	/** Get Estimated Balance	  */
+	public BigDecimal getEstimatedBalance();
+
     /** Column name GL_Journal_ID */
     public static final String COLUMNNAME_GL_Journal_ID = "GL_Journal_ID";
 
@@ -144,6 +162,28 @@ public interface I_TF_InvestmentStructure
 	public int getGL_Journal_ID();
 
 	public org.compiere.model.I_GL_Journal getGL_Journal() throws RuntimeException;
+
+    /** Column name GL_JournalInvAcct_ID */
+    public static final String COLUMNNAME_GL_JournalInvAcct_ID = "GL_JournalInvAcct_ID";
+
+	/** Set Investment a/c Adj	  */
+	public void setGL_JournalInvAcct_ID (int GL_JournalInvAcct_ID);
+
+	/** Get Investment a/c Adj	  */
+	public int getGL_JournalInvAcct_ID();
+
+	public org.compiere.model.I_GL_Journal getGL_JournalInvAcct() throws RuntimeException;
+
+    /** Column name GL_JournalSubPartnerAdj_ID */
+    public static final String COLUMNNAME_GL_JournalSubPartnerAdj_ID = "GL_JournalSubPartnerAdj_ID";
+
+	/** Set Sub-Shareholder a/c Adj	  */
+	public void setGL_JournalSubPartnerAdj_ID (int GL_JournalSubPartnerAdj_ID);
+
+	/** Get Sub-Shareholder a/c Adj	  */
+	public int getGL_JournalSubPartnerAdj_ID();
+
+	public org.compiere.model.I_GL_Journal getGL_JournalSubPartnerAdj() throws RuntimeException;
 
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";
