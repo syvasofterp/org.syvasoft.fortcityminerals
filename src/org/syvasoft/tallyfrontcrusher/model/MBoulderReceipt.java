@@ -78,8 +78,7 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 		}
 		
 		if(newRecord || is_ValueChanged(COLUMNNAME_M_Warehouse_ID)) {
-			TF_MProject proj = new Query(getCtx(), TF_MProject.Table_Name, "M_Warehouse_ID=? AND DocStatus='IP'", null)
-					.setParameters(getM_Warehouse_ID()).first();
+			TF_MProject proj = TF_MProject.getCrusherProductionSubcontractByWarehouse(getM_Warehouse_ID());
 			if(proj != null) {
 				MSubcontractType st = new MSubcontractType(getCtx(), proj.getTF_SubcontractType_ID(), get_TrxName());
 				if(st.getSubcontractType().equals(MSubcontractType.SUBCONTRACTTYPE_CrusherProduction))
@@ -94,8 +93,7 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 	}
 	
 	public void createSubcontractMovement() {
-		TF_MProject proj = new Query(getCtx(), TF_MProject.Table_Name, "M_Warehouse_ID=? AND DocStatus='IP'", null)
-				.setParameters(getM_Warehouse_ID()).first();
+		TF_MProject proj = TF_MProject.getCrusherProductionSubcontractByWarehouse(getM_Warehouse_ID());
 		if(proj != null) {
 			MSubcontractType st = new MSubcontractType(getCtx(), proj.getTF_SubcontractType_ID(), get_TrxName());
 			if(st.isTrackMaterialMovement()) {
@@ -120,7 +118,7 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 		setC_UOM_ID(proj.getC_UOM_ID());
 		setM_Warehouse_ID(entry.getM_Warehouse_ID());
 		setDescription(entry.getDescription());
-		setVehicleNo(entry.getVehicleNo());
+		setVehicleNo(entry.getVehicleNo());		
 		setDocStatus(DOCSTATUS_Drafted);
 		setDocAction(DOCACTION_Complete);
 		setTF_WeighmentEntry_ID(entry.getTF_WeighmentEntry_ID());		
