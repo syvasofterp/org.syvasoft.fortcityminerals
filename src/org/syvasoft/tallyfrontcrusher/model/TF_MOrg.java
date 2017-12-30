@@ -80,4 +80,45 @@ public class TF_MOrg extends MOrg {
 		return org;
 	}
 	
+    /** Column name ShortName */
+    public static final String COLUMNNAME_ShortName = "ShortName";
+    /** Set Short Name.
+	@param ShortName Short Name	  */
+	public void setShortName (String ShortName)
+	{
+		set_Value (COLUMNNAME_ShortName, ShortName);
+	}
+	
+	/** Get Short Name.
+		@return Short Name	  */
+	public String getShortName () 
+	{
+		String shortName = (String)get_Value(COLUMNNAME_ShortName); 
+		if(shortName == null || shortName.trim().length() == 0)
+			shortName = getName();
+		return shortName;		
+	}
+	
+	/** Column name IsDemo */
+    public static final String COLUMNNAME_IsDemo = "IsDemo";
+    /** Set Demo.
+	@param IsDemo Demo	  */
+	public void setIsDemo (boolean IsDemo)
+	{
+		set_Value (COLUMNNAME_IsDemo, Boolean.valueOf(IsDemo));
+	}
+	
+	/** Get Demo.
+		@return Demo	  */
+	public boolean isDemo () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsDemo);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
 }

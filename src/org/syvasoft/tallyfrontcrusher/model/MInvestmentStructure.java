@@ -161,12 +161,12 @@ public class MInvestmentStructure extends X_TF_InvestmentStructure {
 	
 	public void adjustSubShareholderAccountInHeadOffice() {
 		TF_MOrg org = new TF_MOrg(getCtx(), getAD_Org_ID(), get_TrxName());
-		List<MShareholder> partners = new Query(getCtx(), MShareholder.Table_Name, "AD_Org_ID=? AND TF_ShareholderMain_ID IS NOT NULL" , get_TrxName())
+		List<MShareholder> subPartners = new Query(getCtx(), MShareholder.Table_Name, "AD_Org_ID=? AND TF_ShareholderMain_ID IS NOT NULL" , get_TrxName())
 				.setParameters(getAD_Org_ID()).list();
-		if(partners.size() == 0 || org.getAD_OrgHO_ID() == 0)
+		if(subPartners.size() == 0 || org.getAD_OrgHO_ID() == 0)
 			return;	
 		
-		int mainShareholderCapitalAcct = partners.get(0).getTF_ShareholderMain().getCapitalAcct_ID(); 
+		int mainShareholderCapitalAcct = subPartners.get(0).getTF_ShareholderMain().getCapitalAcct_ID(); 
 		if(org.getHeadOffice().getInvestmentAcct_ID() != mainShareholderCapitalAcct) {
 			log.warning("Main Shareholder does not match with Head Office Investment Account!");
 			return;
@@ -189,12 +189,19 @@ public class MInvestmentStructure extends X_TF_InvestmentStructure {
 		j.setC_ConversionType_ID(114);				
 		j.saveEx();
 		
-		String sandPoint = org.getName();
-		StringBuilder sbSubPartners = new StringBuilder();
+		String sandPoint = org.getShortName();
+		StringBuilder sbSubPartners = new StringBuilder();		
 		int line = 10;
 		MJournalLine jl;
 		BigDecimal crAmt = BigDecimal.ZERO;
-		for(MShareholder partner : partners) {
+
+		String desc = null;
+		if(getDescription() == null || getDescription().trim().length() == 0)
+			desc = "In " + sandPoint + ", Initial Expense paid for " + getC_ElementValue().getName();
+		else
+			desc = " In " + sandPoint + ", " + getDescription();
+		
+		for(MShareholder partner : subPartners) {
 			double perecent = partner.getInvestmentShare().doubleValue() / 100;
 			BigDecimal Amt = getPayable_Amount().multiply(new BigDecimal(perecent));
 			crAmt = crAmt.add(Amt);
@@ -203,7 +210,7 @@ public class MInvestmentStructure extends X_TF_InvestmentStructure {
 			jl = new MJournalLine(j);
 			jl.setLine(line);			
 			jl.setAccount_ID(partner.getCapitalAcct_ID());		
-			jl.setDescription("In " + sandPoint + ", " + getDescription());
+			jl.setDescription(desc);
 			jl.setAmtSourceDr(Amt);
 			jl.setAmtAcctDr(Amt);
 			jl.setIsGenerated(true);
@@ -214,7 +221,7 @@ public class MInvestmentStructure extends X_TF_InvestmentStructure {
 		jl = new MJournalLine(j);
 		jl.setLine(20);			
 		jl.setAccount_ID(mainShareholderCapitalAcct);		
-		jl.setDescription("In " + sandPoint + ", " + getDescription() + " (" + sbSubPartners.toString() + ")");
+		jl.setDescription(desc + " (" + sbSubPartners.toString() + ")");
 		jl.setAmtSourceCr(crAmt);
 		jl.setAmtAcctCr(crAmt);
 		jl.setIsGenerated(true);
@@ -238,7 +245,7 @@ public class MInvestmentStructure extends X_TF_InvestmentStructure {
 			return;
 					
 		int m_C_DocTypeTarget_ID = 1000000;
-		String sandPoint = org.getName();
+		String sandPoint = org.getShortName();
 		
 		TF_MJournal j = new TF_MJournal(getCtx(), 0, get_TrxName());
 		j.setDescription("Initial Expense");
@@ -259,12 +266,18 @@ public class MInvestmentStructure extends X_TF_InvestmentStructure {
 		double perecent = partner.getInvestmentShare().doubleValue() / 100;
 		BigDecimal Amt = getPayable_Amount().multiply(new BigDecimal(perecent));
 		
+		String desc = null;
+		if(getDescription() == null || getDescription().trim().length() == 0)
+			desc = "In " + sandPoint + ", " + partner.getName() + " paid initial expense for " + getC_ElementValue().getName();
+		else
+			desc = " In " + sandPoint + ", " + getDescription();
+		
 		//Debit Initial Expense in Head Office.
 		MJournalLine jl;			
 		jl = new MJournalLine(j);
 		jl.setLine(10);			
 		jl.setAccount_ID(getC_ElementValue_ID());		
-		jl.setDescription("In " + sandPoint + ", " + getDescription());
+		jl.setDescription(desc);
 		jl.setAmtSourceDr(Amt);
 		jl.setAmtAcctDr(Amt);
 		jl.setIsGenerated(true);
@@ -275,7 +288,7 @@ public class MInvestmentStructure extends X_TF_InvestmentStructure {
 		jl = new MJournalLine(j);
 		jl.setLine(20);			
 		jl.setAccount_ID(partner.getCapitalAcct_ID());		
-		jl.setDescription("In " + sandPoint + ", " + getDescription());
+		jl.setDescription(desc);
 		jl.setAmtSourceCr(Amt);
 		jl.setAmtAcctCr(Amt);
 		jl.setIsGenerated(true);
