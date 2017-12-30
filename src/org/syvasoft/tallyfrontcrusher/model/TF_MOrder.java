@@ -1073,8 +1073,7 @@ public class TF_MOrder extends MOrder {
 			throw new AdempiereUserError("Invalid Rent Amount");
 		}
 		
-		TF_MProject proj = new Query(getCtx(), TF_MProject.Table_Name, "M_Warehouse_ID=? AND DocStatus='IP'", null)
-				.setParameters(getM_Warehouse_ID()).first();
+		TF_MProject proj = TF_MProject.getCrusherProductionSubcontractByWarehouse(getM_Warehouse_ID());
 		if(proj != null && getC_Project_ID() == 0)
 			setC_Project_ID(proj.getC_Project_ID());
 		
@@ -1362,9 +1361,12 @@ public class TF_MOrder extends MOrder {
 		
 		invoice.setBPartner(bp);
 		invoice.setIsSOTrx(false);		
-		invoice.setVehicleNo(getVehicleNo());
+		invoice.setVehicleNo(getVehicleNo());		
 		invoice.setDescription("Created from Sales: " + getDocumentNo());
-		
+		if(getTF_WeighmentEntry_ID() > 0) {
+			MWeighmentEntry entry = new MWeighmentEntry(getCtx(), getTF_WeighmentEntry_ID(), get_TrxName());
+			invoice.addDescription("Ticket No: " + entry.getDocumentNo());
+		}
 		//Price List
 		int m_M_PriceList_ID = Env.getContextAsInt(getCtx(), "#M_PriceList_ID");
 		if(bp.getPO_PriceList_ID() > 0)

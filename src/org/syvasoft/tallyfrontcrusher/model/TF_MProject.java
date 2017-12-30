@@ -400,8 +400,7 @@ public class TF_MProject extends MProject {
 		//Update Contract Amt Actual
 		if(is_ValueChanged(COLUMNNAME_QtyProcessed) || is_ValueChanged(COLUMNNAME_Unit_Price))
 			setContract_Amt_Act(getUnit_Price().multiply(getQtyProcessed()));
-		
-		
+				
 		//1. Jobwork is Mandatory when SubcontractType.Invoice For : Jobwork
 		//2. Quarry is mandatory when SubcontractType.CreateBoulderReceipt is true
 		

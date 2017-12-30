@@ -46,26 +46,30 @@ public class CreateSubcontractRawMaterialMovement extends SvrProcess {
 				//log.saveEx();				
 			}
 			else if(st.isCreateBoulderReceipt()) {
+				MBoulderReceipt br = new MBoulderReceipt(getCtx(), 0, get_TrxName());
 				try {
-					MBoulderReceipt br = new MBoulderReceipt(getCtx(), 0, get_TrxName());
 					br.createFromWeighmentEntry(entry);
+					br.saveEx();
+					br.createSubcontractMovement();
 					br.saveEx();
 					if(!br.isProcessed()) {
 						br.processIt(MBoulderReceipt.DOCACTION_Complete);					
 						br.saveEx();					
-					}				
-					entry.setStatus(MWeighmentEntry.STATUS_Billed);
-					entry.setProcessed(true);				
+					}			
+									
 				}
 				catch (Exception ex) {
-					String desc = entry.getDescription();
+					String desc = br.getDescription();
 					if(desc == null)
 						desc = "";
 					if(!desc.contains("ERROR:")) {
-						entry.setDescription(desc + 
+						br.setDescription(desc + 
 								" | ERROR: " + ex.getMessage());					
-					}
+					}					
+					br.saveEx();
 				}
+				entry.setStatus(MWeighmentEntry.STATUS_Billed);
+				entry.setProcessed(true);
 			}
 			else if(st.isIncludeRMProduction() && st.isTrackMaterialMovement()) {
 				MSubcontractMaterialMovement mov = new MSubcontractMaterialMovement(Env.getCtx(), 0, get_TrxName());
