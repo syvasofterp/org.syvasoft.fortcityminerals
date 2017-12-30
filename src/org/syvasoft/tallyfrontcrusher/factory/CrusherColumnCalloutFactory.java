@@ -30,9 +30,12 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_SetVehicleN
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_CalcRentAmount;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_CalcRentPayable;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_Destination;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_Org;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_POSCashBP;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_RentedVehicle;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_SOUnitPriceRent;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_SandBlockLine1;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_SandBlockQtyPrice;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_SetTonnage;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_Warehouse;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_WeighmentEntry;
@@ -92,6 +95,11 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 				(columnName.equals(TF_MInvoice.COLUMNNAME_Item1_Qty) || columnName.equals(TF_MInvoice.COLUMNNAME_Item1_Price) ||
 				 columnName.equals(TF_MInvoice.COLUMNNAME_Item2_Qty) || columnName.equals(TF_MInvoice.COLUMNNAME_Item2_Price)))
 			list.add(new CalloutInvoiceHeaderItemAmount());
+		
+		if(tableName.equals(TF_MOrder.Table_Name)) {
+			if(columnName.equals(TF_MOrder.COLUMNNAME_AD_Org_ID))
+				list.add(new CalloutOrder_Org());
+		}
 		
 		//TF_MOrder - Set Cash Payment Rule for POS BP
 		if(tableName.equals(TF_MOrder.Table_Name) && columnName.equals(TF_MOrder.COLUMNNAME_C_BPartner_ID))
@@ -321,6 +329,22 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 					columnName.equals(MInvestmentReceipt.COLUMNNAME_PayAmt) ||
 					columnName.equals(MInvestmentReceipt.COLUMNNAME_InvestmentReceiptType))
 				list.add(new CalloutInvestmentReceipt_AutoDescription());
+		}
+		
+		if(tableName.equals(TF_MOrder.Table_Name)) {
+			if(columnName.equals(TF_MOrder.COLUMNNAME_Item1_BucketQty) ||
+					columnName.equals(TF_MOrder.COLUMNNAME_Item2_BucketQty) || 
+					columnName.equals(TF_MOrder.COLUMNNAME_TonePerBucket) || 
+					columnName.equals(TF_MOrder.COLUMNNAME_Item1_BucketRate) || 
+					columnName.equals(TF_MOrder.COLUMNNAME_Item2_BucketRate) ||
+					columnName.equals(TF_MOrder.COLUMNNAME_Item2_TonePerBucket) ) {
+				list.add(new CalloutOrder_SandBlockQtyPrice());
+			}	
+			
+			if(columnName.equals(TF_MOrder.COLUMNNAME_Item1_IsPermitSales) || 
+					columnName.equals(TF_MOrder.COLUMNNAME_C_BPartner_ID)	) {
+				list.add(new CalloutOrder_SandBlockLine1());
+			}
 		}
 		
 		return list != null ? list.toArray(new IColumnCallout[0]) : new IColumnCallout[0];

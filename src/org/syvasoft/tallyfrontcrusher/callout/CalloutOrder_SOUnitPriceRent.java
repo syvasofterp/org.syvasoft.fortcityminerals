@@ -20,6 +20,8 @@ public class CalloutOrder_SOUnitPriceRent implements IColumnCallout {
 			BigDecimal unitPrice = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_UnitPrice);
 			BigDecimal rentAmount = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Rent_Amt);
 			BigDecimal qty = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_Qty);
+			if(qty.equals(BigDecimal.ZERO))
+				qty = BigDecimal.ONE;
 			BigDecimal unitRent = rentAmount.divide(qty,2,RoundingMode.HALF_UP);
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_UnitRent, unitRent);
 			BigDecimal price = unitPrice;

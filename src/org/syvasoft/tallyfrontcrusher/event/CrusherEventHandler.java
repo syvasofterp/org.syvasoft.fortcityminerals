@@ -42,6 +42,8 @@ import org.syvasoft.tallyfrontcrusher.model.MTyre;
 import org.syvasoft.tallyfrontcrusher.model.TF_MCharge;
 import org.syvasoft.tallyfrontcrusher.model.TF_MInvoice;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
+import org.syvasoft.tallyfrontcrusher.model.TF_MOrderLine;
+import org.syvasoft.tallyfrontcrusher.model.TF_MOrg;
 import org.syvasoft.tallyfrontcrusher.model.TF_MPayment;
 
 
@@ -55,6 +57,7 @@ public class CrusherEventHandler extends AbstractEventHandler {
 		registerTableEvent(IEventTopics.DOC_AFTER_COMPLETE, MOrder.Table_Name);
 		registerTableEvent(IEventTopics.DOC_BEFORE_PREPARE, MProduction.Table_Name);
 		registerTableEvent(IEventTopics.PO_BEFORE_CHANGE, MPayment.Table_Name);
+		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MInvoiceLine.Table_Name);
 		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MTransaction.Table_Name);
 		registerTableEvent(IEventTopics.PO_AFTER_NEW, MTyre.Table_Name);
 		registerEvent(IEventTopics.AFTER_LOGIN);		
@@ -69,6 +72,8 @@ public class CrusherEventHandler extends AbstractEventHandler {
 			String sql = "SELECT C_Element_ID FROM C_Element WHERE AD_Client_ID =? AND ElementType='A'";
 			int COA_ID = DB.getSQLValue(null, sql, Env.getAD_Client_ID(Env.getCtx()));
 			Env.setContext(Env.getCtx(), "#C_Element_ID", COA_ID);
+			TF_MOrg org = new TF_MOrg(Env.getCtx(), Env.getAD_Org_ID(Env.getCtx()), null);
+			Env.setContext(Env.getCtx(), "#OrgType", org.getOrgType());
 			return;
 		}
 		
@@ -83,8 +88,9 @@ public class CrusherEventHandler extends AbstractEventHandler {
 						payment.set_ValueOfColumn(TF_MPayment.COLUMNNAME_CashType, TF_MPayment.CASHTYPE_VendorPayment);
 					
 					payment.set_ValueOfColumn(TF_MPayment.COLUMNNAME_TF_BPartner_ID, payment.getC_BPartner_ID());
-				}
-			}
+				}				
+			}			
+			
 		}
 		else if(po.get_TableName().equals(MInvoice.Table_Name)) {
 			
@@ -101,6 +107,18 @@ public class CrusherEventHandler extends AbstractEventHandler {
 				//	generateReceiptFromInvoice(inv);
 				
 			}			
+		}
+		else if(po.get_TableName().equals(MInvoiceLine.Table_Name)) {
+			MInvoiceLine iLine = (MInvoiceLine) po;
+			if(event.getTopic().equals(IEventTopics.PO_BEFORE_NEW)) {
+				if (iLine.getC_OrderLine_ID() > 0) {
+					TF_MOrderLine oLine = new TF_MOrderLine(Env.getCtx(), iLine.getC_OrderLine_ID(), iLine.get_TrxName());
+					iLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_BucketQty, oLine.getBucketQty());
+					iLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_IsPermitSales, oLine.isPermitSales());
+					iLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_TonePerBucket, oLine.getTonePerBucket());
+					iLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_BucketRate, oLine.getBucketRate());					
+				}
+			}
 		}
 		else if(po instanceof MOrder) {
 			MOrder ord = (MOrder) po;

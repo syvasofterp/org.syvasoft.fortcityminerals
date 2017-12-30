@@ -8,6 +8,7 @@ import org.compiere.model.MOrder;
 import org.compiere.model.MOrderLine;
 import org.compiere.model.MSysConfig;
 import org.compiere.util.DB;
+import org.compiere.util.Env;
 
 public class TF_MOrderLine extends MOrderLine {
 
@@ -55,6 +56,85 @@ public class TF_MOrderLine extends MOrderLine {
 			return "Y".equals(oo);
 		}
 		return false;
+	}
+	
+	/** Column name IsPermitSales */
+    public static final String COLUMNNAME_IsPermitSales = "IsPermitSales";
+    /** Set Permit Sales.
+	@param IsPermitSales Permit Sales	  */
+	public void setIsPermitSales (boolean IsPermitSales)
+	{
+		set_Value (COLUMNNAME_IsPermitSales, Boolean.valueOf(IsPermitSales));
+	}
+	
+	/** Get Permit Sales.
+		@return Permit Sales	  */
+	public boolean isPermitSales () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsPermitSales);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	/** Column name BucketQty */
+    public static final String COLUMNNAME_BucketQty = "BucketQty";
+    /** Set Bucket Qty.
+	@param BucketQty Bucket Qty	  */
+	public void setBucketQty (BigDecimal BucketQty)
+	{
+		set_Value (COLUMNNAME_BucketQty, BucketQty);
+	}
+	
+	/** Get Bucket Qty.
+		@return Bucket Qty	  */
+	public BigDecimal getBucketQty () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_BucketQty);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+	
+	/** Column name TonePerBucket */
+    public static final String COLUMNNAME_TonePerBucket = "TonePerBucket";
+    /** Set Tone (per Bucket).
+	@param TonePerBucket Tone (per Bucket)	  */
+	public void setTonePerBucket (BigDecimal TonePerBucket)
+	{
+		set_Value (COLUMNNAME_TonePerBucket, TonePerBucket);
+	}
+	
+	/** Get Tone (per Bucket).
+		@return Tone (per Bucket)	  */
+	public BigDecimal getTonePerBucket () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_TonePerBucket);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+    /** Column name BucketRate */
+    public static final String COLUMNNAME_BucketRate = "BucketRate";
+    /** Set Bucket Rate.
+	@param BucketRate Bucket Rate	  */
+	public void setBucketRate (BigDecimal BucketRate)
+	{
+		set_Value (COLUMNNAME_BucketRate, BucketRate);
+	}
+	
+	/** Get Bucket Rate.
+		@return Bucket Rate	  */
+	public BigDecimal getBucketRate () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_BucketRate);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
 	}
 
 	@Override

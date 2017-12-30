@@ -885,7 +885,279 @@ public class TF_MOrder extends MOrder {
 			 return 0;
 		return ii.intValue();
 	}
-		
+	
+	/** Column name Item2_UOM_ID */
+    public static final String COLUMNNAME_Item2_UOM_ID = "Item2_UOM_ID";
+	public org.compiere.model.I_C_UOM getItem2_UOM() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_UOM)MTable.get(getCtx(), org.compiere.model.I_C_UOM.Table_Name)
+			.getPO(getItem2_UOM_ID(), get_TrxName());	}
+
+	/** Set UOM.
+		@param Item2_UOM_ID UOM	  */
+	public void setItem2_UOM_ID (int Item2_UOM_ID)
+	{
+		if (Item2_UOM_ID < 1) 
+			set_Value (COLUMNNAME_Item2_UOM_ID, null);
+		else 
+			set_Value (COLUMNNAME_Item2_UOM_ID, Integer.valueOf(Item2_UOM_ID));
+	}
+
+	/** Get UOM.
+		@return UOM	  */
+	public int getItem2_UOM_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Item2_UOM_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+	
+	/** Column name Item2_Tax_ID */
+    public static final String COLUMNNAME_Item2_Tax_ID = "Item2_Tax_ID";
+    public org.compiere.model.I_C_Tax getItem2_Tax() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Tax)MTable.get(getCtx(), org.compiere.model.I_C_Tax.Table_Name)
+			.getPO(getItem2_Tax_ID(), get_TrxName());	}
+
+	/** Set Tax.
+		@param Item2_Tax_ID 
+		Tax Identifier
+	  */
+	public void setItem2_Tax_ID (int Item2_Tax_ID)
+	{
+		if (Item2_Tax_ID < 1) 
+			set_Value (COLUMNNAME_Item2_Tax_ID, null);
+		else 
+			set_Value (COLUMNNAME_Item2_Tax_ID, Integer.valueOf(Item2_Tax_ID));
+	}
+
+	/** Get Tax.
+		@return Tax Identifier
+	  */
+	public int getItem2_Tax_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Item2_Tax_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+	
+	/** Column name OrgType */
+    public static final String COLUMNNAME_OrgType = "OrgType";    
+    /** Crusher = C */
+	public static final String ORGTYPE_Crusher = "C";
+	/** Sand Block = S */
+	public static final String ORGTYPE_SandBlock = "S";
+	/** Trading = T */
+	public static final String ORGTYPE_Trading = "T";
+    /** Set Organization Type.
+	@param OrgType Organization Type	  */
+	public void setOrgType (String OrgType)
+	{
+	
+		set_Value (COLUMNNAME_OrgType, OrgType);
+	}
+	
+	/** Get Organization Type.
+		@return Organization Type	  */
+	public String getOrgType () 
+	{
+		return (String)get_Value(COLUMNNAME_OrgType);
+	}
+	
+	/** Column name Item1_BucketQty */
+    public static final String COLUMNNAME_Item1_BucketQty = "Item1_BucketQty";
+    /** Set Bucket Qty.
+	@param Item1_BucketQty Bucket Qty	  */
+	public void setItem1_BucketQty (BigDecimal Item1_BucketQty)
+	{
+		set_Value (COLUMNNAME_Item1_BucketQty, Item1_BucketQty);
+	}
+	
+	/** Get Bucket Qty.
+		@return Bucket Qty	  */
+	public BigDecimal getItem1_BucketQty () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Item1_BucketQty);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Column name Item2_BucketQty */
+    public static final String COLUMNNAME_Item2_BucketQty = "Item2_BucketQty";
+    /** Set Bucket Qty.
+	@param Item2_BucketQty Bucket Qty	  */
+	public void setItem2_BucketQty (BigDecimal Item2_BucketQty)
+	{
+		set_Value (COLUMNNAME_Item2_BucketQty, Item2_BucketQty);
+	}
+	
+	/** Get Bucket Qty.
+		@return Bucket Qty	  */
+	public BigDecimal getItem2_BucketQty () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Item2_BucketQty);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+    /** Column name TonePerBucket */
+    public static final String COLUMNNAME_TonePerBucket = "TonePerBucket";
+    /** Set Tone (per Bucket).
+	@param TonePerBucket Tone (per Bucket)	  */
+	public void setTonePerBucket (BigDecimal TonePerBucket)
+	{
+		set_Value (COLUMNNAME_TonePerBucket, TonePerBucket);
+	}
+	
+	/** Get Tone (per Bucket).
+		@return Tone (per Bucket)	  */
+	public BigDecimal getTonePerBucket () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_TonePerBucket);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+    
+	/** Column name Item1_IsPermitSales */
+    public static final String COLUMNNAME_Item1_IsPermitSales = "Item1_IsPermitSales";
+    /** Set Permit Sales.
+	@param Item1_IsPermitSales Permit Sales	  */
+	public void setItem1_IsPermitSales (boolean Item1_IsPermitSales)
+	{
+		set_Value (COLUMNNAME_Item1_IsPermitSales, Boolean.valueOf(Item1_IsPermitSales));
+	}
+	/** Column name Item2_IsPermitSales */
+    public static final String COLUMNNAME_Item2_IsPermitSales = "Item2_IsPermitSales";
+    /** Set Permit Sales.
+	@param Item2_IsPermitSales Permit Sales	  */
+	public void setItem2_IsPermitSales (boolean Item2_IsPermitSales)
+	{
+		set_Value (COLUMNNAME_Item2_IsPermitSales, Boolean.valueOf(Item2_IsPermitSales));
+	}
+	
+	/** Get Permit Sales.
+		@return Permit Sales	  */
+	public boolean isItem2_IsPermitSales () 
+	{
+		Object oo = get_Value(COLUMNNAME_Item2_IsPermitSales);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+	
+	/** Get Permit Sales.
+	@return Permit Sales	  */
+	public boolean isItem1_IsPermitSales () 
+	{
+		Object oo = get_Value(COLUMNNAME_Item1_IsPermitSales);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+	
+    /** Column name Item1_BucketRate */
+    public static final String COLUMNNAME_Item1_BucketRate = "Item1_BucketRate";
+    
+    /** Set Bucket Rate.
+	@param Item1_BucketRate Bucket Rate	  */
+	public void setItem1_BucketRate (BigDecimal Item1_BucketRate)
+	{
+		set_Value (COLUMNNAME_Item1_BucketRate, Item1_BucketRate);
+	}
+	
+	/** Get Bucket Rate.
+		@return Bucket Rate	  */
+	public BigDecimal getItem1_BucketRate () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Item1_BucketRate);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Column name Item2_BucketRate */
+    public static final String COLUMNNAME_Item2_BucketRate = "Item2_BucketRate";
+    /** Set Bucket Rate.
+	@param Item2_BucketRate Bucket Rate	  */
+	public void setItem2_BucketRate (BigDecimal Item2_BucketRate)
+	{
+		set_Value (COLUMNNAME_Item2_BucketRate, Item2_BucketRate);
+	}
+	
+	/** Get Bucket Rate.
+		@return Bucket Rate	  */
+	public BigDecimal getItem2_BucketRate () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Item2_BucketRate);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+	/** Column name Item2_TonePerBucket */
+    public static final String COLUMNNAME_Item2_TonePerBucket = "Item2_TonePerBucket";
+    /** Set Tone (per Bucket).
+	@param Item2_TonePerBucket Tone (per Bucket)	  */
+	public void setItem2_TonePerBucket (BigDecimal Item2_TonePerBucket)
+	{
+		set_Value (COLUMNNAME_Item2_TonePerBucket, Item2_TonePerBucket);
+	}
+	
+	/** Get Tone (per Bucket).
+		@return Tone (per Bucket)	  */
+	public BigDecimal getItem2_TonePerBucket () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Item2_TonePerBucket);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Column name Item1_Desc */
+    public static final String COLUMNNAME_Item1_Desc = "Item1_Desc";
+    /** Set Description.
+	@param Item1_Desc Description	  */
+	public void setItem1_Desc (String Item1_Desc)
+	{
+		set_Value (COLUMNNAME_Item1_Desc, Item1_Desc);
+	}
+	
+	/** Get Description.
+		@return Description	  */
+	public String getItem1_Desc () 
+	{
+		return (String)get_Value(COLUMNNAME_Item1_Desc);
+	}
+	
+    /** Column name Item2_Desc */
+    public static final String COLUMNNAME_Item2_Desc = "Item2_Desc";
+    /** Set Description.
+	@param Item2_Desc Description	  */
+	public void setItem2_Desc (String Item2_Desc)
+	{
+		set_Value (COLUMNNAME_Item2_Desc, Item2_Desc);
+	}
+	
+	/** Get Description.
+		@return Description	  */
+	public String getItem2_Desc () 
+	{
+		return (String)get_Value(COLUMNNAME_Item2_Desc);
+	}
+
+    
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
 		success = super.afterSave(newRecord, success);
@@ -958,6 +1230,13 @@ public class TF_MOrder extends MOrder {
 			
 			ordLine.setC_UOM_ID(getItem1_UOM_ID());
 			
+			//Sand Block fields
+			ordLine.setBucketQty(getItem1_BucketQty());
+			ordLine.setIsPermitSales(isItem1_IsPermitSales());
+			ordLine.setTonePerBucket(getTonePerBucket());
+			ordLine.setBucketRate(getItem1_BucketRate());
+			ordLine.setDescription(getItem1_Desc());
+			
 			ordLine.saveEx();			
 			DB.executeUpdate("UPDATE C_Order SET " + COLUMNNAME_Item1_C_OrderLine_ID + " = "
 				+ ordLine.getC_OrderLine_ID() + " WHERE C_Order_ID = " + getC_Order_ID(), get_TrxName());	
@@ -972,7 +1251,18 @@ public class TF_MOrder extends MOrder {
 				ordLine = new TF_MOrderLine(this);
 			TF_MOrder.addProductPricingIfNot(getItem2_ID(), getM_PriceList_ID(), getC_BPartner_ID(), getItem2_Qty(), getItem2_Price(), 
 					getDateOrdered(), getC_DocType().isSOTrx());
-			setOrderLine(ordLine, getItem2_ID(), getItem2_Qty(), getItem2_Price());									
+			setOrderLine(ordLine, getItem2_ID(), getItem2_Qty(), getItem2_Price());
+			
+			ordLine.setC_Tax_ID(getItem2_Tax_ID());
+			ordLine.setC_UOM_ID(getItem2_UOM_ID());
+			
+			//Sand Block fields
+			ordLine.setBucketQty(getItem2_BucketQty());
+			ordLine.setIsPermitSales(isItem2_IsPermitSales());
+			ordLine.setTonePerBucket(getItem2_TonePerBucket());
+			ordLine.setBucketRate(getItem2_BucketRate());
+			ordLine.setDescription(getItem2_Desc());
+			
 			ordLine.saveEx();			
 			DB.executeUpdate("UPDATE C_Order SET " + COLUMNNAME_Item2_C_OrderLine_ID + " = "
 				+ ordLine.getC_OrderLine_ID() + " WHERE C_Order_ID = " + getC_Order_ID(), get_TrxName());	
@@ -1076,6 +1366,9 @@ public class TF_MOrder extends MOrder {
 		TF_MProject proj = TF_MProject.getCrusherProductionSubcontractByWarehouse(getM_Warehouse_ID());
 		if(proj != null && getC_Project_ID() == 0)
 			setC_Project_ID(proj.getC_Project_ID());
+		
+		TF_MOrg org = new TF_MOrg(getCtx(), getAD_Org_ID(), get_TrxName());
+		setOrgType(org.getOrgType());
 		
 		return super.beforeSave(newRecord);
 	}
@@ -1337,13 +1630,19 @@ public class TF_MOrder extends MOrder {
 		MSubcontractType st = new MSubcontractType(getCtx(), proj.getTF_SubcontractType_ID(), get_TrxName());
 		
 		int priceItem_Id = 0;
-		if(st.getInvoicePriceFrom().equals(MSubcontractType.INVOICEPRICEFROM_Jobwork)) 
+		int priceItem2_id = 0;
+		if(st.getInvoicePriceFrom().equals(MSubcontractType.INVOICEPRICEFROM_Jobwork)) { 
 			priceItem_Id = proj.getJobWork_Product_ID();
-		else
+			priceItem2_id = proj.getJobWork_Product_ID();
+		}		
+		else {
 			priceItem_Id = getItem1_ID();
-		
+			priceItem2_id = getItem2_ID();
+		}
 		//Crusher Production Subcontract Purchase		
 		BigDecimal purchasePrice = MJobworkProductPrice.getPrice(getCtx(), getC_Project_ID(), priceItem_Id, getDateAcct()) ;
+		BigDecimal purchasePrice2 = MJobworkProductPrice.getPrice(getCtx(), getC_Project_ID(), priceItem2_id, getDateAcct()) ;
+		
 		if(purchasePrice == null)
 			throw new AdempiereException("Please setup Contract Price for " + getItem1().getName() + "!");
 		
@@ -1380,32 +1679,50 @@ public class TF_MOrder extends MOrder {
 		invoice.saveEx();
 		//End Invoice Header
 		
-		//Invoice Line - Vehicle Rental Charge
+		//Invoice Line - Item1
 		MInvoiceLine invLine = new MInvoiceLine(invoice);
 		invLine.setM_Product_ID(getItem1_ID() , true);
-				
-		
 		invLine.setQty(getItem1_Qty());					
-		
 		invLine.setPriceActual(purchasePrice);
 		invLine.setPriceList(purchasePrice);
 		invLine.setPriceLimit(purchasePrice);
-		invLine.setPriceEntered(purchasePrice);
-		
+		invLine.setPriceEntered(purchasePrice);		
 		invLine.setC_Tax_ID(1000000);
-				
+		invLine.setDescription(getItem1_Desc());
+		
+		//Invoice Line - Item2
+		MInvoiceLine invLine2 = new MInvoiceLine(invoice);
+		if(getItem2_ID() > 0) { 
+			invLine2.setM_Product_ID(getItem2_ID() , true);
+			invLine2.setQty(getItem2_Qty());					
+			invLine2.setPriceActual(purchasePrice2);
+			invLine2.setPriceList(purchasePrice2);
+			invLine2.setPriceLimit(purchasePrice2);
+			invLine2.setPriceEntered(purchasePrice2);		
+			invLine2.setC_Tax_ID(1000000);
+			invLine2.setDescription(getItem2_Desc());
+		}
+		
 		//MM Receipt
 		MInOut inout = new MInOut(invoice, 1000014, getDateAcct(), getM_Warehouse_ID());
 		inout.setDescription(invoice.getDescription());
 		inout.setMovementType(MInOut.MOVEMENTTYPE_VendorReceipts);
 		inout.saveEx(get_TrxName());
 		
-		//Material Receipt Line
+		//Material Receipt Line - Item 1
 		MInOutLine ioLine = new MInOutLine(inout);
 		MWarehouse wh = (MWarehouse) getM_Warehouse();
 		ioLine.setInvoiceLine(invLine, wh.getDefaultLocator().get_ID(), getItem1_Qty());
 		ioLine.setQty(getItem1_Qty());
 		ioLine.saveEx(get_TrxName());
+		
+		//Material Receipt Line - Item 1
+		MInOutLine ioLine2 = new MInOutLine(inout);
+		if(getItem2_ID() > 0) {
+			ioLine2.setInvoiceLine(invLine2, wh.getDefaultLocator().get_ID(), getItem2_Qty());
+			ioLine2.setQty(getItem2_Qty());
+			ioLine2.saveEx(get_TrxName());
+		}
 		
 		//Material Receipt DocAction
 		if (!inout.processIt(DocAction.ACTION_Complete))
@@ -1415,6 +1732,11 @@ public class TF_MOrder extends MOrder {
 		
 		invLine.setM_InOutLine_ID(ioLine.getM_InOutLine_ID());
 		invLine.saveEx();
+		
+		if(getItem2_ID() > 0) {
+			invLine2.setM_InOutLine_ID(ioLine2.getM_InOutLine_ID());
+			invLine2.saveEx();
+		}
 		
 		//Invoice DocAction
 		if (!invoice.processIt(DocAction.ACTION_Complete))

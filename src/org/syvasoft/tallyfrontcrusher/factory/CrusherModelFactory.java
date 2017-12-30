@@ -40,6 +40,7 @@ import org.syvasoft.tallyfrontcrusher.model.MQuarry;
 import org.syvasoft.tallyfrontcrusher.model.MQuarryRent;
 import org.syvasoft.tallyfrontcrusher.model.MQuarryRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MRentedVehicle;
+import org.syvasoft.tallyfrontcrusher.model.MSandBlockBucketConfig;
 import org.syvasoft.tallyfrontcrusher.model.MShareholder;
 import org.syvasoft.tallyfrontcrusher.model.MShareholderType;
 import org.syvasoft.tallyfrontcrusher.model.MSubcontractMaterialMovement;
@@ -206,6 +207,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return MSubcontractType.class;
 		else if(MWeighmentErrorLog.Table_Name.equals(tableName))
 			return MWeighmentErrorLog.class;
+		else if(MSandBlockBucketConfig.Table_Name.equals(tableName))
+			return MSandBlockBucketConfig.class;
 		return null;
 	}
 
@@ -342,6 +345,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MSubcontractType(ctx, Record_ID, trxName);
 		else if(MWeighmentErrorLog.Table_Name.equals(tableName))
 			return new MWeighmentErrorLog(ctx, Record_ID, trxName);
+		else if(MSandBlockBucketConfig.Table_Name.equals(tableName))
+			return new MSandBlockBucketConfig(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -478,6 +483,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MSubcontractType(ctx, rs, trxName);
 		else if(MWeighmentErrorLog.Table_Name.equals(tableName))
 			return new MWeighmentErrorLog(ctx, rs, trxName);
+		else if(MSandBlockBucketConfig.Table_Name.equals(tableName))
+			return new MSandBlockBucketConfig(ctx, rs, trxName);
 		return null;
 	}
 
