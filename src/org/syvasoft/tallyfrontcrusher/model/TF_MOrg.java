@@ -121,4 +121,30 @@ public class TF_MOrg extends MOrg {
 		}
 		return false;
 	}
+	
+    /** Column name OrgType */
+    public static final String COLUMNNAME_OrgType = "OrgType";
+    /** Crusher = C */
+	public static final String ORGTYPE_Crusher = "C";
+	/** Sand Block = S */
+	public static final String ORGTYPE_SandBlock = "S";
+	/** Trading = T */
+	public static final String ORGTYPE_Trading = "T";
+	/** Set Organization Type.
+		@param OrgType Organization Type	  */
+    /** Set Organization Type.
+	@param OrgType Organization Type	  */
+	public void setOrgType (String OrgType)
+	{
+	
+		set_Value (COLUMNNAME_OrgType, OrgType);
+	}
+	
+	/** Get Organization Type.
+		@return Organization Type	  */
+	public String getOrgType () 
+	{
+		return (String)get_Value(COLUMNNAME_OrgType);
+	}
+	
 }

@@ -1,6 +1,7 @@
 package org.syvasoft.tallyfrontcrusher.callout;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.Properties;
 
@@ -38,7 +39,7 @@ public class CalloutOrderQuickEntry_SetPrice implements IColumnCallout {
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Price, price);
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_UnitPrice, price);
 			if(qty != null)
-				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Amt, price.multiply(qty));
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Amt, price.multiply(qty).divide(BigDecimal.ONE, 2, RoundingMode.HALF_UP));
 			
 			MProduct prod = MProduct.get(ctx, product_ID);
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_UOM_ID, prod.getC_UOM_ID());
@@ -62,7 +63,13 @@ public class CalloutOrderQuickEntry_SetPrice implements IColumnCallout {
 			if(price == null)
 				price = BigDecimal.ZERO;
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item2_Price, price);
-			mTab.setValue(TF_MOrder.COLUMNNAME_Item2_Amt, price.multiply(qty));			
+			mTab.setValue(TF_MOrder.COLUMNNAME_Item2_Amt, price.multiply(qty).divide(BigDecimal.ONE, 2, RoundingMode.HALF_EVEN));		
+			
+			MProduct prod = MProduct.get(ctx, product_ID);
+			mTab.setValue(TF_MOrder.COLUMNNAME_Item2_UOM_ID, prod.getC_UOM_ID());
+			int defaultTaxID = Env.getContextAsInt(ctx, "#C_Tax_ID");
+			mTab.setValue(TF_MOrder.COLUMNNAME_Item2_Tax_ID, defaultTaxID);
+			
 		}
 		return null;
 	}
