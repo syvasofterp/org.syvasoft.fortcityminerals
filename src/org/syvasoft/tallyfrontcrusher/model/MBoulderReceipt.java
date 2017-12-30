@@ -93,6 +93,8 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 	}
 	
 	public void createSubcontractMovement() {
+		if(getTF_RMSubcon_Movement_ID() > 0)
+			return;
 		TF_MProject proj = TF_MProject.getCrusherProductionSubcontractByWarehouse(getM_Warehouse_ID());
 		if(proj != null) {
 			MSubcontractType st = new MSubcontractType(getCtx(), proj.getTF_SubcontractType_ID(), get_TrxName());
@@ -169,7 +171,10 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 		invoice.setIsSOTrx(false);		
 		invoice.setVehicleNo(getVehicleNo());
 		
-		invoice.setDescription("Created from Boulder Receipt: " + getDocumentNo());
+		String desc = "Boulder Receipt: " + getDocumentNo();
+		if(getTF_WeighmentEntry_ID() > 0 )
+			desc = desc + " | Ticket No: " + getTF_WeighmentEntry().getDocumentNo();
+		invoice.setDescription(desc);
 		
 		//Price List
 		int m_M_PriceList_ID = Env.getContextAsInt(getCtx(), "#M_PriceList_ID");
