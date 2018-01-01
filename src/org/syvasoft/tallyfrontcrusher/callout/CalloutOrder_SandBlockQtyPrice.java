@@ -22,7 +22,7 @@ public class CalloutOrder_SandBlockQtyPrice implements IColumnCallout {
 		BigDecimal item1_Qty = BigDecimal.ZERO;
 		BigDecimal item2_Qty = BigDecimal.ZERO;
 		String orgType  = (String) mTab.getValue(TF_MOrder.COLUMNNAME_OrgType);
-		if(!orgType.equals(TF_MOrder.ORGTYPE_SandBlock))
+		if(!orgType.equals(TF_MOrder.ORGTYPE_SandBlock) || !mTab.getValueAsBoolean(TF_MOrder.COLUMNNAME_IsSOTrx))
 			return null;
 		
 		if(mTab.getValue(TF_MOrder.COLUMNNAME_Item1_BucketQty) != null)
