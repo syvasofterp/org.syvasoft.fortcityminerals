@@ -36,6 +36,8 @@ import org.syvasoft.tallyfrontcrusher.model.MLabourWage;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWageAdvance;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWageConfig;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWageIssue;
+import org.syvasoft.tallyfrontcrusher.model.MPermitLedger;
+import org.syvasoft.tallyfrontcrusher.model.MPermitLedgerLine;
 import org.syvasoft.tallyfrontcrusher.model.MQuarry;
 import org.syvasoft.tallyfrontcrusher.model.MQuarryRent;
 import org.syvasoft.tallyfrontcrusher.model.MQuarryRentConfig;
@@ -209,6 +211,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return MWeighmentErrorLog.class;
 		else if(MSandBlockBucketConfig.Table_Name.equals(tableName))
 			return MSandBlockBucketConfig.class;
+		else if(MPermitLedger.Table_Name.equals(tableName))
+			return MPermitLedger.class;
+		else if(MPermitLedgerLine.Table_Name.equals(tableName))
+			return MPermitLedgerLine.class;
 		return null;
 	}
 
@@ -347,6 +353,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MWeighmentErrorLog(ctx, Record_ID, trxName);
 		else if(MSandBlockBucketConfig.Table_Name.equals(tableName))
 			return new MSandBlockBucketConfig(ctx, Record_ID, trxName);
+		else if(MPermitLedger.Table_Name.equals(tableName))
+			return new MPermitLedger(ctx, Record_ID, trxName);
+		else if(MPermitLedgerLine.Table_Name.equals(tableName))
+			return new MPermitLedgerLine(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -485,6 +495,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MWeighmentErrorLog(ctx, rs, trxName);
 		else if(MSandBlockBucketConfig.Table_Name.equals(tableName))
 			return new MSandBlockBucketConfig(ctx, rs, trxName);
+		else if(MPermitLedger.Table_Name.equals(tableName))
+			return new MPermitLedger(ctx, rs, trxName);
+		else if(MPermitLedgerLine.Table_Name.equals(tableName))
+			return new MPermitLedgerLine(ctx, rs, trxName);
 		return null;
 	}
 

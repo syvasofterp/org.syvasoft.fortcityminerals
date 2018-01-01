@@ -1352,8 +1352,11 @@ public class TF_MOrder extends MOrder {
 	public String completeIt() {
 		createSubcontractPurchaseEntry();
 		String msg = super.completeIt();
+		purchasePermit();
+		issuePermit();
 		createTransporterInvoice();
-		closeWeighmentEntry();		
+		closeWeighmentEntry();
+		
 		return msg;
 	}
 
@@ -1406,6 +1409,8 @@ public class TF_MOrder extends MOrder {
 		reverseTransporterInvoice();
 		reverseWeighmentEntry();
 		reverseSubcontractPurchaseEntry();
+		reverseIssuedPermit();
+		reversePurchasedPermit();
 		return super.voidIt();
 	}
 	
@@ -1443,6 +1448,8 @@ public class TF_MOrder extends MOrder {
 		reverseTransporterInvoice();
 		reverseWeighmentEntry();
 		reverseSubcontractPurchaseEntry();
+		reverseIssuedPermit();
+		reversePurchasedPermit();
 		return super.reActivateIt();
 	}
 
@@ -1765,6 +1772,78 @@ public class TF_MOrder extends MOrder {
 			setSubcon_Receipt_ID(0);
 		}
 		
+	}
+	
+	//Only for purchase
+	public void purchasePermit() {
+		if(!isSOTrx()) {
+			TF_MProduct prod = new TF_MProduct(getCtx(), getItem1_ID(), get_TrxName());			
+			if(prod.isMaintainPermitLedger()) {
+				MPermitLedger pl = new MPermitLedger(getCtx(), 0, get_TrxName());
+				pl.setAD_Org_ID(getAD_Org_ID());
+				pl.setC_Order_ID(getC_Order_ID());
+				pl.setC_OrderLine_ID(getItem1_C_OrderLine_ID());
+				pl.setM_Product_ID(getItem1_ID());
+				pl.setDateAcct(getDateAcct());
+				pl.setDescription(getDescription());
+				pl.setQtyPurchased(getItem1_Qty());
+				pl.setUnitPrice(getItem1_Price());
+				pl.setPurchasedAmt(getItem1_Amt());
+				pl.setQtyIssued(BigDecimal.ZERO);
+				pl.saveEx();
+			}
+		}
+	}
+	
+	public void reversePurchasedPermit() {
+		if(!isSOTrx()) {
+			TF_MProduct prod = new TF_MProduct(getCtx(), getItem1_ID(), get_TrxName());
+			if(prod.isMaintainPermitLedger())
+				MPermitLedger.reversePurchasedPermit(getAD_Org_ID(), getItem1_C_OrderLine_ID(), get_TrxName());
+		}
+	}
+	
+	//Only For Sales
+	public void issuePermit() {		
+		if(!isSOTrx()) 
+			return;
+		MSandBlockBucketConfig config = MSandBlockBucketConfig.getBucketConfig(getAD_Org_ID(), MSandBlockBucketConfig.SANDTYPE_PermitSand);
+		if(isItem1_IsPermitSales() && getItem1_ID() == config.getM_Product_ID()
+				&& config.getM_ProductPermitLedger_ID() > 0) {
+			BigDecimal qtyIssue = getItem1_BucketQty().multiply(config.getPermitTonnagePerBucket());
+			BigDecimal qtyPermitStock = MPermitLedger.getAvailablePermitStockQty(config.getM_ProductPermitLedger_ID(), get_TrxName());
+			if(qtyPermitStock.doubleValue() < qtyIssue.doubleValue())
+				throw new AdempiereException("Insufficient Permit Stock Available!");
+			while(qtyIssue.doubleValue()>0) {
+				MPermitLedger permit = MPermitLedger.getAvailablePermit(config.getM_ProductPermitLedger_ID(), get_TrxName());
+				BigDecimal qtyIssued = BigDecimal.ZERO;
+				if(permit.getQtyBalance().doubleValue() > qtyIssue.doubleValue())
+					qtyIssued = qtyIssue;
+				else
+					qtyIssued = permit.getQtyBalance();
+				
+				MPermitLedgerLine pmLine = new MPermitLedgerLine(getCtx(), 0, get_TrxName());
+				pmLine.setAD_Org_ID(getAD_Org_ID());
+				pmLine.setC_Order_ID(getC_Order_ID());
+				pmLine.setC_OrderLine_ID(getItem1_C_OrderLine_ID());
+				pmLine.setTF_PermitLedger_ID(permit.getTF_PermitLedger_ID());
+				pmLine.setM_Product_ID(getItem1_ID());
+				pmLine.setDescription(getItem1_Desc());
+				pmLine.setQtyIssued(qtyIssued);;
+				pmLine.setDateAcct(getDateAcct());
+				pmLine.setUnitPrice(permit.getUnitPrice());
+				pmLine.setTonePerBucket(config.getPermitTonnagePerBucket());
+				pmLine.saveEx();
+				permit.updateQtyIssued();
+				permit.saveEx();
+				qtyIssue = qtyIssue.subtract(qtyIssued);
+			}				
+		}	
+	}
+	
+	public void reverseIssuedPermit() {
+		if(isItem1_IsPermitSales() && isSOTrx())
+			MPermitLedger.reverseIssuedPermit(getAD_Org_ID(), getItem1_C_OrderLine_ID(), get_TrxName());
 	}
 	
 }
