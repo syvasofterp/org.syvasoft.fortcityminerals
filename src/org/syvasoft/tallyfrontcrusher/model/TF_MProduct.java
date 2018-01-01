@@ -175,6 +175,29 @@ public class TF_MProduct extends MProduct {
 		return ii.intValue();
 	}
 
+	/** Column name MaintainPermitLedger */
+    public static final String COLUMNNAME_MaintainPermitLedger = "MaintainPermitLedger";
+    /** Set Maintain Permit Ledger.
+	@param MaintainPermitLedger Maintain Permit Ledger	  */
+	public void setMaintainPermitLedger (boolean MaintainPermitLedger)
+	{
+		set_Value (COLUMNNAME_MaintainPermitLedger, Boolean.valueOf(MaintainPermitLedger));
+	}
+	
+	/** Get Maintain Permit Ledger.
+		@return Maintain Permit Ledger	  */
+	public boolean isMaintainPermitLedger () 
+	{
+		Object oo = get_Value(COLUMNNAME_MaintainPermitLedger);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
 		boolean ok = super.afterSave(newRecord, success);
