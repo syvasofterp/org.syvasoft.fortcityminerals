@@ -58,6 +58,7 @@ public class CrusherEventHandler extends AbstractEventHandler {
 		registerTableEvent(IEventTopics.DOC_BEFORE_PREPARE, MProduction.Table_Name);
 		registerTableEvent(IEventTopics.PO_BEFORE_CHANGE, MPayment.Table_Name);
 		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MInvoiceLine.Table_Name);
+		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MInvoice.Table_Name);
 		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MTransaction.Table_Name);
 		registerTableEvent(IEventTopics.PO_AFTER_NEW, MTyre.Table_Name);
 		registerEvent(IEventTopics.AFTER_LOGIN);		
@@ -104,9 +105,14 @@ public class CrusherEventHandler extends AbstractEventHandler {
 				// AP Invoice with Material Receipt
 				// Generate the MR immediately.
 				//if(inv.getC_DocTypeTarget_ID() == 1000051)
-				//	generateReceiptFromInvoice(inv);
-				
-			}			
+				//	generateReceiptFromInvoice(inv);				
+			}
+			if(event.getTopic().equals(IEventTopics.PO_BEFORE_NEW)) {
+				if (inv.getC_Order_ID() > 0) {
+					TF_MOrder ord = new TF_MOrder(Env.getCtx(), inv.getC_Order_ID(), inv.get_TrxName());
+					inv.set_ValueOfColumn(TF_MOrder.COLUMNNAME_VehicleNo, ord.getVehicleNo());
+				}
+			}
 		}
 		else if(po.get_TableName().equals(MInvoiceLine.Table_Name)) {
 			MInvoiceLine iLine = (MInvoiceLine) po;
