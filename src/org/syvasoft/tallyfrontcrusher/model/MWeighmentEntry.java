@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.util.Properties;
 
 import org.adempiere.exceptions.AdempiereException;
+import org.compiere.model.Query;
 
 public class MWeighmentEntry extends X_TF_WeighmentEntry {
 
@@ -26,6 +27,13 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		
 		if(getTF_RentedVehicle_ID() > 0 && (getVehicleNo() == null || getVehicleNo().length() == 0))
 				setVehicleNo(getTF_RentedVehicle().getVehicleNo());
+		
+		if(getC_BPartner_ID() == 0 && getPaymentRule().equals(PAYMENTRULE_Cash)) {
+			TF_MBPartner bp = new Query(getCtx(), TF_MBPartner.Table_Name, "IsPOSCashBP='Y'", get_TrxName())
+					.setClient_ID().first();
+			if(bp != null)
+				setC_BPartner_ID(bp.getC_BPartner_ID());
+		}
 		
 		//if(getGrossWeight().doubleValue() > 0 && getTareWeight().doubleValue() <=0)
 		//	throw new AdempiereException("Tare Weight should be greater than ZERO!");
