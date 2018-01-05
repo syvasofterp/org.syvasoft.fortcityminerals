@@ -258,8 +258,9 @@ public class TF_MProduct extends MProduct {
 			throw new AdempiereException("Create Warehouse for this Organization!");
 		MWarehouse wh = whs[0];		
 		MInventory inv = new MInventory(getCtx(), 0, get_TrxName());
-		inv.setC_DocType_ID(1000027); //Cost Adjustment
-		String desc = getName() + " Opening Cost Entry";		
+		inv.setC_DocType_ID(1000027); //Cost Adjustment		
+		String desc = getName() + " Opening Cost Entry";
+		inv.setAD_Org_ID(getAD_Org_ID());
 		inv.setDescription(desc);
 		inv.setC_Currency_ID(as.getC_Currency_ID());
 		inv.setMovementDate(getOpeningDate());
@@ -298,6 +299,7 @@ public class TF_MProduct extends MProduct {
 		//Physical Inventory Header
 		MInventory inv = new MInventory(getCtx(), 0, get_TrxName());
 		inv.setC_DocType_ID(1000023); //Physical Inventory
+		inv.setAD_Org_ID(getAD_Org_ID());
 		String desc = getName() + " Opening Stock Entry ";
 		MWarehouse[] whs = MWarehouse.getForOrg(getCtx(), getAD_Org_ID());
 		if(whs.length==0)

@@ -7,6 +7,7 @@ import java.util.Properties;
 import org.adempiere.base.IColumnCallout;
 import org.compiere.model.GridField;
 import org.compiere.model.GridTab;
+import org.syvasoft.tallyfrontcrusher.model.MSandBlockBucketConfig;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
 
 public class CalloutOrder_SandBlockQtyPrice implements IColumnCallout {
@@ -37,6 +38,16 @@ public class CalloutOrder_SandBlockQtyPrice implements IColumnCallout {
 			item1_TonePerBucket = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_TonePerBucket);
 		if(mTab.getValue(TF_MOrder.COLUMNNAME_Item2_TonePerBucket) != null)
 			item2_TonePerBucket = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Item2_TonePerBucket);
+		
+		
+		if(mField.getColumnName().equals(TF_MOrder.COLUMNNAME_Item1_BucketQty)) {
+			boolean isPermitSales = mTab.getValueAsBoolean(TF_MOrder.COLUMNNAME_Item1_IsPermitSales);
+			int orgID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_AD_Org_ID) ;
+			if(isPermitSales) {
+				MSandBlockBucketConfig config = MSandBlockBucketConfig.getBucketConfig(orgID, MSandBlockBucketConfig.SANDTYPE_PermitSand);		
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_PermitIssued, item1_BucketQty.multiply(config.getPermitTonnagePerBucket()));
+			}
+		}
 		
 		item1_Qty = item1_BucketQty.multiply(item1_TonePerBucket);
 		item2_Qty = item2_BucketQty.multiply(item2_TonePerBucket);

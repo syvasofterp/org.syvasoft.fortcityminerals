@@ -119,10 +119,12 @@ public class CrusherEventHandler extends AbstractEventHandler {
 			if(event.getTopic().equals(IEventTopics.PO_BEFORE_NEW)) {
 				if (iLine.getC_OrderLine_ID() > 0) {
 					TF_MOrderLine oLine = new TF_MOrderLine(Env.getCtx(), iLine.getC_OrderLine_ID(), iLine.get_TrxName());
+					iLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_SandType, oLine.getSandType());
 					iLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_BucketQty, oLine.getBucketQty());
 					iLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_IsPermitSales, oLine.isPermitSales());
 					iLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_TonePerBucket, oLine.getTonePerBucket());
-					iLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_BucketRate, oLine.getBucketRate());					
+					iLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_BucketRate, oLine.getBucketRate());
+					iLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_TotalLoad, oLine.getTotalLoad());
 				}
 			}
 		}

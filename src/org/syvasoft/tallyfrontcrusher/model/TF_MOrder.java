@@ -1157,7 +1157,111 @@ public class TF_MOrder extends MOrder {
 		return (String)get_Value(COLUMNNAME_Item2_Desc);
 	}
 
+	/** Column name Item1_SandType */
+    public static final String COLUMNNAME_Item1_SandType = "Item1_SandType";
+    /** Permit Sand = PM */
+	public static final String ITEM1_SANDTYPE_PermitSand = "PM";
+	/** Extra Bucket = EX */
+	public static final String ITEM1_SANDTYPE_ExtraBucket = "EX";
+	/** Without Permit = WP */
+	public static final String ITEM1_SANDTYPE_WithoutPermit = "WP";
+	/** Set Sand Type.
+		@param Item1_SandType Sand Type	  */
+	public void setItem1_SandType (String Item1_SandType)
+	{
+
+		set_Value (COLUMNNAME_Item1_SandType, Item1_SandType);
+	}
+
+	/** Get Sand Type.
+	@return Sand Type	  */
+	public String getItem1_SandType () 
+	{
+		return (String)get_Value(COLUMNNAME_Item1_SandType);
+	}
+
+	/** Column name Item2_SandType */
+    public static final String COLUMNNAME_Item2_SandType = "Item2_SandType";
+    /** Permit Sand = PM */
+	public static final String ITEM2_SANDTYPE_PermitSand = "PM";
+	/** Extra Bucket = EX */
+	public static final String ITEM2_SANDTYPE_ExtraBucket = "EX";
+	/** Without Permit = WP */
+	public static final String ITEM2_SANDTYPE_WithoutPermit = "WP";
+	/** Set Sand Type.
+		@param Item2_SandType Sand Type	  */
+	public void setItem2_SandType (String Item2_SandType)
+	{
+
+		set_Value (COLUMNNAME_Item2_SandType, Item2_SandType);
+	}
+
+	/** Get Sand Type.
+		@return Sand Type	  */
+	public String getItem2_SandType () 
+	{
+		return (String)get_Value(COLUMNNAME_Item2_SandType);
+	}
+
+	/** Column name Item1_TotalLoad */
+    public static final String COLUMNNAME_Item1_TotalLoad = "Item1_TotalLoad";
+    /** Set Total Load.
+	@param Item1_TotalLoad Total Load	  */
+	public void setItem1_TotalLoad (BigDecimal Item1_TotalLoad)
+	{
+		set_Value (COLUMNNAME_Item1_TotalLoad, Item1_TotalLoad);
+	}
+	
+	/** Get Total Load.
+		@return Total Load	  */
+	public BigDecimal getItem1_TotalLoad () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Item1_TotalLoad);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Column name Item2_TotalLoad */
+    public static final String COLUMNNAME_Item2_TotalLoad = "Item2_TotalLoad";
+    /** Set Total Load.
+	@param Item2_TotalLoad Total Load	  */
+	public void setItem2_TotalLoad (BigDecimal Item2_TotalLoad)
+	{
+		set_Value (COLUMNNAME_Item2_TotalLoad, Item2_TotalLoad);
+	}
+	
+	/** Get Total Load.
+		@return Total Load	  */
+	public BigDecimal getItem2_TotalLoad () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Item2_TotalLoad);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
     
+	/** Column name Item1_PermitIssued */
+    public static final String COLUMNNAME_Item1_PermitIssued = "Item1_PermitIssued";
+
+	/** Set Permit Issued.
+		@param Item1_PermitIssued Permit Issued	  */
+	public void setItem1_PermitIssued (BigDecimal Item1_PermitIssued)
+	{
+		set_Value (COLUMNNAME_Item1_PermitIssued, Item1_PermitIssued);
+	}
+
+	/** Get Permit Issued.
+		@return Permit Issued	  */
+	public BigDecimal getItem1_PermitIssued () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Item1_PermitIssued);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
 		success = super.afterSave(newRecord, success);
@@ -1232,10 +1336,12 @@ public class TF_MOrder extends MOrder {
 			
 			//Sand Block fields
 			ordLine.setBucketQty(getItem1_BucketQty());
+			ordLine.setSandType(getItem1_SandType());
 			ordLine.setIsPermitSales(isItem1_IsPermitSales());
 			ordLine.setTonePerBucket(getTonePerBucket());
 			ordLine.setBucketRate(getItem1_BucketRate());
 			ordLine.setDescription(getItem1_Desc());
+			ordLine.setTotalLoad(getItem1_TotalLoad());
 			
 			ordLine.saveEx();			
 			DB.executeUpdate("UPDATE C_Order SET " + COLUMNNAME_Item1_C_OrderLine_ID + " = "
@@ -1258,10 +1364,12 @@ public class TF_MOrder extends MOrder {
 			
 			//Sand Block fields
 			ordLine.setBucketQty(getItem2_BucketQty());
+			ordLine.setSandType(getItem2_SandType());
 			ordLine.setIsPermitSales(isItem2_IsPermitSales());
 			ordLine.setTonePerBucket(getItem2_TonePerBucket());
 			ordLine.setBucketRate(getItem2_BucketRate());
 			ordLine.setDescription(getItem2_Desc());
+			ordLine.setTotalLoad(getItem2_TotalLoad());
 			
 			ordLine.saveEx();			
 			DB.executeUpdate("UPDATE C_Order SET " + COLUMNNAME_Item2_C_OrderLine_ID + " = "
@@ -1365,7 +1473,7 @@ public class TF_MOrder extends MOrder {
 		if(getVehicle_ID()>0 && getRent_Amt().doubleValue()==0) {
 			throw new AdempiereUserError("Invalid Rent Amount");
 		}
-		
+				
 		TF_MProject proj = TF_MProject.getCrusherProductionSubcontractByWarehouse(getM_Warehouse_ID());
 		if(proj != null && getC_Project_ID() == 0)
 			setC_Project_ID(proj.getC_Project_ID());
@@ -1668,7 +1776,7 @@ public class TF_MOrder extends MOrder {
 		invoice.setBPartner(bp);
 		invoice.setIsSOTrx(false);		
 		invoice.setVehicleNo(getVehicleNo());		
-		invoice.setDescription("Created from Sales: " + getDocumentNo());
+		invoice.setDescription("(" + getDocumentNo() + ")");
 		if(getTF_WeighmentEntry_ID() > 0) {
 			MWeighmentEntry entry = new MWeighmentEntry(getCtx(), getTF_WeighmentEntry_ID(), get_TrxName());
 			invoice.addDescription("Ticket No: " + entry.getDocumentNo());
@@ -1695,7 +1803,15 @@ public class TF_MOrder extends MOrder {
 		invLine.setPriceLimit(purchasePrice);
 		invLine.setPriceEntered(purchasePrice);		
 		invLine.setC_Tax_ID(1000000);
-		invLine.setDescription(getItem1_Desc());
+		//invLine.setDescription(getItem1_Desc());
+		
+		if(getOrgType().equals(TF_MOrder.ORGTYPE_SandBlock)) {
+			invLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_SandType, getItem1_SandType());
+			invLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_BucketQty, getItem1_BucketQty());
+			invLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_IsPermitSales, isItem1_IsPermitSales() );
+			invLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_TonePerBucket, getTonePerBucket());
+			invLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_TotalLoad, getItem1_TotalLoad());
+		}
 		
 		//Invoice Line - Item2
 		MInvoiceLine invLine2 = new MInvoiceLine(invoice);
@@ -1707,7 +1823,14 @@ public class TF_MOrder extends MOrder {
 			invLine2.setPriceLimit(purchasePrice2);
 			invLine2.setPriceEntered(purchasePrice2);		
 			invLine2.setC_Tax_ID(1000000);
-			invLine2.setDescription(getItem2_Desc());
+			//invLine2.setDescription(getItem2_Desc());
+			if(getOrgType().equals(TF_MOrder.ORGTYPE_SandBlock)) {
+				invLine2.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_SandType, getItem2_SandType());
+				invLine2.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_BucketQty, getItem2_BucketQty());
+				invLine2.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_IsPermitSales, isItem2_IsPermitSales() );
+				invLine2.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_TonePerBucket, getItem2_TonePerBucket());
+				invLine2.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_TotalLoad, getItem2_TotalLoad());
+			}
 		}
 		
 		//MM Receipt
@@ -1810,7 +1933,8 @@ public class TF_MOrder extends MOrder {
 		MSandBlockBucketConfig config = MSandBlockBucketConfig.getBucketConfig(getAD_Org_ID(), MSandBlockBucketConfig.SANDTYPE_PermitSand);
 		if(isItem1_IsPermitSales() && getItem1_ID() == config.getM_Product_ID()
 				&& config.getM_ProductPermitLedger_ID() > 0) {
-			BigDecimal qtyIssue = getItem1_BucketQty().multiply(config.getPermitTonnagePerBucket());
+			BigDecimal qtyIssue = getItem1_PermitIssued(); 
+					//getItem1_BucketQty().multiply(config.getPermitTonnagePerBucket());
 			BigDecimal qtyPermitStock = MPermitLedger.getAvailablePermitStockQty(config.getM_ProductPermitLedger_ID(), get_TrxName());
 			if(qtyPermitStock.doubleValue() < qtyIssue.doubleValue())
 				throw new AdempiereException("Insufficient Permit Stock Available!");
