@@ -87,21 +87,30 @@ public class MInvestmentStructure extends X_TF_InvestmentStructure {
 		jl = new MJournalLine(j);
 		jl.setLine(10);			
 		jl.setAccount_ID(getC_ElementValue_ID());		
-		jl.setDescription("Initial Expense Payable for " + getC_ElementValue().getName());
+		jl.setDescription("Initial Expense Payable");
 		jl.setAmtSourceCr(getPayable_Amount());
 		jl.setAmtAcctCr(getPayable_Amount());
 		jl.setIsGenerated(true);
 		jl.saveEx();
-		
+		TF_MOrg org = new TF_MOrg(getCtx(), getAD_Org_ID(), get_TrxName());
+		String sandPoint = org.getShortName();		
+		String desc = "In " + sandPoint;
 		List<MShareholder> partners = new Query(getCtx(), MShareholder.Table_Name, "AD_Org_ID=?" , get_TrxName())
 				.setParameters(getAD_Org_ID()).list();
 		int line = 10;
 		for(MShareholder partner : partners) {			
 			jl = new MJournalLine(j);
 			line = line + 10;
-			jl.setLine(line);			
-			jl.setAccount_ID(partner.getCapitalAcct_ID());			
-			jl.setDescription(getDescription() + ", Initial Expense Receivable for " + getC_ElementValue().getName());
+			jl.setLine(line);
+			String  subshareholder="";
+			int capAcct_ID = partner.getCapitalAcct_ID();
+			if(partner.getTF_ShareholderMain_ID() > 0) {
+				capAcct_ID = partner.getTF_ShareholderMain().getCapitalAcct_ID();
+				subshareholder = " (" + partner.getName() + ")"; 
+			}
+			
+			jl.setAccount_ID(capAcct_ID);			
+			jl.setDescription( desc + ", Receivable for " + getC_ElementValue().getName() + subshareholder);
 			
 			double perecent = partner.getInvestmentShare().doubleValue() / 100;
 			BigDecimal drAmt = getPayable_Amount().multiply(new BigDecimal(perecent));					
@@ -197,7 +206,7 @@ public class MInvestmentStructure extends X_TF_InvestmentStructure {
 
 		String desc = null;
 		if(getDescription() == null || getDescription().trim().length() == 0)
-			desc = "In " + sandPoint + ", Initial Expense paid for " + getC_ElementValue().getName();
+			desc = "In " + sandPoint + ", Paid for " + getC_ElementValue().getName();
 		else
 			desc = " In " + sandPoint + ", " + getDescription();
 		
@@ -220,8 +229,8 @@ public class MInvestmentStructure extends X_TF_InvestmentStructure {
 		//Credit Main Shareholder in Head Office.						
 		jl = new MJournalLine(j);
 		jl.setLine(20);			
-		jl.setAccount_ID(mainShareholderCapitalAcct);		
-		jl.setDescription(desc + " (" + sbSubPartners.toString() + ")");
+		jl.setAccount_ID(org.getOrganizationAcct_ID());		
+		jl.setDescription(desc + " by " + sbSubPartners.toString());
 		jl.setAmtSourceCr(crAmt);
 		jl.setAmtAcctCr(crAmt);
 		jl.setIsGenerated(true);
@@ -239,6 +248,9 @@ public class MInvestmentStructure extends X_TF_InvestmentStructure {
 	
 	public void adjustInvestmentAccountInHeadOffice() {
 		TF_MOrg org = new TF_MOrg(getCtx(), getAD_Org_ID(), get_TrxName());
+		if(org.getAD_OrgHO_ID() == 0)
+			throw new AdempiereException("Please specify Head Office!");
+		
 		MShareholder partner = new Query(getCtx(), MShareholder.Table_Name, "AD_Org_ID=? AND CapitalAcct_ID = ?" , get_TrxName())
 				.setParameters(getAD_Org_ID(), org.getHeadOffice().getInvestmentAcct_ID()).first();
 		if (partner == null || org.getAD_OrgHO_ID() == 0)
@@ -268,7 +280,7 @@ public class MInvestmentStructure extends X_TF_InvestmentStructure {
 		
 		String desc = null;
 		if(getDescription() == null || getDescription().trim().length() == 0)
-			desc = "In " + sandPoint + ", " + partner.getName() + " paid initial expense for " + getC_ElementValue().getName();
+			desc = "In " + sandPoint + ", " + partner.getName() + " paid for " + getC_ElementValue().getName();
 		else
 			desc = " In " + sandPoint + ", " + getDescription();
 		
@@ -287,7 +299,7 @@ public class MInvestmentStructure extends X_TF_InvestmentStructure {
 		//Credit Main Shareholder in Head Office.						
 		jl = new MJournalLine(j);
 		jl.setLine(20);			
-		jl.setAccount_ID(partner.getCapitalAcct_ID());		
+		jl.setAccount_ID(org.getOrganizationAcct_ID());		
 		jl.setDescription(desc);
 		jl.setAmtSourceCr(Amt);
 		jl.setAmtAcctCr(Amt);

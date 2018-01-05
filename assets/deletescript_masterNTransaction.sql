@@ -85,19 +85,25 @@ DELETE FROM TF_Jobwork_IssuedItems;
 DELETE FROM TF_Jobwork_ReceivedItems;
 DELETE FROM TF_Jobwork_ProductPrice;
 DELETE FROM TF_Jobwork_ItemIssue;
-delete from fact_acct WHERE ad_client_id=1000000;;
-delete from fact_acct_summary WHERE ad_client_id=1000000;;
+delete from fact_acct WHERE ad_client_id=1000000  AND AD_Org_ID IN (1000027, 1000043, 1000022);
+delete from fact_acct_summary WHERE ad_client_id=1000000 AND AD_Org_ID IN (1000027, 1000043, 1000022);;
 DELETE FROM c_recurring WHERE ad_client_id=1000000;;
 UPDATE tf_jobwork_expense_entry set SubCon_Invoice_id = null, GL_Journal_ID = null;
 DELETE FROM tf_jobwork_expense_entry WHERE AD_client_ID = 1000000;
 UPDATE C_Payment SET EmpAdv_Journal_ID = null, C_Project_ID = null WHERE AD_client_ID = 1000000;
 UPDATE TF_TripSheet SET SubCon_invoice_ID = null WHERE AD_client_ID = 1000000;;
 UPDATE tf_coaopeningbalance SET GL_Journal_ID = null WHERE AD_client_ID = 1000000;;
-UPDATE tf_investmentstructure SET GL_Journal_ID = null WHERE AD_client_ID = 1000000;;
+
+UPDATE tf_investmentstructure SET GL_Journal_ID = null, gl_journalinvacct_id=null, 
+gl_journalsubpartneradj_id = null  WHERE AD_client_ID = 1000000 AND AD_Org_ID = 1000027;
 UPDATE TF_InvestmentReceipt SET GL_Journal_ID = null WHERE AD_client_ID = 1000000;;
+
+UPDATE GL_Journal SET TF_CreditLine_ID = NULL WHERE ad_client_id=1000000 AND AD_Org_ID = 1000022;
+UPDATE GL_Journal SET TF_DebitLine_ID = NULL WHERE ad_client_id=1000000  AND AD_Org_ID = 1000022;
 delete from gl_journalbatch WHERE ad_client_id=1000000 ;
-delete from gl_journalline WHERE ad_client_id=1000000; 
-delete from gl_journal WHERE ad_client_id=1000000;; 
+delete from gl_journalline WHERE ad_client_id=1000000  AND AD_Org_ID = 1000022; 
+delete from gl_journal WHERE ad_client_id=1000000 AND AD_Org_ID = 1000022;  
+DELETE FROM TF_INVESTMENTSTRUCTURE WHERE ad_client_id=1000000 AND AD_Org_ID = 1000022;  
 DELETE from c_validcombination WHERE C_Project_ID IN (SELECT C_Project_ID FROM C_Project WHERE C_Project_id !=1000000 AND ad_client_id=1000000);
 UPDATE C_Invoice SET C_Project_ID = null, tf_weighmententry_id = null WHERE AD_client_ID = 1000000;
 UPDATE m_inventory SET C_Project_ID = null WHERE AD_Client_ID = 1000000;
@@ -360,14 +366,14 @@ DELETE FROM C_Charge_TRL  WHERE AD_Client_ID = 1000000 ;
 DELETE FROM C_Charge WHERE AD_Client_ID = 1000000 ;
 DELETE FROM ad_preference WHERE AD_Client_ID = 1000000  AND AD_Org_ID!=1000000;
 
-DELETE FROM AD_Role_OrgAccess WHERE AD_Client_ID = 1000000  AND AD_Org_ID NOT IN (0,)1000000);
+--DELETE FROM AD_Role_OrgAccess WHERE AD_Client_ID = 1000000  AND AD_Org_ID NOT IN (0,)1000000);
 DELETE FROM c_validcombination WHERE AD_Client_ID = 1000000  AND AD_Org_ID NOT IN (0);
 UPDATE C_ElementValue SET DefaultOrg_ID  = 0 WHERE DefaultOrg_ID != 0 AND AD_Client_ID = 1000000  ;
 DELETE FROM ad_sequence_no WHERE AD_Client_ID = 1000000  AND AD_Org_ID NOT IN (0,1000000);
-DELETE FROM AD_Org WHERE AD_Client_ID = 1000000  AND AD_Org_ID NOT IN (0,1000000);
+--DELETE FROM AD_Org WHERE AD_Client_ID = 1000000  AND AD_Org_ID NOT IN (0,1000000);
 
 --DELETE FROM adempiere.AD_Image WHERE AD_Client_ID = 1000000;
-
+SELECT * FROM ad_sequence_no WHERE AD_Client_ID = 1000000  AND AD_Org_ID NOT IN (0,1000000);
 
 --DELETE FROM ADEMPIERE.ad_attachment WHERE AD_Client_ID = 1000000;
 
@@ -382,5 +388,16 @@ DELETE FROM C_ElementValue WHERE C_Element_ID=1000001
 
 DELETE FROM TF_Destination WHERE AD_Client_ID = 1000000;
 
-UPDATE AD_User SET IsActive = 'N' WHERE AD_User_ID=0
+--UPDATE AD_User SET IsActive = 'N' WHERE AD_User_ID=0
+UPDATE C_Bank SET AD_Org_ID = 0 WHERE C_Bank_ID=1000032
+
+
+
+--UPDATE C_ElementValue SET DefaultOrg_ID = 1000024 WHERE DefaultOrg_ID = 1000023
+
+--DELETE FROM AD_ChangeLog WHERE AD_Client_ID = 1000000  
+
+--DELETE FROM AD_ORG WHERE AD_Org_ID=1000023
+--DELETE FROM c_bankaccount_acct WHERE AD_Client_ID = 1000000  AND AD_Org_ID=1000023
+--DELETE FROM c_validcombination WHERE AD_Client_ID = 1000000  AND AD_Org_ID=1000023
 

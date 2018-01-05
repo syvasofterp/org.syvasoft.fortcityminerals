@@ -127,11 +127,54 @@ public class TF_MOrderLine extends MOrderLine {
 		set_Value (COLUMNNAME_BucketRate, BucketRate);
 	}
 	
+	/** Column name SandType */
+    public static final String COLUMNNAME_SandType = "SandType";
+    /** Permit Sand = PM */
+	public static final String SANDTYPE_PermitSand = "PM";
+	/** Extra Bucket = EX */
+	public static final String SANDTYPE_ExtraBucket = "EX";
+	/** Without Permit = WP */
+	public static final String SANDTYPE_WithoutPermit = "WP";
+	/** Set Sand Type.
+		@param SandType Sand Type	  */
+	public void setSandType (String SandType)
+	{
+
+		set_Value (COLUMNNAME_SandType, SandType);
+	}
+
+	/** Get Sand Type.
+		@return Sand Type	  */
+	public String getSandType () 
+	{
+		return (String)get_Value(COLUMNNAME_SandType);
+	}
+
+	
 	/** Get Bucket Rate.
 		@return Bucket Rate	  */
 	public BigDecimal getBucketRate () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_BucketRate);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Column name TotalLoad */
+    public static final String COLUMNNAME_TotalLoad = "TotalLoad";
+    /** Set Total Load.
+	@param TotalLoad Total Load	  */
+	public void setTotalLoad (BigDecimal TotalLoad)
+	{
+		set_Value (COLUMNNAME_TotalLoad, TotalLoad);
+	}
+	
+	/** Get Total Load.
+		@return Total Load	  */
+	public BigDecimal getTotalLoad () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_TotalLoad);
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;

@@ -343,7 +343,8 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 			
 			if(columnName.equals(TF_MOrder.COLUMNNAME_Item1_IsPermitSales) || 
 					columnName.equals(TF_MOrder.COLUMNNAME_C_BPartner_ID) ||
-					columnName.equals(TF_MOrder.COLUMNNAME_Item2_BucketQty) ) {
+					columnName.equals(TF_MOrder.COLUMNNAME_Item2_BucketQty) ||
+					columnName.equals(TF_MOrder.COLUMNNAME_M_Warehouse_ID)) {
 				list.add(new CalloutOrder_SandBlockLine1());
 			}
 		}

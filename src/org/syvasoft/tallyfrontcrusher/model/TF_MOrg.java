@@ -147,4 +147,31 @@ public class TF_MOrg extends MOrg {
 		return (String)get_Value(COLUMNNAME_OrgType);
 	}
 	
+	/** Column name OrganizationAcct_ID */
+    public static final String COLUMNNAME_OrganizationAcct_ID = "OrganizationAcct_ID";
+    public org.compiere.model.I_C_ElementValue getOrganizationAcct() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getOrganizationAcct_ID(), get_TrxName());	}
+
+	/** Set Organization Account.
+		@param OrganizationAcct_ID Organization Account	  */
+	public void setOrganizationAcct_ID (int OrganizationAcct_ID)
+	{
+		if (OrganizationAcct_ID < 1) 
+			set_Value (COLUMNNAME_OrganizationAcct_ID, null);
+		else 
+			set_Value (COLUMNNAME_OrganizationAcct_ID, Integer.valueOf(OrganizationAcct_ID));
+	}
+
+	/** Get Organization Account.
+		@return Organization Account	  */
+	public int getOrganizationAcct_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_OrganizationAcct_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 }
