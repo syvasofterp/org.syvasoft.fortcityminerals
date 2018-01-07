@@ -95,6 +95,7 @@ public class MInvestmentStructure extends X_TF_InvestmentStructure {
 		TF_MOrg org = new TF_MOrg(getCtx(), getAD_Org_ID(), get_TrxName());
 		String sandPoint = org.getShortName();		
 		String desc = "In " + sandPoint;
+		String usrDesc = getDescription();
 		List<MShareholder> partners = new Query(getCtx(), MShareholder.Table_Name, "AD_Org_ID=?" , get_TrxName())
 				.setParameters(getAD_Org_ID()).list();
 		int line = 10;
@@ -109,8 +110,11 @@ public class MInvestmentStructure extends X_TF_InvestmentStructure {
 				subshareholder = " (" + partner.getName() + ")"; 
 			}
 			
-			jl.setAccount_ID(capAcct_ID);			
-			jl.setDescription( desc + ", Receivable for " + getC_ElementValue().getName() + subshareholder);
+			jl.setAccount_ID(capAcct_ID);
+			if(usrDesc == null || usrDesc.length() == 0)
+				jl.setDescription( desc + ", Receivable for " + getC_ElementValue().getName() + subshareholder);
+			else
+				jl.setDescription( desc + ", " + usrDesc  + subshareholder);
 			
 			double perecent = partner.getInvestmentShare().doubleValue() / 100;
 			BigDecimal drAmt = getPayable_Amount().multiply(new BigDecimal(perecent));					

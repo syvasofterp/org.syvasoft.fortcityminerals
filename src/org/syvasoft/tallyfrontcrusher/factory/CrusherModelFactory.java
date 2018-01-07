@@ -61,6 +61,8 @@ import org.syvasoft.tallyfrontcrusher.model.MVehicleRentalContract;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleType;
 import org.syvasoft.tallyfrontcrusher.model.MWeighmentEntry;
 import org.syvasoft.tallyfrontcrusher.model.MWeighmentErrorLog;
+import org.syvasoft.tallyfrontcrusher.model.MYardEntry;
+import org.syvasoft.tallyfrontcrusher.model.MYardEntryConfig;
 import org.syvasoft.tallyfrontcrusher.model.TF_MBPartner;
 import org.syvasoft.tallyfrontcrusher.model.TF_MBankAccount;
 import org.syvasoft.tallyfrontcrusher.model.TF_MCharge;
@@ -215,6 +217,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return MPermitLedger.class;
 		else if(MPermitLedgerLine.Table_Name.equals(tableName))
 			return MPermitLedgerLine.class;
+		else if(MYardEntry.Table_Name.equals(tableName))
+			return MYardEntry.class;
+		else if(MYardEntryConfig.Table_Name.equals(tableName))
+			return MYardEntryConfig.class;
 		return null;
 	}
 
@@ -357,6 +363,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MPermitLedger(ctx, Record_ID, trxName);
 		else if(MPermitLedgerLine.Table_Name.equals(tableName))
 			return new MPermitLedgerLine(ctx, Record_ID, trxName);
+		else if(MYardEntry.Table_Name.equals(tableName))
+			return new MYardEntry(ctx, Record_ID, trxName);
+		else if(MYardEntryConfig.Table_Name.equals(tableName))
+			return new MYardEntryConfig(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -499,6 +509,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MPermitLedger(ctx, rs, trxName);
 		else if(MPermitLedgerLine.Table_Name.equals(tableName))
 			return new MPermitLedgerLine(ctx, rs, trxName);
+		else if(MYardEntry.Table_Name.equals(tableName))
+			return new MYardEntry(ctx, rs, trxName);
+		else if(MYardEntryConfig.Table_Name.equals(tableName))
+			return new MYardEntryConfig(ctx, rs, trxName);
 		return null;
 	}
 
