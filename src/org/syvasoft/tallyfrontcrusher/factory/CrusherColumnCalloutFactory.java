@@ -61,6 +61,8 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutTyreStatusChange_Tyre;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutVehicleRentConfig_Destination;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutWeighmentEntry_CalcNetWeight;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutWeighmentEntry_Vehicle;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutYardEntry_CalcAmount;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutYardEntry_VehicleType;
 import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalary;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryIssue;
@@ -76,6 +78,7 @@ import org.syvasoft.tallyfrontcrusher.model.MTyreStatusChange;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentalContract;
 import org.syvasoft.tallyfrontcrusher.model.MWeighmentEntry;
+import org.syvasoft.tallyfrontcrusher.model.MYardEntry;
 import org.syvasoft.tallyfrontcrusher.model.TF_MElementValue;
 import org.syvasoft.tallyfrontcrusher.model.TF_MInvoice;
 import org.syvasoft.tallyfrontcrusher.model.TF_MJournal;
@@ -349,6 +352,21 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 			}
 		}
 		
+		if(tableName.equals(MYardEntry.Table_Name)) {
+			if(columnName.equals(MYardEntry.COLUMNNAME_TF_VehicleType_ID)) {
+				list.add(new CalloutYardEntry_VehicleType());
+				list.add(new CalloutYardEntry_CalcAmount());
+			}
+			if(columnName.equals(MYardEntry.COLUMNNAME_PermitCancelledQty) ||
+					columnName.equals(MYardEntry.COLUMNNAME_PermitIssuedQty) ||
+					columnName.equals(MYardEntry.COLUMNNAME_PermitPrice) ||
+					columnName.equals(MYardEntry.COLUMNNAME_ExtraBucketQty) ||
+					columnName.equals(MYardEntry.COLUMNNAME_ExtraBucketPrice) ||
+					columnName.equals(MYardEntry.COLUMNNAME_ExtraBucketQty) ||
+					columnName.equals(MYardEntry.COLUMNNAME_WpPrice))
+				list.add(new CalloutYardEntry_CalcAmount());					
+			
+		}
 		return list != null ? list.toArray(new IColumnCallout[0]) : new IColumnCallout[0];
 	}
 
