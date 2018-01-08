@@ -480,7 +480,9 @@ public class TF_MPayment extends MPayment {
 	}
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
-		if(newRecord || is_ValueChanged(COLUMNNAME_C_ElementValue_ID)) {
+		if(newRecord || is_ValueChanged(COLUMNNAME_C_ElementValue_ID) || 
+				(getC_Charge_ID() == 0 && getC_ElementValue_ID() > 0 )
+				) {
 			//if(getC_ElementValue_ID()>0 ) { 
 				TF_MCharge charge = TF_MCharge.createChargeFromAccount(getCtx(), getC_ElementValue_ID(), get_TrxName());
 				if(charge != null )

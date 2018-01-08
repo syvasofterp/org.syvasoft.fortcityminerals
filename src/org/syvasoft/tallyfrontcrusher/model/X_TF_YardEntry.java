@@ -33,7 +33,7 @@ public class X_TF_YardEntry extends PO implements I_TF_YardEntry, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180107L;
+	private static final long serialVersionUID = 20180108L;
 
     /** Standard Constructor */
     public X_TF_YardEntry (Properties ctx, int TF_YardEntry_ID, String trxName)
@@ -44,6 +44,7 @@ public class X_TF_YardEntry extends PO implements I_TF_YardEntry, I_Persistent
 			setDateAcct (new Timestamp( System.currentTimeMillis() ));
 			setDocumentNo (null);
 			setProcessed (false);
+			setTF_VehicleType_ID (0);
 			setTF_YardEntry_ID (0);
         } */
     }
@@ -291,6 +292,23 @@ public class X_TF_YardEntry extends PO implements I_TF_YardEntry, I_Persistent
 	public BigDecimal getPermitPrice () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_PermitPrice);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set Permit Sales Qty.
+		@param PermitSalesQty Permit Sales Qty	  */
+	public void setPermitSalesQty (BigDecimal PermitSalesQty)
+	{
+		set_Value (COLUMNNAME_PermitSalesQty, PermitSalesQty);
+	}
+
+	/** Get Permit Sales Qty.
+		@return Permit Sales Qty	  */
+	public BigDecimal getPermitSalesQty () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_PermitSalesQty);
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;

@@ -20,6 +20,7 @@ public class CalloutYardEntry_CalcAmount implements IColumnCallout {
 		BigDecimal WPPermitPrice = BigDecimal.ZERO;
 		BigDecimal WPQty = BigDecimal.ZERO;
 		BigDecimal PermitCancelledQty = BigDecimal.ZERO;
+		BigDecimal PermitSalesQty = BigDecimal.ZERO;
 		
 		TotalLoad = (BigDecimal) mTab.getValue(MYardEntry.COLUMNNAME_TotalLoad);
 		PermitIssuedQty = (BigDecimal) mTab.getValue(MYardEntry.COLUMNNAME_PermitIssuedQty);
@@ -29,9 +30,11 @@ public class CalloutYardEntry_CalcAmount implements IColumnCallout {
 		WPPermitPrice = (BigDecimal) mTab.getValue(MYardEntry.COLUMNNAME_WpPrice);
 		WPQty = (BigDecimal) mTab.getValue(MYardEntry.COLUMNNAME_WPQty);
 		PermitCancelledQty = (BigDecimal) mTab.getValue(MYardEntry.COLUMNNAME_PermitCancelledQty);
-		WPQty = TotalLoad.subtract(PermitIssuedQty).subtract(PermitCancelledQty);
+		PermitSalesQty = PermitIssuedQty.subtract(PermitCancelledQty);
+		WPQty = TotalLoad.subtract(PermitSalesQty);		 
 		
-		mTab.setValue(MYardEntry.COLUMNNAME_PermitAmount, PermitIssuedPrice.multiply(PermitIssuedQty));
+		mTab.setValue(MYardEntry.COLUMNNAME_PermitSalesQty, PermitSalesQty);
+		mTab.setValue(MYardEntry.COLUMNNAME_PermitAmount, PermitIssuedPrice.multiply(PermitSalesQty));		
 		mTab.setValue(MYardEntry.COLUMNNAME_WPQty, WPQty);
 		mTab.setValue(MYardEntry.COLUMNNAME_WPAmount, WPPermitPrice.multiply(WPQty));
 		

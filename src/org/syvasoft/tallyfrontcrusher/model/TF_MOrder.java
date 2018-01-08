@@ -1261,10 +1261,34 @@ public class TF_MOrder extends MOrder {
 		return bd;
 	}
 
+	/** Column name Item1_VehicleType_ID */
+    public static final String COLUMNNAME_Item1_VehicleType_ID = "Item1_VehicleType_ID";
+
+	/** Set Vehicle Type.
+		@param Item1_VehicleType_ID Vehicle Type	  */
+	public void setItem1_VehicleType_ID (int Item1_VehicleType_ID)
+	{
+		if (Item1_VehicleType_ID < 1) 
+			set_Value (COLUMNNAME_Item1_VehicleType_ID, null);
+		else 
+			set_Value (COLUMNNAME_Item1_VehicleType_ID, Integer.valueOf(Item1_VehicleType_ID));
+	}
+
+	/** Get Vehicle Type.
+		@return Vehicle Type	  */
+	public int getItem1_VehicleType_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Item1_VehicleType_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
 		success = super.afterSave(newRecord, success);
+		
 		updateQuickOrderLines();
 		//updateVehicleRentLine();
 		updateRentedVehicleRentLine();
@@ -1335,6 +1359,9 @@ public class TF_MOrder extends MOrder {
 			ordLine.setC_UOM_ID(getItem1_UOM_ID());
 			
 			//Sand Block fields
+			//these should be updated in invoice line at:
+			// 1. Create Subcontract Invoice
+			// 2. CrusherEventHandler.
 			ordLine.setBucketQty(getItem1_BucketQty());
 			ordLine.setSandType(getItem1_SandType());
 			ordLine.setIsPermitSales(isItem1_IsPermitSales());
@@ -1342,6 +1369,7 @@ public class TF_MOrder extends MOrder {
 			ordLine.setBucketRate(getItem1_BucketRate());
 			ordLine.setDescription(getItem1_Desc());
 			ordLine.setTotalLoad(getItem1_TotalLoad());
+			ordLine.setTF_VehicleType_ID(getItem1_VehicleType_ID());
 			
 			ordLine.saveEx();			
 			DB.executeUpdate("UPDATE C_Order SET " + COLUMNNAME_Item1_C_OrderLine_ID + " = "
@@ -1363,6 +1391,9 @@ public class TF_MOrder extends MOrder {
 			ordLine.setC_UOM_ID(getItem2_UOM_ID());
 			
 			//Sand Block fields
+			//these should be updated in invoice line at:
+			// 1. Create Subcontract Invoice
+			// 2. CrusherEventHandler.
 			ordLine.setBucketQty(getItem2_BucketQty());
 			ordLine.setSandType(getItem2_SandType());
 			ordLine.setIsPermitSales(isItem2_IsPermitSales());
@@ -1370,6 +1401,8 @@ public class TF_MOrder extends MOrder {
 			ordLine.setBucketRate(getItem2_BucketRate());
 			ordLine.setDescription(getItem2_Desc());
 			ordLine.setTotalLoad(getItem2_TotalLoad());
+			ordLine.setTF_VehicleType_ID(getItem1_VehicleType_ID()); //from first line.
+			
 			
 			ordLine.saveEx();			
 			DB.executeUpdate("UPDATE C_Order SET " + COLUMNNAME_Item2_C_OrderLine_ID + " = "
@@ -1480,6 +1513,18 @@ public class TF_MOrder extends MOrder {
 		
 		TF_MOrg org = new TF_MOrg(getCtx(), getAD_Org_ID(), get_TrxName());
 		setOrgType(org.getOrgType());
+		
+		if(getOrgType().equals(ORGTYPE_SandBlock)) {
+			if(getItem1_BucketQty().doubleValue()<=0)
+				throw new AdempiereException("Line 1: Bucket qty is Mandatory");
+			if(isItem1_IsPermitSales() && getItem1_PermitIssued().doubleValue()<=0.5)
+				throw new AdempiereException("Permit Issued Should be greater than or equal to 0.5");
+			if(getItem1_ID() > 0 && getItem1_TotalLoad().doubleValue() <= 0)
+				throw new AdempiereException("Total Load is mandatory");
+			
+			setItem1_Amt(getItem1_Amt().setScale(0, RoundingMode.HALF_EVEN));
+			setItem2_Amt(getItem2_Amt().setScale(0, RoundingMode.HALF_EVEN));
+		}
 		
 		return super.beforeSave(newRecord);
 	}
@@ -1811,6 +1856,7 @@ public class TF_MOrder extends MOrder {
 			invLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_IsPermitSales, isItem1_IsPermitSales() );
 			invLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_TonePerBucket, getTonePerBucket());
 			invLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_TotalLoad, getItem1_TotalLoad());
+			invLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_TF_VehicleType_ID, getItem1_VehicleType_ID());
 		}
 		
 		//Invoice Line - Item2
@@ -1930,7 +1976,7 @@ public class TF_MOrder extends MOrder {
 	public void issuePermit() {		
 		if(!isSOTrx()) 
 			return;
-		MSandBlockBucketConfig config = MSandBlockBucketConfig.getBucketConfig(getAD_Org_ID(), MSandBlockBucketConfig.SANDTYPE_PermitSand);
+		MSandBlockBucketConfig config = MSandBlockBucketConfig.getBucketConfig(getAD_Org_ID(), MSandBlockBucketConfig.SANDTYPE_P, getItem1_VehicleType_ID());
 		if(isItem1_IsPermitSales() && getItem1_ID() == config.getM_Product_ID()
 				&& config.getM_ProductPermitLedger_ID() > 0) {
 			BigDecimal qtyIssue = getItem1_PermitIssued(); 

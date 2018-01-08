@@ -170,6 +170,28 @@ public class TF_MOrderLine extends MOrderLine {
 		set_Value (COLUMNNAME_TotalLoad, TotalLoad);
 	}
 	
+	/** Column name TF_VehicleType_ID */
+    public static final String COLUMNNAME_TF_VehicleType_ID = "TF_VehicleType_ID";
+    /** Set Vehicle Type.
+	@param TF_VehicleType_ID Vehicle Type	  */
+	public void setTF_VehicleType_ID (int TF_VehicleType_ID)
+	{
+		if (TF_VehicleType_ID < 1) 
+			set_Value (COLUMNNAME_TF_VehicleType_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_VehicleType_ID, Integer.valueOf(TF_VehicleType_ID));
+	}
+	
+	/** Get Vehicle Type.
+		@return Vehicle Type	  */
+	public int getTF_VehicleType_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_VehicleType_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+	
 	/** Get Total Load.
 		@return Total Load	  */
 	public BigDecimal getTotalLoad () 
