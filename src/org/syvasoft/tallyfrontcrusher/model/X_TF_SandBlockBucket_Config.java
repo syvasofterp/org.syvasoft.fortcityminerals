@@ -32,7 +32,7 @@ public class X_TF_SandBlockBucket_Config extends PO implements I_TF_SandBlockBuc
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20171230L;
+	private static final long serialVersionUID = 20180108L;
 
     /** Standard Constructor */
     public X_TF_SandBlockBucket_Config (Properties ctx, int TF_SandBlockBucket_Config_ID, String trxName)
@@ -212,12 +212,12 @@ public class X_TF_SandBlockBucket_Config extends PO implements I_TF_SandBlockBuc
 		return bd;
 	}
 
-	/** Permit Sand = PM */
-	public static final String SANDTYPE_PermitSand = "PM";
-	/** Extra Permit = EX */
-	public static final String SANDTYPE_ExtraPermit = "EX";
-	/** Without Permit = WP */
-	public static final String SANDTYPE_WithoutPermit = "WP";
+	/** P = PM */
+	public static final String SANDTYPE_P = "PM";
+	/** X = EX */
+	public static final String SANDTYPE_X = "EX";
+	/** W = WP */
+	public static final String SANDTYPE_W = "WP";
 	/** Set Sand Type.
 		@param SandType Sand Type	  */
 	public void setSandType (String SandType)
@@ -265,5 +265,30 @@ public class X_TF_SandBlockBucket_Config extends PO implements I_TF_SandBlockBuc
 	public String getTF_SandBlockBucket_Config_UU () 
 	{
 		return (String)get_Value(COLUMNNAME_TF_SandBlockBucket_Config_UU);
+	}
+
+	public I_TF_VehicleType getTF_VehicleType() throws RuntimeException
+    {
+		return (I_TF_VehicleType)MTable.get(getCtx(), I_TF_VehicleType.Table_Name)
+			.getPO(getTF_VehicleType_ID(), get_TrxName());	}
+
+	/** Set Vehicle Type.
+		@param TF_VehicleType_ID Vehicle Type	  */
+	public void setTF_VehicleType_ID (int TF_VehicleType_ID)
+	{
+		if (TF_VehicleType_ID < 1) 
+			set_Value (COLUMNNAME_TF_VehicleType_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_VehicleType_ID, Integer.valueOf(TF_VehicleType_ID));
+	}
+
+	/** Get Vehicle Type.
+		@return Vehicle Type	  */
+	public int getTF_VehicleType_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_VehicleType_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 }

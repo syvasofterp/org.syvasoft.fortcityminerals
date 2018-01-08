@@ -39,9 +39,9 @@ public class MSandBlockBucketConfig extends X_TF_SandBlockBucket_Config {
 		return super.beforeSave(newRecord);
 	}
 
-	public static MSandBlockBucketConfig getBucketConfig(int AD_Org_ID, String sandType) {		
-		MSandBlockBucketConfig config = new Query(Env.getCtx(), Table_Name, "AD_Org_ID = ? AND SandType=?", null)
-				.setClient_ID().setParameters(AD_Org_ID, sandType).first();
+	public static MSandBlockBucketConfig getBucketConfig(int AD_Org_ID, String sandType, int TF_VehicleType_ID) {		
+		MSandBlockBucketConfig config = new Query(Env.getCtx(), Table_Name, "AD_Org_ID = ? AND SandType=? AND COALESCE(TF_VehicleType_ID,0) = ? ", null)
+				.setClient_ID().setParameters(AD_Org_ID, sandType, TF_VehicleType_ID).first();
 		return config;		
 	}
 }

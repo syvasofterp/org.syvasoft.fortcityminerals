@@ -42,9 +42,12 @@ public class CalloutOrder_SandBlockQtyPrice implements IColumnCallout {
 		
 		if(mField.getColumnName().equals(TF_MOrder.COLUMNNAME_Item1_BucketQty)) {
 			boolean isPermitSales = mTab.getValueAsBoolean(TF_MOrder.COLUMNNAME_Item1_IsPermitSales);
+			int tf_vehicletype_id = 0;
+			if(mTab.getValue(TF_MOrder.COLUMNNAME_Item1_VehicleType_ID) != null)
+				tf_vehicletype_id = (int) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_VehicleType_ID);
 			int orgID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_AD_Org_ID) ;
 			if(isPermitSales) {
-				MSandBlockBucketConfig config = MSandBlockBucketConfig.getBucketConfig(orgID, MSandBlockBucketConfig.SANDTYPE_PermitSand);		
+				MSandBlockBucketConfig config = MSandBlockBucketConfig.getBucketConfig(orgID, MSandBlockBucketConfig.SANDTYPE_P, tf_vehicletype_id);		
 				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_PermitIssued, item1_BucketQty.multiply(config.getPermitTonnagePerBucket()));
 			}
 		}
@@ -62,7 +65,7 @@ public class CalloutOrder_SandBlockQtyPrice implements IColumnCallout {
 			item2_UnitPrice = item2_BucketRate.multiply(item2_BucketQty).divide(item2_Qty, 3, RoundingMode.HALF_EVEN);
 		}	
 		
-		mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Qty, item1_Qty);
+		mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Qty, item1_Qty);		
 		mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Price, item1_UnitPrice);
 		mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Amt, item1_BucketQty.multiply(item1_BucketRate).divide(BigDecimal.ONE, 2, RoundingMode.HALF_EVEN));
 		mTab.setValue(TF_MOrder.COLUMNNAME_Item2_Qty, item2_Qty);		

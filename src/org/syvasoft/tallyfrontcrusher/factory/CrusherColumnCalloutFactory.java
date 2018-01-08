@@ -347,7 +347,9 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 			if(columnName.equals(TF_MOrder.COLUMNNAME_Item1_IsPermitSales) || 
 					columnName.equals(TF_MOrder.COLUMNNAME_C_BPartner_ID) ||
 					columnName.equals(TF_MOrder.COLUMNNAME_Item2_BucketQty) ||
-					columnName.equals(TF_MOrder.COLUMNNAME_M_Warehouse_ID)) {
+					columnName.equals(TF_MOrder.COLUMNNAME_Item1_BucketQty) ||
+					columnName.equals(TF_MOrder.COLUMNNAME_M_Warehouse_ID) ||
+					columnName.equals(TF_MOrder.COLUMNNAME_Item1_VehicleType_ID)) {
 				list.add(new CalloutOrder_SandBlockLine1());
 			}
 		}
@@ -363,7 +365,8 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 					columnName.equals(MYardEntry.COLUMNNAME_ExtraBucketQty) ||
 					columnName.equals(MYardEntry.COLUMNNAME_ExtraBucketPrice) ||
 					columnName.equals(MYardEntry.COLUMNNAME_ExtraBucketQty) ||
-					columnName.equals(MYardEntry.COLUMNNAME_WpPrice))
+					columnName.equals(MYardEntry.COLUMNNAME_WpPrice) ||
+					columnName.equals(MYardEntry.COLUMNNAME_TotalLoad))
 				list.add(new CalloutYardEntry_CalcAmount());					
 			
 		}

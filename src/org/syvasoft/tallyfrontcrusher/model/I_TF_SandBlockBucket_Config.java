@@ -195,6 +195,17 @@ public interface I_TF_SandBlockBucket_Config
 	/** Get TF_SandBlockBucket_Config_UU	  */
 	public String getTF_SandBlockBucket_Config_UU();
 
+    /** Column name TF_VehicleType_ID */
+    public static final String COLUMNNAME_TF_VehicleType_ID = "TF_VehicleType_ID";
+
+	/** Set Vehicle Type	  */
+	public void setTF_VehicleType_ID (int TF_VehicleType_ID);
+
+	/** Get Vehicle Type	  */
+	public int getTF_VehicleType_ID();
+
+	public I_TF_VehicleType getTF_VehicleType() throws RuntimeException;
+
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";
 
