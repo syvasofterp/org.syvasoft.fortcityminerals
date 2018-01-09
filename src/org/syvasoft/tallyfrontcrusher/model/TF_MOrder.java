@@ -1401,7 +1401,7 @@ public class TF_MOrder extends MOrder {
 			ordLine.setBucketRate(getItem2_BucketRate());
 			ordLine.setDescription(getItem2_Desc());
 			ordLine.setTotalLoad(getItem2_TotalLoad());
-			ordLine.setTF_VehicleType_ID(getItem1_VehicleType_ID()); //from first line.
+			//ordLine.setTF_VehicleType_ID(getItem1_VehicleType_ID()); //from first line.
 			
 			
 			ordLine.saveEx();			
@@ -1524,6 +1524,7 @@ public class TF_MOrder extends MOrder {
 			
 			setItem1_Amt(getItem1_Amt().setScale(0, RoundingMode.HALF_EVEN));
 			setItem2_Amt(getItem2_Amt().setScale(0, RoundingMode.HALF_EVEN));
+			setItem1_PermitIssued(getItem1_PermitIssued().setScale(1, RoundingMode.HALF_EVEN));
 		}
 		
 		return super.beforeSave(newRecord);

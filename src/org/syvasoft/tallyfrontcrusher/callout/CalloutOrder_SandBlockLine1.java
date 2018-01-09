@@ -49,6 +49,7 @@ public class CalloutOrder_SandBlockLine1 implements IColumnCallout {
 					mTab.setValue(TF_MOrder.COLUMNNAME_Item1_SandType, null);
 					mTab.setValue(TF_MOrder.COLUMNNAME_Item1_BucketRate, BigDecimal.ZERO);
 					mTab.setValue(TF_MOrder.COLUMNNAME_TonePerBucket, BigDecimal.ZERO);
+					mTab.setValue(TF_MOrder.COLUMNNAME_TF_RentedVehicle_ID, null);
 					
 					if(tf_vehicletype_id != 0) 
 						return "Sand Block Bucket Configuration is not found for Current Vehicle Type & Sand Type!";
@@ -72,8 +73,8 @@ public class CalloutOrder_SandBlockLine1 implements IColumnCallout {
 						mTab.setValue(TF_MOrder.COLUMNNAME_Item2_ID, null);
 						mTab.setValue(TF_MOrder.COLUMNNAME_Item2_SandType, null);
 						mTab.setValue(TF_MOrder.COLUMNNAME_Item2_BucketRate, BigDecimal.ZERO);
-						mTab.setValue(TF_MOrder.COLUMNNAME_Item2_TonePerBucket, BigDecimal.ZERO);
-						throw new AdempiereException("Sand Block Bucket Configuration is not found for Extra Bucket!");
+						mTab.setValue(TF_MOrder.COLUMNNAME_Item2_TonePerBucket, BigDecimal.ZERO);						
+						return ("Sand Block Bucket Configuration is not found for Extra Bucket!");
 					}
 					mTab.setValue(TF_MOrder.COLUMNNAME_Item2_ID, config.getM_Product_ID());
 					mTab.setValue(TF_MOrder.COLUMNNAME_Item2_SandType, config.getSandType());
@@ -92,8 +93,9 @@ public class CalloutOrder_SandBlockLine1 implements IColumnCallout {
 				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_SandType, null);
 				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_BucketRate, BigDecimal.ZERO);
 				mTab.setValue(TF_MOrder.COLUMNNAME_TonePerBucket, BigDecimal.ZERO);
+				mTab.setValue(TF_MOrder.COLUMNNAME_TF_RentedVehicle_ID, null);
 				if(tf_vehicletype_id != 0)
-					throw new AdempiereException("Sand Block Bucket Configuration is not found for Current Vehicle Type & Sand Type!");
+					return ("Sand Block Bucket Configuration is not found for Current Vehicle Type & Sand Type!");
 				return null;
 			}
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_ID, config.getM_Product_ID());
