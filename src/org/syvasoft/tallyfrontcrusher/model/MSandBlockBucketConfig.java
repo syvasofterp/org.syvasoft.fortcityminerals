@@ -29,11 +29,11 @@ public class MSandBlockBucketConfig extends X_TF_SandBlockBucket_Config {
 	
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
-		if(newRecord || is_ValueChanged(COLUMNNAME_SandType)) {
-			String sql = "SELECT COUNT(*) FROM TF_SandBlockBucket_Config WHERE AD_Org_ID=? AND SandType=?";
-			int count = DB.getSQLValue(get_TrxName(), sql, getAD_Org_ID(), getSandType());
+		if(newRecord || is_ValueChanged(COLUMNNAME_SandType) || is_ValueChanged(COLUMNNAME_TF_VehicleType_ID)) {
+			String sql = "SELECT COUNT(*) FROM TF_SandBlockBucket_Config WHERE AD_Org_ID=? AND SandType=? AND TF_VehicleType_ID = ?";
+			int count = DB.getSQLValue(get_TrxName(), sql, getAD_Org_ID(), getSandType(), getTF_VehicleType_ID());
 			if(count > 0) {
-				throw new AdempiereException("Required Unique Data for (Org, SandType)");
+				throw new AdempiereException("Required Unique Data for (Org, Vehicle Type, SandType)");
 			}
 		}
 		return super.beforeSave(newRecord);
