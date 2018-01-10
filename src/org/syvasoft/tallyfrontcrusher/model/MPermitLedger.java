@@ -2,6 +2,7 @@ package org.syvasoft.tallyfrontcrusher.model;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
+import java.util.List;
 import java.util.Properties;
 
 import org.adempiere.exceptions.AdempiereException;
@@ -63,6 +64,14 @@ public class MPermitLedger extends X_TF_PermitLedger {
 	}
 	
 	public static void reverseIssuedPermit(int AD_Org_ID, int C_OrderLine_ID, String trxName) {
+		
+		List<MPermitLedgerLine> lines = new Query(Env.getCtx(), MPermitLedgerLine.Table_Name, "C_OrderLine_ID = ?", trxName)
+				.setClient_ID().setParameters(C_OrderLine_ID).list();
+		
+		for(MPermitLedgerLine line : lines) {
+			line.reversePermitExpense();
+			line.saveEx();
+		}
 		
 		String sql = " DELETE FROM TF_PermitLedgerLine WHERE C_OrderLine_ID = " + C_OrderLine_ID;
 		DB.executeUpdate(sql, trxName);

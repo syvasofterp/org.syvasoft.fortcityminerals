@@ -12,6 +12,7 @@ import org.compiere.model.MCostDetail;
 import org.compiere.model.MInventory;
 import org.compiere.model.MInventoryLine;
 import org.compiere.model.MProduct;
+import org.compiere.model.MProductCategory;
 import org.compiere.model.MTable;
 import org.compiere.model.MWarehouse;
 import org.compiere.model.MWarehousePrice;
@@ -198,6 +199,12 @@ public class TF_MProduct extends MProduct {
 		return false;
 	}
 
+	public int getPermitExpenseAccount_ID () {
+		MProductCategory pc = (MProductCategory) getM_Product_Category();
+		int permitExpAcct_ID = pc.get_ValueAsInt("C_ElementValuePermitExpense_ID");
+		return permitExpAcct_ID;
+	}
+	
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
 		boolean ok = super.afterSave(newRecord, success);
@@ -220,8 +227,7 @@ public class TF_MProduct extends MProduct {
 			//}			
 			setOpeningCost(newRecord);
 		}
-		
-		
+				
 		if(newRecord || is_ValueChanged(COLUMNNAME_Qty)
 				|| is_ValueChanged(COLUMNNAME_OpeningDate)) {
 			if(getM_Inventory_ID() > 0) {
@@ -234,11 +240,8 @@ public class TF_MProduct extends MProduct {
 			}
 			setOpeningStock(newRecord);
 		}
-		
-		
+				
 		//Cost Adjustment
-		
-		
 		
 	}
 	public void setOpeningCost(boolean newRecord) {

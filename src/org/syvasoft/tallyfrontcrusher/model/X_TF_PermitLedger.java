@@ -34,7 +34,7 @@ public class X_TF_PermitLedger extends PO implements I_TF_PermitLedger, I_Persis
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20171231L;
+	private static final long serialVersionUID = 20180110L;
 
     /** Standard Constructor */
     public X_TF_PermitLedger (Properties ctx, int TF_PermitLedger_ID, String trxName)

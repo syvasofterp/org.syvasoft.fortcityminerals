@@ -33,7 +33,7 @@ public class X_TF_PermitLedgerLine extends PO implements I_TF_PermitLedgerLine, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20171231L;
+	private static final long serialVersionUID = 20180110L;
 
     /** Standard Constructor */
     public X_TF_PermitLedgerLine (Properties ctx, int TF_PermitLedgerLine_ID, String trxName)
@@ -166,6 +166,34 @@ public class X_TF_PermitLedgerLine extends PO implements I_TF_PermitLedgerLine, 
 	public String getDescription () 
 	{
 		return (String)get_Value(COLUMNNAME_Description);
+	}
+
+	public org.compiere.model.I_GL_Journal getGL_Journal() throws RuntimeException
+    {
+		return (org.compiere.model.I_GL_Journal)MTable.get(getCtx(), org.compiere.model.I_GL_Journal.Table_Name)
+			.getPO(getGL_Journal_ID(), get_TrxName());	}
+
+	/** Set Journal.
+		@param GL_Journal_ID 
+		General Ledger Journal
+	  */
+	public void setGL_Journal_ID (int GL_Journal_ID)
+	{
+		if (GL_Journal_ID < 1) 
+			set_Value (COLUMNNAME_GL_Journal_ID, null);
+		else 
+			set_Value (COLUMNNAME_GL_Journal_ID, Integer.valueOf(GL_Journal_ID));
+	}
+
+	/** Get Journal.
+		@return General Ledger Journal
+	  */
+	public int getGL_Journal_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_GL_Journal_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	public org.compiere.model.I_M_Product getM_Product() throws RuntimeException
