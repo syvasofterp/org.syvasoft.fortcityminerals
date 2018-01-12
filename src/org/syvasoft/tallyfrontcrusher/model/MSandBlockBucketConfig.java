@@ -35,6 +35,9 @@ public class MSandBlockBucketConfig extends X_TF_SandBlockBucket_Config {
 			if(count > 0) {
 				throw new AdempiereException("Required Unique Data for (Org, Vehicle Type, SandType)");
 			}
+			
+			if(SANDTYPE_X.equals(getSandType()) && getTF_VehicleType_ID() > 0)
+				throw new AdempiereException("Vehicle Type is not applicable for X Sand Type!");
 		}
 		return super.beforeSave(newRecord);
 	}

@@ -1,13 +1,17 @@
 package org.syvasoft.tallyfrontcrusher.model;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.util.List;
 import java.util.Properties;
 
 import org.compiere.model.MJournal;
 import org.compiere.model.MJournalBatch;
 import org.compiere.model.MJournalLine;
 import org.compiere.model.MTable;
+import org.compiere.model.Query;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
 
@@ -197,13 +201,56 @@ public class TF_MJournal extends MJournal {
 		return bd;
 	}
 
+	/** Column name IsDistributeProfit */
+    public static final String COLUMNNAME_IsDistributeProfit = "IsDistributeProfit";
+    /** Set Distribute Profit / Loss.
+	@param IsDistributeProfit Distribute Profit / Loss	  */
+	public void setIsDistributeProfit (boolean IsDistributeProfit)
+	{
+		set_Value (COLUMNNAME_IsDistributeProfit, Boolean.valueOf(IsDistributeProfit));
+	}
+	
+	/** Get Distribute Profit / Loss.
+		@return Distribute Profit / Loss	  */
+	public boolean isDistributeProfit () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsDistributeProfit);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
 
+	/** Column name NetProfit */
+    public static final String COLUMNNAME_NetProfit = "NetProfit";
+    /** Set Net Profit / Loss.
+	@param NetProfit Net Profit / Loss	  */
+	public void setNetProfit (BigDecimal NetProfit)
+	{
+		set_Value (COLUMNNAME_NetProfit, NetProfit);
+	}
+	
+	/** Get Net Profit / Loss.
+		@return Net Profit / Loss	  */
+	public BigDecimal getNetProfit () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_NetProfit);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}    
+	
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {
 		// TODO Auto-generated method stub
 		boolean ok = super.afterSave(newRecord, success);
-		if(!isProcessed())
+		if(!isProcessed()) {
 			updateQuickEntryLines(newRecord);
+			createProfitShareLines(newRecord);
+		}
 		return ok;
 	}
 	
@@ -279,6 +326,82 @@ public class TF_MJournal extends MJournal {
 					+ drjl.getGL_JournalLine_ID() + " WHERE GL_Journal_ID = " + getGL_Journal_ID(), get_TrxName());			
 		}
 			
+	}
+	
+	private void createProfitShareLines(boolean newRecord) {
+		if(isDistributeProfit() && (newRecord || is_ValueChanged(COLUMNNAME_NetProfit) || is_ValueChanged(COLUMNNAME_DateAcct))) {
+			MJournalLine[] lines = getLines(true);
+			//Deleting all lines to create new profit share lines.
+			for(MJournalLine line : lines) {
+				MJournalLine l = new MJournalLine(getCtx(), line.getGL_JournalLine_ID(), get_TrxName());
+				l.deleteEx(true);
+			}
+		}
+		else {
+			return;
+		}
+		
+		if(getNetProfit().doubleValue() == 0 && isDistributeProfit()) 
+			return;
+			
+		
+		List<MShareholder> partners = new Query(getCtx(), MShareholder.Table_Name, "AD_Org_ID = ? AND TF_ShareholderMain_ID IS NULL AND ProfitShare > 0", get_TrxName())
+				.setClient_ID().setParameters(getAD_Org_ID()).list();
+		
+		boolean isProfit = getNetProfit().doubleValue() > 0 ;		
+		BigDecimal netProfit = getNetProfit().abs();
+		
+		int PLApprAcct_ID = MGLPostingConfig.getMGLPostingConfig(getCtx()).getPLApprAcct_ID();
+		
+		// P & L Appr. a/c
+		MJournalLine jl = new MJournalLine(this);
+		int line = 10;
+		jl.setLine(line);			
+		jl.setAccount_ID(PLApprAcct_ID);
+		jl.setDescription("Net Profit Transferred to " + partners.size() + " Shareholders");
+		if(isProfit) {
+			jl.setAmtSourceDr(netProfit);
+			jl.setAmtAcctDr(netProfit);
+		}
+		else {
+			jl.setAmtSourceCr(netProfit);
+			jl.setAmtAcctCr(netProfit);
+		}
+		jl.setIsGenerated(true);
+		jl.saveEx();
+		
+		for(MShareholder partner : partners) {
+			jl = new MJournalLine(this);
+			line = line + 10;
+			jl.setLine(line);			
+			jl.setAccount_ID(partner.getCapitalAcct_ID());
+			BigDecimal profitShare = partner.getProfitShare(true);
+			String desc = "PROFIT SHARE " + profitShare.toString() + "% of Rs." + getNetProfit().toString();
+			jl.setDescription(desc);
+			BigDecimal profitShareAmt = profitShare.multiply(netProfit).divide(new BigDecimal(100), 0, RoundingMode.HALF_EVEN);
+			if(isProfit) {
+				jl.setAmtSourceCr(profitShareAmt);
+				jl.setAmtAcctCr(profitShareAmt);
+			}
+			else {
+				jl.setAmtSourceDr(profitShareAmt);
+				jl.setAmtAcctDr(profitShareAmt);
+			}
+			jl.setIsGenerated(true);
+			jl.saveEx();
+		}
+	}
+	
+	public static BigDecimal getNetProfit(int AD_Org_ID, Timestamp dateAcct) {
+		String sql = "SELECT SUM(AmtAcct) * -1  FROM rv_fact_acct_day WHERE Account_ID = ? AND AD_Org_ID = ? AND DateAcct <= ? ";		
+		int PLAcct = MGLPostingConfig.getMGLPostingConfig(Env.getCtx()).getPLApprAcct_ID();
+		
+		BigDecimal netProfit = DB.getSQLValueBD(null, sql, PLAcct, AD_Org_ID, dateAcct);
+		
+		if(netProfit == null)
+			netProfit = BigDecimal.ZERO;
+		
+		return netProfit;
 	}
 
 }

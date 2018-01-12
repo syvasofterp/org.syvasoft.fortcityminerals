@@ -1,5 +1,6 @@
 package org.syvasoft.tallyfrontcrusher.model;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.Properties;
@@ -25,7 +26,20 @@ public class MShareholder extends X_TF_Shareholder {
 		// TODO Auto-generated constructor stub
 	}
 
-	
+	public BigDecimal getProfitShare(boolean isIncludedSubShareholders) {
+		if(isIncludedSubShareholders) {
+			String sql = "SELECT  SUM(ProfitShare) FROM TF_Shareholder WHERE AD_org_ID = ? AND  ? IN (TF_Shareholder_ID, TF_ShareholderMain_ID)";
+			BigDecimal profitShare = DB.getSQLValueBD(get_TrxName(), sql, getAD_Org_ID(), getTF_Shareholder_ID());
+			if(profitShare != null)
+				return profitShare;
+			else
+				return BigDecimal.ZERO;
+		}
+		else {
+			return getProfitShare();
+		}
+			
+	}
 	
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
