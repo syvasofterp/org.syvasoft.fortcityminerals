@@ -30,7 +30,7 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20171125L;
+	private static final long serialVersionUID = 20180112L;
 
     /** Standard Constructor */
     public X_TF_GLPosting_Config (Properties ctx, int TF_GLPosting_Config_ID, String trxName)
@@ -235,6 +235,31 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	public int getC_BankAccount_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_C_BankAccount_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_ElementValue getCapitalAdjAcct() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getCapitalAdjAcct_ID(), get_TrxName());	}
+
+	/** Set Capital Adj A/c.
+		@param CapitalAdjAcct_ID Capital Adj A/c	  */
+	public void setCapitalAdjAcct_ID (int CapitalAdjAcct_ID)
+	{
+		if (CapitalAdjAcct_ID < 1) 
+			set_Value (COLUMNNAME_CapitalAdjAcct_ID, null);
+		else 
+			set_Value (COLUMNNAME_CapitalAdjAcct_ID, Integer.valueOf(CapitalAdjAcct_ID));
+	}
+
+	/** Get Capital Adj A/c.
+		@return Capital Adj A/c	  */
+	public int getCapitalAdjAcct_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_CapitalAdjAcct_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
@@ -541,6 +566,56 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	public int getOpeningBalAcct_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_OpeningBalAcct_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_ElementValue getPLAcct() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getPLAcct_ID(), get_TrxName());	}
+
+	/** Set Profit and Loss Account.
+		@param PLAcct_ID Profit and Loss Account	  */
+	public void setPLAcct_ID (int PLAcct_ID)
+	{
+		if (PLAcct_ID < 1) 
+			set_Value (COLUMNNAME_PLAcct_ID, null);
+		else 
+			set_Value (COLUMNNAME_PLAcct_ID, Integer.valueOf(PLAcct_ID));
+	}
+
+	/** Get Profit and Loss Account.
+		@return Profit and Loss Account	  */
+	public int getPLAcct_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_PLAcct_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_ElementValue getPLApprAcct() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getPLApprAcct_ID(), get_TrxName());	}
+
+	/** Set Profit and Loss Appropriation Account.
+		@param PLApprAcct_ID Profit and Loss Appropriation Account	  */
+	public void setPLApprAcct_ID (int PLApprAcct_ID)
+	{
+		if (PLApprAcct_ID < 1) 
+			set_Value (COLUMNNAME_PLApprAcct_ID, null);
+		else 
+			set_Value (COLUMNNAME_PLApprAcct_ID, Integer.valueOf(PLApprAcct_ID));
+	}
+
+	/** Get Profit and Loss Appropriation Account.
+		@return Profit and Loss Appropriation Account	  */
+	public int getPLApprAcct_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_PLApprAcct_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();

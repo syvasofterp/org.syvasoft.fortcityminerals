@@ -16,7 +16,10 @@ public class CalloutJournal_QuickEntryMode implements IColumnCallout {
 		if(!isQuickEntryMode) {
 			mTab.setValue(TF_MJournal.COLUMNNAME_Amount, BigDecimal.ZERO);
 			mTab.setValue(TF_MJournal.COLUMNNAME_TF_DebitAcct_ID, 0);
-			mTab.setValue(TF_MJournal.COLUMNNAME_TF_CreditAcct_ID, 0);
+			mTab.setValue(TF_MJournal.COLUMNNAME_TF_CreditAcct_ID, 0);			
+		}
+		else {
+			mTab.setValue(TF_MJournal.COLUMNNAME_IsDistributeProfit, false);
 		}
 		return null;
 	}

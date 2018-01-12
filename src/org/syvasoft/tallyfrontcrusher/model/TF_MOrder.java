@@ -1514,7 +1514,7 @@ public class TF_MOrder extends MOrder {
 		TF_MOrg org = new TF_MOrg(getCtx(), getAD_Org_ID(), get_TrxName());
 		setOrgType(org.getOrgType());
 		
-		if(getOrgType().equals(ORGTYPE_SandBlock)) {
+		if(getOrgType().equals(ORGTYPE_SandBlock) && isSOTrx()) {
 			if(getItem1_BucketQty().doubleValue()<=0)
 				throw new AdempiereException("Line 1: Bucket qty is Mandatory");
 			if(isItem1_IsPermitSales() && getItem1_PermitIssued().doubleValue()<=0.5)

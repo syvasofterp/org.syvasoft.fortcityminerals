@@ -146,6 +146,17 @@ public interface I_TF_GLPosting_Config
 
 	public org.compiere.model.I_C_BankAccount getC_BankAccount() throws RuntimeException;
 
+    /** Column name CapitalAdjAcct_ID */
+    public static final String COLUMNNAME_CapitalAdjAcct_ID = "CapitalAdjAcct_ID";
+
+	/** Set Capital Adj A/c	  */
+	public void setCapitalAdjAcct_ID (int CapitalAdjAcct_ID);
+
+	/** Get Capital Adj A/c	  */
+	public int getCapitalAdjAcct_ID();
+
+	public org.compiere.model.I_C_ElementValue getCapitalAdjAcct() throws RuntimeException;
+
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
 
@@ -314,6 +325,28 @@ public interface I_TF_GLPosting_Config
 	public int getOpeningBalAcct_ID();
 
 	public org.compiere.model.I_C_ElementValue getOpeningBalAcct() throws RuntimeException;
+
+    /** Column name PLAcct_ID */
+    public static final String COLUMNNAME_PLAcct_ID = "PLAcct_ID";
+
+	/** Set Profit and Loss Account	  */
+	public void setPLAcct_ID (int PLAcct_ID);
+
+	/** Get Profit and Loss Account	  */
+	public int getPLAcct_ID();
+
+	public org.compiere.model.I_C_ElementValue getPLAcct() throws RuntimeException;
+
+    /** Column name PLApprAcct_ID */
+    public static final String COLUMNNAME_PLApprAcct_ID = "PLApprAcct_ID";
+
+	/** Set Profit and Loss Appropriation Account	  */
+	public void setPLApprAcct_ID (int PLApprAcct_ID);
+
+	/** Get Profit and Loss Appropriation Account	  */
+	public int getPLApprAcct_ID();
+
+	public org.compiere.model.I_C_ElementValue getPLApprAcct() throws RuntimeException;
 
     /** Column name QuarryExp_Acct */
     public static final String COLUMNNAME_QuarryExp_Acct = "QuarryExp_Acct";
