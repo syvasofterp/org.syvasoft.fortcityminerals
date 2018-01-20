@@ -26,14 +26,14 @@ import org.compiere.util.Env;
 
 /** Generated Model for TF_Jobwork_ItemIssue
  *  @author iDempiere (generated) 
- *  @version Release 3.1 - $Id$ */
+ *  @version Release 4.1 - $Id$ */
 public class X_TF_Jobwork_ItemIssue extends PO implements I_TF_Jobwork_ItemIssue, I_Persistent 
 {
 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170814L;
+	private static final long serialVersionUID = 20180119L;
 
     /** Standard Constructor */
     public X_TF_Jobwork_ItemIssue (Properties ctx, int TF_Jobwork_ItemIssue_ID, String trxName)
@@ -84,9 +84,9 @@ public class X_TF_Jobwork_ItemIssue extends PO implements I_TF_Jobwork_ItemIssue
 		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
 			.getPO(getC_ElementValue_ID(), get_TrxName());	}
 
-	/** Set Profit Center.
+	/** Set Account Element.
 		@param C_ElementValue_ID 
-		Profit Center
+		Account Element
 	  */
 	public void setC_ElementValue_ID (int C_ElementValue_ID)
 	{
@@ -96,8 +96,8 @@ public class X_TF_Jobwork_ItemIssue extends PO implements I_TF_Jobwork_ItemIssue
 			set_Value (COLUMNNAME_C_ElementValue_ID, Integer.valueOf(C_ElementValue_ID));
 	}
 
-	/** Get Profit Center.
-		@return Profit Center
+	/** Get Account Element.
+		@return Account Element
 	  */
 	public int getC_ElementValue_ID () 
 	{
@@ -140,9 +140,9 @@ public class X_TF_Jobwork_ItemIssue extends PO implements I_TF_Jobwork_ItemIssue
 		return (org.compiere.model.I_C_Project)MTable.get(getCtx(), org.compiere.model.I_C_Project.Table_Name)
 			.getPO(getC_Project_ID(), get_TrxName());	}
 
-	/** Set Subcontract / Job Work.
+	/** Set Project.
 		@param C_Project_ID 
-		Subcontract / Job Work
+		Financial Project
 	  */
 	public void setC_Project_ID (int C_Project_ID)
 	{
@@ -152,8 +152,8 @@ public class X_TF_Jobwork_ItemIssue extends PO implements I_TF_Jobwork_ItemIssue
 			set_ValueNoCheck (COLUMNNAME_C_Project_ID, Integer.valueOf(C_Project_ID));
 	}
 
-	/** Get Subcontract / Job Work.
-		@return Subcontract / Job Work
+	/** Get Project.
+		@return Financial Project
 	  */
 	public int getC_Project_ID () 
 	{

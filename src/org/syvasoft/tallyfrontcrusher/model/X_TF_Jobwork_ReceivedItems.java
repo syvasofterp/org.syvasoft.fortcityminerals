@@ -25,14 +25,14 @@ import org.compiere.util.Env;
 
 /** Generated Model for TF_Jobwork_ReceivedItems
  *  @author iDempiere (generated) 
- *  @version Release 3.1 - $Id$ */
+ *  @version Release 4.1 - $Id$ */
 public class X_TF_Jobwork_ReceivedItems extends PO implements I_TF_Jobwork_ReceivedItems, I_Persistent 
 {
 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170501L;
+	private static final long serialVersionUID = 20180119L;
 
     /** Standard Constructor */
     public X_TF_Jobwork_ReceivedItems (Properties ctx, int TF_Jobwork_ReceivedItems_ID, String trxName)

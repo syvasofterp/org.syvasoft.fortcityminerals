@@ -10,6 +10,7 @@ import org.compiere.model.GridTab;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
 import org.syvasoft.tallyfrontcrusher.model.MGLPostingConfig;
+import org.syvasoft.tallyfrontcrusher.model.MJobworkAssignedAccount;
 import org.syvasoft.tallyfrontcrusher.model.TF_MElementValue;
 import org.syvasoft.tallyfrontcrusher.model.TF_MPayment;
 
@@ -73,6 +74,14 @@ public class CalloutPayment_ElementValue implements IColumnCallout {
 					description = "Cash Paid to " + acct.getName();
 				else
 					description = "Cash Received from " + acct.getName();
+				int AD_Org_ID = (int) mTab.getValue(TF_MPayment.COLUMNNAME_AD_Org_ID);
+				MJobworkAssignedAccount jwAcct = MJobworkAssignedAccount.getJobwork(AD_Org_ID, acct_id);				
+				if(jwAcct != null) {
+					mTab.setValue(TF_MPayment.COLUMNNAME_C_Project_ID, jwAcct.getC_Project_ID());					
+				}
+				else {
+					mTab.setValue(TF_MPayment.COLUMNNAME_C_Project_ID, null);	
+				}
 			}
 			
 		}

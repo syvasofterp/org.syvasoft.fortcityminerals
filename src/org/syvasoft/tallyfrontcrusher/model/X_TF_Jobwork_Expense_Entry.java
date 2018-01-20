@@ -26,14 +26,14 @@ import org.compiere.util.Env;
 
 /** Generated Model for TF_Jobwork_Expense_Entry
  *  @author iDempiere (generated) 
- *  @version Release 3.1 - $Id$ */
+ *  @version Release 4.1 - $Id$ */
 public class X_TF_Jobwork_Expense_Entry extends PO implements I_TF_Jobwork_Expense_Entry, I_Persistent 
 {
 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170806L;
+	private static final long serialVersionUID = 20180119L;
 
     /** Standard Constructor */
     public X_TF_Jobwork_Expense_Entry (Properties ctx, int TF_Jobwork_Expense_Entry_ID, String trxName)
@@ -160,7 +160,7 @@ public class X_TF_Jobwork_Expense_Entry extends PO implements I_TF_Jobwork_Expen
 	  */
 	public void setDateAcct (Timestamp DateAcct)
 	{
-		set_ValueNoCheck (COLUMNNAME_DateAcct, DateAcct);
+		set_Value (COLUMNNAME_DateAcct, DateAcct);
 	}
 
 	/** Get Account Date.

@@ -26,14 +26,14 @@ import org.compiere.util.Env;
 
 /** Generated Model for TF_Jobwork_ResRentEntry
  *  @author iDempiere (generated) 
- *  @version Release 3.1 - $Id$ */
+ *  @version Release 4.1 - $Id$ */
 public class X_TF_Jobwork_ResRentEntry extends PO implements I_TF_Jobwork_ResRentEntry, I_Persistent 
 {
 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170806L;
+	private static final long serialVersionUID = 20180119L;
 
     /** Standard Constructor */
     public X_TF_Jobwork_ResRentEntry (Properties ctx, int TF_Jobwork_ResRentEntry_ID, String trxName)
@@ -43,6 +43,7 @@ public class X_TF_Jobwork_ResRentEntry extends PO implements I_TF_Jobwork_ResRen
         {
 			setContractBase (null);
 			setDateAcct (new Timestamp( System.currentTimeMillis() ));
+// @#Date@
 			setProcessed (false);
 			setTF_Jobwork_IssuedResource_ID (0);
 			setTF_Jobwork_ResRentEntry_ID (0);
@@ -124,7 +125,7 @@ public class X_TF_Jobwork_ResRentEntry extends PO implements I_TF_Jobwork_ResRen
 	  */
 	public void setDateAcct (Timestamp DateAcct)
 	{
-		set_ValueNoCheck (COLUMNNAME_DateAcct, DateAcct);
+		set_Value (COLUMNNAME_DateAcct, DateAcct);
 	}
 
 	/** Get Account Date.

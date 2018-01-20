@@ -7,6 +7,7 @@ import org.compiere.model.GridField;
 import org.compiere.model.GridTab;
 import org.compiere.model.MUser;
 import org.compiere.util.Env;
+import org.syvasoft.tallyfrontcrusher.model.MJobworkAssignedEmployee;
 import org.syvasoft.tallyfrontcrusher.model.TF_MBPartner;
 import org.syvasoft.tallyfrontcrusher.model.TF_MPayment;
 
@@ -14,12 +15,22 @@ public class CalloutPayment_TFBPartner implements IColumnCallout {
 
 	@Override
 	public String start(Properties ctx, int WindowNo, GridTab mTab, GridField mField, Object value, Object oldValue) {
-		int bPartnerID = 0;
+		int bPartnerID = 0;		
 		boolean isEmployee = false;
 		if(mTab.getValue(TF_MPayment.COLUMNNAME_TF_BPartner_ID) != null) {
 			bPartnerID = (int) mTab.getValue(TF_MPayment.COLUMNNAME_TF_BPartner_ID);
 			TF_MBPartner bp = new TF_MBPartner(ctx, bPartnerID, null);
-			isEmployee = bp.isEmployee();			
+			isEmployee = bp.isEmployee();
+			if(isEmployee) {
+				int AD_Org_ID = (int) mTab.getValue(TF_MPayment.COLUMNNAME_AD_Org_ID);
+				MJobworkAssignedEmployee jwEmp = MJobworkAssignedEmployee.getJobwork(AD_Org_ID, bPartnerID);
+				if(jwEmp != null) {
+					mTab.setValue(TF_MPayment.COLUMNNAME_C_Project_ID, jwEmp.getC_Project_ID());
+				}
+				else {
+					mTab.setValue(TF_MPayment.COLUMNNAME_C_Project_ID, null);
+				}
+			}
 		}
 		else {
 			MUser user = MUser.get(ctx, Env.getAD_User_ID(ctx));				

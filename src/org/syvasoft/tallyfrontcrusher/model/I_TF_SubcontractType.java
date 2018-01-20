@@ -123,10 +123,14 @@ public interface I_TF_SubcontractType
     /** Column name IncludeRMProduction */
     public static final String COLUMNNAME_IncludeRMProduction = "IncludeRMProduction";
 
-	/** Set Include Raw Material Production	  */
+	/** Set Include Raw Material Production.
+	  * Indicates that there is Weighment Entry for Raw Material Incoming
+	  */
 	public void setIncludeRMProduction (boolean IncludeRMProduction);
 
-	/** Get Include Raw Material Production	  */
+	/** Get Include Raw Material Production.
+	  * Indicates that there is Weighment Entry for Raw Material Incoming
+	  */
 	public boolean isIncludeRMProduction();
 
     /** Column name InvoiceFor */
@@ -159,6 +163,19 @@ public interface I_TF_SubcontractType
 	  * The record is active in the system
 	  */
 	public boolean isActive();
+
+    /** Column name IsSOTrx */
+    public static final String COLUMNNAME_IsSOTrx = "IsSOTrx";
+
+	/** Set Sales Transaction.
+	  * This is a Sales Transaction
+	  */
+	public void setIsSOTrx (boolean IsSOTrx);
+
+	/** Get Sales Transaction.
+	  * This is a Sales Transaction
+	  */
+	public boolean isSOTrx();
 
     /** Column name Name */
     public static final String COLUMNNAME_Name = "Name";

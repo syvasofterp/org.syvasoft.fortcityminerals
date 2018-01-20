@@ -26,7 +26,7 @@ public class MDestination extends X_TF_Destination {
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {
 		if(newRecord) {
-			String whereClause = " AD_Org_ID  IN (0,?) ";
+			String whereClause = " AD_Org_ID  IN (0,?) AND RequireRentConfig = 'Y' ";
 			List<MRentedVehicle> vehicles = new Query(getCtx(), MRentedVehicle.Table_Name, whereClause, get_TrxName())
 					.setOnlyActiveRecords(true).setParameters(getAD_Org_ID()).list();
 			for(MRentedVehicle vehicle : vehicles) {

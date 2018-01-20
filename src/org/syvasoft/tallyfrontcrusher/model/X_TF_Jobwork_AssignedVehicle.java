@@ -17,16 +17,14 @@
 /** Generated Model - DO NOT CHANGE */
 package org.syvasoft.tallyfrontcrusher.model;
 
-import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.util.Properties;
 import org.compiere.model.*;
-import org.compiere.util.Env;
 
-/** Generated Model for TF_Jobwork_IssuedItems
+/** Generated Model for TF_Jobwork_AssignedVehicle
  *  @author iDempiere (generated) 
  *  @version Release 4.1 - $Id$ */
-public class X_TF_Jobwork_IssuedItems extends PO implements I_TF_Jobwork_IssuedItems, I_Persistent 
+public class X_TF_Jobwork_AssignedVehicle extends PO implements I_TF_Jobwork_AssignedVehicle, I_Persistent 
 {
 
 	/**
@@ -35,19 +33,18 @@ public class X_TF_Jobwork_IssuedItems extends PO implements I_TF_Jobwork_IssuedI
 	private static final long serialVersionUID = 20180119L;
 
     /** Standard Constructor */
-    public X_TF_Jobwork_IssuedItems (Properties ctx, int TF_Jobwork_IssuedItems_ID, String trxName)
+    public X_TF_Jobwork_AssignedVehicle (Properties ctx, int TF_Jobwork_AssignedVehicle_ID, String trxName)
     {
-      super (ctx, TF_Jobwork_IssuedItems_ID, trxName);
-      /** if (TF_Jobwork_IssuedItems_ID == 0)
+      super (ctx, TF_Jobwork_AssignedVehicle_ID, trxName);
+      /** if (TF_Jobwork_AssignedVehicle_ID == 0)
         {
-			setC_UOM_ID (0);
 			setM_Product_ID (0);
-			setTF_Jobwork_IssuedItems_ID (0);
+			setTF_Jobwork_AssignedVehicle_ID (0);
         } */
     }
 
     /** Load Constructor */
-    public X_TF_Jobwork_IssuedItems (Properties ctx, ResultSet rs, String trxName)
+    public X_TF_Jobwork_AssignedVehicle (Properties ctx, ResultSet rs, String trxName)
     {
       super (ctx, rs, trxName);
     }
@@ -69,7 +66,7 @@ public class X_TF_Jobwork_IssuedItems extends PO implements I_TF_Jobwork_IssuedI
 
     public String toString()
     {
-      StringBuffer sb = new StringBuffer ("X_TF_Jobwork_IssuedItems[")
+      StringBuffer sb = new StringBuffer ("X_TF_Jobwork_AssignedVehicle[")
         .append(get_ID()).append("]");
       return sb.toString();
     }
@@ -102,32 +99,21 @@ public class X_TF_Jobwork_IssuedItems extends PO implements I_TF_Jobwork_IssuedI
 		return ii.intValue();
 	}
 
-	public org.compiere.model.I_C_UOM getC_UOM() throws RuntimeException
-    {
-		return (org.compiere.model.I_C_UOM)MTable.get(getCtx(), org.compiere.model.I_C_UOM.Table_Name)
-			.getPO(getC_UOM_ID(), get_TrxName());	}
-
-	/** Set UOM.
-		@param C_UOM_ID 
-		Unit of Measure
+	/** Set Description.
+		@param Description 
+		Optional short description of the record
 	  */
-	public void setC_UOM_ID (int C_UOM_ID)
+	public void setDescription (String Description)
 	{
-		if (C_UOM_ID < 1) 
-			set_Value (COLUMNNAME_C_UOM_ID, null);
-		else 
-			set_Value (COLUMNNAME_C_UOM_ID, Integer.valueOf(C_UOM_ID));
+		set_Value (COLUMNNAME_Description, Description);
 	}
 
-	/** Get UOM.
-		@return Unit of Measure
+	/** Get Description.
+		@return Optional short description of the record
 	  */
-	public int getC_UOM_ID () 
+	public String getDescription () 
 	{
-		Integer ii = (Integer)get_Value(COLUMNNAME_C_UOM_ID);
-		if (ii == null)
-			 return 0;
-		return ii.intValue();
+		return (String)get_Value(COLUMNNAME_Description);
 	}
 
 	public org.compiere.model.I_M_Product getM_Product() throws RuntimeException
@@ -158,71 +144,37 @@ public class X_TF_Jobwork_IssuedItems extends PO implements I_TF_Jobwork_IssuedI
 		return ii.intValue();
 	}
 
-	/** Set Quantity Deducted.
-		@param QtyDeducted Quantity Deducted	  */
-	public void setQtyDeducted (BigDecimal QtyDeducted)
+	/** Set Jobwork Assigned Vehicle.
+		@param TF_Jobwork_AssignedVehicle_ID Jobwork Assigned Vehicle	  */
+	public void setTF_Jobwork_AssignedVehicle_ID (int TF_Jobwork_AssignedVehicle_ID)
 	{
-		set_Value (COLUMNNAME_QtyDeducted, QtyDeducted);
-	}
-
-	/** Get Quantity Deducted.
-		@return Quantity Deducted	  */
-	public BigDecimal getQtyDeducted () 
-	{
-		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_QtyDeducted);
-		if (bd == null)
-			 return Env.ZERO;
-		return bd;
-	}
-
-	/** Set Quantity Issued.
-		@param QtyIssued Quantity Issued	  */
-	public void setQtyIssued (BigDecimal QtyIssued)
-	{
-		set_Value (COLUMNNAME_QtyIssued, QtyIssued);
-	}
-
-	/** Get Quantity Issued.
-		@return Quantity Issued	  */
-	public BigDecimal getQtyIssued () 
-	{
-		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_QtyIssued);
-		if (bd == null)
-			 return Env.ZERO;
-		return bd;
-	}
-
-	/** Set Issued Items.
-		@param TF_Jobwork_IssuedItems_ID Issued Items	  */
-	public void setTF_Jobwork_IssuedItems_ID (int TF_Jobwork_IssuedItems_ID)
-	{
-		if (TF_Jobwork_IssuedItems_ID < 1) 
-			set_ValueNoCheck (COLUMNNAME_TF_Jobwork_IssuedItems_ID, null);
+		if (TF_Jobwork_AssignedVehicle_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_TF_Jobwork_AssignedVehicle_ID, null);
 		else 
-			set_ValueNoCheck (COLUMNNAME_TF_Jobwork_IssuedItems_ID, Integer.valueOf(TF_Jobwork_IssuedItems_ID));
+			set_ValueNoCheck (COLUMNNAME_TF_Jobwork_AssignedVehicle_ID, Integer.valueOf(TF_Jobwork_AssignedVehicle_ID));
 	}
 
-	/** Get Issued Items.
-		@return Issued Items	  */
-	public int getTF_Jobwork_IssuedItems_ID () 
+	/** Get Jobwork Assigned Vehicle.
+		@return Jobwork Assigned Vehicle	  */
+	public int getTF_Jobwork_AssignedVehicle_ID () 
 	{
-		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Jobwork_IssuedItems_ID);
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Jobwork_AssignedVehicle_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
 	}
 
-	/** Set TF_Jobwork_IssuedItems_UU.
-		@param TF_Jobwork_IssuedItems_UU TF_Jobwork_IssuedItems_UU	  */
-	public void setTF_Jobwork_IssuedItems_UU (String TF_Jobwork_IssuedItems_UU)
+	/** Set TF_Jobwork_AssignedVehicle_UU.
+		@param TF_Jobwork_AssignedVehicle_UU TF_Jobwork_AssignedVehicle_UU	  */
+	public void setTF_Jobwork_AssignedVehicle_UU (String TF_Jobwork_AssignedVehicle_UU)
 	{
-		set_ValueNoCheck (COLUMNNAME_TF_Jobwork_IssuedItems_UU, TF_Jobwork_IssuedItems_UU);
+		set_ValueNoCheck (COLUMNNAME_TF_Jobwork_AssignedVehicle_UU, TF_Jobwork_AssignedVehicle_UU);
 	}
 
-	/** Get TF_Jobwork_IssuedItems_UU.
-		@return TF_Jobwork_IssuedItems_UU	  */
-	public String getTF_Jobwork_IssuedItems_UU () 
+	/** Get TF_Jobwork_AssignedVehicle_UU.
+		@return TF_Jobwork_AssignedVehicle_UU	  */
+	public String getTF_Jobwork_AssignedVehicle_UU () 
 	{
-		return (String)get_Value(COLUMNNAME_TF_Jobwork_IssuedItems_UU);
+		return (String)get_Value(COLUMNNAME_TF_Jobwork_AssignedVehicle_UU);
 	}
 }

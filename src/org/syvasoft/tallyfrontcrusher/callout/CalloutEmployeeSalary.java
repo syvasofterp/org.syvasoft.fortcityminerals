@@ -21,7 +21,7 @@ public class CalloutEmployeeSalary implements IColumnCallout {
 		BigDecimal stdDays = BigDecimal.ZERO;
 		BigDecimal stdWage = BigDecimal.ZERO;
 		BigDecimal presentDays = BigDecimal.ZERO;
-		boolean isCalculated = mTab.getValueAsBoolean(MEmployeeSalary.COLUMNNAME_IsCalculated);
+		boolean isCalculated = mTab.getValueAsBoolean(MEmployeeSalary.COLUMNNAME_IsCalculated);		
 		
 		if(mTab.getValue(MEmployeeSalary.COLUMNNAME_Present_Days) != null)
 			presentDays = (BigDecimal) mTab.getValue(MEmployeeSalary.COLUMNNAME_Present_Days);

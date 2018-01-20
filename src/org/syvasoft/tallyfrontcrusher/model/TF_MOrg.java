@@ -174,4 +174,32 @@ public class TF_MOrg extends MOrg {
 		return ii.intValue();
 	}
 
+	/** Column name OrganizationEarningsAcct_ID */
+    public static final String COLUMNNAME_OrganizationEarningsAcct_ID = "OrganizationEarningsAcct_ID";
+    
+    public org.compiere.model.I_C_ElementValue getOrganizationEarningsAcct() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getOrganizationEarningsAcct_ID(), get_TrxName());	}
+
+	/** Set Earnings Account.
+		@param OrganizationEarningsAcct_ID Earnings Account	  */
+	public void setOrganizationEarningsAcct_ID (int OrganizationEarningsAcct_ID)
+	{
+		if (OrganizationEarningsAcct_ID < 1) 
+			set_Value (COLUMNNAME_OrganizationEarningsAcct_ID, null);
+		else 
+			set_Value (COLUMNNAME_OrganizationEarningsAcct_ID, Integer.valueOf(OrganizationEarningsAcct_ID));
+	}
+
+	/** Get Earnings Account.
+		@return Earnings Account	  */
+	public int getOrganizationEarningsAcct_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_OrganizationEarningsAcct_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 }

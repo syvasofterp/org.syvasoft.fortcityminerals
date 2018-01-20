@@ -23,7 +23,7 @@ import org.compiere.util.KeyNamePair;
 
 /** Generated Interface for TF_Employee_Salary
  *  @author iDempiere (generated) 
- *  @version Release 3.1
+ *  @version Release 4.1
  */
 @SuppressWarnings("all")
 public interface I_TF_Employee_Salary 
@@ -67,12 +67,12 @@ public interface I_TF_Employee_Salary
     /** Column name C_BPartner_ID */
     public static final String COLUMNNAME_C_BPartner_ID = "C_BPartner_ID";
 
-	/** Set Employee.
+	/** Set Business Partner .
 	  * Identifies a Business Partner
 	  */
 	public void setC_BPartner_ID (int C_BPartner_ID);
 
-	/** Get Employee.
+	/** Get Business Partner .
 	  * Identifies a Business Partner
 	  */
 	public int getC_BPartner_ID();
@@ -82,13 +82,13 @@ public interface I_TF_Employee_Salary
     /** Column name C_ElementValue_ID */
     public static final String COLUMNNAME_C_ElementValue_ID = "C_ElementValue_ID";
 
-	/** Set Profit Center.
-	  * Profit Center
+	/** Set Account Element.
+	  * Account Element
 	  */
 	public void setC_ElementValue_ID (int C_ElementValue_ID);
 
-	/** Get Profit Center.
-	  * Profit Center
+	/** Get Account Element.
+	  * Account Element
 	  */
 	public int getC_ElementValue_ID();
 
@@ -108,6 +108,21 @@ public interface I_TF_Employee_Salary
 	public int getC_Invoice_ID();
 
 	public org.compiere.model.I_C_Invoice getC_Invoice() throws RuntimeException;
+
+    /** Column name C_Project_ID */
+    public static final String COLUMNNAME_C_Project_ID = "C_Project_ID";
+
+	/** Set Project.
+	  * Financial Project
+	  */
+	public void setC_Project_ID (int C_Project_ID);
+
+	/** Get Project.
+	  * Financial Project
+	  */
+	public int getC_Project_ID();
+
+	public org.compiere.model.I_C_Project getC_Project() throws RuntimeException;
 
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";

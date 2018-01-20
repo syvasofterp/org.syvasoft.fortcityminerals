@@ -612,12 +612,15 @@ public class TF_MPayment extends MPayment {
 		return desc;
 	}
 	
-	public void postAdvanceAdjustmentJournal() {
+	public void postAdvanceAdjustmentJournal() {		
 		//Posting Opening Balance GL journal 
 		int m_C_DocTypeTarget_ID = 1000000;
 		MGLPostingConfig glConfig = MGLPostingConfig.getMGLPostingConfig(getCtx());
+		if(glConfig.getSalariesAdvanceAcct_ID() == getC_ElementValue_ID())
+			return;
+		
 		TF_MJournal j = new TF_MJournal(getCtx(), 0, get_TrxName());
-		j.setDescription("Advance Deducted from Cash Book Entry #" + getDocumentNo());
+		j.setDescription("Advance Deducted from " + getDocumentNo());
 		j.setAD_Org_ID(getAD_Org_ID());
 		j.setC_AcctSchema_ID(Env.getContextAsInt(getCtx(), "$C_AcctSchema_ID"));
 		j.setC_Currency_ID(Env.getContextAsInt(getCtx(), "$C_Currency_ID"));
@@ -630,6 +633,7 @@ public class TF_MPayment extends MPayment {
 		j.setC_Period_ID(period.getC_Period_ID());
 		j.setGL_Category_ID(1000000);
 		j.setC_ConversionType_ID(114);
+		j.setC_Project_ID(getC_Project_ID());
 		//j.setIsQuickEntry(true);
 		//j.setAmount(getAdvance_Deduct());
 		//j.setTF_DebitAcct_ID(getC_ElementValue_ID());

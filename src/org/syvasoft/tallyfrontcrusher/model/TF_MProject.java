@@ -397,6 +397,7 @@ public class TF_MProject extends MProject {
 		MProjectType projType = new MProjectType(getCtx(), 1000000, get_TrxName());		
 		setProjectType(projType);
 		
+		
 		//Update Contract Amt Actual
 		if(is_ValueChanged(COLUMNNAME_QtyProcessed) || is_ValueChanged(COLUMNNAME_Unit_Price))
 			setContract_Amt_Act(getUnit_Price().multiply(getQtyProcessed()));
@@ -406,6 +407,7 @@ public class TF_MProject extends MProject {
 		
 		MSubcontractType contractType = new MSubcontractType(getCtx(), getTF_SubcontractType_ID(), get_TrxName());
 		setSubcontractType(contractType.getSubcontractType());
+		setIsSOTrx(contractType.isSOTrx());
 		if(contractType.getInvoiceFor().equals(MSubcontractType.INVOICEFOR_Jobwork) && getJobWork_Product_ID() == 0) {
 			throw new AdempiereException("The selected Subcontract Type enforces that the Jobwork is mandatory");
 		}

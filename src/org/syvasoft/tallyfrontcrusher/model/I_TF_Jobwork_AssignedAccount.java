@@ -21,18 +21,18 @@ import java.sql.Timestamp;
 import org.compiere.model.*;
 import org.compiere.util.KeyNamePair;
 
-/** Generated Interface for TF_Jobwork_Expense_Entry
+/** Generated Interface for TF_Jobwork_AssignedAccount
  *  @author iDempiere (generated) 
  *  @version Release 4.1
  */
 @SuppressWarnings("all")
-public interface I_TF_Jobwork_Expense_Entry 
+public interface I_TF_Jobwork_AssignedAccount 
 {
 
-    /** TableName=TF_Jobwork_Expense_Entry */
-    public static final String Table_Name = "TF_Jobwork_Expense_Entry";
+    /** TableName=TF_Jobwork_AssignedAccount */
+    public static final String Table_Name = "TF_Jobwork_AssignedAccount";
 
-    /** AD_Table_ID=1000196 */
+    /** AD_Table_ID=1000236 */
     public static final int Table_ID = MTable.getTable_ID(Table_Name);
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);
@@ -63,19 +63,6 @@ public interface I_TF_Jobwork_Expense_Entry
 	  * Organizational entity within client
 	  */
 	public int getAD_Org_ID();
-
-    /** Column name Amount */
-    public static final String COLUMNNAME_Amount = "Amount";
-
-	/** Set Amount.
-	  * Amount in a defined currency
-	  */
-	public void setAmount (BigDecimal Amount);
-
-	/** Get Amount.
-	  * Amount in a defined currency
-	  */
-	public BigDecimal getAmount();
 
     /** Column name C_ElementValue_ID */
     public static final String COLUMNNAME_C_ElementValue_ID = "C_ElementValue_ID";
@@ -123,19 +110,6 @@ public interface I_TF_Jobwork_Expense_Entry
 	  */
 	public int getCreatedBy();
 
-    /** Column name DateAcct */
-    public static final String COLUMNNAME_DateAcct = "DateAcct";
-
-	/** Set Account Date.
-	  * Accounting Date
-	  */
-	public void setDateAcct (Timestamp DateAcct);
-
-	/** Get Account Date.
-	  * Accounting Date
-	  */
-	public Timestamp getDateAcct();
-
     /** Column name Description */
     public static final String COLUMNNAME_Description = "Description";
 
@@ -148,47 +122,6 @@ public interface I_TF_Jobwork_Expense_Entry
 	  * Optional short description of the record
 	  */
 	public String getDescription();
-
-    /** Column name DocStatus */
-    public static final String COLUMNNAME_DocStatus = "DocStatus";
-
-	/** Set Document Status.
-	  * The current status of the document
-	  */
-	public void setDocStatus (String DocStatus);
-
-	/** Get Document Status.
-	  * The current status of the document
-	  */
-	public String getDocStatus();
-
-    /** Column name DocumentNo */
-    public static final String COLUMNNAME_DocumentNo = "DocumentNo";
-
-	/** Set Document No.
-	  * Document sequence number of the document
-	  */
-	public void setDocumentNo (String DocumentNo);
-
-	/** Get Document No.
-	  * Document sequence number of the document
-	  */
-	public String getDocumentNo();
-
-    /** Column name GL_Journal_ID */
-    public static final String COLUMNNAME_GL_Journal_ID = "GL_Journal_ID";
-
-	/** Set Journal.
-	  * General Ledger Journal
-	  */
-	public void setGL_Journal_ID (int GL_Journal_ID);
-
-	/** Get Journal.
-	  * General Ledger Journal
-	  */
-	public int getGL_Journal_ID();
-
-	public org.compiere.model.I_GL_Journal getGL_Journal() throws RuntimeException;
 
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";
@@ -203,56 +136,23 @@ public interface I_TF_Jobwork_Expense_Entry
 	  */
 	public boolean isActive();
 
-    /** Column name Processed */
-    public static final String COLUMNNAME_Processed = "Processed";
+    /** Column name TF_Jobwork_AssignedAccount_ID */
+    public static final String COLUMNNAME_TF_Jobwork_AssignedAccount_ID = "TF_Jobwork_AssignedAccount_ID";
 
-	/** Set Processed.
-	  * The document has been processed
-	  */
-	public void setProcessed (boolean Processed);
+	/** Set Jobwork Assigned Account	  */
+	public void setTF_Jobwork_AssignedAccount_ID (int TF_Jobwork_AssignedAccount_ID);
 
-	/** Get Processed.
-	  * The document has been processed
-	  */
-	public boolean isProcessed();
+	/** Get Jobwork Assigned Account	  */
+	public int getTF_Jobwork_AssignedAccount_ID();
 
-    /** Column name Processing */
-    public static final String COLUMNNAME_Processing = "Processing";
+    /** Column name TF_Jobwork_AssignedAccount_UU */
+    public static final String COLUMNNAME_TF_Jobwork_AssignedAccount_UU = "TF_Jobwork_AssignedAccount_UU";
 
-	/** Set Process Now	  */
-	public void setProcessing (boolean Processing);
+	/** Set TF_Jobwork_AssignedAccount_UU	  */
+	public void setTF_Jobwork_AssignedAccount_UU (String TF_Jobwork_AssignedAccount_UU);
 
-	/** Get Process Now	  */
-	public boolean isProcessing();
-
-    /** Column name Subcon_Invoice_ID */
-    public static final String COLUMNNAME_Subcon_Invoice_ID = "Subcon_Invoice_ID";
-
-	/** Set Subcontractor Invoice	  */
-	public void setSubcon_Invoice_ID (int Subcon_Invoice_ID);
-
-	/** Get Subcontractor Invoice	  */
-	public int getSubcon_Invoice_ID();
-
-	public org.compiere.model.I_C_Invoice getSubcon_Invoice() throws RuntimeException;
-
-    /** Column name TF_Jobwork_Expense_Entry_ID */
-    public static final String COLUMNNAME_TF_Jobwork_Expense_Entry_ID = "TF_Jobwork_Expense_Entry_ID";
-
-	/** Set Subcontract / Job Work Expense Entry	  */
-	public void setTF_Jobwork_Expense_Entry_ID (int TF_Jobwork_Expense_Entry_ID);
-
-	/** Get Subcontract / Job Work Expense Entry	  */
-	public int getTF_Jobwork_Expense_Entry_ID();
-
-    /** Column name TF_Jobwork_Expense_Entry_UU */
-    public static final String COLUMNNAME_TF_Jobwork_Expense_Entry_UU = "TF_Jobwork_Expense_Entry_UU";
-
-	/** Set TF_Jobwork_Expense_Entry_UU	  */
-	public void setTF_Jobwork_Expense_Entry_UU (String TF_Jobwork_Expense_Entry_UU);
-
-	/** Get TF_Jobwork_Expense_Entry_UU	  */
-	public String getTF_Jobwork_Expense_Entry_UU();
+	/** Get TF_Jobwork_AssignedAccount_UU	  */
+	public String getTF_Jobwork_AssignedAccount_UU();
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";

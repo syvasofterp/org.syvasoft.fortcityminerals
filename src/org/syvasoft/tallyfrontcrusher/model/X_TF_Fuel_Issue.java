@@ -33,7 +33,7 @@ public class X_TF_Fuel_Issue extends PO implements I_TF_Fuel_Issue, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20171205L;
+	private static final long serialVersionUID = 20180119L;
 
     /** Standard Constructor */
     public X_TF_Fuel_Issue (Properties ctx, int TF_Fuel_Issue_ID, String trxName)
@@ -45,10 +45,11 @@ public class X_TF_Fuel_Issue extends PO implements I_TF_Fuel_Issue, I_Persistent
 // @#Date@
 			setIsCalculated (true);
 // Y
+			setIssueType (null);
+// P
 			setM_Warehouse_ID (0);
 			setProcessed (false);
 			setTF_Fuel_Issue_ID (0);
-			setVehicle_ID (0);
         } */
     }
 
@@ -388,6 +389,25 @@ public class X_TF_Fuel_Issue extends PO implements I_TF_Fuel_Issue, I_Persistent
 			return "Y".equals(oo);
 		}
 		return false;
+	}
+
+	/** Own Expense = E */
+	public static final String ISSUETYPE_OwnExpense = "E";
+	/** Payment = P */
+	public static final String ISSUETYPE_Payment = "P";
+	/** Set Issue Type.
+		@param IssueType Issue Type	  */
+	public void setIssueType (String IssueType)
+	{
+
+		set_Value (COLUMNNAME_IssueType, IssueType);
+	}
+
+	/** Get Issue Type.
+		@return Issue Type	  */
+	public String getIssueType () 
+	{
+		return (String)get_Value(COLUMNNAME_IssueType);
 	}
 
 	public org.compiere.model.I_M_InOut getM_InOut() throws RuntimeException

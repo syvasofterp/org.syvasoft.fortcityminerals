@@ -257,6 +257,15 @@ public interface I_TF_Fuel_Issue
 	  */
 	public boolean isCalculated();
 
+    /** Column name IssueType */
+    public static final String COLUMNNAME_IssueType = "IssueType";
+
+	/** Set Issue Type	  */
+	public void setIssueType (String IssueType);
+
+	/** Get Issue Type	  */
+	public String getIssueType();
+
     /** Column name M_InOut_ID */
     public static final String COLUMNNAME_M_InOut_ID = "M_InOut_ID";
 
