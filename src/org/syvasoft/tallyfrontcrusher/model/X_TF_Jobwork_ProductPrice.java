@@ -26,14 +26,14 @@ import org.compiere.util.Env;
 
 /** Generated Model for TF_Jobwork_ProductPrice
  *  @author iDempiere (generated) 
- *  @version Release 3.1 - $Id$ */
+ *  @version Release 4.1 - $Id$ */
 public class X_TF_Jobwork_ProductPrice extends PO implements I_TF_Jobwork_ProductPrice, I_Persistent 
 {
 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170501L;
+	private static final long serialVersionUID = 20180119L;
 
     /** Standard Constructor */
     public X_TF_Jobwork_ProductPrice (Properties ctx, int TF_Jobwork_ProductPrice_ID, String trxName)
@@ -100,6 +100,23 @@ public class X_TF_Jobwork_ProductPrice extends PO implements I_TF_Jobwork_Produc
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
+	}
+
+	/** Set Date From.
+		@param DateFrom 
+		Starting date for a range
+	  */
+	public void setDateFrom (Timestamp DateFrom)
+	{
+		set_Value (COLUMNNAME_DateFrom, DateFrom);
+	}
+
+	/** Get Date From.
+		@return Starting date for a range
+	  */
+	public Timestamp getDateFrom () 
+	{
+		return (Timestamp)get_Value(COLUMNNAME_DateFrom);
 	}
 
 	public org.compiere.model.I_M_Product getM_Product() throws RuntimeException

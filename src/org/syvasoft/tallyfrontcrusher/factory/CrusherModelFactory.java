@@ -23,6 +23,9 @@ import org.syvasoft.tallyfrontcrusher.model.MInterOrgCashTransfer;
 import org.syvasoft.tallyfrontcrusher.model.MInvestmentReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MInvestmentStructure;
 import org.syvasoft.tallyfrontcrusher.model.MItemReceiptOtherSrc;
+import org.syvasoft.tallyfrontcrusher.model.MJobworkAssignedAccount;
+import org.syvasoft.tallyfrontcrusher.model.MJobworkAssignedEmployee;
+import org.syvasoft.tallyfrontcrusher.model.MJobworkAssignedVehicle;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkCharges;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkExpense;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkExpenseEntry;
@@ -221,6 +224,12 @@ public class CrusherModelFactory implements IModelFactory {
 			return MYardEntry.class;
 		else if(MYardEntryConfig.Table_Name.equals(tableName))
 			return MYardEntryConfig.class;
+		else if(MJobworkAssignedEmployee.Table_Name.equals(tableName))
+			return MJobworkAssignedEmployee.class;
+		else if(MJobworkAssignedAccount.Table_Name.equals(tableName))
+			return MJobworkAssignedAccount.class;
+		else if(MJobworkAssignedVehicle.Table_Name.equals(tableName))
+			return MJobworkAssignedVehicle.class;
 		return null;
 	}
 
@@ -367,6 +376,12 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MYardEntry(ctx, Record_ID, trxName);
 		else if(MYardEntryConfig.Table_Name.equals(tableName))
 			return new MYardEntryConfig(ctx, Record_ID, trxName);
+		else if(MJobworkAssignedEmployee.Table_Name.equals(tableName))
+			return new MJobworkAssignedEmployee(ctx, Record_ID, trxName);
+		else if(MJobworkAssignedAccount.Table_Name.equals(tableName))
+			return new MJobworkAssignedAccount(ctx, Record_ID, trxName);
+		else if(MJobworkAssignedVehicle.Table_Name.equals(tableName))
+			return new MJobworkAssignedVehicle(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -513,6 +528,12 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MYardEntry(ctx, rs, trxName);
 		else if(MYardEntryConfig.Table_Name.equals(tableName))
 			return new MYardEntryConfig(ctx, rs, trxName);
+		else if(MJobworkAssignedEmployee.Table_Name.equals(tableName))
+			return new MJobworkAssignedEmployee(ctx, rs, trxName);
+		else if(MJobworkAssignedAccount.Table_Name.equals(tableName))
+			return new MJobworkAssignedAccount(ctx, rs, trxName);
+		else if(MJobworkAssignedVehicle.Table_Name.equals(tableName))
+			return new MJobworkAssignedVehicle(ctx, rs, trxName);
 		return null;
 	}
 

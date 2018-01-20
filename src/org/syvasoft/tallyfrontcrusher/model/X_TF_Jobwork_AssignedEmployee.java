@@ -17,16 +17,14 @@
 /** Generated Model - DO NOT CHANGE */
 package org.syvasoft.tallyfrontcrusher.model;
 
-import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.util.Properties;
 import org.compiere.model.*;
-import org.compiere.util.Env;
 
-/** Generated Model for TF_Jobwork_Expense
+/** Generated Model for TF_Jobwork_AssignedEmployee
  *  @author iDempiere (generated) 
  *  @version Release 4.1 - $Id$ */
-public class X_TF_Jobwork_Expense extends PO implements I_TF_Jobwork_Expense, I_Persistent 
+public class X_TF_Jobwork_AssignedEmployee extends PO implements I_TF_Jobwork_AssignedEmployee, I_Persistent 
 {
 
 	/**
@@ -35,18 +33,19 @@ public class X_TF_Jobwork_Expense extends PO implements I_TF_Jobwork_Expense, I_
 	private static final long serialVersionUID = 20180119L;
 
     /** Standard Constructor */
-    public X_TF_Jobwork_Expense (Properties ctx, int TF_Jobwork_Expense_ID, String trxName)
+    public X_TF_Jobwork_AssignedEmployee (Properties ctx, int TF_Jobwork_AssignedEmployee_ID, String trxName)
     {
-      super (ctx, TF_Jobwork_Expense_ID, trxName);
-      /** if (TF_Jobwork_Expense_ID == 0)
+      super (ctx, TF_Jobwork_AssignedEmployee_ID, trxName);
+      /** if (TF_Jobwork_AssignedEmployee_ID == 0)
         {
-			setC_ElementValue_ID (0);
-			setTF_Jobwork_Expense_ID (0);
+			setC_BPartner_ID (0);
+			setC_Project_ID (0);
+			setTF_Jobwork_AssignedEmployee_ID (0);
         } */
     }
 
     /** Load Constructor */
-    public X_TF_Jobwork_Expense (Properties ctx, ResultSet rs, String trxName)
+    public X_TF_Jobwork_AssignedEmployee (Properties ctx, ResultSet rs, String trxName)
     {
       super (ctx, rs, trxName);
     }
@@ -68,34 +67,34 @@ public class X_TF_Jobwork_Expense extends PO implements I_TF_Jobwork_Expense, I_
 
     public String toString()
     {
-      StringBuffer sb = new StringBuffer ("X_TF_Jobwork_Expense[")
+      StringBuffer sb = new StringBuffer ("X_TF_Jobwork_AssignedEmployee[")
         .append(get_ID()).append("]");
       return sb.toString();
     }
 
-	public org.compiere.model.I_C_ElementValue getC_ElementValue() throws RuntimeException
+	public org.compiere.model.I_C_BPartner getC_BPartner() throws RuntimeException
     {
-		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
-			.getPO(getC_ElementValue_ID(), get_TrxName());	}
+		return (org.compiere.model.I_C_BPartner)MTable.get(getCtx(), org.compiere.model.I_C_BPartner.Table_Name)
+			.getPO(getC_BPartner_ID(), get_TrxName());	}
 
-	/** Set Account Element.
-		@param C_ElementValue_ID 
-		Account Element
+	/** Set Business Partner .
+		@param C_BPartner_ID 
+		Identifies a Business Partner
 	  */
-	public void setC_ElementValue_ID (int C_ElementValue_ID)
+	public void setC_BPartner_ID (int C_BPartner_ID)
 	{
-		if (C_ElementValue_ID < 1) 
-			set_Value (COLUMNNAME_C_ElementValue_ID, null);
+		if (C_BPartner_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_C_BPartner_ID, null);
 		else 
-			set_Value (COLUMNNAME_C_ElementValue_ID, Integer.valueOf(C_ElementValue_ID));
+			set_ValueNoCheck (COLUMNNAME_C_BPartner_ID, Integer.valueOf(C_BPartner_ID));
 	}
 
-	/** Get Account Element.
-		@return Account Element
+	/** Get Business Partner .
+		@return Identifies a Business Partner
 	  */
-	public int getC_ElementValue_ID () 
+	public int getC_BPartner_ID () 
 	{
-		Integer ii = (Integer)get_Value(COLUMNNAME_C_ElementValue_ID);
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_BPartner_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
@@ -129,74 +128,54 @@ public class X_TF_Jobwork_Expense extends PO implements I_TF_Jobwork_Expense, I_
 		return ii.intValue();
 	}
 
-	/** Set Deducted Amount.
-		@param DeductedAmt Deducted Amount	  */
-	public void setDeductedAmt (BigDecimal DeductedAmt)
+	/** Set Description.
+		@param Description 
+		Optional short description of the record
+	  */
+	public void setDescription (String Description)
 	{
-		set_Value (COLUMNNAME_DeductedAmt, DeductedAmt);
+		set_Value (COLUMNNAME_Description, Description);
 	}
 
-	/** Get Deducted Amount.
-		@return Deducted Amount	  */
-	public BigDecimal getDeductedAmt () 
+	/** Get Description.
+		@return Optional short description of the record
+	  */
+	public String getDescription () 
 	{
-		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_DeductedAmt);
-		if (bd == null)
-			 return Env.ZERO;
-		return bd;
+		return (String)get_Value(COLUMNNAME_Description);
 	}
 
-	/** Set Jobwork Expense.
-		@param TF_Jobwork_Expense_ID Jobwork Expense	  */
-	public void setTF_Jobwork_Expense_ID (int TF_Jobwork_Expense_ID)
+	/** Set Jobwork Assigned Employee.
+		@param TF_Jobwork_AssignedEmployee_ID Jobwork Assigned Employee	  */
+	public void setTF_Jobwork_AssignedEmployee_ID (int TF_Jobwork_AssignedEmployee_ID)
 	{
-		if (TF_Jobwork_Expense_ID < 1) 
-			set_ValueNoCheck (COLUMNNAME_TF_Jobwork_Expense_ID, null);
+		if (TF_Jobwork_AssignedEmployee_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_TF_Jobwork_AssignedEmployee_ID, null);
 		else 
-			set_ValueNoCheck (COLUMNNAME_TF_Jobwork_Expense_ID, Integer.valueOf(TF_Jobwork_Expense_ID));
+			set_ValueNoCheck (COLUMNNAME_TF_Jobwork_AssignedEmployee_ID, Integer.valueOf(TF_Jobwork_AssignedEmployee_ID));
 	}
 
-	/** Get Jobwork Expense.
-		@return Jobwork Expense	  */
-	public int getTF_Jobwork_Expense_ID () 
+	/** Get Jobwork Assigned Employee.
+		@return Jobwork Assigned Employee	  */
+	public int getTF_Jobwork_AssignedEmployee_ID () 
 	{
-		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Jobwork_Expense_ID);
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Jobwork_AssignedEmployee_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
 	}
 
-	/** Set TF_Jobwork_Expense_UU.
-		@param TF_Jobwork_Expense_UU TF_Jobwork_Expense_UU	  */
-	public void setTF_Jobwork_Expense_UU (String TF_Jobwork_Expense_UU)
+	/** Set TF_Jobwork_AssignedEmployee_UU.
+		@param TF_Jobwork_AssignedEmployee_UU TF_Jobwork_AssignedEmployee_UU	  */
+	public void setTF_Jobwork_AssignedEmployee_UU (String TF_Jobwork_AssignedEmployee_UU)
 	{
-		set_ValueNoCheck (COLUMNNAME_TF_Jobwork_Expense_UU, TF_Jobwork_Expense_UU);
+		set_ValueNoCheck (COLUMNNAME_TF_Jobwork_AssignedEmployee_UU, TF_Jobwork_AssignedEmployee_UU);
 	}
 
-	/** Get TF_Jobwork_Expense_UU.
-		@return TF_Jobwork_Expense_UU	  */
-	public String getTF_Jobwork_Expense_UU () 
+	/** Get TF_Jobwork_AssignedEmployee_UU.
+		@return TF_Jobwork_AssignedEmployee_UU	  */
+	public String getTF_Jobwork_AssignedEmployee_UU () 
 	{
-		return (String)get_Value(COLUMNNAME_TF_Jobwork_Expense_UU);
-	}
-
-	/** Set Total Amount.
-		@param TotalAmt 
-		Total Amount
-	  */
-	public void setTotalAmt (BigDecimal TotalAmt)
-	{
-		set_ValueNoCheck (COLUMNNAME_TotalAmt, TotalAmt);
-	}
-
-	/** Get Total Amount.
-		@return Total Amount
-	  */
-	public BigDecimal getTotalAmt () 
-	{
-		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_TotalAmt);
-		if (bd == null)
-			 return Env.ZERO;
-		return bd;
+		return (String)get_Value(COLUMNNAME_TF_Jobwork_AssignedEmployee_UU);
 	}
 }

@@ -41,6 +41,13 @@ public class MShareholder extends X_TF_Shareholder {
 			
 	}
 	
+	public List<MShareholder> getSubShareholders() {
+		String whereClause = "AD_Org_ID = ? AND TF_ShareholderMain_ID = ?";
+		List<MShareholder> subPartners = new Query(getCtx(), Table_Name, whereClause, get_TrxName())
+				.setClient_ID().setParameters(getAD_Org_ID(), getTF_Shareholder_ID()).list();
+		return subPartners;
+	}
+	
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
 		if(getCapitalAcct_ID() == 0) {

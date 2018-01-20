@@ -23,7 +23,7 @@ import org.compiere.util.KeyNamePair;
 
 /** Generated Interface for TF_Jobwork_ResRentEntry
  *  @author iDempiere (generated) 
- *  @version Release 3.1
+ *  @version Release 4.1
  */
 @SuppressWarnings("all")
 public interface I_TF_Jobwork_ResRentEntry 
@@ -32,7 +32,7 @@ public interface I_TF_Jobwork_ResRentEntry
     /** TableName=TF_Jobwork_ResRentEntry */
     public static final String Table_Name = "TF_Jobwork_ResRentEntry";
 
-    /** AD_Table_ID=1000206 */
+    /** AD_Table_ID=1000205 */
     public static final int Table_ID = MTable.getTable_ID(Table_Name);
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);

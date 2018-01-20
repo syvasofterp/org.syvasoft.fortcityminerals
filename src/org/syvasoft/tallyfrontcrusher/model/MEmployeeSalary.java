@@ -59,7 +59,7 @@ public class MEmployeeSalary extends X_TF_Employee_Salary {
 			//Posting GL journal for Employee Salary 
 			MJournal j = new MJournal(getCtx(), 0, get_TrxName());
 			j.setAD_Org_ID(getAD_Org_ID());
-			String description = "Salary Entry #" + getDocumentNo();
+			String description = getDocumentNo();
 			if(getDescription() != null)
 				description = getDescription() + " | " + description;
 				
@@ -82,6 +82,7 @@ public class MEmployeeSalary extends X_TF_Employee_Salary {
 			jl.setLine(10);			
 			jl.setAccount_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getSalariesExpenseAcct());
 			jl.setC_BPartner_ID(getC_BPartner_ID());
+			jl.setC_Project_ID(getC_Project_ID());
 			jl.setUser1_ID(getC_ElementValue_ID()); // Quarry Profit Center
 			jl.setAmtSourceDr(getSalary_Amt());
 			jl.setAmtAcctDr(getSalary_Amt());
@@ -93,6 +94,7 @@ public class MEmployeeSalary extends X_TF_Employee_Salary {
 			jl.setLine(20);			
 			jl.setAccount_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getSalaryPayable_Acct());
 			jl.setC_BPartner_ID(getC_BPartner_ID());
+			jl.setC_Project_ID(getC_Project_ID());
 			jl.setUser1_ID(getC_ElementValue_ID()); // Quarry Profit Center
 			jl.setAmtSourceCr(getSalary_Amt());
 			jl.setAmtAcctCr(getSalary_Amt());

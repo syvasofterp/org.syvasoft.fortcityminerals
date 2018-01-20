@@ -27,14 +27,14 @@ import org.compiere.util.KeyNamePair;
 
 /** Generated Model for TF_Jobwork_IssuedResource
  *  @author iDempiere (generated) 
- *  @version Release 3.1 - $Id$ */
+ *  @version Release 4.1 - $Id$ */
 public class X_TF_Jobwork_IssuedResource extends PO implements I_TF_Jobwork_IssuedResource, I_Persistent 
 {
 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170806L;
+	private static final long serialVersionUID = 20180119L;
 
     /** Standard Constructor */
     public X_TF_Jobwork_IssuedResource (Properties ctx, int TF_Jobwork_IssuedResource_ID, String trxName)
@@ -255,9 +255,9 @@ public class X_TF_Jobwork_IssuedResource extends PO implements I_TF_Jobwork_Issu
 		return (org.compiere.model.I_M_Product)MTable.get(getCtx(), org.compiere.model.I_M_Product.Table_Name)
 			.getPO(getM_Product_ID(), get_TrxName());	}
 
-	/** Set Vehicle / Resource.
+	/** Set Product.
 		@param M_Product_ID 
-		Vehicle / Resource
+		Product, Service, Item
 	  */
 	public void setM_Product_ID (int M_Product_ID)
 	{
@@ -267,8 +267,8 @@ public class X_TF_Jobwork_IssuedResource extends PO implements I_TF_Jobwork_Issu
 			set_Value (COLUMNNAME_M_Product_ID, Integer.valueOf(M_Product_ID));
 	}
 
-	/** Get Vehicle / Resource.
-		@return Vehicle / Resource
+	/** Get Product.
+		@return Product, Service, Item
 	  */
 	public int getM_Product_ID () 
 	{

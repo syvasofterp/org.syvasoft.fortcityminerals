@@ -33,7 +33,7 @@ public class X_TF_RentedVehicle extends PO implements I_TF_RentedVehicle, I_Pers
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20171130L;
+	private static final long serialVersionUID = 20180118L;
 
     /** Standard Constructor */
     public X_TF_RentedVehicle (Properties ctx, int TF_RentedVehicle_ID, String trxName)
@@ -206,6 +206,27 @@ public class X_TF_RentedVehicle extends PO implements I_TF_RentedVehicle, I_Pers
 		return ii.intValue();
 	}
 
+	/** Set Rent Configuration.
+		@param RequireRentConfig Rent Configuration	  */
+	public void setRequireRentConfig (boolean RequireRentConfig)
+	{
+		set_Value (COLUMNNAME_RequireRentConfig, Boolean.valueOf(RequireRentConfig));
+	}
+
+	/** Get Rent Configuration.
+		@return Rent Configuration	  */
+	public boolean isRequireRentConfig () 
+	{
+		Object oo = get_Value(COLUMNNAME_RequireRentConfig);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
 	/** Set Tare Weight (Kg).
 		@param TareWeight Tare Weight (Kg)	  */
 	public void setTareWeight (BigDecimal TareWeight)
@@ -255,6 +276,23 @@ public class X_TF_RentedVehicle extends PO implements I_TF_RentedVehicle, I_Pers
 	public String getTF_RentedVehicle_UU () 
 	{
 		return (String)get_Value(COLUMNNAME_TF_RentedVehicle_UU);
+	}
+
+	/** Set Unit Price.
+		@param UnitPrice Unit Price	  */
+	public void setUnitPrice (BigDecimal UnitPrice)
+	{
+		set_Value (COLUMNNAME_UnitPrice, UnitPrice);
+	}
+
+	/** Get Unit Price.
+		@return Unit Price	  */
+	public BigDecimal getUnitPrice () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_UnitPrice);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
 	}
 
 	/** Set Vehicle No.

@@ -21,18 +21,18 @@ import java.sql.Timestamp;
 import org.compiere.model.*;
 import org.compiere.util.KeyNamePair;
 
-/** Generated Interface for TF_Jobwork_IssuedItems
+/** Generated Interface for TF_Weighment_ErrorLog
  *  @author iDempiere (generated) 
  *  @version Release 4.1
  */
 @SuppressWarnings("all")
-public interface I_TF_Jobwork_IssuedItems 
+public interface I_TF_Weighment_ErrorLog 
 {
 
-    /** TableName=TF_Jobwork_IssuedItems */
-    public static final String Table_Name = "TF_Jobwork_IssuedItems";
+    /** TableName=TF_Weighment_ErrorLog */
+    public static final String Table_Name = "TF_Weighment_ErrorLog";
 
-    /** AD_Table_ID=1000191 */
+    /** AD_Table_ID=1000226 */
     public static final int Table_ID = MTable.getTable_ID(Table_Name);
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);
@@ -64,35 +64,18 @@ public interface I_TF_Jobwork_IssuedItems
 	  */
 	public int getAD_Org_ID();
 
-    /** Column name C_Project_ID */
-    public static final String COLUMNNAME_C_Project_ID = "C_Project_ID";
+    /** Column name Classname */
+    public static final String COLUMNNAME_Classname = "Classname";
 
-	/** Set Project.
-	  * Financial Project
+	/** Set Classname.
+	  * Java Classname
 	  */
-	public void setC_Project_ID (int C_Project_ID);
+	public void setClassname (String Classname);
 
-	/** Get Project.
-	  * Financial Project
+	/** Get Classname.
+	  * Java Classname
 	  */
-	public int getC_Project_ID();
-
-	public org.compiere.model.I_C_Project getC_Project() throws RuntimeException;
-
-    /** Column name C_UOM_ID */
-    public static final String COLUMNNAME_C_UOM_ID = "C_UOM_ID";
-
-	/** Set UOM.
-	  * Unit of Measure
-	  */
-	public void setC_UOM_ID (int C_UOM_ID);
-
-	/** Get UOM.
-	  * Unit of Measure
-	  */
-	public int getC_UOM_ID();
-
-	public org.compiere.model.I_C_UOM getC_UOM() throws RuntimeException;
+	public String getClassname();
 
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
@@ -110,6 +93,15 @@ public interface I_TF_Jobwork_IssuedItems
 	  */
 	public int getCreatedBy();
 
+    /** Column name DateError */
+    public static final String COLUMNNAME_DateError = "DateError";
+
+	/** Set Date Error	  */
+	public void setDateError (Timestamp DateError);
+
+	/** Get Date Error	  */
+	public Timestamp getDateError();
+
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";
 
@@ -123,56 +115,56 @@ public interface I_TF_Jobwork_IssuedItems
 	  */
 	public boolean isActive();
 
-    /** Column name M_Product_ID */
-    public static final String COLUMNNAME_M_Product_ID = "M_Product_ID";
+    /** Column name Message */
+    public static final String COLUMNNAME_Message = "Message";
 
-	/** Set Product.
-	  * Product, Service, Item
+	/** Set Message.
+	  * EMail Message
 	  */
-	public void setM_Product_ID (int M_Product_ID);
+	public void setMessage (String Message);
 
-	/** Get Product.
-	  * Product, Service, Item
+	/** Get Message.
+	  * EMail Message
 	  */
-	public int getM_Product_ID();
+	public String getMessage();
 
-	public org.compiere.model.I_M_Product getM_Product() throws RuntimeException;
+    /** Column name MethodName */
+    public static final String COLUMNNAME_MethodName = "MethodName";
 
-    /** Column name QtyDeducted */
-    public static final String COLUMNNAME_QtyDeducted = "QtyDeducted";
+	/** Set Method Name	  */
+	public void setMethodName (String MethodName);
 
-	/** Set Quantity Deducted	  */
-	public void setQtyDeducted (BigDecimal QtyDeducted);
+	/** Get Method Name	  */
+	public String getMethodName();
 
-	/** Get Quantity Deducted	  */
-	public BigDecimal getQtyDeducted();
+    /** Column name TF_Weighment_ErrorLog_ID */
+    public static final String COLUMNNAME_TF_Weighment_ErrorLog_ID = "TF_Weighment_ErrorLog_ID";
 
-    /** Column name QtyIssued */
-    public static final String COLUMNNAME_QtyIssued = "QtyIssued";
+	/** Set Weighment Entry Error Log	  */
+	public void setTF_Weighment_ErrorLog_ID (int TF_Weighment_ErrorLog_ID);
 
-	/** Set Quantity Issued	  */
-	public void setQtyIssued (BigDecimal QtyIssued);
+	/** Get Weighment Entry Error Log	  */
+	public int getTF_Weighment_ErrorLog_ID();
 
-	/** Get Quantity Issued	  */
-	public BigDecimal getQtyIssued();
+    /** Column name TF_Weighment_ErrorLog_UU */
+    public static final String COLUMNNAME_TF_Weighment_ErrorLog_UU = "TF_Weighment_ErrorLog_UU";
 
-    /** Column name TF_Jobwork_IssuedItems_ID */
-    public static final String COLUMNNAME_TF_Jobwork_IssuedItems_ID = "TF_Jobwork_IssuedItems_ID";
+	/** Set TF_Weighment_ErrorLog_UU	  */
+	public void setTF_Weighment_ErrorLog_UU (String TF_Weighment_ErrorLog_UU);
 
-	/** Set Issued Items	  */
-	public void setTF_Jobwork_IssuedItems_ID (int TF_Jobwork_IssuedItems_ID);
+	/** Get TF_Weighment_ErrorLog_UU	  */
+	public String getTF_Weighment_ErrorLog_UU();
 
-	/** Get Issued Items	  */
-	public int getTF_Jobwork_IssuedItems_ID();
+    /** Column name TF_WeighmentEntry_ID */
+    public static final String COLUMNNAME_TF_WeighmentEntry_ID = "TF_WeighmentEntry_ID";
 
-    /** Column name TF_Jobwork_IssuedItems_UU */
-    public static final String COLUMNNAME_TF_Jobwork_IssuedItems_UU = "TF_Jobwork_IssuedItems_UU";
+	/** Set Weighment Entry	  */
+	public void setTF_WeighmentEntry_ID (int TF_WeighmentEntry_ID);
 
-	/** Set TF_Jobwork_IssuedItems_UU	  */
-	public void setTF_Jobwork_IssuedItems_UU (String TF_Jobwork_IssuedItems_UU);
+	/** Get Weighment Entry	  */
+	public int getTF_WeighmentEntry_ID();
 
-	/** Get TF_Jobwork_IssuedItems_UU	  */
-	public String getTF_Jobwork_IssuedItems_UU();
+	public I_TF_WeighmentEntry getTF_WeighmentEntry() throws RuntimeException;
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";

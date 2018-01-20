@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.adempiere.base.IColumnCallout;
 import org.adempiere.base.IColumnCalloutFactory;
+import org.compiere.model.MJournalLine;
 import org.compiere.model.MPayment;
 import org.jfree.chart.block.ColumnArrangement;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutBoulderReceipt_JobWork;
@@ -13,14 +14,19 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutElementValue_AccountGroup;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutEmployeeSalary;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutEmployeeSalaryIssue_CalcBalanceAmts;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutEmployeeSalaryIssue_SetOpenAmt;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutEmployeeSalary_BPartner;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutFuelIssue_CalcAmount;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutFuelIssue_IssueType;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutFuelIssue_SetPrice;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutFuelIssue_TypeChange;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutFuelIssue_Vehicle;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutInterOrgCash_DestAccount;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutInterOrgCash_SrcOrg;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutInvestmentReceipt_AutoDescription;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutInvoiceHeaderItemAmount;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutJournal_DistributeProfit;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutJournal_QuickEntryMode;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutJournal_SetJobWork;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutLabourWage;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutLabourWageIssue_CalcBalanceAmts;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutLabourWageIssue_SetOpenAmt;
@@ -162,12 +168,18 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 				list.add(new CalloutPayment_FromToBankAccount());
 		}
 		//TF_Employee_Salary - Load Salary Config
-		if(tableName.equals(MEmployeeSalary.Table_Name) && (columnName.equals(MEmployeeSalary.COLUMNNAME_C_BPartner_ID)
+		if(tableName.equals(MEmployeeSalary.Table_Name)) {
+			if((columnName.equals(MEmployeeSalary.COLUMNNAME_C_BPartner_ID)
 				|| columnName.equals(MEmployeeSalary.COLUMNNAME_DateAcct) || columnName.equals(MEmployeeSalary.COLUMNNAME_Present_Days)
 				|| columnName.equals(MEmployeeSalary.COLUMNNAME_IsCalculated) 
-				))
-			list.add(new CalloutEmployeeSalary());
-		
+				)) {
+				list.add(new CalloutEmployeeSalary());
+			}
+			
+			if(columnName.equals(MEmployeeSalary.COLUMNNAME_C_BPartner_ID)) {
+				list.add(new CalloutEmployeeSalary_BPartner());
+			}
+		}
 		//TF_Labour_Wage - Load Wage Config
 		if(tableName.equals(MLabourWage.Table_Name) && (columnName.equals(MLabourWage.COLUMNNAME_C_BPartner_ID) ||
 				columnName.equals(MLabourWage.COLUMNNAME_DateAcct) || columnName.equals(MLabourWage.COLUMNNAME_Present_Days) || 
@@ -310,6 +322,12 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 			if(columnName.equals(MFuelIssue.COLUMNNAME_Vehicle_ID) || columnName.equals(MFuelIssue.COLUMNNAME_C_Project_ID)
 					|| columnName.equals(MFuelIssue.COLUMNNAME_Account_ID) || columnName.equals(MFuelIssue.COLUMNNAME_M_Product_ID))
 				list.add(new CalloutFuelIssue_TypeChange());
+			if(columnName.equals(MFuelIssue.COLUMNNAME_IssueType))
+				list.add(new CalloutFuelIssue_IssueType());
+			if(columnName.equals(MFuelIssue.COLUMNNAME_Vehicle_ID))
+				list.add(new CalloutFuelIssue_Vehicle());
+			if(columnName.equals(MFuelIssue.COLUMNNAME_M_Product_ID))
+				list.add(new CalloutFuelIssue_SetPrice());
 		}
 		if(tableName.equals(MInterOrgCashTransfer.Table_Name)) {
 			if(columnName.equals(MInterOrgCashTransfer.COLUMNNAME_Dest_Acct_ID))
@@ -375,6 +393,15 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 				list.add(new CalloutJournal_DistributeProfit());
 			if(columnName.equals(TF_MJournal.COLUMNNAME_IsQuickEntry)) {
 				list.add(new CalloutJournal_QuickEntryMode());
+			}
+			if(columnName.equals(TF_MJournal.COLUMNNAME_TF_CreditAcct_ID) || 
+					columnName.equals(TF_MJournal.COLUMNNAME_TF_DebitAcct_ID) ) {
+				list.add(new CalloutJournal_SetJobWork());
+			}				
+		}
+		if(tableName.equals(MJournalLine.Table_Name)) {
+			if(columnName.equals(MJournalLine.COLUMNNAME_Account_ID)) {
+				list.add(new CalloutJournal_SetJobWork());
 			}
 		}
 		

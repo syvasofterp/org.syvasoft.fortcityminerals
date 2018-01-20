@@ -23,7 +23,7 @@ import org.compiere.util.KeyNamePair;
 
 /** Generated Interface for TF_Jobwork_ProductPrice
  *  @author iDempiere (generated) 
- *  @version Release 3.1
+ *  @version Release 4.1
  */
 @SuppressWarnings("all")
 public interface I_TF_Jobwork_ProductPrice 
@@ -94,6 +94,19 @@ public interface I_TF_Jobwork_ProductPrice
 	  * User who created this records
 	  */
 	public int getCreatedBy();
+
+    /** Column name DateFrom */
+    public static final String COLUMNNAME_DateFrom = "DateFrom";
+
+	/** Set Date From.
+	  * Starting date for a range
+	  */
+	public void setDateFrom (Timestamp DateFrom);
+
+	/** Get Date From.
+	  * Starting date for a range
+	  */
+	public Timestamp getDateFrom();
 
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";

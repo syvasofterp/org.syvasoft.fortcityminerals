@@ -7,6 +7,7 @@ import java.util.Properties;
 
 import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.MAcctSchema;
+import org.compiere.model.MClient;
 import org.compiere.model.MCost;
 import org.compiere.model.MCostDetail;
 import org.compiere.model.MInventory;
@@ -338,6 +339,19 @@ public class TF_MProduct extends MProduct {
 		DB.executeUpdate("UPDATE M_Product SET M_Inventory_ID=" + inv.getM_Inventory_ID() + " WHERE M_Product_ID ="
 				+ getM_Product_ID(), get_TrxName());
 				
+	}
+	
+	public static BigDecimal getCurrentCost(int AD_Org_ID, int M_Product_ID) {
+		
+		MProduct product = MProduct.get(Env.getCtx(), M_Product_ID);
+		MClient client = MClient.get(Env.getCtx());
+		MAcctSchema as = client.getAcctSchema();
+		String costingMethod = product.getCostingMethod(as);		
+		MCost cost = product.getCostingRecord(as, AD_Org_ID, 0, costingMethod);
+		if(cost == null)
+			throw new AdempiereException("No Costing Info for : "  + product.getName());
+		
+		return cost.getCurrentCostPrice();		
 	}
 	
 }

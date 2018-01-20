@@ -23,7 +23,7 @@ import org.compiere.util.KeyNamePair;
 
 /** Generated Interface for TF_Jobwork_IssuedResource
  *  @author iDempiere (generated) 
- *  @version Release 3.1
+ *  @version Release 4.1
  */
 @SuppressWarnings("all")
 public interface I_TF_Jobwork_IssuedResource 
@@ -182,13 +182,13 @@ public interface I_TF_Jobwork_IssuedResource
     /** Column name M_Product_ID */
     public static final String COLUMNNAME_M_Product_ID = "M_Product_ID";
 
-	/** Set Vehicle / Resource.
-	  * Vehicle / Resource
+	/** Set Product.
+	  * Product, Service, Item
 	  */
 	public void setM_Product_ID (int M_Product_ID);
 
-	/** Get Vehicle / Resource.
-	  * Vehicle / Resource
+	/** Get Product.
+	  * Product, Service, Item
 	  */
 	public int getM_Product_ID();
 

@@ -23,7 +23,7 @@ import org.compiere.util.KeyNamePair;
 
 /** Generated Interface for TF_Jobwork_ItemIssue
  *  @author iDempiere (generated) 
- *  @version Release 3.1
+ *  @version Release 4.1
  */
 @SuppressWarnings("all")
 public interface I_TF_Jobwork_ItemIssue 
@@ -67,13 +67,13 @@ public interface I_TF_Jobwork_ItemIssue
     /** Column name C_ElementValue_ID */
     public static final String COLUMNNAME_C_ElementValue_ID = "C_ElementValue_ID";
 
-	/** Set Profit Center.
-	  * Profit Center
+	/** Set Account Element.
+	  * Account Element
 	  */
 	public void setC_ElementValue_ID (int C_ElementValue_ID);
 
-	/** Get Profit Center.
-	  * Profit Center
+	/** Get Account Element.
+	  * Account Element
 	  */
 	public int getC_ElementValue_ID();
 
@@ -97,13 +97,13 @@ public interface I_TF_Jobwork_ItemIssue
     /** Column name C_Project_ID */
     public static final String COLUMNNAME_C_Project_ID = "C_Project_ID";
 
-	/** Set Subcontract / Job Work.
-	  * Subcontract / Job Work
+	/** Set Project.
+	  * Financial Project
 	  */
 	public void setC_Project_ID (int C_Project_ID);
 
-	/** Get Subcontract / Job Work.
-	  * Subcontract / Job Work
+	/** Get Project.
+	  * Financial Project
 	  */
 	public int getC_Project_ID();
 

@@ -75,10 +75,13 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 							" WHERE l.M_Locator_ID=" + wh.getDefaultLocator().get_ID();
 			BigDecimal qtyAvailable = DB.getSQLValueBD(null, sql);
 			if(qtyAvailable.doubleValue() < getQty().doubleValue()) {
-				log.saveError("NotEnoughStocked", Msg.getElement(getCtx(), COLUMNNAME_Qty));
-				return false;
+				//log.saveError("NotEnoughStocked", Msg.getElement(getCtx(), COLUMNNAME_Qty));
+				throw new AdempiereException("Inventory on Hand : " + qtyAvailable);				
 			}
 		//}
+			
+		TF_MCharge.createChargeFromAccount(getCtx(), getAccount_ID(), get_TrxName());
+			
 		return super.beforeSave(newRecord);
 	}
 	
@@ -88,7 +91,7 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 		}
 		else if(DocAction.ACTION_Complete.equals(docAction)) {
 			setDocStatus(DOCSTATUS_Completed);
-			setProcessed(true);
+			setProcessed(true);			
 			MRentedVehicle rv = null;
 			TF_MProject proj = null;
 			
@@ -99,10 +102,10 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 				proj = new TF_MProject(getCtx(), getC_Project_ID(), get_TrxName());
 			
 			
-			if(rv != null || proj != null) {
+			if(ISSUETYPE_Payment.equals(getIssueType())  && (rv != null || proj != null)) {
 				createDebitNote(rv, proj);
 			}
-			else {
+			else if(ISSUETYPE_OwnExpense.equals(getIssueType())) {
 				createInternalUseInventory(docAction);
 			}
 						
@@ -115,16 +118,23 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 		//Inventory Use Header
 		MInventory inv = new MInventory(wh, get_TrxName());
 		inv.setC_DocType_ID(1000026);
-		String desc = "Diesel Issued to " +  getVehicle().getName(); 
-		inv.setDescription(desc);
+		String prdName = TF_MProduct.get(getCtx(), getM_Product_ID()).getName();
+		String desc = "Issued " + prdName + " to " +  getVehicle().getName();
+		if(getC_Project_ID() > 0) {
+			desc = desc + " for " + getC_Project().getName();
+		}
+		inv.setDescription(getDocumentNo());
+		inv.addDescription(getDescription());
 		inv.setMovementDate(getDateAcct());
-		inv.setUser1_ID(getC_ElementValue_ID());			
+		inv.setUser1_ID(getC_ElementValue_ID());
+		inv.setC_Project_ID(getC_Project_ID());
 		inv.setDocStatus(DOCSTATUS_Drafted);
 		inv.saveEx();
 		
 		//Inventory Use Line
 		MInventoryLine line = new MInventoryLine(inv, wh.getDefaultLocator().get_ID(), getM_Product_ID(), 0, null, null, getQty());
-		line.setC_Charge_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getFuelExpense_Charge_ID());
+		TF_MCharge chrg = TF_MCharge.createChargeFromAccount(getCtx(), getAccount_ID(), get_TrxName());
+		line.setC_Charge_ID(chrg.getC_Charge_ID());
 		line.setDescription(desc);
 		//line.setCurrentCostPrice(getRate());
 		line.saveEx();
@@ -159,15 +169,9 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 		invoice.setBPartner(bp);
 		invoice.setIsSOTrx(false);		
 		
-		String description = "";			
-		if(getM_Product_ID() > 0)
-			description = "Fuel/Material Issue Entry:";
-		
-		if(getAccount_ID() > 0)
-			description = "Expense Issue Entry:";
-		
-		invoice.setDescription(description + getDocumentNo());
-		if(getDescription() != null)			 		
+		//String description = getDocumentNo();		
+		invoice.setDescription(getDocumentNo());
+		if(getDescription() != null && getDescription().length() > 0)			 		
 			invoice.addDescription(getDescription());
 		
 		//Price List
@@ -199,9 +203,9 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 		}
 		
 		if(rv != null)
-			invLine.setDescription("Fuel / Material Issued to " + rv.getVehicleNo());
+			invoice.addDescription("Fuel / Material Issued to " + rv.getVehicleNo());
 		else if(proj != null && getM_Product_ID() > 0)
-			invLine.setDescription("Fuel / Material Issued to " + proj.getName() + " Subcontract");
+			invoice.addDescription("Fuel / Material Issued to " + proj.getName() + " Subcontract");
 		else {
 			TF_MCharge ch = TF_MCharge.createChargeFromAccount(getCtx(), getAccount_ID(), null);
 			invLine.setC_Charge_ID(ch.getC_Charge_ID());
@@ -213,10 +217,10 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 			invLine.setPriceList(price);
 			invLine.setPriceLimit(price);
 			invLine.setPriceEntered(price);
-			invLine.setDescription("Expense incurred to " + proj.getName() + " Subcontract");
+			invoice.addDescription("Expense incurred to " + proj.getName() + " Subcontract");
 			
 		}
-		
+		invoice.saveEx();
 		invLine.setC_Tax_ID(1000000);
 		
 		if(getM_Product_ID() > 0) { 

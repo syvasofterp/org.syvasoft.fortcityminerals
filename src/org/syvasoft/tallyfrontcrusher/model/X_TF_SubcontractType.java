@@ -30,7 +30,7 @@ public class X_TF_SubcontractType extends PO implements I_TF_SubcontractType, I_
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20171226L;
+	private static final long serialVersionUID = 20180120L;
 
     /** Standard Constructor */
     public X_TF_SubcontractType (Properties ctx, int TF_SubcontractType_ID, String trxName)
@@ -39,6 +39,9 @@ public class X_TF_SubcontractType extends PO implements I_TF_SubcontractType, I_
       /** if (TF_SubcontractType_ID == 0)
         {
 			setInvoiceFor (null);
+			setInvoicePriceFrom (null);
+			setIsSOTrx (false);
+// N
 			setName (null);
 			setSubcontractType (null);
 // QP
@@ -155,14 +158,17 @@ public class X_TF_SubcontractType extends PO implements I_TF_SubcontractType, I_
 	}
 
 	/** Set Include Raw Material Production.
-		@param IncludeRMProduction Include Raw Material Production	  */
+		@param IncludeRMProduction 
+		Indicates that there is Weighment Entry for Raw Material Incoming
+	  */
 	public void setIncludeRMProduction (boolean IncludeRMProduction)
 	{
 		set_Value (COLUMNNAME_IncludeRMProduction, Boolean.valueOf(IncludeRMProduction));
 	}
 
 	/** Get Include Raw Material Production.
-		@return Include Raw Material Production	  */
+		@return Indicates that there is Weighment Entry for Raw Material Incoming
+	  */
 	public boolean isIncludeRMProduction () 
 	{
 		Object oo = get_Value(COLUMNNAME_IncludeRMProduction);
@@ -213,6 +219,30 @@ public class X_TF_SubcontractType extends PO implements I_TF_SubcontractType, I_
 		return (String)get_Value(COLUMNNAME_InvoicePriceFrom);
 	}
 
+	/** Set Sales Transaction.
+		@param IsSOTrx 
+		This is a Sales Transaction
+	  */
+	public void setIsSOTrx (boolean IsSOTrx)
+	{
+		set_Value (COLUMNNAME_IsSOTrx, Boolean.valueOf(IsSOTrx));
+	}
+
+	/** Get Sales Transaction.
+		@return This is a Sales Transaction
+	  */
+	public boolean isSOTrx () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsSOTrx);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
 	/** Set Name.
 		@param Name 
 		Alphanumeric identifier of the entity
@@ -236,6 +266,10 @@ public class X_TF_SubcontractType extends PO implements I_TF_SubcontractType, I_
 	public static final String SUBCONTRACTTYPE_QuarryProducton = "QP";
 	/** Sand Mining = SM */
 	public static final String SUBCONTRACTTYPE_SandMining = "SM";
+	/** Kating Project = KP */
+	public static final String SUBCONTRACTTYPE_KatingProject = "KP";
+	/** Sand Block Project = SP */
+	public static final String SUBCONTRACTTYPE_SandBlockProject = "SP";
 	/** Set Subcontract Type.
 		@param SubcontractType Subcontract Type	  */
 	public void setSubcontractType (String SubcontractType)

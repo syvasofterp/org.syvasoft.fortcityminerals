@@ -42,6 +42,7 @@ public class MRentedVehicle extends X_TF_RentedVehicle {
 		prod.setDescription("Rented from " + getC_BPartner().getName());
 		prod.setIsActive(isActive());
 		prod.setC_TaxCategory_ID(Env.getContextAsInt(getCtx(), "#C_TaxCategory_ID"));
+		prod.set_ValueOfColumn("IsRented", true);
 		prod.saveEx();
 		if(getM_Product_ID() == 0) {
 			DB.executeUpdate("UPDATE TF_RentedVehicle SET M_Product_ID = " + prod.getM_Product_ID() +
@@ -49,7 +50,7 @@ public class MRentedVehicle extends X_TF_RentedVehicle {
 		}
 		
 		//Add all the destinations to the Rent Configuration with the default rate.
-		if(newRecord) {
+		if(newRecord && isRequireRentConfig()) {
 			List<MDestination> destinations = new Query(getCtx(), MDestination.Table_Name, "AD_Org_ID IN (0,?)", get_TrxName())
 					.setOnlyActiveRecords(true).setParameters(getAD_Org_ID()).setOrderBy("Name").list();
 			for(MDestination dest : destinations) {
