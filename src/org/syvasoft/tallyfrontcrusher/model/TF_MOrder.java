@@ -1340,6 +1340,8 @@ public class TF_MOrder extends MOrder {
 		//Update modified item lines.		
 		//Item1
 		if(getItem1_ID() > 0 && (is_ValueChanged(COLUMNNAME_Item1_ID) || is_ValueChanged(COLUMNNAME_Item1_Qty)
+				|| is_ValueChanged(COLUMNNAME_Item1_TotalLoad) || is_ValueChanged(COLUMNNAME_Item1_VehicleType_ID)
+				|| is_ValueChanged(COLUMNNAME_Item1_SandType)
 				|| is_ValueChanged(COLUMNNAME_Item1_Price) || getItem1_C_OrderLine_ID() == 0)) {
 			
 			if(getItem1_C_OrderLine_ID() > 0) 
@@ -1369,9 +1371,16 @@ public class TF_MOrder extends MOrder {
 			ordLine.setBucketRate(getItem1_BucketRate());
 			ordLine.setDescription(getItem1_Desc());
 			ordLine.setTotalLoad(getItem1_TotalLoad());
-			ordLine.setTF_VehicleType_ID(getItem1_VehicleType_ID());
+			ordLine.setTF_VehicleType_ID(getItem1_VehicleType_ID());			
+			ordLine.saveEx();
 			
-			ordLine.saveEx();			
+			//FIX: Set Bucket Rate based Total amount			
+			if(getOrgType().equals(ORGTYPE_SandBlock)) {
+			DB.executeUpdate("UPDATE C_OrderLine SET " + TF_MOrderLine.COLUMNNAME_LineNetAmt + " = "
+					+ getItem1_Amt() + " WHERE C_OrderLine_ID = " + ordLine.getC_OrderLine_ID(), get_TrxName());
+			}
+			
+			//ordLine.setLineNetAmt(getItem1_Amt());
 			DB.executeUpdate("UPDATE C_Order SET " + COLUMNNAME_Item1_C_OrderLine_ID + " = "
 				+ ordLine.getC_OrderLine_ID() + " WHERE C_Order_ID = " + getC_Order_ID(), get_TrxName());	
 		}
@@ -1400,11 +1409,16 @@ public class TF_MOrder extends MOrder {
 			ordLine.setTonePerBucket(getItem2_TonePerBucket());
 			ordLine.setBucketRate(getItem2_BucketRate());
 			ordLine.setDescription(getItem2_Desc());
-			ordLine.setTotalLoad(getItem2_TotalLoad());
+			ordLine.setTotalLoad(getItem2_TotalLoad());			
 			//ordLine.setTF_VehicleType_ID(getItem1_VehicleType_ID()); //from first line.
-			
-			
 			ordLine.saveEx();			
+			
+			//FIX: Set Bucket Rate based Total amount
+			if(getOrgType().equals(ORGTYPE_SandBlock)) {
+				DB.executeUpdate("UPDATE C_OrderLine SET " + TF_MOrderLine.COLUMNNAME_LineNetAmt + " = "
+						+ getItem2_Amt() + " WHERE C_OrderLine_ID = " + ordLine.getC_OrderLine_ID(), get_TrxName());
+			}
+			
 			DB.executeUpdate("UPDATE C_Order SET " + COLUMNNAME_Item2_C_OrderLine_ID + " = "
 				+ ordLine.getC_OrderLine_ID() + " WHERE C_Order_ID = " + getC_Order_ID(), get_TrxName());	
 		}
@@ -1978,7 +1992,8 @@ public class TF_MOrder extends MOrder {
 		if(!isSOTrx()) 
 			return;
 		MSandBlockBucketConfig config = MSandBlockBucketConfig.getBucketConfig(getAD_Org_ID(), MSandBlockBucketConfig.SANDTYPE_P, getItem1_VehicleType_ID());
-		if(isItem1_IsPermitSales() && getItem1_ID() == config.getM_Product_ID()
+		
+		if(config != null && isItem1_IsPermitSales() && getItem1_ID() == config.getM_Product_ID()
 				&& config.getM_ProductPermitLedger_ID() > 0) {
 			BigDecimal qtyIssue = getItem1_PermitIssued(); 
 					//getItem1_BucketQty().multiply(config.getPermitTonnagePerBucket());

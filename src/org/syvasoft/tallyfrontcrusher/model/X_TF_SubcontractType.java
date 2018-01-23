@@ -30,7 +30,7 @@ public class X_TF_SubcontractType extends PO implements I_TF_SubcontractType, I_
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180120L;
+	private static final long serialVersionUID = 20180122L;
 
     /** Standard Constructor */
     public X_TF_SubcontractType (Properties ctx, int TF_SubcontractType_ID, String trxName)
@@ -185,6 +185,8 @@ public class X_TF_SubcontractType extends PO implements I_TF_SubcontractType, I_
 	public static final String INVOICEFOR_Jobwork = "JW";
 	/** Product Received = PR */
 	public static final String INVOICEFOR_ProductReceived = "PR";
+	/** None = NO */
+	public static final String INVOICEFOR_None = "NO";
 	/** Set Invoice For.
 		@param InvoiceFor Invoice For	  */
 	public void setInvoiceFor (String InvoiceFor)
@@ -204,6 +206,8 @@ public class X_TF_SubcontractType extends PO implements I_TF_SubcontractType, I_
 	public static final String INVOICEPRICEFROM_Jobwork = "JW";
 	/** Product Received = PR */
 	public static final String INVOICEPRICEFROM_ProductReceived = "PR";
+	/** None = NO */
+	public static final String INVOICEPRICEFROM_None = "NO";
 	/** Set Invoice Price From.
 		@param InvoicePriceFrom Invoice Price From	  */
 	public void setInvoicePriceFrom (String InvoicePriceFrom)
@@ -338,5 +342,55 @@ public class X_TF_SubcontractType extends PO implements I_TF_SubcontractType, I_
 			return "Y".equals(oo);
 		}
 		return false;
+	}
+
+	public org.compiere.model.I_C_ElementValue getUnbilledKatingJobworkAcct() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getUnbilledKatingJobworkAcct_ID(), get_TrxName());	}
+
+	/** Set Unbilled Kating Jobwork Account.
+		@param UnbilledKatingJobworkAcct_ID Unbilled Kating Jobwork Account	  */
+	public void setUnbilledKatingJobworkAcct_ID (int UnbilledKatingJobworkAcct_ID)
+	{
+		if (UnbilledKatingJobworkAcct_ID < 1) 
+			set_Value (COLUMNNAME_UnbilledKatingJobworkAcct_ID, null);
+		else 
+			set_Value (COLUMNNAME_UnbilledKatingJobworkAcct_ID, Integer.valueOf(UnbilledKatingJobworkAcct_ID));
+	}
+
+	/** Get Unbilled Kating Jobwork Account.
+		@return Unbilled Kating Jobwork Account	  */
+	public int getUnbilledKatingJobworkAcct_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_UnbilledKatingJobworkAcct_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_ElementValue getUnbillKatingReceivableAcct() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getUnbillKatingReceivableAcct_ID(), get_TrxName());	}
+
+	/** Set Unbilled Kating Jobwork Receivable.
+		@param UnbillKatingReceivableAcct_ID Unbilled Kating Jobwork Receivable	  */
+	public void setUnbillKatingReceivableAcct_ID (int UnbillKatingReceivableAcct_ID)
+	{
+		if (UnbillKatingReceivableAcct_ID < 1) 
+			set_Value (COLUMNNAME_UnbillKatingReceivableAcct_ID, null);
+		else 
+			set_Value (COLUMNNAME_UnbillKatingReceivableAcct_ID, Integer.valueOf(UnbillKatingReceivableAcct_ID));
+	}
+
+	/** Get Unbilled Kating Jobwork Receivable.
+		@return Unbilled Kating Jobwork Receivable	  */
+	public int getUnbillKatingReceivableAcct_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_UnbillKatingReceivableAcct_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 }

@@ -21,18 +21,18 @@ import java.sql.Timestamp;
 import org.compiere.model.*;
 import org.compiere.util.KeyNamePair;
 
-/** Generated Interface for TF_Vehicle_Rent
+/** Generated Interface for TF_KatingEntry
  *  @author iDempiere (generated) 
  *  @version Release 4.1
  */
 @SuppressWarnings("all")
-public interface I_TF_Vehicle_Rent 
+public interface I_TF_KatingEntry 
 {
 
-    /** TableName=TF_Vehicle_Rent */
-    public static final String Table_Name = "TF_Vehicle_Rent";
+    /** TableName=TF_KatingEntry */
+    public static final String Table_Name = "TF_KatingEntry";
 
-    /** AD_Table_ID=1000170 */
+    /** AD_Table_ID=1000238 */
     public static final int Table_ID = MTable.getTable_ID(Table_Name);
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);
@@ -64,36 +64,6 @@ public interface I_TF_Vehicle_Rent
 	  */
 	public int getAD_Org_ID();
 
-    /** Column name C_ElementValue_ID */
-    public static final String COLUMNNAME_C_ElementValue_ID = "C_ElementValue_ID";
-
-	/** Set Account Element.
-	  * Account Element
-	  */
-	public void setC_ElementValue_ID (int C_ElementValue_ID);
-
-	/** Get Account Element.
-	  * Account Element
-	  */
-	public int getC_ElementValue_ID();
-
-	public org.compiere.model.I_C_ElementValue getC_ElementValue() throws RuntimeException;
-
-    /** Column name C_Invoice_ID */
-    public static final String COLUMNNAME_C_Invoice_ID = "C_Invoice_ID";
-
-	/** Set Invoice.
-	  * Invoice Identifier
-	  */
-	public void setC_Invoice_ID (int C_Invoice_ID);
-
-	/** Get Invoice.
-	  * Invoice Identifier
-	  */
-	public int getC_Invoice_ID();
-
-	public org.compiere.model.I_C_Invoice getC_Invoice() throws RuntimeException;
-
     /** Column name C_Project_ID */
     public static final String COLUMNNAME_C_Project_ID = "C_Project_ID";
 
@@ -108,21 +78,6 @@ public interface I_TF_Vehicle_Rent
 	public int getC_Project_ID();
 
 	public org.compiere.model.I_C_Project getC_Project() throws RuntimeException;
-
-    /** Column name C_UOM_ID */
-    public static final String COLUMNNAME_C_UOM_ID = "C_UOM_ID";
-
-	/** Set UOM.
-	  * Unit of Measure
-	  */
-	public void setC_UOM_ID (int C_UOM_ID);
-
-	/** Get UOM.
-	  * Unit of Measure
-	  */
-	public int getC_UOM_ID();
-
-	public org.compiere.model.I_C_UOM getC_UOM() throws RuntimeException;
 
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
@@ -140,21 +95,6 @@ public interface I_TF_Vehicle_Rent
 	  */
 	public int getCreatedBy();
 
-    /** Column name CreditC_ElementValue_ID */
-    public static final String COLUMNNAME_CreditC_ElementValue_ID = "CreditC_ElementValue_ID";
-
-	/** Set Profit Center (Cr).
-	  * Credit Profit Center
-	  */
-	public void setCreditC_ElementValue_ID (int CreditC_ElementValue_ID);
-
-	/** Get Profit Center (Cr).
-	  * Credit Profit Center
-	  */
-	public int getCreditC_ElementValue_ID();
-
-	public org.compiere.model.I_C_ElementValue getCreditC_ElementValue() throws RuntimeException;
-
     /** Column name DateAcct */
     public static final String COLUMNNAME_DateAcct = "DateAcct";
 
@@ -167,32 +107,6 @@ public interface I_TF_Vehicle_Rent
 	  * Accounting Date
 	  */
 	public Timestamp getDateAcct();
-
-    /** Column name DateFrom */
-    public static final String COLUMNNAME_DateFrom = "DateFrom";
-
-	/** Set Date From.
-	  * Starting date for a range
-	  */
-	public void setDateFrom (Timestamp DateFrom);
-
-	/** Get Date From.
-	  * Starting date for a range
-	  */
-	public Timestamp getDateFrom();
-
-    /** Column name DateTo */
-    public static final String COLUMNNAME_DateTo = "DateTo";
-
-	/** Set Date To.
-	  * End date of a date range
-	  */
-	public void setDateTo (Timestamp DateTo);
-
-	/** Get Date To.
-	  * End date of a date range
-	  */
-	public Timestamp getDateTo();
 
     /** Column name Description */
     public static final String COLUMNNAME_Description = "Description";
@@ -261,18 +175,20 @@ public interface I_TF_Vehicle_Rent
 	  */
 	public boolean isActive();
 
-    /** Column name IsCalculated */
-    public static final String COLUMNNAME_IsCalculated = "IsCalculated";
+    /** Column name M_Product_ID */
+    public static final String COLUMNNAME_M_Product_ID = "M_Product_ID";
 
-	/** Set Calculated.
-	  * The value is calculated by the system
+	/** Set Product.
+	  * Product, Service, Item
 	  */
-	public void setIsCalculated (boolean IsCalculated);
+	public void setM_Product_ID (int M_Product_ID);
 
-	/** Get Calculated.
-	  * The value is calculated by the system
+	/** Get Product.
+	  * Product, Service, Item
 	  */
-	public boolean isCalculated();
+	public int getM_Product_ID();
+
+	public org.compiere.model.I_M_Product getM_Product() throws RuntimeException;
 
     /** Column name Price */
     public static final String COLUMNNAME_Price = "Price";
@@ -309,85 +225,52 @@ public interface I_TF_Vehicle_Rent
 	/** Get Process Now	  */
 	public boolean isProcessing();
 
-    /** Column name Qty */
-    public static final String COLUMNNAME_Qty = "Qty";
+    /** Column name TF_KatingEntry_ID */
+    public static final String COLUMNNAME_TF_KatingEntry_ID = "TF_KatingEntry_ID";
 
-	/** Set Quantity.
-	  * Quantity
-	  */
-	public void setQty (BigDecimal Qty);
+	/** Set Kating Entry	  */
+	public void setTF_KatingEntry_ID (int TF_KatingEntry_ID);
 
-	/** Get Quantity.
-	  * Quantity
-	  */
-	public BigDecimal getQty();
+	/** Get Kating Entry	  */
+	public int getTF_KatingEntry_ID();
 
-    /** Column name Rent_Amt */
-    public static final String COLUMNNAME_Rent_Amt = "Rent_Amt";
+    /** Column name TF_KatingEntry_UU */
+    public static final String COLUMNNAME_TF_KatingEntry_UU = "TF_KatingEntry_UU";
 
-	/** Set Rent (Amount)	  */
-	public void setRent_Amt (BigDecimal Rent_Amt);
+	/** Set TF_KatingEntry_UU	  */
+	public void setTF_KatingEntry_UU (String TF_KatingEntry_UU);
 
-	/** Get Rent (Amount)	  */
-	public BigDecimal getRent_Amt();
+	/** Get TF_KatingEntry_UU	  */
+	public String getTF_KatingEntry_UU();
 
-    /** Column name Std_Days */
-    public static final String COLUMNNAME_Std_Days = "Std_Days";
+    /** Column name TF_RentedVehicle_ID */
+    public static final String COLUMNNAME_TF_RentedVehicle_ID = "TF_RentedVehicle_ID";
 
-	/** Set Standard Days	  */
-	public void setStd_Days (BigDecimal Std_Days);
+	/** Set Rented Vehicle	  */
+	public void setTF_RentedVehicle_ID (int TF_RentedVehicle_ID);
 
-	/** Get Standard Days	  */
-	public BigDecimal getStd_Days();
+	/** Get Rented Vehicle	  */
+	public int getTF_RentedVehicle_ID();
 
-    /** Column name Std_Rent */
-    public static final String COLUMNNAME_Std_Rent = "Std_Rent";
+	public I_TF_RentedVehicle getTF_RentedVehicle() throws RuntimeException;
 
-	/** Set Standard Rent	  */
-	public void setStd_Rent (BigDecimal Std_Rent);
+    /** Column name Tonnage */
+    public static final String COLUMNNAME_Tonnage = "Tonnage";
 
-	/** Get Standard Rent	  */
-	public BigDecimal getStd_Rent();
+	/** Set Tonnage	  */
+	public void setTonnage (BigDecimal Tonnage);
 
-    /** Column name TF_Quarry_ID */
-    public static final String COLUMNNAME_TF_Quarry_ID = "TF_Quarry_ID";
+	/** Get Tonnage	  */
+	public BigDecimal getTonnage();
 
-	/** Set Quarry	  */
-	public void setTF_Quarry_ID (int TF_Quarry_ID);
+    /** Column name TotalLoad */
+    public static final String COLUMNNAME_TotalLoad = "TotalLoad";
 
-	/** Get Quarry	  */
-	public int getTF_Quarry_ID();
+	/** Set Total Load	  */
+	public void setTotalLoad (BigDecimal TotalLoad);
 
-	public I_TF_Quarry getTF_Quarry() throws RuntimeException;
-
-    /** Column name TF_Vehicle_Rent_ID */
-    public static final String COLUMNNAME_TF_Vehicle_Rent_ID = "TF_Vehicle_Rent_ID";
-
-	/** Set Vehicle Rent	  */
-	public void setTF_Vehicle_Rent_ID (int TF_Vehicle_Rent_ID);
-
-	/** Get Vehicle Rent	  */
-	public int getTF_Vehicle_Rent_ID();
-
-    /** Column name TF_Vehicle_Rent_UU */
-    public static final String COLUMNNAME_TF_Vehicle_Rent_UU = "TF_Vehicle_Rent_UU";
-
-	/** Set TF_Vehicle_Rent_UU	  */
-	public void setTF_Vehicle_Rent_UU (String TF_Vehicle_Rent_UU);
-
-	/** Get TF_Vehicle_Rent_UU	  */
-	public String getTF_Vehicle_Rent_UU();
-
-    /** Column name TF_VehicleType_ID */
-    public static final String COLUMNNAME_TF_VehicleType_ID = "TF_VehicleType_ID";
-
-	/** Set Vehicle Type	  */
-	public void setTF_VehicleType_ID (int TF_VehicleType_ID);
-
-	/** Get Vehicle Type	  */
-	public int getTF_VehicleType_ID();
-
-	public I_TF_VehicleType getTF_VehicleType() throws RuntimeException;
+	/** Get Total Load	  */
+	public BigDecimal getTotalLoad();
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";
@@ -404,15 +287,4 @@ public interface I_TF_Vehicle_Rent
 	  * User who updated this records
 	  */
 	public int getUpdatedBy();
-
-    /** Column name Vehicle_ID */
-    public static final String COLUMNNAME_Vehicle_ID = "Vehicle_ID";
-
-	/** Set Vehicle	  */
-	public void setVehicle_ID (int Vehicle_ID);
-
-	/** Get Vehicle	  */
-	public int getVehicle_ID();
-
-	public I_TF_RentedVehicle getVehicle() throws RuntimeException;
 }

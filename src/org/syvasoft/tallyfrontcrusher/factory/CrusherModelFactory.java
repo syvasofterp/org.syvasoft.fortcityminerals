@@ -24,6 +24,7 @@ import org.syvasoft.tallyfrontcrusher.model.MInvestmentReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MInvestmentStructure;
 import org.syvasoft.tallyfrontcrusher.model.MItemReceiptOtherSrc;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkAssignedAccount;
+import org.syvasoft.tallyfrontcrusher.model.MJobworkAssignedBPartner;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkAssignedEmployee;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkAssignedVehicle;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkCharges;
@@ -35,6 +36,7 @@ import org.syvasoft.tallyfrontcrusher.model.MJobworkItemIssue;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkProductPrice;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkReceivedItems;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkResourceRentEntry;
+import org.syvasoft.tallyfrontcrusher.model.MKatingEntry;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWage;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWageAdvance;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWageConfig;
@@ -226,10 +228,14 @@ public class CrusherModelFactory implements IModelFactory {
 			return MYardEntryConfig.class;
 		else if(MJobworkAssignedEmployee.Table_Name.equals(tableName))
 			return MJobworkAssignedEmployee.class;
+		else if(MJobworkAssignedBPartner.Table_Name.equals(tableName))
+			return MJobworkAssignedBPartner.class;
 		else if(MJobworkAssignedAccount.Table_Name.equals(tableName))
 			return MJobworkAssignedAccount.class;
 		else if(MJobworkAssignedVehicle.Table_Name.equals(tableName))
 			return MJobworkAssignedVehicle.class;
+		else if(MKatingEntry.Table_Name.equals(tableName))
+			return MKatingEntry.class;
 		return null;
 	}
 
@@ -376,12 +382,16 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MYardEntry(ctx, Record_ID, trxName);
 		else if(MYardEntryConfig.Table_Name.equals(tableName))
 			return new MYardEntryConfig(ctx, Record_ID, trxName);
-		else if(MJobworkAssignedEmployee.Table_Name.equals(tableName))
+		else if(MJobworkAssignedEmployee.Table_Name.equals(tableName))			
 			return new MJobworkAssignedEmployee(ctx, Record_ID, trxName);
+		else if(MJobworkAssignedBPartner.Table_Name.equals(tableName))
+			return new MJobworkAssignedBPartner(ctx, Record_ID, trxName);
 		else if(MJobworkAssignedAccount.Table_Name.equals(tableName))
 			return new MJobworkAssignedAccount(ctx, Record_ID, trxName);
 		else if(MJobworkAssignedVehicle.Table_Name.equals(tableName))
 			return new MJobworkAssignedVehicle(ctx, Record_ID, trxName);
+		else if(MKatingEntry.Table_Name.equals(tableName))
+			return new MKatingEntry(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -530,10 +540,14 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MYardEntryConfig(ctx, rs, trxName);
 		else if(MJobworkAssignedEmployee.Table_Name.equals(tableName))
 			return new MJobworkAssignedEmployee(ctx, rs, trxName);
+		else if(MJobworkAssignedBPartner.Table_Name.equals(tableName))
+			return new MJobworkAssignedBPartner(ctx, rs, trxName);
 		else if(MJobworkAssignedAccount.Table_Name.equals(tableName))
 			return new MJobworkAssignedAccount(ctx, rs, trxName);
 		else if(MJobworkAssignedVehicle.Table_Name.equals(tableName))
 			return new MJobworkAssignedVehicle(ctx, rs, trxName);
+		else if(MKatingEntry.Table_Name.equals(tableName))
+			return new MKatingEntry(ctx, rs, trxName);
 		return null;
 	}
 

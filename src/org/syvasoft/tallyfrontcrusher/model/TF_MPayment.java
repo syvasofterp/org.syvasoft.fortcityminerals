@@ -513,9 +513,7 @@ public class TF_MPayment extends MPayment {
 	@Override
 	public String completeIt() {
 		//Subcontract / Job Work
-		if(getC_Project_ID() > 0) {
-			MJobworkCharges.updateJobworkCharges(getCtx(), getC_Project_ID(), getC_Charge_ID(), getPayAmt(), get_TrxName());
-		}		
+		
 		String msg = super.completeIt();
 		createInterCashBookEntry();
 		createInterOrgCashBookEntry();

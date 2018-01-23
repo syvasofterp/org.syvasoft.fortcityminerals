@@ -127,11 +127,10 @@ public class TF_MElementValue extends MElementValue {
 
 	
 	@Override
-	protected boolean beforeSave(boolean newRecord) {		
-		boolean ok = super.beforeSave(newRecord);
+	protected boolean beforeSave(boolean newRecord) {
 		if(getC_Element_ID() == 0) {
 			setC_Element_ID(Env.getContextAsInt(getCtx(), "#C_Element_ID"));
-		}
+		}		
 		if(newRecord) {
 			String sql = "SELECT o.Name FROM C_ElementValue e INNER JOIN AD_Org o ON e.DefaultOrg_ID = o.AD_Org_ID " +
 			" WHERE C_Element_ID = ? AND UPPER(TRIM(e.Name)) = UPPER(TRIM(?)) ";
@@ -139,7 +138,15 @@ public class TF_MElementValue extends MElementValue {
 			if(orgName != null) {
 				throw new AdempiereException("This account head is already existed under " + orgName + " organization!" );
 			}
+			sql = "SELECT o.Name FROM C_ElementValue e INNER JOIN AD_Org o ON e.DefaultOrg_ID = o.AD_Org_ID " +
+			" WHERE C_Element_ID = ? AND UPPER(TRIM(e.Value)) = UPPER(TRIM(?)) ";
+			orgName = DB.getSQLValueString(get_TrxName(), sql, getC_Element_ID(), getValue());
+			if(orgName != null) {
+				throw new AdempiereException("Please specify unique Search Key !" );
+			}
 		}
+		boolean ok = super.beforeSave(newRecord);
+	
 		return ok;
 	}
 

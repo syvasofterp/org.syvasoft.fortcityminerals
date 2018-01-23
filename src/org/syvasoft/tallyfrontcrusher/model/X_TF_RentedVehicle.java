@@ -33,7 +33,7 @@ public class X_TF_RentedVehicle extends PO implements I_TF_RentedVehicle, I_Pers
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180118L;
+	private static final long serialVersionUID = 20180122L;
 
     /** Standard Constructor */
     public X_TF_RentedVehicle (Properties ctx, int TF_RentedVehicle_ID, String trxName)
@@ -276,6 +276,23 @@ public class X_TF_RentedVehicle extends PO implements I_TF_RentedVehicle, I_Pers
 	public String getTF_RentedVehicle_UU () 
 	{
 		return (String)get_Value(COLUMNNAME_TF_RentedVehicle_UU);
+	}
+
+	/** Set Tonnage / Load.
+		@param TonnagePerLoad Tonnage / Load	  */
+	public void setTonnagePerLoad (BigDecimal TonnagePerLoad)
+	{
+		set_Value (COLUMNNAME_TonnagePerLoad, TonnagePerLoad);
+	}
+
+	/** Get Tonnage / Load.
+		@return Tonnage / Load	  */
+	public BigDecimal getTonnagePerLoad () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_TonnagePerLoad);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
 	}
 
 	/** Set Unit Price.

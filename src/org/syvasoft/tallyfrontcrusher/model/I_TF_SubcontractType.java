@@ -226,6 +226,28 @@ public interface I_TF_SubcontractType
 	/** Get Track Material Movement	  */
 	public boolean isTrackMaterialMovement();
 
+    /** Column name UnbilledKatingJobworkAcct_ID */
+    public static final String COLUMNNAME_UnbilledKatingJobworkAcct_ID = "UnbilledKatingJobworkAcct_ID";
+
+	/** Set Unbilled Kating Jobwork Account	  */
+	public void setUnbilledKatingJobworkAcct_ID (int UnbilledKatingJobworkAcct_ID);
+
+	/** Get Unbilled Kating Jobwork Account	  */
+	public int getUnbilledKatingJobworkAcct_ID();
+
+	public org.compiere.model.I_C_ElementValue getUnbilledKatingJobworkAcct() throws RuntimeException;
+
+    /** Column name UnbillKatingReceivableAcct_ID */
+    public static final String COLUMNNAME_UnbillKatingReceivableAcct_ID = "UnbillKatingReceivableAcct_ID";
+
+	/** Set Unbilled Kating Jobwork Receivable	  */
+	public void setUnbillKatingReceivableAcct_ID (int UnbillKatingReceivableAcct_ID);
+
+	/** Get Unbilled Kating Jobwork Receivable	  */
+	public int getUnbillKatingReceivableAcct_ID();
+
+	public org.compiere.model.I_C_ElementValue getUnbillKatingReceivableAcct() throws RuntimeException;
+
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";
 

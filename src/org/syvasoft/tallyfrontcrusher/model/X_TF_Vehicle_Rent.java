@@ -26,14 +26,14 @@ import org.compiere.util.Env;
 
 /** Generated Model for TF_Vehicle_Rent
  *  @author iDempiere (generated) 
- *  @version Release 3.1 - $Id$ */
+ *  @version Release 4.1 - $Id$ */
 public class X_TF_Vehicle_Rent extends PO implements I_TF_Vehicle_Rent, I_Persistent 
 {
 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170302L;
+	private static final long serialVersionUID = 20180122L;
 
     /** Standard Constructor */
     public X_TF_Vehicle_Rent (Properties ctx, int TF_Vehicle_Rent_ID, String trxName)
@@ -41,6 +41,7 @@ public class X_TF_Vehicle_Rent extends PO implements I_TF_Vehicle_Rent, I_Persis
       super (ctx, TF_Vehicle_Rent_ID, trxName);
       /** if (TF_Vehicle_Rent_ID == 0)
         {
+			setC_UOM_ID (0);
 			setDateAcct (new Timestamp( System.currentTimeMillis() ));
 			setIsCalculated (true);
 // Y
@@ -83,7 +84,7 @@ public class X_TF_Vehicle_Rent extends PO implements I_TF_Vehicle_Rent, I_Persis
 		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
 			.getPO(getC_ElementValue_ID(), get_TrxName());	}
 
-	/** Set Profit Center.
+	/** Set Account Element.
 		@param C_ElementValue_ID 
 		Account Element
 	  */
@@ -95,12 +96,96 @@ public class X_TF_Vehicle_Rent extends PO implements I_TF_Vehicle_Rent, I_Persis
 			set_Value (COLUMNNAME_C_ElementValue_ID, Integer.valueOf(C_ElementValue_ID));
 	}
 
-	/** Get Profit Center.
+	/** Get Account Element.
 		@return Account Element
 	  */
 	public int getC_ElementValue_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_C_ElementValue_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_Invoice getC_Invoice() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Invoice)MTable.get(getCtx(), org.compiere.model.I_C_Invoice.Table_Name)
+			.getPO(getC_Invoice_ID(), get_TrxName());	}
+
+	/** Set Invoice.
+		@param C_Invoice_ID 
+		Invoice Identifier
+	  */
+	public void setC_Invoice_ID (int C_Invoice_ID)
+	{
+		if (C_Invoice_ID < 1) 
+			set_Value (COLUMNNAME_C_Invoice_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_Invoice_ID, Integer.valueOf(C_Invoice_ID));
+	}
+
+	/** Get Invoice.
+		@return Invoice Identifier
+	  */
+	public int getC_Invoice_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_Invoice_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_Project getC_Project() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Project)MTable.get(getCtx(), org.compiere.model.I_C_Project.Table_Name)
+			.getPO(getC_Project_ID(), get_TrxName());	}
+
+	/** Set Subcontract / Project.
+		@param C_Project_ID 
+		Financial Project
+	  */
+	public void setC_Project_ID (int C_Project_ID)
+	{
+		if (C_Project_ID < 1) 
+			set_Value (COLUMNNAME_C_Project_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_Project_ID, Integer.valueOf(C_Project_ID));
+	}
+
+	/** Get Subcontract / Project.
+		@return Financial Project
+	  */
+	public int getC_Project_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_Project_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_UOM getC_UOM() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_UOM)MTable.get(getCtx(), org.compiere.model.I_C_UOM.Table_Name)
+			.getPO(getC_UOM_ID(), get_TrxName());	}
+
+	/** Set UOM.
+		@param C_UOM_ID 
+		Unit of Measure
+	  */
+	public void setC_UOM_ID (int C_UOM_ID)
+	{
+		if (C_UOM_ID < 1) 
+			set_Value (COLUMNNAME_C_UOM_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_UOM_ID, Integer.valueOf(C_UOM_ID));
+	}
+
+	/** Get UOM.
+		@return Unit of Measure
+	  */
+	public int getC_UOM_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_UOM_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
@@ -321,6 +406,26 @@ public class X_TF_Vehicle_Rent extends PO implements I_TF_Vehicle_Rent, I_Persis
 		return false;
 	}
 
+	/** Set Price.
+		@param Price 
+		Price
+	  */
+	public void setPrice (BigDecimal Price)
+	{
+		set_Value (COLUMNNAME_Price, Price);
+	}
+
+	/** Get Price.
+		@return Price
+	  */
+	public BigDecimal getPrice () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Price);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
 	/** Set Processed.
 		@param Processed 
 		The document has been processed
@@ -366,6 +471,26 @@ public class X_TF_Vehicle_Rent extends PO implements I_TF_Vehicle_Rent, I_Persis
 		return false;
 	}
 
+	/** Set Quantity.
+		@param Qty 
+		Quantity
+	  */
+	public void setQty (BigDecimal Qty)
+	{
+		set_Value (COLUMNNAME_Qty, Qty);
+	}
+
+	/** Get Quantity.
+		@return Quantity
+	  */
+	public BigDecimal getQty () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Qty);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
 	/** Set Rent (Amount).
 		@param Rent_Amt Rent (Amount)	  */
 	public void setRent_Amt (BigDecimal Rent_Amt)
@@ -378,23 +503,6 @@ public class X_TF_Vehicle_Rent extends PO implements I_TF_Vehicle_Rent, I_Persis
 	public BigDecimal getRent_Amt () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Rent_Amt);
-		if (bd == null)
-			 return Env.ZERO;
-		return bd;
-	}
-
-	/** Set Rented Days.
-		@param Rented_Days Rented Days	  */
-	public void setRented_Days (BigDecimal Rented_Days)
-	{
-		set_Value (COLUMNNAME_Rented_Days, Rented_Days);
-	}
-
-	/** Get Rented Days.
-		@return Rented Days	  */
-	public BigDecimal getRented_Days () 
-	{
-		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Rented_Days);
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
@@ -518,9 +626,9 @@ public class X_TF_Vehicle_Rent extends PO implements I_TF_Vehicle_Rent, I_Persis
 		return ii.intValue();
 	}
 
-	public org.compiere.model.I_M_Product getVehicle() throws RuntimeException
+	public I_TF_RentedVehicle getVehicle() throws RuntimeException
     {
-		return (org.compiere.model.I_M_Product)MTable.get(getCtx(), org.compiere.model.I_M_Product.Table_Name)
+		return (I_TF_RentedVehicle)MTable.get(getCtx(), I_TF_RentedVehicle.Table_Name)
 			.getPO(getVehicle_ID(), get_TrxName());	}
 
 	/** Set Vehicle.
