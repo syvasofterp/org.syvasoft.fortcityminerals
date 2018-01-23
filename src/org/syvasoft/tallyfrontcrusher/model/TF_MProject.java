@@ -300,6 +300,12 @@ public class TF_MProject extends MProject {
 	public static final String SUBCONTRACTTYPE_CrusherProduction = "CP";
 	/** Quarry Producton = QP */
 	public static final String SUBCONTRACTTYPE_QuarryProducton = "QP";
+	/** Sand Mining = SM */
+	public static final String SUBCONTRACTTYPE_SandMining = "SM";
+	/** Kating Project = KP */
+	public static final String SUBCONTRACTTYPE_KatingProject = "KP";
+	/** Sand Block Project = SP */
+	public static final String SUBCONTRACTTYPE_SandBlockProject = "SP";
 	/** Set Subcontract Type.
 		@param SubcontractType Subcontract Type	  */
 	public void setSubcontractType (String SubcontractType)
@@ -397,7 +403,6 @@ public class TF_MProject extends MProject {
 		MProjectType projType = new MProjectType(getCtx(), 1000000, get_TrxName());		
 		setProjectType(projType);
 		
-		
 		//Update Contract Amt Actual
 		if(is_ValueChanged(COLUMNNAME_QtyProcessed) || is_ValueChanged(COLUMNNAME_Unit_Price))
 			setContract_Amt_Act(getUnit_Price().multiply(getQtyProcessed()));
@@ -418,12 +423,40 @@ public class TF_MProject extends MProject {
 		return super.beforeSave(newRecord);
 	}
 	
+	@Override
+	protected boolean afterSave(boolean newRecord, boolean success) {		
+		boolean ok = super.afterSave(newRecord, success);
+		if(getC_BPartner_ID() > 0 && newRecord) {
+			MJobworkAssignedBPartner jwBP = MJobworkAssignedBPartner.getJobwork(getAD_Org_ID(), getC_BPartner_ID());
+			if(jwBP == null) {
+				jwBP = new MJobworkAssignedBPartner(getCtx(), 0, get_TrxName());
+				jwBP.setAD_Org_ID(getAD_Org_ID());
+				jwBP.setC_BPartner_ID(getC_BPartner_ID());
+				jwBP.setC_Project_ID(getC_Project_ID());
+				jwBP.saveEx();
+			}
+		}
+		return ok;
+	}
+
 	public void processIt(String docAction) {
 		if(docAction.equals(DOCACTION_Start)) {
 			setDocStatus(DOCSTATUS_InProgress);
 		}
 		else if(docAction.equals(DOCACTION_Modify)) {
 			setDocStatus(DOCSTATUS_Drafted);
+		}
+	}
+	
+	public void updateQtyProcessed() {
+		if(getSubcontractType().equals(SUBCONTRACTTYPE_KatingProject)) {
+			String sql = "UPDATE C_Project SET QtyProcessed=COALESCE((SELECT  SUM(Tonnage) FROM TF_KatingEntry k "
+					+ "WHERE k.C_Project_ID = C_Project.C_Project_ID AND DocStatus='CO'),0) WHERE C_Project_ID = " + getC_Project_ID();
+			DB.executeUpdate(sql, get_TrxName());
+			
+			sql = "UPDATE C_Project SET Contract_Amt_Act=COALESCE((SELECT  SUM(Tonnage * Price) FROM TF_KatingEntry k "
+					+ "WHERE k.C_Project_ID = C_Project.C_Project_ID AND DocStatus='CO'),0) WHERE C_Project_ID = " + getC_Project_ID();
+			DB.executeUpdate(sql, get_TrxName());
 		}
 	}
 	

@@ -66,6 +66,8 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutTyreAssignment_CalcRunningM
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTyreAssignment_ReleaseTyreMovement;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTyreStatusChange_Tyre;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutVehicleRentConfig_Destination;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutVehicleRent_CalcAmount;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutVehicleRent_Vehicle;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutWeighmentEntry_CalcNetWeight;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutWeighmentEntry_Vehicle;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutYardEntry_CalcAmount;
@@ -82,6 +84,7 @@ import org.syvasoft.tallyfrontcrusher.model.MLabourWageIssue;
 import org.syvasoft.tallyfrontcrusher.model.MTripSheet;
 import org.syvasoft.tallyfrontcrusher.model.MTyreAssignment;
 import org.syvasoft.tallyfrontcrusher.model.MTyreStatusChange;
+import org.syvasoft.tallyfrontcrusher.model.MVehicleRent;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentalContract;
 import org.syvasoft.tallyfrontcrusher.model.MWeighmentEntry;
@@ -402,6 +405,17 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		if(tableName.equals(MJournalLine.Table_Name)) {
 			if(columnName.equals(MJournalLine.COLUMNNAME_Account_ID)) {
 				list.add(new CalloutJournal_SetJobWork());
+			}
+		}
+		
+		if(tableName.equals(MVehicleRent.Table_Name)) {
+			if(columnName.equals(MVehicleRent.COLUMNNAME_Vehicle_ID)) {
+				list.add(new CalloutVehicleRent_Vehicle());
+				list.add(new CalloutVehicleRent_CalcAmount());
+			}
+			if(columnName.equals(MVehicleRent.COLUMNNAME_Qty) || 
+					columnName.equals(MVehicleRent.COLUMNNAME_Price)) {			
+				list.add(new CalloutVehicleRent_CalcAmount());
 			}
 		}
 		

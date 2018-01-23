@@ -1,12 +1,20 @@
 package org.syvasoft.tallyfrontcrusher.model;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.ResultSet;
 import java.util.Properties;
 
+import org.adempiere.exceptions.AdempiereException;
+import org.compiere.model.MBPartner;
+import org.compiere.model.MInvoiceLine;
 import org.compiere.model.MJournal;
 import org.compiere.model.MJournalLine;
 import org.compiere.model.MPeriod;
+import org.compiere.model.MPriceList;
 import org.compiere.model.MResource;
+import org.compiere.model.MSysConfig;
+import org.compiere.process.DocAction;
 import org.compiere.util.Env;
 
 public class MVehicleRent extends X_TF_Vehicle_Rent {
@@ -33,68 +41,69 @@ public class MVehicleRent extends X_TF_Vehicle_Rent {
 			setDocStatus(DOCSTATUS_Completed);
 			setProcessed(true);
 			
-			MJournal j = new MJournal(getCtx(), 0, get_TrxName());
-			j.setDescription("Generated from Vehicle Rent Entry - " + getTF_Vehicle_Rent_ID());
-			j.setC_AcctSchema_ID(Env.getContextAsInt(getCtx(), "$C_AcctSchema_ID"));
-			j.setC_Currency_ID(Env.getContextAsInt(getCtx(), "$C_Currency_ID"));
-			j.setPostingType(MJournal.POSTINGTYPE_Actual);
-			j.setC_DocType_ID(1000000);
-			j.setDateDoc(getDateAcct());
-			j.setDateAcct(getDateAcct());
-			j.setDocStatus(DOCSTATUS_Drafted);
-			MPeriod period = MPeriod.get(getCtx(), getDateAcct());
-			j.setC_Period_ID(period.getC_Period_ID());
-			j.setGL_Category_ID(1000000);
-			j.setC_ConversionType_ID(114);
-			j.saveEx();
+			MRentedVehicle vehicle = new MRentedVehicle(getCtx(), getVehicle_ID(), get_TrxName());
+			MBPartner bp = new MBPartner(getCtx(), vehicle.getC_BPartner_ID(), get_TrxName());
+			//Invoice Header
+			TF_MInvoice invoice = new TF_MInvoice(getCtx(), 0, get_TrxName());
+			invoice.setClientOrg(getAD_Client_ID(), getAD_Org_ID());
+			invoice.setC_DocTypeTarget_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getTransporterInvoiceDocType_ID());			
+			invoice.setDateInvoiced(getDateAcct());
+			invoice.setDateAcct(getDateAcct());
+			//
+			invoice.setSalesRep_ID(Env.getAD_User_ID(getCtx()));
+			//
+			invoice.setBPartner(bp);
+			invoice.setIsSOTrx(false);		
+			invoice.setDescription(getDescription());
 			
-			//Vehicle Expense
-			MJournalLine jl = new MJournalLine(j);
-			jl.setLine(10);			
-			jl.setAccount_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getVehicleExp_Acct());
-			jl.setUser1_ID(getC_ElementValue_ID()); // Quarry Profit Center
-			jl.setAmtSourceDr(getRent_Amt());
-			jl.setAmtAcctDr(getRent_Amt());
-			jl.setIsGenerated(true);
-			jl.saveEx();
+			//Price List
+			int m_M_PriceList_ID = Env.getContextAsInt(getCtx(), "#M_PriceList_ID");
+			if(bp.getPO_PriceList_ID() > 0)
+				m_M_PriceList_ID = bp.getPO_PriceList_ID();			
+			invoice.setM_PriceList_ID(m_M_PriceList_ID);
+			invoice.setC_Currency_ID(MPriceList.get(getCtx(), m_M_PriceList_ID, get_TrxName()).getC_Currency_ID());
 			
-			//Vehicle Rent
-			jl = new MJournalLine(j);
-			jl.setLine(20);			
-			jl.setAccount_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getVehicleRent_Acct());
-			jl.setUser1_ID(getCreditC_ElementValue_ID()); // Vehicle Profit Center
-			jl.setAmtSourceCr(getRent_Amt());
-			jl.setAmtAcctCr(getRent_Amt());
-			jl.setIsGenerated(true);
-			jl.saveEx();
+			//Financial Dimension - Profit Center
+			invoice.setC_Project_ID(getC_Project_ID());
 			
-			j.processIt(MJournal.ACTION_Complete);
-			j.saveEx();
+			invoice.saveEx();
+			//End Invoice Header
 			
-			setGL_Journal_ID(j.getGL_Journal_ID());
+			//Invoice Line - Vehicle Rental Charge
+			MInvoiceLine invLine = new MInvoiceLine(invoice);
+			invLine.setM_Product_ID(vehicle.getM_Product_ID(), true);			
+			invLine.setQty(getQty());			
+			invLine.setPriceActual(getPrice());
+			invLine.setPriceList(getPrice());
+			invLine.setPriceLimit(getPrice());
+			invLine.setPriceEntered(getPrice());			
+			invLine.saveEx();
+			
+			//DocAction
+			if (!invoice.processIt(DocAction))
+				throw new AdempiereException("Failed when processing document - " + invoice.getProcessMsg());
+			invoice.saveEx();
+			//End DocAction
+			
+			setC_Invoice_ID(invoice.getC_Invoice_ID());
 		}
 	}
 	
 	public void reverseIt() {
-		if(getGL_Journal_ID()>0) {
-			MJournal j = new MJournal(getCtx(), getGL_Journal_ID(), get_TrxName());
-			j.reverseCorrectIt();
-			j.saveEx();
-			
-			setGL_Journal_ID(0);
-			setProcessed(false);
-			setDocStatus(DOCSTATUS_Drafted);
+		if(getC_Invoice_ID() > 0 ) {
+			TF_MInvoice inv = new TF_MInvoice(getCtx(), getC_Invoice_ID(), get_TrxName());
+			if(inv.getDocStatus().equals(DocAction.ACTION_Complete))
+				inv.reverseCorrectIt();
+			inv.saveEx();
+			setC_Invoice_ID(0);
 		}
+		setDocStatus(DOCSTATUS_InProgress);
+		setProcessed(false);
 	}
 	
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
-		if(isCalculated()) {
-			setRent_Amt(getStd_Rent().multiply(getRented_Days().divide(getStd_Days())));
-		}
-		//Set Credit Profit Center for Vehicle
-		MResource res = (MResource) getVehicle().getS_Resource();
-		setCreditC_ElementValue_ID(res.get_ValueAsInt("C_ElementValue_ID"));
+				
 		
 		return super.beforeSave(newRecord);
 	}

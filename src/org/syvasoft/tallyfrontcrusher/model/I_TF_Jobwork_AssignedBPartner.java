@@ -21,25 +21,25 @@ import java.sql.Timestamp;
 import org.compiere.model.*;
 import org.compiere.util.KeyNamePair;
 
-/** Generated Interface for TF_RentedVehicle
+/** Generated Interface for TF_Jobwork_AssignedBPartner
  *  @author iDempiere (generated) 
  *  @version Release 4.1
  */
 @SuppressWarnings("all")
-public interface I_TF_RentedVehicle 
+public interface I_TF_Jobwork_AssignedBPartner 
 {
 
-    /** TableName=TF_RentedVehicle */
-    public static final String Table_Name = "TF_RentedVehicle";
+    /** TableName=TF_Jobwork_AssignedBPartner */
+    public static final String Table_Name = "TF_Jobwork_AssignedBPartner";
 
-    /** AD_Table_ID=1000208 */
+    /** AD_Table_ID=1000237 */
     public static final int Table_ID = MTable.getTable_ID(Table_Name);
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);
 
-    /** AccessLevel = 3 - Client - Org 
+    /** AccessLevel = 1 - Org 
      */
-    BigDecimal accessLevel = BigDecimal.valueOf(3);
+    BigDecimal accessLevel = BigDecimal.valueOf(1);
 
     /** Load Meta Data */
 
@@ -79,20 +79,20 @@ public interface I_TF_RentedVehicle
 
 	public org.compiere.model.I_C_BPartner getC_BPartner() throws RuntimeException;
 
-    /** Column name C_UOM_ID */
-    public static final String COLUMNNAME_C_UOM_ID = "C_UOM_ID";
+    /** Column name C_Project_ID */
+    public static final String COLUMNNAME_C_Project_ID = "C_Project_ID";
 
-	/** Set UOM.
-	  * Unit of Measure
+	/** Set Project.
+	  * Financial Project
 	  */
-	public void setC_UOM_ID (int C_UOM_ID);
+	public void setC_Project_ID (int C_Project_ID);
 
-	/** Get UOM.
-	  * Unit of Measure
+	/** Get Project.
+	  * Financial Project
 	  */
-	public int getC_UOM_ID();
+	public int getC_Project_ID();
 
-	public org.compiere.model.I_C_UOM getC_UOM() throws RuntimeException;
+	public org.compiere.model.I_C_Project getC_Project() throws RuntimeException;
 
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
@@ -136,89 +136,23 @@ public interface I_TF_RentedVehicle
 	  */
 	public boolean isActive();
 
-    /** Column name M_Product_Category_ID */
-    public static final String COLUMNNAME_M_Product_Category_ID = "M_Product_Category_ID";
+    /** Column name TF_Jobwork_AssignedBPartner_ID */
+    public static final String COLUMNNAME_TF_Jobwork_AssignedBPartner_ID = "TF_Jobwork_AssignedBPartner_ID";
 
-	/** Set Product Category.
-	  * Category of a Product
-	  */
-	public void setM_Product_Category_ID (int M_Product_Category_ID);
+	/** Set Assigned Customer / Vendor	  */
+	public void setTF_Jobwork_AssignedBPartner_ID (int TF_Jobwork_AssignedBPartner_ID);
 
-	/** Get Product Category.
-	  * Category of a Product
-	  */
-	public int getM_Product_Category_ID();
+	/** Get Assigned Customer / Vendor	  */
+	public int getTF_Jobwork_AssignedBPartner_ID();
 
-	public org.compiere.model.I_M_Product_Category getM_Product_Category() throws RuntimeException;
+    /** Column name TF_Jobwork_AssignedBPartner_UU */
+    public static final String COLUMNNAME_TF_Jobwork_AssignedBPartner_UU = "TF_Jobwork_AssignedBPartner_UU";
 
-    /** Column name M_Product_ID */
-    public static final String COLUMNNAME_M_Product_ID = "M_Product_ID";
+	/** Set TF_Jobwork_AssignedBPartner_UU	  */
+	public void setTF_Jobwork_AssignedBPartner_UU (String TF_Jobwork_AssignedBPartner_UU);
 
-	/** Set Product.
-	  * Product, Service, Item
-	  */
-	public void setM_Product_ID (int M_Product_ID);
-
-	/** Get Product.
-	  * Product, Service, Item
-	  */
-	public int getM_Product_ID();
-
-	public org.compiere.model.I_M_Product getM_Product() throws RuntimeException;
-
-    /** Column name RequireRentConfig */
-    public static final String COLUMNNAME_RequireRentConfig = "RequireRentConfig";
-
-	/** Set Rent Configuration	  */
-	public void setRequireRentConfig (boolean RequireRentConfig);
-
-	/** Get Rent Configuration	  */
-	public boolean isRequireRentConfig();
-
-    /** Column name TareWeight */
-    public static final String COLUMNNAME_TareWeight = "TareWeight";
-
-	/** Set Tare Weight (Kg)	  */
-	public void setTareWeight (BigDecimal TareWeight);
-
-	/** Get Tare Weight (Kg)	  */
-	public BigDecimal getTareWeight();
-
-    /** Column name TF_RentedVehicle_ID */
-    public static final String COLUMNNAME_TF_RentedVehicle_ID = "TF_RentedVehicle_ID";
-
-	/** Set Rented Vehicle	  */
-	public void setTF_RentedVehicle_ID (int TF_RentedVehicle_ID);
-
-	/** Get Rented Vehicle	  */
-	public int getTF_RentedVehicle_ID();
-
-    /** Column name TF_RentedVehicle_UU */
-    public static final String COLUMNNAME_TF_RentedVehicle_UU = "TF_RentedVehicle_UU";
-
-	/** Set TF_RentedVehicle_UU	  */
-	public void setTF_RentedVehicle_UU (String TF_RentedVehicle_UU);
-
-	/** Get TF_RentedVehicle_UU	  */
-	public String getTF_RentedVehicle_UU();
-
-    /** Column name TonnagePerLoad */
-    public static final String COLUMNNAME_TonnagePerLoad = "TonnagePerLoad";
-
-	/** Set Tonnage / Load	  */
-	public void setTonnagePerLoad (BigDecimal TonnagePerLoad);
-
-	/** Get Tonnage / Load	  */
-	public BigDecimal getTonnagePerLoad();
-
-    /** Column name UnitPrice */
-    public static final String COLUMNNAME_UnitPrice = "UnitPrice";
-
-	/** Set Unit Price	  */
-	public void setUnitPrice (BigDecimal UnitPrice);
-
-	/** Get Unit Price	  */
-	public BigDecimal getUnitPrice();
+	/** Get TF_Jobwork_AssignedBPartner_UU	  */
+	public String getTF_Jobwork_AssignedBPartner_UU();
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";
@@ -235,22 +169,4 @@ public interface I_TF_RentedVehicle
 	  * User who updated this records
 	  */
 	public int getUpdatedBy();
-
-    /** Column name VehicleNo */
-    public static final String COLUMNNAME_VehicleNo = "VehicleNo";
-
-	/** Set Vehicle No	  */
-	public void setVehicleNo (String VehicleNo);
-
-	/** Get Vehicle No	  */
-	public String getVehicleNo();
-
-    /** Column name VehicleSOPOType */
-    public static final String COLUMNNAME_VehicleSOPOType = "VehicleSOPOType";
-
-	/** Set Vehicle SO/PO Type	  */
-	public void setVehicleSOPOType (String VehicleSOPOType);
-
-	/** Get Vehicle SO/PO Type	  */
-	public String getVehicleSOPOType();
 }
