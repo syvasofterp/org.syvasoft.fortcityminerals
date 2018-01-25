@@ -99,7 +99,7 @@ public class MInvestmentStructure extends X_TF_InvestmentStructure {
 		List<MShareholder> partners = new Query(getCtx(), MShareholder.Table_Name, "AD_Org_ID=?" , get_TrxName())
 				.setParameters(getAD_Org_ID()).list();
 		int line = 10;
-		for(MShareholder partner : partners) {			
+		for(MShareholder partner : partners) {
 			jl = new MJournalLine(j);
 			line = line + 10;
 			jl.setLine(line);

@@ -394,6 +394,140 @@ public class TF_MProject extends MProject {
 		return ii.intValue();
 	}
 	
+	/** Column name AD_OrgLinked_ID */
+    public static final String COLUMNNAME_AD_OrgLinked_ID = "AD_OrgLinked_ID";
+    /** Set Organization.
+	@param AD_OrgLinked_ID 
+	LInk Organization
+     */
+	public void setAD_OrgLinked_ID (int AD_OrgLinked_ID)
+	{
+		if (AD_OrgLinked_ID < 1) 
+			set_Value (COLUMNNAME_AD_OrgLinked_ID, null);
+		else 
+			set_Value (COLUMNNAME_AD_OrgLinked_ID, Integer.valueOf(AD_OrgLinked_ID));
+	}
+	
+	/** Get Organization.
+		@return LInk Organization
+	  */
+	public int getAD_OrgLinked_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_AD_OrgLinked_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+	
+	/** Column name C_ProjectLinked_ID */
+    public static final String COLUMNNAME_C_ProjectLinked_ID = "C_ProjectLinked_ID";
+    public org.compiere.model.I_C_Project getC_ProjectLinked() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Project)MTable.get(getCtx(), org.compiere.model.I_C_Project.Table_Name)
+			.getPO(getC_ProjectLinked_ID(), get_TrxName());	}
+
+	/** Set Link Subcontract.
+		@param C_ProjectLinked_ID Link Subcontract	  */
+	public void setC_ProjectLinked_ID (int C_ProjectLinked_ID)
+	{
+		if (C_ProjectLinked_ID < 1) 
+			set_Value (COLUMNNAME_C_ProjectLinked_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_ProjectLinked_ID, Integer.valueOf(C_ProjectLinked_ID));
+	}
+
+	/** Get Link Subcontract.
+		@return Link Subcontract	  */
+	public int getC_ProjectLinked_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_ProjectLinked_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Column name CreateSalesInvoice */
+    public static final String COLUMNNAME_CreateSalesInvoice = "CreateSalesInvoice";
+    /** Set Create Sales Invoice.
+	@param CreateSalesInvoice 
+	Sales Invoice will be created for Purchase Invoice created for the Linked Project.
+     */
+	public void setCreateSalesInvoice (boolean CreateSalesInvoice)
+	{
+		set_Value (COLUMNNAME_CreateSalesInvoice, Boolean.valueOf(CreateSalesInvoice));
+	}
+	
+	/** Get Create Sales Invoice.
+		@return Sales Invoice will be created for Purchase Invoice created for the Linked Project.
+	  */
+	public boolean isCreateSalesInvoice () 
+	{
+		Object oo = get_Value(COLUMNNAME_CreateSalesInvoice);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+    /** Column name C_DocTypeLink_ID */
+    public static final String COLUMNNAME_C_DocTypeLink_ID = "C_DocTypeLink_ID";
+	public org.compiere.model.I_C_DocType getC_DocTypeLink() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_DocType)MTable.get(getCtx(), org.compiere.model.I_C_DocType.Table_Name)
+			.getPO(getC_DocTypeLink_ID(), get_TrxName());	}
+
+	/** Set Link Purchase Invoice Doc Type.
+		@param C_DocTypeLink_ID Link Purchase Invoice Doc Type	  */
+	public void setC_DocTypeLink_ID (int C_DocTypeLink_ID)
+	{
+		if (C_DocTypeLink_ID < 1) 
+			set_Value (COLUMNNAME_C_DocTypeLink_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_DocTypeLink_ID, Integer.valueOf(C_DocTypeLink_ID));
+	}
+
+	/** Get Link Purchase Invoice Doc Type.
+		@return Link Purchase Invoice Doc Type	  */
+	public int getC_DocTypeLink_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_DocTypeLink_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Column name C_DocTypeSalesInvoice_ID */
+    public static final String COLUMNNAME_C_DocTypeSalesInvoice_ID = "C_DocTypeSalesInvoice_ID";
+    
+	public org.compiere.model.I_C_DocType getC_DocTypeSalesInvoice() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_DocType)MTable.get(getCtx(), org.compiere.model.I_C_DocType.Table_Name)
+			.getPO(getC_DocTypeSalesInvoice_ID(), get_TrxName());	
+	}
+
+	/** Set Sales Invoice Doc Type.
+		@param C_DocTypeSalesInvoice_ID Sales Invoice Doc Type	  */
+	public void setC_DocTypeSalesInvoice_ID (int C_DocTypeSalesInvoice_ID)
+	{
+		if (C_DocTypeSalesInvoice_ID < 1) 
+			set_Value (COLUMNNAME_C_DocTypeSalesInvoice_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_DocTypeSalesInvoice_ID, Integer.valueOf(C_DocTypeSalesInvoice_ID));
+	}
+
+	/** Get Sales Invoice Doc Type.
+		@return Sales Invoice Doc Type	  */
+	public int getC_DocTypeSalesInvoice_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_DocTypeSalesInvoice_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+	
+	
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
 		if(getDocumentNo() != null && (getValue() == null || getValue().length()==0))
@@ -422,6 +556,7 @@ public class TF_MProject extends MProject {
 		
 		return super.beforeSave(newRecord);
 	}
+	
 	
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
@@ -460,6 +595,17 @@ public class TF_MProject extends MProject {
 		}
 	}
 	
+	public void updateQtyBilled() {
+		if(getSubcontractType().equals(SUBCONTRACTTYPE_KatingProject)) {
+			String sql = "SELECT 	SUM(QtyInvoiced) FROM C_Invoice i INNER JOIN C_InvoiceLine il  "
+					+ "ON i.C_Invoice_ID = il.C_Invoice_ID WHERE i.C_Project_ID = ? AND i.DocStatus = 'CO' AND i.IsSOTrx='Y'";
+			BigDecimal qtyInvoiced = DB.getSQLValueBD(get_TrxName(), sql, getC_Project_ID());
+			setInvoicedQty(qtyInvoiced);
+			
+			//Invoiced Amount is updated by default.
+		}
+	}
+	
 	public void updateBoulderReceiptBasedFields(MBoulderReceipt br) {
 		
 		if(getC_Project_ID() == br.getC_Project_ID() && getJobWork_Product_ID() == br.getJobWork_Product_ID()) {
@@ -494,4 +640,17 @@ public class TF_MProject extends MProject {
 		return proj;
 	}
 
+	public static TF_MProject getProject(int M_Warehouse_ID) {
+		TF_MProject proj = new Query(Env.getCtx(), TF_MProject.Table_Name, "M_Warehouse_ID=? AND DocStatus='IP' ", null)
+				.setParameters(M_Warehouse_ID).first();
+		return proj;
+				
+	}
+	
+	public static TF_MProject getLinkedProject(int C_Project_ID) {
+		String whereClause = COLUMNNAME_C_ProjectLinked_ID + " = ? AND DocStatus = 'IP' ";
+		TF_MProject proj = new Query(Env.getCtx(), Table_Name, whereClause, null)
+				.setClient_ID().setParameters(C_Project_ID).first();
+		return proj;
+	}
 }
