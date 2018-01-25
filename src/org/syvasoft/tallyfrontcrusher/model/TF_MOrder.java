@@ -1850,6 +1850,7 @@ public class TF_MOrder extends MOrder {
 		
 		//Financial Dimension - Profit Center
 		invoice.setUser1_ID(getUser1_ID());
+		invoice.setC_Project_ID(getC_Project_ID());
 		
 		invoice.saveEx();
 		//End Invoice Header
@@ -1943,16 +1944,20 @@ public class TF_MOrder extends MOrder {
 	
 	public void reverseSubcontractPurchaseEntry() {
 		if(getSubcon_Invoice_ID() > 0) {			
-			TF_MInvoice inv = new TF_MInvoice(getCtx(), getSubcon_Invoice_ID(), get_TrxName());			
-			inv.reverseCorrectIt();
-			inv.saveEx();
+			TF_MInvoice inv = new TF_MInvoice(getCtx(), getSubcon_Invoice_ID(), get_TrxName());
+			if(inv.getDocStatus().equals(DOCSTATUS_Completed)) {
+				inv.reverseCorrectIt();
+				inv.saveEx();
+			}
 			MSubcontractMaterialMovement.deleteInvoiceMovement(inv.getC_Invoice_ID(), get_TrxName());
 			setSubcon_Invoice_ID(0);
 		}
 		if(getSubcon_Receipt_ID() > 0) {
 			MInOut io = new MInOut(getCtx(), getSubcon_Receipt_ID(), get_TrxName());
-			io.reverseCorrectIt();
-			io.saveEx();
+			if(io.getDocStatus().equals(DOCSTATUS_Completed)) {
+				io.reverseCorrectIt();
+				io.saveEx();
+			}
 			setSubcon_Receipt_ID(0);
 		}
 		

@@ -43,6 +43,7 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_RentedVehicle;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_SOUnitPriceRent;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_SandBlockLine1;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_SandBlockQtyPrice;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_SetProject;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_SetTonnage;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_Warehouse;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_WeighmentEntry;
@@ -95,6 +96,7 @@ import org.syvasoft.tallyfrontcrusher.model.TF_MJournal;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
 import org.syvasoft.tallyfrontcrusher.model.TF_MPayment;
 import org.syvasoft.tallyfrontcrusher.model.TF_MProduct;
+import org.syvasoft.tallyfrontcrusher.model.TF_MProject;
 
 public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 
@@ -416,6 +418,12 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 			if(columnName.equals(MVehicleRent.COLUMNNAME_Qty) || 
 					columnName.equals(MVehicleRent.COLUMNNAME_Price)) {			
 				list.add(new CalloutVehicleRent_CalcAmount());
+			}
+		}
+		
+		if(tableName.equals(TF_MOrder.Table_Name)) {
+			if(columnName.equals(TF_MOrder.COLUMNNAME_C_BPartner_ID)) {
+				list.add(new CalloutOrder_SetProject());
 			}
 		}
 		
