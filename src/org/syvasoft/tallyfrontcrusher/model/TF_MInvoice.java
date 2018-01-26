@@ -611,8 +611,8 @@ public class TF_MInvoice extends MInvoice {
 		if (!invoice.processIt(DocAction.ACTION_Complete))
 			throw new AdempiereException("Failed when processing document - " + invoice.getProcessMsg());
 		invoice.saveEx();
-				
 		
+		counterProj.set_TrxName(get_TrxName());		
 		counterProj.updateQtyBilled();
 		counterProj.saveEx(get_TrxName());
 		setRef_Invoice_ID(invoice.getC_Invoice_ID());

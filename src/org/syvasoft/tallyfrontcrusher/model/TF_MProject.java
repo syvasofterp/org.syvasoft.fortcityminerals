@@ -600,6 +600,8 @@ public class TF_MProject extends MProject {
 			String sql = "SELECT 	SUM(QtyInvoiced) FROM C_Invoice i INNER JOIN C_InvoiceLine il  "
 					+ "ON i.C_Invoice_ID = il.C_Invoice_ID WHERE i.C_Project_ID = ? AND i.DocStatus = 'CO' AND i.IsSOTrx='Y'";
 			BigDecimal qtyInvoiced = DB.getSQLValueBD(get_TrxName(), sql, getC_Project_ID());
+			if(qtyInvoiced == null)
+				qtyInvoiced = BigDecimal.ZERO;
 			setInvoicedQty(qtyInvoiced);
 			
 			//Invoiced Amount is updated by default.

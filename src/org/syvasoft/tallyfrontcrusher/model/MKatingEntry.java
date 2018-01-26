@@ -79,6 +79,11 @@ public class MKatingEntry extends X_TF_KatingEntry {
 		if(newRecord && getDocStatus().equals(DOCSTATUS_Completed)) {
 			processIt(DocAction.ACTION_Complete);
 		}
+		TF_MProject proj = new TF_MProject(getCtx(), getC_Project_ID(), get_TrxName());
+		if(proj.getSubcontractType().equals(TF_MProject.SUBCONTRACTTYPE_KatingProject)) {
+			proj.updateQtyProcessed();
+			proj.saveEx();
+		}
 		return super.afterSave(newRecord, success);
 	}
 	
@@ -157,9 +162,7 @@ public class MKatingEntry extends X_TF_KatingEntry {
 				
 			DB.executeUpdate("UPDATE TF_KatingEntry SET Processed='Y', GL_Journal_ID=" + j.getGL_Journal_ID() + " WHERE TF_KatingEntry_ID ="
 					+ getTF_KatingEntry_ID() , get_TrxName());
-			
-			proj.updateQtyProcessed();
-			proj.saveEx();
+					
 		}
 	}
 	
@@ -175,12 +178,7 @@ public class MKatingEntry extends X_TF_KatingEntry {
 					+ getTF_KatingEntry_ID() , get_TrxName());
 		}
 		setProcessed(false);
-		setDocStatus(DOCSTATUS_InProgress);
-		if(getC_Project_ID() > 0) {
-			TF_MProject proj = new TF_MProject(getCtx(), getC_Project_ID(), get_TrxName());
-			proj.updateQtyProcessed();
-			proj.saveEx();
-		}
+		setDocStatus(DOCSTATUS_InProgress);		
 	}
 
 }
