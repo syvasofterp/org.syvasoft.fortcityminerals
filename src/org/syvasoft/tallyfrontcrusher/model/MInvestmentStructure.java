@@ -65,6 +65,8 @@ public class MInvestmentStructure extends X_TF_InvestmentStructure {
 		if(getPayable_Amount().doubleValue() == 0) 
 			return;
 		
+		TF_MOrg orgHO = new TF_MOrg(getCtx(), getAD_Org_ID(), get_TrxName()).getHeadOffice();
+		int investmentAccount = orgHO.getInvestmentAcct_ID();
 		int m_C_DocTypeTarget_ID = 1000000;		
 		TF_MJournal j = new TF_MJournal(getCtx(), 0, get_TrxName());
 		j.setDescription("Initial Expense");
@@ -105,8 +107,9 @@ public class MInvestmentStructure extends X_TF_InvestmentStructure {
 			jl.setLine(line);
 			String  subshareholder="";
 			int capAcct_ID = partner.getCapitalAcct_ID();
-			if(partner.getTF_ShareholderMain_ID() > 0) {
-				capAcct_ID = partner.getTF_ShareholderMain().getCapitalAcct_ID();
+			if(partner.getTF_ShareholderMain_ID() > 0 &&
+					partner.getTF_ShareholderMain().getCapitalAcct_ID() == investmentAccount) {				
+				capAcct_ID = partner.getTF_ShareholderMain().getCapitalAcct_ID();				 
 				subshareholder = " (" + partner.getName() + ")"; 
 			}
 			
@@ -174,12 +177,20 @@ public class MInvestmentStructure extends X_TF_InvestmentStructure {
 	
 	public void adjustSubShareholderAccountInHeadOffice() {
 		TF_MOrg org = new TF_MOrg(getCtx(), getAD_Org_ID(), get_TrxName());
-		List<MShareholder> subPartners = new Query(getCtx(), MShareholder.Table_Name, "AD_Org_ID=? AND TF_ShareholderMain_ID IS NOT NULL" , get_TrxName())
-				.setParameters(getAD_Org_ID()).list();
+		int investmentAccount = org.getHeadOffice().getInvestmentAcct_ID();
+		List<MShareholder> subPartners = new Query(getCtx(), MShareholder.Table_Name, "AD_Org_ID=? AND TF_ShareholderMain_ID IS NOT NULL"
+				 , get_TrxName()).setParameters(getAD_Org_ID()).list();
 		if(subPartners.size() == 0 || org.getAD_OrgHO_ID() == 0)
 			return;	
 		
-		int mainShareholderCapitalAcct = subPartners.get(0).getTF_ShareholderMain().getCapitalAcct_ID(); 
+		int mainShareholderCapitalAcct = 0;
+		for(MShareholder subPartner : subPartners) {
+				if (subPartner.getTF_ShareholderMain().getCapitalAcct_ID() == investmentAccount) {
+					mainShareholderCapitalAcct = investmentAccount;
+					break;
+				}
+		}
+		
 		if(org.getHeadOffice().getInvestmentAcct_ID() != mainShareholderCapitalAcct) {
 			log.warning("Main Shareholder does not match with Head Office Investment Account!");
 			return;
@@ -215,6 +226,9 @@ public class MInvestmentStructure extends X_TF_InvestmentStructure {
 			desc = " In " + sandPoint + ", " + getDescription();
 		
 		for(MShareholder partner : subPartners) {
+			if(partner.getTF_ShareholderMain().getCapitalAcct_ID() != investmentAccount)
+				continue;
+			
 			double perecent = partner.getInvestmentShare().doubleValue() / 100;
 			BigDecimal Amt = getPayable_Amount().multiply(new BigDecimal(perecent));
 			crAmt = crAmt.add(Amt);
