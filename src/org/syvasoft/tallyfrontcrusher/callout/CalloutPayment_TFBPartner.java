@@ -7,6 +7,8 @@ import org.compiere.model.GridField;
 import org.compiere.model.GridTab;
 import org.compiere.model.MUser;
 import org.compiere.util.Env;
+import org.syvasoft.tallyfrontcrusher.model.MInterOrgBPCashTransferConfig;
+import org.syvasoft.tallyfrontcrusher.model.MInterOrgBPCashTransferConfigLine;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkAssignedBPartner;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkAssignedEmployee;
 import org.syvasoft.tallyfrontcrusher.model.TF_MBPartner;
@@ -49,7 +51,28 @@ public class CalloutPayment_TFBPartner implements IColumnCallout {
 		}
 		mTab.setValue(TF_MPayment.COLUMNNAME_IsEmployee, isEmployee);
 		mTab.setValue(TF_MPayment.COLUMNNAME_C_BPartner_ID, bPartnerID);
-				
+		
+		boolean isReceipt = mTab.getValueAsBoolean(TF_MPayment.COLUMNNAME_IsReceipt);
+		boolean isInterOrgBPCash = false;
+		int C_BankAccount_ID = 0;
+		
+		if(mTab.getValue(TF_MPayment.COLUMNNAME_C_BankAccount_ID) != null)
+			C_BankAccount_ID = (int) mTab.getValue(TF_MPayment.COLUMNNAME_C_BankAccount_ID);
+		
+		mTab.setValue(TF_MPayment.COLUMNNAME_IsInterOrgBPCashTransferX, isInterOrgBPCash);
+		mTab.setValue(TF_MPayment.COLUMNNAME_TF_OrgBPCashTrans_Configx_ID, null);
+		if(!isReceipt && bPartnerID > 0 && !isEmployee) {
+			MInterOrgBPCashTransferConfigLine config = MInterOrgBPCashTransferConfig.getDefaultAddionalCashTransfer(C_BankAccount_ID, bPartnerID, false);
+			if(config != null) {
+				isInterOrgBPCash = true;
+				config = MInterOrgBPCashTransferConfig.getDefaultAddionalCashTransfer(C_BankAccount_ID, bPartnerID, true);
+				if(config != null) {
+					mTab.setValue(TF_MPayment.COLUMNNAME_TF_OrgBPCashTrans_Configx_ID, config.getTF_OrgBPCashTrans_Configx_ID());										
+				}				
+				mTab.setValue(TF_MPayment.COLUMNNAME_IsInterOrgBPCashTransferX, isInterOrgBPCash);				
+			}
+		}
+		
 		return null;
 	}
 
