@@ -21,10 +21,10 @@ import java.sql.ResultSet;
 import java.util.Properties;
 import org.compiere.model.*;
 
-/** Generated Model for TF_OrgCashTransfer_Config
+/** Generated Model for TF_OrgBPCashTransfer_Config
  *  @author iDempiere (generated) 
  *  @version Release 4.1 - $Id$ */
-public class X_TF_OrgCashTransfer_Config extends PO implements I_TF_OrgCashTransfer_Config, I_Persistent 
+public class X_TF_OrgBPCashTransfer_Config extends PO implements I_TF_OrgBPCashTransfer_Config, I_Persistent 
 {
 
 	/**
@@ -33,25 +33,26 @@ public class X_TF_OrgCashTransfer_Config extends PO implements I_TF_OrgCashTrans
 	private static final long serialVersionUID = 20180129L;
 
     /** Standard Constructor */
-    public X_TF_OrgCashTransfer_Config (Properties ctx, int TF_OrgCashTransfer_Config_ID, String trxName)
+    public X_TF_OrgBPCashTransfer_Config (Properties ctx, int TF_OrgBPCashTransfer_Config_ID, String trxName)
     {
-      super (ctx, TF_OrgCashTransfer_Config_ID, trxName);
-      /** if (TF_OrgCashTransfer_Config_ID == 0)
+      super (ctx, TF_OrgBPCashTransfer_Config_ID, trxName);
+      /** if (TF_OrgBPCashTransfer_Config_ID == 0)
         {
-			setDest_Acct_ID (0);
 			setDest_BankAccount_ID (0);
 			setDest_Org_ID (0);
+// @Dest_Org_ID@
+			setDest_Partner_ID (0);
 			setDirection (null);
-// B
-			setSrc_Acct_ID (0);
+// O
 			setSrc_BankAccount_ID (0);
 			setSrc_Org_ID (0);
-			setTF_OrgCashTransfer_Config_ID (0);
+			setSrc_Partner_ID (0);
+			setTF_OrgBPCashTransfer_Config_ID (0);
         } */
     }
 
     /** Load Constructor */
-    public X_TF_OrgCashTransfer_Config (Properties ctx, ResultSet rs, String trxName)
+    public X_TF_OrgBPCashTransfer_Config (Properties ctx, ResultSet rs, String trxName)
     {
       super (ctx, rs, trxName);
     }
@@ -73,7 +74,7 @@ public class X_TF_OrgCashTransfer_Config extends PO implements I_TF_OrgCashTrans
 
     public String toString()
     {
-      StringBuffer sb = new StringBuffer ("X_TF_OrgCashTransfer_Config[")
+      StringBuffer sb = new StringBuffer ("X_TF_OrgBPCashTransfer_Config[")
         .append(get_ID()).append("]");
       return sb.toString();
     }
@@ -93,31 +94,6 @@ public class X_TF_OrgCashTransfer_Config extends PO implements I_TF_OrgCashTrans
 	public String getDescription () 
 	{
 		return (String)get_Value(COLUMNNAME_Description);
-	}
-
-	public org.compiere.model.I_C_ElementValue getDest_Acct() throws RuntimeException
-    {
-		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
-			.getPO(getDest_Acct_ID(), get_TrxName());	}
-
-	/** Set Destination Org Account.
-		@param Dest_Acct_ID Destination Org Account	  */
-	public void setDest_Acct_ID (int Dest_Acct_ID)
-	{
-		if (Dest_Acct_ID < 1) 
-			set_Value (COLUMNNAME_Dest_Acct_ID, null);
-		else 
-			set_Value (COLUMNNAME_Dest_Acct_ID, Integer.valueOf(Dest_Acct_ID));
-	}
-
-	/** Get Destination Org Account.
-		@return Destination Org Account	  */
-	public int getDest_Acct_ID () 
-	{
-		Integer ii = (Integer)get_Value(COLUMNNAME_Dest_Acct_ID);
-		if (ii == null)
-			 return 0;
-		return ii.intValue();
 	}
 
 	public org.compiere.model.I_C_BankAccount getDest_BankAccount() throws RuntimeException
@@ -165,6 +141,56 @@ public class X_TF_OrgCashTransfer_Config extends PO implements I_TF_OrgCashTrans
 		return ii.intValue();
 	}
 
+	public org.compiere.model.I_C_BPartner getDest_Partner() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_BPartner)MTable.get(getCtx(), org.compiere.model.I_C_BPartner.Table_Name)
+			.getPO(getDest_Partner_ID(), get_TrxName());	}
+
+	/** Set Destination Org Business Partner.
+		@param Dest_Partner_ID Destination Org Business Partner	  */
+	public void setDest_Partner_ID (int Dest_Partner_ID)
+	{
+		if (Dest_Partner_ID < 1) 
+			set_Value (COLUMNNAME_Dest_Partner_ID, null);
+		else 
+			set_Value (COLUMNNAME_Dest_Partner_ID, Integer.valueOf(Dest_Partner_ID));
+	}
+
+	/** Get Destination Org Business Partner.
+		@return Destination Org Business Partner	  */
+	public int getDest_Partner_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Dest_Partner_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_Project getDest_Project() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Project)MTable.get(getCtx(), org.compiere.model.I_C_Project.Table_Name)
+			.getPO(getDest_Project_ID(), get_TrxName());	}
+
+	/** Set Destination Org Project.
+		@param Dest_Project_ID Destination Org Project	  */
+	public void setDest_Project_ID (int Dest_Project_ID)
+	{
+		if (Dest_Project_ID < 1) 
+			set_Value (COLUMNNAME_Dest_Project_ID, null);
+		else 
+			set_Value (COLUMNNAME_Dest_Project_ID, Integer.valueOf(Dest_Project_ID));
+	}
+
+	/** Get Destination Org Project.
+		@return Destination Org Project	  */
+	public int getDest_Project_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Dest_Project_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	/** Bidirection = B */
 	public static final String DIRECTION_Bidirection = "B";
 	/** Only Source Org Pays to Destination Org = O */
@@ -182,31 +208,6 @@ public class X_TF_OrgCashTransfer_Config extends PO implements I_TF_OrgCashTrans
 	public String getDirection () 
 	{
 		return (String)get_Value(COLUMNNAME_Direction);
-	}
-
-	public org.compiere.model.I_C_ElementValue getSrc_Acct() throws RuntimeException
-    {
-		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
-			.getPO(getSrc_Acct_ID(), get_TrxName());	}
-
-	/** Set Source Org Account.
-		@param Src_Acct_ID Source Org Account	  */
-	public void setSrc_Acct_ID (int Src_Acct_ID)
-	{
-		if (Src_Acct_ID < 1) 
-			set_Value (COLUMNNAME_Src_Acct_ID, null);
-		else 
-			set_Value (COLUMNNAME_Src_Acct_ID, Integer.valueOf(Src_Acct_ID));
-	}
-
-	/** Get Source Org Account.
-		@return Source Org Account	  */
-	public int getSrc_Acct_ID () 
-	{
-		Integer ii = (Integer)get_Value(COLUMNNAME_Src_Acct_ID);
-		if (ii == null)
-			 return 0;
-		return ii.intValue();
 	}
 
 	public org.compiere.model.I_C_BankAccount getSrc_BankAccount() throws RuntimeException
@@ -254,37 +255,62 @@ public class X_TF_OrgCashTransfer_Config extends PO implements I_TF_OrgCashTrans
 		return ii.intValue();
 	}
 
-	/** Set Inter Org Cash Transfer.
-		@param TF_OrgCashTransfer_Config_ID Inter Org Cash Transfer	  */
-	public void setTF_OrgCashTransfer_Config_ID (int TF_OrgCashTransfer_Config_ID)
+	public org.compiere.model.I_C_BPartner getSrc_Partner() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_BPartner)MTable.get(getCtx(), org.compiere.model.I_C_BPartner.Table_Name)
+			.getPO(getSrc_Partner_ID(), get_TrxName());	}
+
+	/** Set Source Org Business Partner.
+		@param Src_Partner_ID Source Org Business Partner	  */
+	public void setSrc_Partner_ID (int Src_Partner_ID)
 	{
-		if (TF_OrgCashTransfer_Config_ID < 1) 
-			set_ValueNoCheck (COLUMNNAME_TF_OrgCashTransfer_Config_ID, null);
+		if (Src_Partner_ID < 1) 
+			set_Value (COLUMNNAME_Src_Partner_ID, null);
 		else 
-			set_ValueNoCheck (COLUMNNAME_TF_OrgCashTransfer_Config_ID, Integer.valueOf(TF_OrgCashTransfer_Config_ID));
+			set_Value (COLUMNNAME_Src_Partner_ID, Integer.valueOf(Src_Partner_ID));
 	}
 
-	/** Get Inter Org Cash Transfer.
-		@return Inter Org Cash Transfer	  */
-	public int getTF_OrgCashTransfer_Config_ID () 
+	/** Get Source Org Business Partner.
+		@return Source Org Business Partner	  */
+	public int getSrc_Partner_ID () 
 	{
-		Integer ii = (Integer)get_Value(COLUMNNAME_TF_OrgCashTransfer_Config_ID);
+		Integer ii = (Integer)get_Value(COLUMNNAME_Src_Partner_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
 	}
 
-	/** Set TF_OrgCashTransfer_Config_UU.
-		@param TF_OrgCashTransfer_Config_UU TF_OrgCashTransfer_Config_UU	  */
-	public void setTF_OrgCashTransfer_Config_UU (String TF_OrgCashTransfer_Config_UU)
+	/** Set Inter Organization BP Cash Transfer.
+		@param TF_OrgBPCashTransfer_Config_ID Inter Organization BP Cash Transfer	  */
+	public void setTF_OrgBPCashTransfer_Config_ID (int TF_OrgBPCashTransfer_Config_ID)
 	{
-		set_ValueNoCheck (COLUMNNAME_TF_OrgCashTransfer_Config_UU, TF_OrgCashTransfer_Config_UU);
+		if (TF_OrgBPCashTransfer_Config_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_TF_OrgBPCashTransfer_Config_ID, null);
+		else 
+			set_ValueNoCheck (COLUMNNAME_TF_OrgBPCashTransfer_Config_ID, Integer.valueOf(TF_OrgBPCashTransfer_Config_ID));
 	}
 
-	/** Get TF_OrgCashTransfer_Config_UU.
-		@return TF_OrgCashTransfer_Config_UU	  */
-	public String getTF_OrgCashTransfer_Config_UU () 
+	/** Get Inter Organization BP Cash Transfer.
+		@return Inter Organization BP Cash Transfer	  */
+	public int getTF_OrgBPCashTransfer_Config_ID () 
 	{
-		return (String)get_Value(COLUMNNAME_TF_OrgCashTransfer_Config_UU);
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_OrgBPCashTransfer_Config_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Set TF_OrgBPCashTransfer_Config_UU.
+		@param TF_OrgBPCashTransfer_Config_UU TF_OrgBPCashTransfer_Config_UU	  */
+	public void setTF_OrgBPCashTransfer_Config_UU (String TF_OrgBPCashTransfer_Config_UU)
+	{
+		set_ValueNoCheck (COLUMNNAME_TF_OrgBPCashTransfer_Config_UU, TF_OrgBPCashTransfer_Config_UU);
+	}
+
+	/** Get TF_OrgBPCashTransfer_Config_UU.
+		@return TF_OrgBPCashTransfer_Config_UU	  */
+	public String getTF_OrgBPCashTransfer_Config_UU () 
+	{
+		return (String)get_Value(COLUMNNAME_TF_OrgBPCashTransfer_Config_UU);
 	}
 }

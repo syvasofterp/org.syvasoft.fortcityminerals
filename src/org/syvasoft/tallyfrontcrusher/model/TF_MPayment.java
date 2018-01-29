@@ -467,6 +467,122 @@ public class TF_MPayment extends MPayment {
 		return (Timestamp)get_Value(COLUMNNAME_DateBankTrx);
 	}
 
+	/** Column name IsInterOrgBPCashTransferX */
+    public static final String COLUMNNAME_IsInterOrgBPCashTransferX = "IsInterOrgBPCashTransferX";
+    /** Set Inter Org BP Cash Transfer X.
+	@param IsInterOrgBPCashTransferX Inter Org BP Cash Transfer X	  */
+	public void setIsInterOrgBPCashTransferX (boolean IsInterOrgBPCashTransferX)
+	{
+		set_Value (COLUMNNAME_IsInterOrgBPCashTransferX, Boolean.valueOf(IsInterOrgBPCashTransferX));
+	}
+	
+	/** Get Inter Org BP Cash Transfer X.
+		@return Inter Org BP Cash Transfer X	  */
+	public boolean isInterOrgBPCashTransferX () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsInterOrgBPCashTransferX);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+	
+	 /** Column name IsInterOrgCashTransferX */
+    public static final String COLUMNNAME_IsInterOrgCashTransferX = "IsInterOrgCashTransferX";
+    /** Set Inter Org Cash Transfer X.
+	@param IsInterOrgCashTransferX Inter Org Cash Transfer X	  */
+	public void setIsInterOrgCashTransferX (boolean IsInterOrgCashTransferX)
+	{
+		set_Value (COLUMNNAME_IsInterOrgCashTransferX, Boolean.valueOf(IsInterOrgCashTransferX));
+	}
+	
+	/** Get Inter Org Cash Transfer X.
+		@return Inter Org Cash Transfer X	  */
+	public boolean isInterOrgCashTransferX () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsInterOrgCashTransferX);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	/** Column name Ref2_Payment_ID */
+    public static final String COLUMNNAME_Ref2_Payment_ID = "Ref2_Payment_ID";
+    public org.compiere.model.I_C_Payment getRef2_Payment() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Payment)MTable.get(getCtx(), org.compiere.model.I_C_Payment.Table_Name)
+			.getPO(getRef2_Payment_ID(), get_TrxName());	}
+
+	/** Set Additional Cash Transfer.
+		@param Ref2_Payment_ID Additional Cash Transfer	  */
+	public void setRef2_Payment_ID (int Ref2_Payment_ID)
+	{
+		if (Ref2_Payment_ID < 1) 
+			set_Value (COLUMNNAME_Ref2_Payment_ID, null);
+		else 
+			set_Value (COLUMNNAME_Ref2_Payment_ID, Integer.valueOf(Ref2_Payment_ID));
+	}
+
+	/** Get Additional Cash Transfer.
+		@return Additional Cash Transfer	  */
+	public int getRef2_Payment_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Ref2_Payment_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Column name TF_OrgBPCashTrans_Configx_ID */
+    public static final String COLUMNNAME_TF_OrgBPCashTrans_Configx_ID = "TF_OrgBPCashTrans_Configx_ID";
+    /** Set Additional BP Cash Transfer in Destination Org.
+	@param TF_OrgBPCashTrans_Configx_ID Additional BP Cash Transfer in Destination Org	  */
+	public void setTF_OrgBPCashTrans_Configx_ID (int TF_OrgBPCashTrans_Configx_ID)
+	{
+		if (TF_OrgBPCashTrans_Configx_ID < 1) 
+			set_Value (COLUMNNAME_TF_OrgBPCashTrans_Configx_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_OrgBPCashTrans_Configx_ID, Integer.valueOf(TF_OrgBPCashTrans_Configx_ID));
+	}
+	
+	/** Get Additional BP Cash Transfer in Destination Org.
+		@return Additional BP Cash Transfer in Destination Org	  */
+	public int getTF_OrgBPCashTrans_Configx_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_OrgBPCashTrans_Configx_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+	
+	/** Column name TF_OrgCashTransfer_Configx_ID */
+    public static final String COLUMNNAME_TF_OrgCashTransfer_Configx_ID = "TF_OrgCashTransfer_Configx_ID";
+    /** Set Destination Org Additional Cash Transfer.
+	@param TF_OrgCashTransfer_Configx_ID Destination Org Additional Cash Transfer	  */
+	public void setTF_OrgCashTransfer_Configx_ID (int TF_OrgCashTransfer_Configx_ID)
+	{
+		if (TF_OrgCashTransfer_Configx_ID < 1) 
+			set_Value (COLUMNNAME_TF_OrgCashTransfer_Configx_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_OrgCashTransfer_Configx_ID, Integer.valueOf(TF_OrgCashTransfer_Configx_ID));
+	}
+	
+	/** Get Destination Org Additional Cash Transfer.
+		@return Destination Org Additional Cash Transfer	  */
+	public int getTF_OrgCashTransfer_Configx_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_OrgCashTransfer_Configx_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
 	
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {
@@ -517,6 +633,7 @@ public class TF_MPayment extends MPayment {
 		String msg = super.completeIt();
 		createInterCashBookEntry();
 		createInterOrgCashBookEntry();
+		createInterOrgBPCashBookEntry();
 		if(isEmployee())
 			postAdvanceAdjustmentJournal();
 		return msg;
@@ -596,8 +713,18 @@ public class TF_MPayment extends MPayment {
 		if(counter.getDocStatus().equals(DOCSTATUS_Completed)){
 			 boolean ok = counter.reverseCorrectIt();
 			 counter.saveEx();
-			 return ok;
 		}
+		
+		if(getRef2_Payment_ID() == 0)
+			return true;
+		
+		//Additional Cash Transfer Reverse..
+		counter = new MPayment(getCtx(), getRef2_Payment_ID(), get_TrxName());
+		if(counter.getDocStatus().equals(DOCSTATUS_Completed)){
+			 boolean ok = counter.reverseCorrectIt();
+			 counter.saveEx();
+			 return ok;
+		}		
 		
 		return true;
 		
@@ -686,7 +813,7 @@ public class TF_MPayment extends MPayment {
 		
 		int counterOrgID=0;
 		int counterCashID=0;
-		int counterAcctID=0;
+		int counterAcctID=0;		
 		String whereClause = "Src_BankAccount_ID = ? AND Dest_Acct_ID = ? AND IsActive='Y'";
 		MInterOrgCashTransfer config = new Query(getCtx(), MInterOrgCashTransfer.Table_Name, whereClause, get_TrxName())
 				.setParameters(getC_BankAccount_ID(), getC_ElementValue_ID()).first();
@@ -697,19 +824,19 @@ public class TF_MPayment extends MPayment {
 			if(config != null) {
 				counterOrgID = config.getSrc_Org_ID();
 				counterCashID = config.getSrc_BankAccount_ID();
-				counterAcctID = config.getDest_Acct_ID();
+				counterAcctID = config.getDest_Acct_ID();				
 			}
 		}
 		else {
 			counterOrgID = config.getDest_Org_ID();
 			counterCashID = config.getDest_BankAccount_ID();
-			counterAcctID = config.getSrc_Acct_ID();
+			counterAcctID = config.getSrc_Acct_ID();			
 		}
 		
 		//It is not Inter Org Cash Transfer
 		if(config == null)
 			return;
-						
+		
 		
 		//It Is Inter Org Cash Transfer		
 		
@@ -723,8 +850,7 @@ public class TF_MPayment extends MPayment {
 			else
 				c_doctype_id = counterDoc.getC_DocType_ID();
 		}
-		
-		
+				
 		
 		TF_MPayment payment = new TF_MPayment(getCtx(), 0, get_TrxName());
 		payment.setAD_Org_ID(counterOrgID);
@@ -753,6 +879,151 @@ public class TF_MPayment extends MPayment {
 		
 		setRef_Payment_ID(payment.getC_Payment_ID());
 		
+		//Additional Cash Transfer in Destination Organization
+		if(getTF_OrgCashTransfer_Configx_ID() == 0)
+			return;
+		
+		MInterOrgCashTransferConfigLine ctConfig = new MInterOrgCashTransferConfigLine(getCtx(), getTF_OrgCashTransfer_Configx_ID(), get_TrxName());		
+		TF_MPayment payment2 = new TF_MPayment(getCtx(), 0, get_TrxName());
+		payment2.setAD_Org_ID(ctConfig.getDest_Org_ID());
+		payment2.setRef_Payment_ID(getRef_Payment_ID());
+		payment2.setRef2_Payment_ID(getC_Payment_ID());
+		payment2.setDateTrx(getDateTrx());
+		payment2.setDateAcct(getDateAcct());		
+		payment2.setC_BankAccount_ID(counterCashID);
+		payment2.setC_DocType_ID(ctConfig.getC_DocType_ID());
+		payment2.setIsReceipt(false);
+		payment2.setC_ElementValue_ID(ctConfig.getDest_Acct_ID());
+		charge = TF_MCharge.createChargeFromAccount(getCtx(), payment2.getC_ElementValue_ID(), null);
+		if(charge != null )
+			payment2.setC_Charge_ID(charge.get_ID());
+		payment2.setUser1_ID(getUser1_ID());
+		payment2.setUser2_ID(getUser2_ID());
+		payment2.setC_BPartner_ID(getC_BPartner_ID());		
+		payment2.setC_Currency_ID(getC_Currency_ID());
+		payment2.setPayAmt(getPayAmt());
+		payment2.setTenderType(getTenderType());
+		payment2.setDescription(getDescription());		
+		payment2.saveEx();
+		
+		if(!payment2.processIt(DocAction.ACTION_Complete))
+			throw new AdempiereException("Failed when processing document - " + payment2.getProcessMsg());
+		payment2.saveEx();
+		
+		setRef2_Payment_ID(payment2.getC_Payment_ID());
+		payment.setRef2_Payment_ID(payment2.getC_Payment_ID());
+		payment.saveEx();
+		
+	}
+	
+	public void createInterOrgBPCashBookEntry() {
+
+		if(getRef_Payment_ID() > 0)
+			return;						
+		
+		int counterOrgID=0;
+		int counterCashID=0;
+		int counterPartnerID = 0;
+		int counterProjectID = 0;
+		
+		MInterOrgBPCashTransferConfig config = MInterOrgBPCashTransferConfig.getConfig(getC_BankAccount_ID(), getTF_BPartner_ID()); 
+				
+		if(config != null) {
+			counterOrgID = config.getDest_Org_ID();
+			counterCashID = config.getDest_BankAccount_ID();
+			counterPartnerID = config.getSrc_Partner_ID();
+			counterProjectID = config.getDest_Project_ID();
+		}
+		
+		//It is not Inter Org BP Cash Transfer
+		if(config == null)
+			return;
+		
+		
+		//It Is Inter Org Cash Transfer		
+		
+		MDocTypeCounter counterDoc = new Query(getCtx(), MDocTypeCounter.Table_Name, "C_DocType_ID=? OR Counter_C_DocType_ID=?", null)
+				.setClient_ID().setParameters(getC_DocType_ID(), getC_DocType_ID()).first();
+		int c_doctype_id = 0;
+		
+		if(counterDoc != null ) {
+			if(getC_DocType_ID() == counterDoc.getC_DocType_ID())
+				c_doctype_id = counterDoc.getCounter_C_DocType_ID();
+			else
+				c_doctype_id = counterDoc.getC_DocType_ID();
+		}
+				
+		
+		TF_MPayment payment = new TF_MPayment(getCtx(), 0, get_TrxName());
+		payment.setAD_Org_ID(counterOrgID);
+		payment.setRef_Payment_ID(getC_Payment_ID());
+		payment.setDateTrx(getDateTrx());
+		payment.setDateAcct(getDateAcct());		
+		payment.setC_BankAccount_ID(counterCashID);
+		payment.setC_DocType_ID(c_doctype_id);
+		payment.setIsReceipt(!isReceipt());
+		payment.setTF_BPartner_ID(counterPartnerID);
+		payment.setC_BPartner_ID(counterPartnerID);		
+		TF_MCharge charge = TF_MCharge.createChargeFromAccount(getCtx(), payment.getC_ElementValue_ID(), null);
+		if(charge != null )
+			payment.setC_Charge_ID(charge.get_ID());		
+		payment.setUser1_ID(getUser1_ID());
+		payment.setUser2_ID(getUser2_ID());
+		payment.setC_Project_ID(counterProjectID);
+		payment.setC_Currency_ID(getC_Currency_ID());
+		payment.setPayAmt(getPayAmt());
+		payment.setTenderType(getTenderType());
+		payment.setDescription(getDescription());		
+		payment.saveEx();
+		
+		if(!payment.processIt(DocAction.ACTION_Complete))
+			throw new AdempiereException("Failed when processing document - " + payment.getProcessMsg());
+		payment.saveEx();
+		
+		setRef_Payment_ID(payment.getC_Payment_ID());
+		
+		//Additional BP Cash Transfer in Destination Organization
+		if(getTF_OrgBPCashTrans_Configx_ID() == 0)
+			return;
+		
+		MInterOrgBPCashTransferConfigLine ctConfig = new MInterOrgBPCashTransferConfigLine(getCtx(), getTF_OrgBPCashTrans_Configx_ID(), get_TrxName());		
+		TF_MPayment payment2 = new TF_MPayment(getCtx(), 0, get_TrxName());
+		payment2.setAD_Org_ID(ctConfig.getDest_Org_ID());
+		payment2.setRef_Payment_ID(getRef_Payment_ID());
+		payment2.setRef2_Payment_ID(getC_Payment_ID());
+		payment2.setDateTrx(getDateTrx());
+		payment2.setDateAcct(getDateAcct());		
+		payment2.setC_BankAccount_ID(counterCashID);
+		payment2.setC_DocType_ID(ctConfig.getC_DocType_ID());
+		payment2.setIsReceipt(false);
+		payment2.setC_ElementValue_ID(ctConfig.getDest_Acct_ID());		
+		charge = TF_MCharge.createChargeFromAccount(getCtx(), payment2.getC_ElementValue_ID(), null);
+		if(charge != null )
+			payment2.setC_Charge_ID(charge.get_ID());
+		payment2.setUser1_ID(getUser1_ID());
+		payment2.setUser2_ID(getUser2_ID());
+		payment2.setC_Project_ID(counterProjectID);
+		if(ctConfig.getDest_Partner_ID() > 0) {
+			payment2.setC_BPartner_ID(ctConfig.getDest_Partner_ID());
+			payment2.setTF_BPartner_ID(ctConfig.getDest_Partner_ID());
+			payment2.setIsEmployee(true);
+		}
+		else {
+			payment2.setC_BPartner_ID(getC_BPartner_ID());
+		}
+		payment2.setC_Currency_ID(getC_Currency_ID());
+		payment2.setPayAmt(getPayAmt());
+		payment2.setTenderType(getTenderType());
+		payment2.setDescription(getDescription());		
+		payment2.saveEx();
+		
+		if(!payment2.processIt(DocAction.ACTION_Complete))
+			throw new AdempiereException("Failed when processing document - " + payment2.getProcessMsg());
+		payment2.saveEx();
+		
+		setRef2_Payment_ID(payment2.getC_Payment_ID());
+		payment.setRef2_Payment_ID(payment2.getC_Payment_ID());
+		payment.saveEx();
 	}
 	
 		

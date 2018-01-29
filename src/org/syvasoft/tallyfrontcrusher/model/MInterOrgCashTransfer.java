@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.util.Properties;
 
 import org.compiere.model.MOrg;
+import org.compiere.model.Query;
+import org.compiere.util.Env;
 
 public class MInterOrgCashTransfer extends X_TF_OrgCashTransfer_Config {
 
@@ -50,6 +52,27 @@ public class MInterOrgCashTransfer extends X_TF_OrgCashTransfer_Config {
 		return super.afterSave(newRecord, success);
 	}
 	
-		
+	public static MInterOrgCashTransfer getConfig(int Src_BankAccount_ID, int Dest_Account_ID) {
+		String whereClause = "Src_BankAccount_ID = ? AND Dest_Acct_ID = ? AND IsActive='Y'";
+		MInterOrgCashTransfer config = new Query(Env.getCtx(), MInterOrgCashTransfer.Table_Name, whereClause, null)
+				.setParameters(Src_BankAccount_ID, Dest_Account_ID).first();
+		if(config == null) {
+			whereClause = "Dest_BankAccount_ID = ? AND Src_Acct_ID = ? AND Direction='B' AND IsActive='Y'";
+			config = new Query(Env.getCtx(), MInterOrgCashTransfer.Table_Name, whereClause, null)
+					.setParameters(Src_BankAccount_ID, Dest_Account_ID).first();
+			if(config != null) {
+				return config;
+			}
+		}		
+		return config;
+	}
 	
+	public static MInterOrgCashTransferConfigLine getDefaultAddionalCashTransfer(int Src_BankAccount_ID, int Dest_Account_ID, boolean onlyDefault) {
+		String whereClause = " TF_OrgCashTransfer_Config_ID IN (SELECT TF_OrgCashTransfer_Config_ID FROM "
+				+ " TF_OrgCashTransfer_Config WHERE Src_BankAccount_ID = ? AND Dest_Acct_ID = ? AND IsActive = 'Y' AND Direction = 'O' ) "
+				+ " AND IsActive= 'Y' " + (onlyDefault ? " AND IsDefault='Y'" : "" );
+		MInterOrgCashTransferConfigLine config = new Query(Env.getCtx(), MInterOrgCashTransferConfigLine.Table_Name, whereClause, null)
+				.setClient_ID().setParameters(Src_BankAccount_ID, Dest_Account_ID).first();
+		return config;
+	}
 }

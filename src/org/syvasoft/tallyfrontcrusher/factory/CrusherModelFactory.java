@@ -41,6 +41,9 @@ import org.syvasoft.tallyfrontcrusher.model.MLabourWage;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWageAdvance;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWageConfig;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWageIssue;
+import org.syvasoft.tallyfrontcrusher.model.MInterOrgBPCashTransferConfig;
+import org.syvasoft.tallyfrontcrusher.model.MInterOrgBPCashTransferConfigLine;
+import org.syvasoft.tallyfrontcrusher.model.MInterOrgCashTransferConfigLine;
 import org.syvasoft.tallyfrontcrusher.model.MPermitLedger;
 import org.syvasoft.tallyfrontcrusher.model.MPermitLedgerLine;
 import org.syvasoft.tallyfrontcrusher.model.MQuarry;
@@ -236,6 +239,12 @@ public class CrusherModelFactory implements IModelFactory {
 			return MJobworkAssignedVehicle.class;
 		else if(MKatingEntry.Table_Name.equals(tableName))
 			return MKatingEntry.class;
+		else if(MInterOrgCashTransferConfigLine.Table_Name.equals(tableName)) 
+			return MInterOrgCashTransferConfigLine.class;
+		else if(MInterOrgBPCashTransferConfig.Table_Name.equals(tableName))
+			return MInterOrgBPCashTransferConfig.class;
+		else if(MInterOrgBPCashTransferConfigLine.Table_Name.equals(tableName))
+			return MInterOrgBPCashTransferConfigLine.class;		
 		return null;
 	}
 
@@ -392,6 +401,12 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MJobworkAssignedVehicle(ctx, Record_ID, trxName);
 		else if(MKatingEntry.Table_Name.equals(tableName))
 			return new MKatingEntry(ctx, Record_ID, trxName);
+		else if(MInterOrgCashTransferConfigLine.Table_Name.equals(tableName)) 
+			return new MInterOrgCashTransferConfigLine(ctx, Record_ID, trxName);
+		else if(MInterOrgBPCashTransferConfig.Table_Name.equals(tableName))
+			return new MInterOrgBPCashTransferConfig(ctx, Record_ID, trxName);
+		else if(MInterOrgBPCashTransferConfigLine.Table_Name.equals(tableName))
+			return new MInterOrgBPCashTransferConfigLine(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -548,6 +563,12 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MJobworkAssignedVehicle(ctx, rs, trxName);
 		else if(MKatingEntry.Table_Name.equals(tableName))
 			return new MKatingEntry(ctx, rs, trxName);
+		else if(MInterOrgCashTransferConfigLine.Table_Name.equals(tableName)) 
+			return new MInterOrgCashTransferConfigLine(ctx, rs, trxName);
+		else if(MInterOrgBPCashTransferConfig.Table_Name.equals(tableName))
+			return new MInterOrgBPCashTransferConfig(ctx, rs, trxName);
+		else if(MInterOrgBPCashTransferConfigLine.Table_Name.equals(tableName))
+			return new MInterOrgBPCashTransferConfigLine(ctx, rs, trxName);
 		return null;
 	}
 

@@ -10,6 +10,9 @@ import org.compiere.model.GridTab;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
 import org.syvasoft.tallyfrontcrusher.model.MGLPostingConfig;
+import org.syvasoft.tallyfrontcrusher.model.MInterOrgBPCashTransferConfigLine;
+import org.syvasoft.tallyfrontcrusher.model.MInterOrgCashTransfer;
+import org.syvasoft.tallyfrontcrusher.model.MInterOrgCashTransferConfigLine;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkAssignedAccount;
 import org.syvasoft.tallyfrontcrusher.model.TF_MElementValue;
 import org.syvasoft.tallyfrontcrusher.model.TF_MPayment;
@@ -90,6 +93,23 @@ public class CalloutPayment_ElementValue implements IColumnCallout {
 		mTab.setValue(TF_MPayment.COLUMNNAME_Salary_Amt, salaryAmt);
 		mTab.setValue(TF_MPayment.COLUMNNAME_Advance_Paid, advancePaid);
 		
+		
+		//Inter Org Cash Additional Transfer
+		boolean isInterOrgCash = false;
+		mTab.setValue(TF_MPayment.COLUMNNAME_IsInterOrgCashTransferX, isInterOrgCash);
+		mTab.setValue(TF_MPayment.COLUMNNAME_TF_OrgCashTransfer_Configx_ID, null);
+		if(!isReceipt && acct_id > 0){
+			int C_BankAccount_ID = (int) mTab.getValue(TF_MPayment.COLUMNNAME_C_BankAccount_ID);
+			MInterOrgCashTransferConfigLine config = MInterOrgCashTransfer.getDefaultAddionalCashTransfer(C_BankAccount_ID, acct_id, false);
+			if(config != null) {
+				isInterOrgCash = true;
+				config = MInterOrgCashTransfer.getDefaultAddionalCashTransfer(C_BankAccount_ID, acct_id, true);
+				if(config != null)
+					mTab.setValue(TF_MPayment.COLUMNNAME_TF_OrgCashTransfer_Configx_ID, config.getTF_OrgCashTransfer_Configx_ID());
+				
+				mTab.setValue(TF_MPayment.COLUMNNAME_IsInterOrgCashTransferX, isInterOrgCash);
+			}			
+		}
 		return null;
 	}
 
