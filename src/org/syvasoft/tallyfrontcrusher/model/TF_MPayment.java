@@ -584,6 +584,36 @@ public class TF_MPayment extends MPayment {
 		return ii.intValue();
 	}
 	
+	/** Column name C_ElementValuePayTo_ID */
+    public static final String COLUMNNAME_C_ElementValuePayTo_ID = "C_ElementValuePayTo_ID";
+    public org.compiere.model.I_C_ElementValue getC_ElementValuePayTo() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getC_ElementValuePayTo_ID(), get_TrxName());	}
+
+	/** Set Pay to.
+		@param C_ElementValuePayTo_ID 
+		Additional Cash Book Transfer
+	  */
+	public void setC_ElementValuePayTo_ID (int C_ElementValuePayTo_ID)
+	{
+		if (C_ElementValuePayTo_ID < 1) 
+			set_Value (COLUMNNAME_C_ElementValuePayTo_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_ElementValuePayTo_ID, Integer.valueOf(C_ElementValuePayTo_ID));
+	}
+
+	/** Get Pay to.
+		@return Additional Cash Book Transfer
+	  */
+	public int getC_ElementValuePayTo_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_ElementValuePayTo_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+	
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {
 		
@@ -634,6 +664,7 @@ public class TF_MPayment extends MPayment {
 		createInterCashBookEntry();
 		createInterOrgCashBookEntry();
 		createInterOrgBPCashBookEntry();
+		createPayToCashBookEntry();
 		if(isEmployee())
 			postAdvanceAdjustmentJournal();
 		return msg;
@@ -1024,6 +1055,47 @@ public class TF_MPayment extends MPayment {
 		setRef2_Payment_ID(payment2.getC_Payment_ID());
 		payment.setRef2_Payment_ID(payment2.getC_Payment_ID());
 		payment.saveEx();
+	}
+	
+	public void createPayToCashBookEntry() {
+		if(getRef_Payment_ID() > 0 || getC_ElementValuePayTo_ID() == 0)
+			return;
+		
+		MDocTypeCounter counterDoc = new Query(getCtx(), MDocTypeCounter.Table_Name, "C_DocType_ID=? OR Counter_C_DocType_ID=?", null)
+				.setClient_ID().setParameters(getC_DocType_ID(), getC_DocType_ID()).first();
+		int c_doctype_id = 0;
+		
+		if(counterDoc != null ) {
+			if(getC_DocType_ID() == counterDoc.getC_DocType_ID())
+				c_doctype_id = counterDoc.getCounter_C_DocType_ID();
+			else
+				c_doctype_id = counterDoc.getC_DocType_ID();
+		}
+		
+		TF_MPayment payment = new TF_MPayment(getCtx(), 0, get_TrxName());
+		payment.setAD_Org_ID(getAD_Org_ID());
+		payment.setRef_Payment_ID(getC_Payment_ID());
+		payment.setDateTrx(getDateTrx());
+		payment.setDateAcct(getDateAcct());		
+		payment.setC_BankAccount_ID(getC_BankAccount_ID());
+		payment.setC_DocType_ID(c_doctype_id);
+		payment.setIsReceipt(!isReceipt());
+		payment.setC_ElementValue_ID(getC_ElementValuePayTo_ID());
+		payment.setUser1_ID(getUser1_ID());
+		payment.setUser2_ID(getUser2_ID());
+		payment.setC_Project_ID(getC_Project_ID());
+		payment.setC_BPartner_ID(getC_BPartner_ID());		
+		payment.setC_Currency_ID(getC_Currency_ID());
+		payment.setPayAmt(getPayAmt());
+		payment.setTenderType(getTenderType());
+		payment.setDescription(getDescription());		
+		payment.saveEx();
+		
+		if(!payment.processIt(DocAction.ACTION_Complete))
+			throw new AdempiereException("Failed when processing document - " + payment.getProcessMsg());
+		payment.saveEx();
+		
+		setRef_Payment_ID(payment.getC_Payment_ID());
 	}
 	
 		
