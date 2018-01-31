@@ -11,6 +11,7 @@ import org.compiere.model.MJournalLine;
 import org.compiere.model.MPayment;
 import org.compiere.model.MPeriod;
 import org.compiere.model.MTable;
+import org.compiere.model.MUser;
 import org.compiere.model.Query;
 import org.compiere.process.DocAction;
 import org.compiere.util.DB;
@@ -1040,7 +1041,9 @@ public class TF_MPayment extends MPayment {
 			payment2.setIsEmployee(true);
 		}
 		else {
-			payment2.setC_BPartner_ID(getC_BPartner_ID());
+			MUser user = MUser.get(getCtx(), Env.getAD_User_ID(Env.getCtx()));				
+			int bPartnerID = user.getC_BPartner_ID();
+			payment2.setC_BPartner_ID(bPartnerID);
 		}
 		payment2.setC_Currency_ID(getC_Currency_ID());
 		payment2.setPayAmt(getPayAmt());
@@ -1084,7 +1087,9 @@ public class TF_MPayment extends MPayment {
 		payment.setUser1_ID(getUser1_ID());
 		payment.setUser2_ID(getUser2_ID());
 		payment.setC_Project_ID(getC_Project_ID());
-		payment.setC_BPartner_ID(getC_BPartner_ID());		
+		MUser user = MUser.get(getCtx(), Env.getAD_User_ID(Env.getCtx()));				
+		int bPartnerID = user.getC_BPartner_ID();
+		payment.setC_BPartner_ID(bPartnerID);
 		payment.setC_Currency_ID(getC_Currency_ID());
 		payment.setPayAmt(getPayAmt());
 		payment.setTenderType(getTenderType());
