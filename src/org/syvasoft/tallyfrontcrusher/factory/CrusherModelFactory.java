@@ -69,8 +69,12 @@ import org.syvasoft.tallyfrontcrusher.model.MVehicleRentalContract;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleType;
 import org.syvasoft.tallyfrontcrusher.model.MWeighmentEntry;
 import org.syvasoft.tallyfrontcrusher.model.MWeighmentErrorLog;
+import org.syvasoft.tallyfrontcrusher.model.MYardCustomerVehicle;
 import org.syvasoft.tallyfrontcrusher.model.MYardEntry;
 import org.syvasoft.tallyfrontcrusher.model.MYardEntryConfig;
+import org.syvasoft.tallyfrontcrusher.model.MYardLoadConfig;
+import org.syvasoft.tallyfrontcrusher.model.MYardLoadEntry;
+import org.syvasoft.tallyfrontcrusher.model.MYardPermitIssueEntry;
 import org.syvasoft.tallyfrontcrusher.model.TF_MBPartner;
 import org.syvasoft.tallyfrontcrusher.model.TF_MBankAccount;
 import org.syvasoft.tallyfrontcrusher.model.TF_MCharge;
@@ -244,7 +248,15 @@ public class CrusherModelFactory implements IModelFactory {
 		else if(MInterOrgBPCashTransferConfig.Table_Name.equals(tableName))
 			return MInterOrgBPCashTransferConfig.class;
 		else if(MInterOrgBPCashTransferConfigLine.Table_Name.equals(tableName))
-			return MInterOrgBPCashTransferConfigLine.class;		
+			return MInterOrgBPCashTransferConfigLine.class;	
+		else if(MYardLoadConfig.Table_Name.equals(tableName))
+			return MYardLoadConfig.class;
+		else if(MYardCustomerVehicle.Table_Name.equals(tableName))
+			return MYardCustomerVehicle.class;
+		else if(MYardLoadEntry.Table_Name.equals(tableName))
+			return MYardLoadEntry.class;
+		else if(MYardPermitIssueEntry.Table_Name.equals(tableName))
+			return MYardPermitIssueEntry.class;
 		return null;
 	}
 
@@ -407,6 +419,14 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MInterOrgBPCashTransferConfig(ctx, Record_ID, trxName);
 		else if(MInterOrgBPCashTransferConfigLine.Table_Name.equals(tableName))
 			return new MInterOrgBPCashTransferConfigLine(ctx, Record_ID, trxName);
+		else if(MYardLoadConfig.Table_Name.equals(tableName))
+			return new MYardLoadConfig(ctx, Record_ID, trxName);
+		else if(MYardCustomerVehicle.Table_Name.equals(tableName))
+			return new MYardCustomerVehicle(ctx, Record_ID, trxName);
+		else if(MYardLoadEntry.Table_Name.equals(tableName))
+			return new MYardLoadEntry(ctx, Record_ID, trxName);
+		else if(MYardPermitIssueEntry.Table_Name.equals(tableName))
+			return new MYardPermitIssueEntry(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -569,6 +589,14 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MInterOrgBPCashTransferConfig(ctx, rs, trxName);
 		else if(MInterOrgBPCashTransferConfigLine.Table_Name.equals(tableName))
 			return new MInterOrgBPCashTransferConfigLine(ctx, rs, trxName);
+		else if(MYardLoadConfig.Table_Name.equals(tableName))
+			return new MYardLoadConfig(ctx, rs, trxName);
+		else if(MYardCustomerVehicle.Table_Name.equals(tableName))
+			return new MYardCustomerVehicle(ctx, rs, trxName);
+		else if(MYardLoadEntry.Table_Name.equals(tableName))
+			return new MYardLoadEntry(ctx, rs, trxName);
+		else if(MYardPermitIssueEntry.Table_Name.equals(tableName))
+			return new MYardPermitIssueEntry(ctx, rs, trxName);
 		return null;
 	}
 

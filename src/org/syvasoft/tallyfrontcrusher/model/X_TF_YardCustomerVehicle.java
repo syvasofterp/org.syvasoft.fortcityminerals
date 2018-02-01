@@ -23,10 +23,10 @@ import java.util.Properties;
 import org.compiere.model.*;
 import org.compiere.util.Env;
 
-/** Generated Model for TF_YardEntry_Config
+/** Generated Model for TF_YardCustomerVehicle
  *  @author iDempiere (generated) 
  *  @version Release 4.1 - $Id$ */
-public class X_TF_YardEntry_Config extends PO implements I_TF_YardEntry_Config, I_Persistent 
+public class X_TF_YardCustomerVehicle extends PO implements I_TF_YardCustomerVehicle, I_Persistent 
 {
 
 	/**
@@ -35,18 +35,19 @@ public class X_TF_YardEntry_Config extends PO implements I_TF_YardEntry_Config, 
 	private static final long serialVersionUID = 20180201L;
 
     /** Standard Constructor */
-    public X_TF_YardEntry_Config (Properties ctx, int TF_YardEntry_Config_ID, String trxName)
+    public X_TF_YardCustomerVehicle (Properties ctx, int TF_YardCustomerVehicle_ID, String trxName)
     {
-      super (ctx, TF_YardEntry_Config_ID, trxName);
-      /** if (TF_YardEntry_Config_ID == 0)
+      super (ctx, TF_YardCustomerVehicle_ID, trxName);
+      /** if (TF_YardCustomerVehicle_ID == 0)
         {
 			setTF_VehicleType_ID (0);
-			setTF_YardEntry_Config_ID (0);
+			setTF_YardCustomerVehicle_ID (0);
+			setVehicleNo (null);
         } */
     }
 
     /** Load Constructor */
-    public X_TF_YardEntry_Config (Properties ctx, ResultSet rs, String trxName)
+    public X_TF_YardCustomerVehicle (Properties ctx, ResultSet rs, String trxName)
     {
       super (ctx, rs, trxName);
     }
@@ -68,26 +69,37 @@ public class X_TF_YardEntry_Config extends PO implements I_TF_YardEntry_Config, 
 
     public String toString()
     {
-      StringBuffer sb = new StringBuffer ("X_TF_YardEntry_Config[")
+      StringBuffer sb = new StringBuffer ("X_TF_YardCustomerVehicle[")
         .append(get_ID()).append("]");
       return sb.toString();
     }
 
-	/** Set Extra Bucket Price.
-		@param ExtraBucketPrice Extra Bucket Price	  */
-	public void setExtraBucketPrice (BigDecimal ExtraBucketPrice)
+	public org.compiere.model.I_C_BPartner getC_BPartner() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_BPartner)MTable.get(getCtx(), org.compiere.model.I_C_BPartner.Table_Name)
+			.getPO(getC_BPartner_ID(), get_TrxName());	}
+
+	/** Set Business Partner .
+		@param C_BPartner_ID 
+		Identifies a Business Partner
+	  */
+	public void setC_BPartner_ID (int C_BPartner_ID)
 	{
-		set_Value (COLUMNNAME_ExtraBucketPrice, ExtraBucketPrice);
+		if (C_BPartner_ID < 1) 
+			set_Value (COLUMNNAME_C_BPartner_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_BPartner_ID, Integer.valueOf(C_BPartner_ID));
 	}
 
-	/** Get Extra Bucket Price.
-		@return Extra Bucket Price	  */
-	public BigDecimal getExtraBucketPrice () 
+	/** Get Business Partner .
+		@return Identifies a Business Partner
+	  */
+	public int getC_BPartner_ID () 
 	{
-		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_ExtraBucketPrice);
-		if (bd == null)
-			 return Env.ZERO;
-		return bd;
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_BPartner_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	/** Set Permit Price.
@@ -132,54 +144,51 @@ public class X_TF_YardEntry_Config extends PO implements I_TF_YardEntry_Config, 
 		return ii.intValue();
 	}
 
-	/** Set Yard Entry Configuration.
-		@param TF_YardEntry_Config_ID Yard Entry Configuration	  */
-	public void setTF_YardEntry_Config_ID (int TF_YardEntry_Config_ID)
+	/** Set Yard Customer Vehicle.
+		@param TF_YardCustomerVehicle_ID Yard Customer Vehicle	  */
+	public void setTF_YardCustomerVehicle_ID (int TF_YardCustomerVehicle_ID)
 	{
-		if (TF_YardEntry_Config_ID < 1) 
-			set_ValueNoCheck (COLUMNNAME_TF_YardEntry_Config_ID, null);
+		if (TF_YardCustomerVehicle_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_TF_YardCustomerVehicle_ID, null);
 		else 
-			set_ValueNoCheck (COLUMNNAME_TF_YardEntry_Config_ID, Integer.valueOf(TF_YardEntry_Config_ID));
+			set_ValueNoCheck (COLUMNNAME_TF_YardCustomerVehicle_ID, Integer.valueOf(TF_YardCustomerVehicle_ID));
 	}
 
-	/** Get Yard Entry Configuration.
-		@return Yard Entry Configuration	  */
-	public int getTF_YardEntry_Config_ID () 
+	/** Get Yard Customer Vehicle.
+		@return Yard Customer Vehicle	  */
+	public int getTF_YardCustomerVehicle_ID () 
 	{
-		Integer ii = (Integer)get_Value(COLUMNNAME_TF_YardEntry_Config_ID);
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_YardCustomerVehicle_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
 	}
 
-	/** Set TF_YardEntry_Config_UU.
-		@param TF_YardEntry_Config_UU TF_YardEntry_Config_UU	  */
-	public void setTF_YardEntry_Config_UU (String TF_YardEntry_Config_UU)
+	/** Set TF_YardCustomerVehicle_UU.
+		@param TF_YardCustomerVehicle_UU TF_YardCustomerVehicle_UU	  */
+	public void setTF_YardCustomerVehicle_UU (String TF_YardCustomerVehicle_UU)
 	{
-		set_ValueNoCheck (COLUMNNAME_TF_YardEntry_Config_UU, TF_YardEntry_Config_UU);
+		set_ValueNoCheck (COLUMNNAME_TF_YardCustomerVehicle_UU, TF_YardCustomerVehicle_UU);
 	}
 
-	/** Get TF_YardEntry_Config_UU.
-		@return TF_YardEntry_Config_UU	  */
-	public String getTF_YardEntry_Config_UU () 
+	/** Get TF_YardCustomerVehicle_UU.
+		@return TF_YardCustomerVehicle_UU	  */
+	public String getTF_YardCustomerVehicle_UU () 
 	{
-		return (String)get_Value(COLUMNNAME_TF_YardEntry_Config_UU);
+		return (String)get_Value(COLUMNNAME_TF_YardCustomerVehicle_UU);
 	}
 
-	/** Set W/P Price.
-		@param WpPrice W/P Price	  */
-	public void setWpPrice (BigDecimal WpPrice)
+	/** Set Vehicle No.
+		@param VehicleNo Vehicle No	  */
+	public void setVehicleNo (String VehicleNo)
 	{
-		set_Value (COLUMNNAME_WpPrice, WpPrice);
+		set_Value (COLUMNNAME_VehicleNo, VehicleNo);
 	}
 
-	/** Get W/P Price.
-		@return W/P Price	  */
-	public BigDecimal getWpPrice () 
+	/** Get Vehicle No.
+		@return Vehicle No	  */
+	public String getVehicleNo () 
 	{
-		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_WpPrice);
-		if (bd == null)
-			 return Env.ZERO;
-		return bd;
+		return (String)get_Value(COLUMNNAME_VehicleNo);
 	}
 }

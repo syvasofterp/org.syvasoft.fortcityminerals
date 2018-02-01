@@ -19,15 +19,14 @@ package org.syvasoft.tallyfrontcrusher.model;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
-import java.sql.Timestamp;
 import java.util.Properties;
 import org.compiere.model.*;
 import org.compiere.util.Env;
 
-/** Generated Model for TF_YardEntry
+/** Generated Model for TF_YardPermitIssue_Entry
  *  @author iDempiere (generated) 
  *  @version Release 4.1 - $Id$ */
-public class X_TF_YardEntry extends PO implements I_TF_YardEntry, I_Persistent 
+public class X_TF_YardPermitIssue_Entry extends PO implements I_TF_YardPermitIssue_Entry, I_Persistent 
 {
 
 	/**
@@ -36,21 +35,19 @@ public class X_TF_YardEntry extends PO implements I_TF_YardEntry, I_Persistent
 	private static final long serialVersionUID = 20180201L;
 
     /** Standard Constructor */
-    public X_TF_YardEntry (Properties ctx, int TF_YardEntry_ID, String trxName)
+    public X_TF_YardPermitIssue_Entry (Properties ctx, int TF_YardPermitIssue_Entry_ID, String trxName)
     {
-      super (ctx, TF_YardEntry_ID, trxName);
-      /** if (TF_YardEntry_ID == 0)
+      super (ctx, TF_YardPermitIssue_Entry_ID, trxName);
+      /** if (TF_YardPermitIssue_Entry_ID == 0)
         {
-			setDateAcct (new Timestamp( System.currentTimeMillis() ));
-			setDocumentNo (null);
-			setProcessed (false);
 			setTF_VehicleType_ID (0);
-			setTF_YardEntry_ID (0);
+			setTF_YardPermitIssue_Entry_ID (0);
+			setVehicleNo (null);
         } */
     }
 
     /** Load Constructor */
-    public X_TF_YardEntry (Properties ctx, ResultSet rs, String trxName)
+    public X_TF_YardPermitIssue_Entry (Properties ctx, ResultSet rs, String trxName)
     {
       super (ctx, rs, trxName);
     }
@@ -72,26 +69,54 @@ public class X_TF_YardEntry extends PO implements I_TF_YardEntry, I_Persistent
 
     public String toString()
     {
-      StringBuffer sb = new StringBuffer ("X_TF_YardEntry[")
+      StringBuffer sb = new StringBuffer ("X_TF_YardPermitIssue_Entry[")
         .append(get_ID()).append("]");
       return sb.toString();
     }
 
-	/** Set Account Date.
-		@param DateAcct 
-		Accounting Date
-	  */
-	public void setDateAcct (Timestamp DateAcct)
+	/** Set Bucket Qty.
+		@param BucketQty Bucket Qty	  */
+	public void setBucketQty (BigDecimal BucketQty)
 	{
-		set_ValueNoCheck (COLUMNNAME_DateAcct, DateAcct);
+		set_Value (COLUMNNAME_BucketQty, BucketQty);
 	}
 
-	/** Get Account Date.
-		@return Accounting Date
-	  */
-	public Timestamp getDateAcct () 
+	/** Get Bucket Qty.
+		@return Bucket Qty	  */
+	public BigDecimal getBucketQty () 
 	{
-		return (Timestamp)get_Value(COLUMNNAME_DateAcct);
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_BucketQty);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	public org.compiere.model.I_C_BPartner getC_BPartner() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_BPartner)MTable.get(getCtx(), org.compiere.model.I_C_BPartner.Table_Name)
+			.getPO(getC_BPartner_ID(), get_TrxName());	}
+
+	/** Set Business Partner .
+		@param C_BPartner_ID 
+		Identifies a Business Partner
+	  */
+	public void setC_BPartner_ID (int C_BPartner_ID)
+	{
+		if (C_BPartner_ID < 1) 
+			set_Value (COLUMNNAME_C_BPartner_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_BPartner_ID, Integer.valueOf(C_BPartner_ID));
+	}
+
+	/** Get Business Partner .
+		@return Identifies a Business Partner
+	  */
+	public int getC_BPartner_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_BPartner_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	/** Set Description.
@@ -167,7 +192,7 @@ public class X_TF_YardEntry extends PO implements I_TF_YardEntry, I_Persistent
 	  */
 	public void setDocumentNo (String DocumentNo)
 	{
-		set_ValueNoCheck (COLUMNNAME_DocumentNo, DocumentNo);
+		set_Value (COLUMNNAME_DocumentNo, DocumentNo);
 	}
 
 	/** Get Document No.
@@ -178,140 +203,23 @@ public class X_TF_YardEntry extends PO implements I_TF_YardEntry, I_Persistent
 		return (String)get_Value(COLUMNNAME_DocumentNo);
 	}
 
-	/** Set Extra Bucket Amount.
-		@param ExtraBucketAmount Extra Bucket Amount	  */
-	public void setExtraBucketAmount (BigDecimal ExtraBucketAmount)
+	/** Issued = I */
+	public static final String PERMITISSUE_TYPE_Issued = "I";
+	/** Cancelled = C */
+	public static final String PERMITISSUE_TYPE_Cancelled = "C";
+	/** Set Permit Issue Type.
+		@param PermitIssue_Type Permit Issue Type	  */
+	public void setPermitIssue_Type (String PermitIssue_Type)
 	{
-		set_Value (COLUMNNAME_ExtraBucketAmount, ExtraBucketAmount);
+
+		set_Value (COLUMNNAME_PermitIssue_Type, PermitIssue_Type);
 	}
 
-	/** Get Extra Bucket Amount.
-		@return Extra Bucket Amount	  */
-	public BigDecimal getExtraBucketAmount () 
+	/** Get Permit Issue Type.
+		@return Permit Issue Type	  */
+	public String getPermitIssue_Type () 
 	{
-		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_ExtraBucketAmount);
-		if (bd == null)
-			 return Env.ZERO;
-		return bd;
-	}
-
-	/** Set Extra Bucket Price.
-		@param ExtraBucketPrice Extra Bucket Price	  */
-	public void setExtraBucketPrice (BigDecimal ExtraBucketPrice)
-	{
-		set_Value (COLUMNNAME_ExtraBucketPrice, ExtraBucketPrice);
-	}
-
-	/** Get Extra Bucket Price.
-		@return Extra Bucket Price	  */
-	public BigDecimal getExtraBucketPrice () 
-	{
-		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_ExtraBucketPrice);
-		if (bd == null)
-			 return Env.ZERO;
-		return bd;
-	}
-
-	/** Set Extra Bucket Qty.
-		@param ExtraBucketQty Extra Bucket Qty	  */
-	public void setExtraBucketQty (BigDecimal ExtraBucketQty)
-	{
-		set_Value (COLUMNNAME_ExtraBucketQty, ExtraBucketQty);
-	}
-
-	/** Get Extra Bucket Qty.
-		@return Extra Bucket Qty	  */
-	public BigDecimal getExtraBucketQty () 
-	{
-		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_ExtraBucketQty);
-		if (bd == null)
-			 return Env.ZERO;
-		return bd;
-	}
-
-	/** Set Permit Amount.
-		@param PermitAmount Permit Amount	  */
-	public void setPermitAmount (BigDecimal PermitAmount)
-	{
-		set_Value (COLUMNNAME_PermitAmount, PermitAmount);
-	}
-
-	/** Get Permit Amount.
-		@return Permit Amount	  */
-	public BigDecimal getPermitAmount () 
-	{
-		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_PermitAmount);
-		if (bd == null)
-			 return Env.ZERO;
-		return bd;
-	}
-
-	/** Set Permit Cancelled Qty.
-		@param PermitCancelledQty Permit Cancelled Qty	  */
-	public void setPermitCancelledQty (BigDecimal PermitCancelledQty)
-	{
-		set_Value (COLUMNNAME_PermitCancelledQty, PermitCancelledQty);
-	}
-
-	/** Get Permit Cancelled Qty.
-		@return Permit Cancelled Qty	  */
-	public BigDecimal getPermitCancelledQty () 
-	{
-		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_PermitCancelledQty);
-		if (bd == null)
-			 return Env.ZERO;
-		return bd;
-	}
-
-	/** Set Permit Issued Qty.
-		@param PermitIssuedQty Permit Issued Qty	  */
-	public void setPermitIssuedQty (BigDecimal PermitIssuedQty)
-	{
-		set_Value (COLUMNNAME_PermitIssuedQty, PermitIssuedQty);
-	}
-
-	/** Get Permit Issued Qty.
-		@return Permit Issued Qty	  */
-	public BigDecimal getPermitIssuedQty () 
-	{
-		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_PermitIssuedQty);
-		if (bd == null)
-			 return Env.ZERO;
-		return bd;
-	}
-
-	/** Set Permit Price.
-		@param PermitPrice Permit Price	  */
-	public void setPermitPrice (BigDecimal PermitPrice)
-	{
-		set_Value (COLUMNNAME_PermitPrice, PermitPrice);
-	}
-
-	/** Get Permit Price.
-		@return Permit Price	  */
-	public BigDecimal getPermitPrice () 
-	{
-		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_PermitPrice);
-		if (bd == null)
-			 return Env.ZERO;
-		return bd;
-	}
-
-	/** Set Permit Sales Qty.
-		@param PermitSalesQty Permit Sales Qty	  */
-	public void setPermitSalesQty (BigDecimal PermitSalesQty)
-	{
-		set_Value (COLUMNNAME_PermitSalesQty, PermitSalesQty);
-	}
-
-	/** Get Permit Sales Qty.
-		@return Permit Sales Qty	  */
-	public BigDecimal getPermitSalesQty () 
-	{
-		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_PermitSalesQty);
-		if (bd == null)
-			 return Env.ZERO;
-		return bd;
+		return (String)get_Value(COLUMNNAME_PermitIssue_Type);
 	}
 
 	/** Set Processed.
@@ -384,52 +292,77 @@ public class X_TF_YardEntry extends PO implements I_TF_YardEntry, I_Persistent
 		return ii.intValue();
 	}
 
-	/** Set Yard Entry.
-		@param TF_YardEntry_ID Yard Entry	  */
-	public void setTF_YardEntry_ID (int TF_YardEntry_ID)
+	public I_TF_YardCustomerVehicle getTF_YardCustomerVehicle() throws RuntimeException
+    {
+		return (I_TF_YardCustomerVehicle)MTable.get(getCtx(), I_TF_YardCustomerVehicle.Table_Name)
+			.getPO(getTF_YardCustomerVehicle_ID(), get_TrxName());	}
+
+	/** Set Yard Customer Vehicle.
+		@param TF_YardCustomerVehicle_ID Yard Customer Vehicle	  */
+	public void setTF_YardCustomerVehicle_ID (int TF_YardCustomerVehicle_ID)
 	{
-		if (TF_YardEntry_ID < 1) 
-			set_ValueNoCheck (COLUMNNAME_TF_YardEntry_ID, null);
+		if (TF_YardCustomerVehicle_ID < 1) 
+			set_Value (COLUMNNAME_TF_YardCustomerVehicle_ID, null);
 		else 
-			set_ValueNoCheck (COLUMNNAME_TF_YardEntry_ID, Integer.valueOf(TF_YardEntry_ID));
+			set_Value (COLUMNNAME_TF_YardCustomerVehicle_ID, Integer.valueOf(TF_YardCustomerVehicle_ID));
 	}
 
-	/** Get Yard Entry.
-		@return Yard Entry	  */
-	public int getTF_YardEntry_ID () 
+	/** Get Yard Customer Vehicle.
+		@return Yard Customer Vehicle	  */
+	public int getTF_YardCustomerVehicle_ID () 
 	{
-		Integer ii = (Integer)get_Value(COLUMNNAME_TF_YardEntry_ID);
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_YardCustomerVehicle_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
 	}
 
-	/** Set TF_YardEntry_UU.
-		@param TF_YardEntry_UU TF_YardEntry_UU	  */
-	public void setTF_YardEntry_UU (String TF_YardEntry_UU)
+	/** Set Yard Permit Issue Entry.
+		@param TF_YardPermitIssue_Entry_ID Yard Permit Issue Entry	  */
+	public void setTF_YardPermitIssue_Entry_ID (int TF_YardPermitIssue_Entry_ID)
 	{
-		set_ValueNoCheck (COLUMNNAME_TF_YardEntry_UU, TF_YardEntry_UU);
+		if (TF_YardPermitIssue_Entry_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_TF_YardPermitIssue_Entry_ID, null);
+		else 
+			set_ValueNoCheck (COLUMNNAME_TF_YardPermitIssue_Entry_ID, Integer.valueOf(TF_YardPermitIssue_Entry_ID));
 	}
 
-	/** Get TF_YardEntry_UU.
-		@return TF_YardEntry_UU	  */
-	public String getTF_YardEntry_UU () 
+	/** Get Yard Permit Issue Entry.
+		@return Yard Permit Issue Entry	  */
+	public int getTF_YardPermitIssue_Entry_ID () 
 	{
-		return (String)get_Value(COLUMNNAME_TF_YardEntry_UU);
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_YardPermitIssue_Entry_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
-	/** Set Total Load.
-		@param TotalLoad Total Load	  */
-	public void setTotalLoad (BigDecimal TotalLoad)
+	/** Set TF_YardPermitIssue_Entry_UU.
+		@param TF_YardPermitIssue_Entry_UU TF_YardPermitIssue_Entry_UU	  */
+	public void setTF_YardPermitIssue_Entry_UU (String TF_YardPermitIssue_Entry_UU)
 	{
-		set_Value (COLUMNNAME_TotalLoad, TotalLoad);
+		set_ValueNoCheck (COLUMNNAME_TF_YardPermitIssue_Entry_UU, TF_YardPermitIssue_Entry_UU);
 	}
 
-	/** Get Total Load.
-		@return Total Load	  */
-	public BigDecimal getTotalLoad () 
+	/** Get TF_YardPermitIssue_Entry_UU.
+		@return TF_YardPermitIssue_Entry_UU	  */
+	public String getTF_YardPermitIssue_Entry_UU () 
 	{
-		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_TotalLoad);
+		return (String)get_Value(COLUMNNAME_TF_YardPermitIssue_Entry_UU);
+	}
+
+	/** Set Tonnage.
+		@param Tonnage Tonnage	  */
+	public void setTonnage (BigDecimal Tonnage)
+	{
+		set_Value (COLUMNNAME_Tonnage, Tonnage);
+	}
+
+	/** Get Tonnage.
+		@return Tonnage	  */
+	public BigDecimal getTonnage () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Tonnage);
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
@@ -447,56 +380,5 @@ public class X_TF_YardEntry extends PO implements I_TF_YardEntry, I_Persistent
 	public String getVehicleNo () 
 	{
 		return (String)get_Value(COLUMNNAME_VehicleNo);
-	}
-
-	/** Set W/P Amount.
-		@param WPAmount W/P Amount	  */
-	public void setWPAmount (BigDecimal WPAmount)
-	{
-		set_Value (COLUMNNAME_WPAmount, WPAmount);
-	}
-
-	/** Get W/P Amount.
-		@return W/P Amount	  */
-	public BigDecimal getWPAmount () 
-	{
-		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_WPAmount);
-		if (bd == null)
-			 return Env.ZERO;
-		return bd;
-	}
-
-	/** Set W/P Price.
-		@param WpPrice W/P Price	  */
-	public void setWpPrice (BigDecimal WpPrice)
-	{
-		set_Value (COLUMNNAME_WpPrice, WpPrice);
-	}
-
-	/** Get W/P Price.
-		@return W/P Price	  */
-	public BigDecimal getWpPrice () 
-	{
-		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_WpPrice);
-		if (bd == null)
-			 return Env.ZERO;
-		return bd;
-	}
-
-	/** Set W/P Qty.
-		@param WPQty W/P Qty	  */
-	public void setWPQty (BigDecimal WPQty)
-	{
-		set_Value (COLUMNNAME_WPQty, WPQty);
-	}
-
-	/** Get W/P Qty.
-		@return W/P Qty	  */
-	public BigDecimal getWPQty () 
-	{
-		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_WPQty);
-		if (bd == null)
-			 return Env.ZERO;
-		return bd;
 	}
 }
