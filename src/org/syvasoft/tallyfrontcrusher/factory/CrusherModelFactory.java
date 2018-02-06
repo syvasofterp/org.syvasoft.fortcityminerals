@@ -71,6 +71,8 @@ import org.syvasoft.tallyfrontcrusher.model.MWeighmentEntry;
 import org.syvasoft.tallyfrontcrusher.model.MWeighmentErrorLog;
 import org.syvasoft.tallyfrontcrusher.model.MYardCustomerVehicle;
 import org.syvasoft.tallyfrontcrusher.model.MYardEntry;
+import org.syvasoft.tallyfrontcrusher.model.MYardEntryApprove;
+import org.syvasoft.tallyfrontcrusher.model.MYardEntryApproveLine;
 import org.syvasoft.tallyfrontcrusher.model.MYardEntryConfig;
 import org.syvasoft.tallyfrontcrusher.model.MYardLoadConfig;
 import org.syvasoft.tallyfrontcrusher.model.MYardLoadEntry;
@@ -257,6 +259,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return MYardLoadEntry.class;
 		else if(MYardPermitIssueEntry.Table_Name.equals(tableName))
 			return MYardPermitIssueEntry.class;
+		else if(MYardEntryApprove.Table_Name.equals(tableName))
+			return MYardEntryApprove.class;
+		else if(MYardEntryApproveLine.Table_Name.equals(tableName))
+			return MYardEntryApproveLine.class;
 		return null;
 	}
 
@@ -427,6 +433,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MYardLoadEntry(ctx, Record_ID, trxName);
 		else if(MYardPermitIssueEntry.Table_Name.equals(tableName))
 			return new MYardPermitIssueEntry(ctx, Record_ID, trxName);
+		else if(MYardEntryApprove.Table_Name.equals(tableName))
+			return new MYardEntryApprove(ctx, Record_ID, trxName);
+		else if(MYardEntryApproveLine.Table_Name.equals(tableName))
+			return new MYardEntryApproveLine(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -597,6 +607,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MYardLoadEntry(ctx, rs, trxName);
 		else if(MYardPermitIssueEntry.Table_Name.equals(tableName))
 			return new MYardPermitIssueEntry(ctx, rs, trxName);
+		else if(MYardEntryApprove.Table_Name.equals(tableName))
+			return new MYardEntryApprove(ctx, rs, trxName);
+		else if(MYardEntryApproveLine.Table_Name.equals(tableName))
+			return new MYardEntryApproveLine(ctx, rs, trxName);
 		return null;
 	}
 

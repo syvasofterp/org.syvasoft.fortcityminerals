@@ -19,6 +19,7 @@ package org.syvasoft.tallyfrontcrusher.model;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.Properties;
 import org.compiere.model.*;
 import org.compiere.util.Env;
@@ -32,7 +33,7 @@ public class X_TF_YardPermitIssue_Entry extends PO implements I_TF_YardPermitIss
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180201L;
+	private static final long serialVersionUID = 20180206L;
 
     /** Standard Constructor */
     public X_TF_YardPermitIssue_Entry (Properties ctx, int TF_YardPermitIssue_Entry_ID, String trxName)
@@ -40,7 +41,7 @@ public class X_TF_YardPermitIssue_Entry extends PO implements I_TF_YardPermitIss
       super (ctx, TF_YardPermitIssue_Entry_ID, trxName);
       /** if (TF_YardPermitIssue_Entry_ID == 0)
         {
-			setTF_VehicleType_ID (0);
+			setMDPNo (null);
 			setTF_YardPermitIssue_Entry_ID (0);
 			setVehicleNo (null);
         } */
@@ -117,6 +118,23 @@ public class X_TF_YardPermitIssue_Entry extends PO implements I_TF_YardPermitIss
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
+	}
+
+	/** Set Account Date.
+		@param DateAcct 
+		Accounting Date
+	  */
+	public void setDateAcct (Timestamp DateAcct)
+	{
+		set_Value (COLUMNNAME_DateAcct, DateAcct);
+	}
+
+	/** Get Account Date.
+		@return Accounting Date
+	  */
+	public Timestamp getDateAcct () 
+	{
+		return (Timestamp)get_Value(COLUMNNAME_DateAcct);
 	}
 
 	/** Set Description.
@@ -203,6 +221,20 @@ public class X_TF_YardPermitIssue_Entry extends PO implements I_TF_YardPermitIss
 		return (String)get_Value(COLUMNNAME_DocumentNo);
 	}
 
+	/** Set MDP No.
+		@param MDPNo MDP No	  */
+	public void setMDPNo (String MDPNo)
+	{
+		set_Value (COLUMNNAME_MDPNo, MDPNo);
+	}
+
+	/** Get MDP No.
+		@return MDP No	  */
+	public String getMDPNo () 
+	{
+		return (String)get_Value(COLUMNNAME_MDPNo);
+	}
+
 	/** Issued = I */
 	public static final String PERMITISSUE_TYPE_Issued = "I";
 	/** Cancelled = C */
@@ -246,15 +278,15 @@ public class X_TF_YardPermitIssue_Entry extends PO implements I_TF_YardPermitIss
 		return false;
 	}
 
-	/** Set Process Now.
-		@param Processing Process Now	  */
+	/** Set Process Permit Issue Entry.
+		@param Processing Process Permit Issue Entry	  */
 	public void setProcessing (boolean Processing)
 	{
 		set_Value (COLUMNNAME_Processing, Boolean.valueOf(Processing));
 	}
 
-	/** Get Process Now.
-		@return Process Now	  */
+	/** Get Process Permit Issue Entry.
+		@return Process Permit Issue Entry	  */
 	public boolean isProcessing () 
 	{
 		Object oo = get_Value(COLUMNNAME_Processing);
@@ -317,6 +349,31 @@ public class X_TF_YardPermitIssue_Entry extends PO implements I_TF_YardPermitIss
 		return ii.intValue();
 	}
 
+	public I_TF_YardEntryApprove getTF_YardEntryApprove() throws RuntimeException
+    {
+		return (I_TF_YardEntryApprove)MTable.get(getCtx(), I_TF_YardEntryApprove.Table_Name)
+			.getPO(getTF_YardEntryApprove_ID(), get_TrxName());	}
+
+	/** Set Approve Yard Entry.
+		@param TF_YardEntryApprove_ID Approve Yard Entry	  */
+	public void setTF_YardEntryApprove_ID (int TF_YardEntryApprove_ID)
+	{
+		if (TF_YardEntryApprove_ID < 1) 
+			set_Value (COLUMNNAME_TF_YardEntryApprove_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_YardEntryApprove_ID, Integer.valueOf(TF_YardEntryApprove_ID));
+	}
+
+	/** Get Approve Yard Entry.
+		@return Approve Yard Entry	  */
+	public int getTF_YardEntryApprove_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_YardEntryApprove_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	/** Set Yard Permit Issue Entry.
 		@param TF_YardPermitIssue_Entry_ID Yard Permit Issue Entry	  */
 	public void setTF_YardPermitIssue_Entry_ID (int TF_YardPermitIssue_Entry_ID)
@@ -349,6 +406,20 @@ public class X_TF_YardPermitIssue_Entry extends PO implements I_TF_YardPermitIss
 	public String getTF_YardPermitIssue_Entry_UU () 
 	{
 		return (String)get_Value(COLUMNNAME_TF_YardPermitIssue_Entry_UU);
+	}
+
+	/** Set Time.
+		@param Time Time	  */
+	public void setTime (String Time)
+	{
+		set_Value (COLUMNNAME_Time, Time);
+	}
+
+	/** Get Time.
+		@return Time	  */
+	public String getTime () 
+	{
+		return (String)get_Value(COLUMNNAME_Time);
 	}
 
 	/** Set Tonnage.

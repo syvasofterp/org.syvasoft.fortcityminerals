@@ -6,6 +6,7 @@ import java.util.Properties;
 
 import org.adempiere.exceptions.AdempiereException;
 import org.compiere.process.DocAction;
+import org.compiere.util.DB;
 
 public class MYardLoadEntry extends X_TF_YardLoadEntry {
 
@@ -37,6 +38,8 @@ public class MYardLoadEntry extends X_TF_YardLoadEntry {
 		qty = qty.add(getBucketQty(getBucket8()));
 		qty = qty.add(getBucketQty(getBucket9()));
 		qty = qty.add(getBucketQty(getBucket10()));
+		qty = qty.add(getBucketQty(getBucket11()));
+		qty = qty.add(getBucketQty(getBucket12()));
 		
 		return qty;
 	}
@@ -82,12 +85,21 @@ public class MYardLoadEntry extends X_TF_YardLoadEntry {
 		//if(getBucketPerLoad().doubleValue() == 0) {
 		MYardLoadConfig config = MYardLoadConfig.getMYardLoadConfig(getAD_Org_ID(), getTF_VehicleType_ID());
 		if(config == null)
-			throw new AdempiereException("Please Yard Load Configuration for the selected Vehicle Type!");
+			throw new AdempiereException("Please set Yard Load Configuration for the selected Vehicle Type!");
 		setBucketPerLoad(config.getBucketPerLoad());		
 		
 		if(getTotal_Bucket().doubleValue() < getBucketPerLoad().doubleValue()) {
 			throw new AdempiereException( getBucketPerLoad().subtract(getTotal_Bucket()) + 
 					" Bucket Required to complete this load!");
+		}
+		
+
+		if(getDescription() == null || getDescription().length() ==0 || !getDescription().contains("Total Bucket")) {
+			String desc = getTF_VehicleType().getName() + ": " + getTF_YardCustomerVehicle().getVehicleNo() +
+					", Total Bucket: " + getTotal_Bucket();
+			if(getDescription() != null && getDescription().length() > 0)
+				desc = desc + " | " + getDescription();
+			setDescription(desc);
 		}
 		
 		return ok;
@@ -97,6 +109,8 @@ public class MYardLoadEntry extends X_TF_YardLoadEntry {
 	protected boolean afterSave(boolean newRecord, boolean success) {
 		if(newRecord && getDocStatus().equals(DOCSTATUS_Completed)) {
 			processIt(DocAction.ACTION_Complete);
+			String sql = "UPDATE " + Table_Name + " SET Processed='Y' WHERE " + COLUMNNAME_TF_YardLoadEntry_ID + " = " + getTF_YardLoadEntry_ID();
+			DB.executeUpdate(sql, get_TrxName());
 		}
 		return super.afterSave(newRecord, success);
 	}

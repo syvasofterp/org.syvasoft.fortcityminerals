@@ -5,6 +5,7 @@ import java.util.Properties;
 
 import org.adempiere.exceptions.AdempiereException;
 import org.compiere.process.DocAction;
+import org.compiere.util.DB;
 
 public class MYardPermitIssueEntry extends X_TF_YardPermitIssue_Entry {
 
@@ -47,19 +48,30 @@ public class MYardPermitIssueEntry extends X_TF_YardPermitIssue_Entry {
 		//if(getBucketPerLoad().doubleValue() == 0) {
 		MYardLoadConfig config = MYardLoadConfig.getMYardLoadConfig(getAD_Org_ID(), getTF_VehicleType_ID());
 		if(config == null)
-			throw new AdempiereException("Please Yard Load Configuration for the selected Vehicle Type!");
+			throw new AdempiereException("Please set Yard Load Configuration for the selected Vehicle Type!");
 		setBucketQty(config.getBucketPerLoad());
-		setTonnage(config.getSalesTonnagePerLoad());
+		setTonnage(config.getSalesTonnagePerLoad());		
+		
+		if(getDescription() == null || getDescription().length() ==0 || !getDescription().contains("Bucket Qty")) {
+			String desc = getMDPNo() + " | " + getTF_VehicleType().getName() + ": " + getTF_YardCustomerVehicle().getVehicleNo() +
+					", Bucket Qty: " + getBucketQty() + ", Tonnage: " + getTonnage();
+			if(getDescription() != null && getDescription().length() > 0)
+				desc = desc + " | " + getDescription();
+			setDescription(desc);
+		}
 		
 		return super.beforeSave(newRecord);
 	}
 
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {
+		boolean ok = super.afterSave(newRecord, success);
 		if(newRecord && getDocStatus().equals(DOCSTATUS_Completed)) {
 			processIt(DocAction.ACTION_Complete);
+			String sql = "UPDATE " + Table_Name + " SET Processed='Y' WHERE " + COLUMNNAME_TF_YardPermitIssue_Entry_ID + " = " + getTF_YardPermitIssue_Entry_ID();
+			DB.executeUpdate(sql, get_TrxName());
 		}
-		return super.afterSave(newRecord, success);
+		return ok;
 	}
 
 	public void processIt(String docAction) {

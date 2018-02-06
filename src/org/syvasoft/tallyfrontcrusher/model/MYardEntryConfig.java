@@ -39,8 +39,25 @@ public class MYardEntryConfig extends X_TF_YardEntry_Config {
 	}
 
 	public static MYardEntryConfig getConfig(int AD_Org_ID, int TF_VehicleType_ID) {
-		MYardEntryConfig config = new Query(Env.getCtx(), Table_Name, "AD_Org_ID = ? AND TF_VehicleType_ID =  ?", null)
+		MYardEntryConfig config = new Query(Env.getCtx(), Table_Name, "AD_Org_ID = ? AND TF_VehicleType_ID =  ?"
+				+ " AND COALESCE(C_BPartner_ID,1000020) = 1000020", null)
 				.setClient_ID().setOnlyActiveRecords(true).setParameters(AD_Org_ID, TF_VehicleType_ID).first();
+		return config;
+	}
+	
+	public static MYardEntryConfig getConfig(int AD_Org_ID, int TF_VehicleType_ID, int C_BPartner_ID) {
+		MYardEntryConfig config = new Query(Env.getCtx(), Table_Name, "AD_Org_ID = ? AND TF_VehicleType_ID =  ?"
+				+ " AND COALESCE(C_BPartner_ID,1000020) = ?", null)
+				.setClient_ID().setOnlyActiveRecords(true).setParameters(AD_Org_ID, TF_VehicleType_ID, C_BPartner_ID).first();
+		if(config == null)
+			config = getConfig(AD_Org_ID, TF_VehicleType_ID);
+		return config;
+	}	
+	
+	public static MYardEntryConfig getXBckConfig(int AD_Org_ID) {
+		MYardEntryConfig config = new Query(Env.getCtx(), Table_Name, "AD_Org_ID = ? "
+				+ " AND ExtraBucketPrice > 0", null)
+				.setClient_ID().setOnlyActiveRecords(true).setParameters(AD_Org_ID).first();		
 		return config;
 	}
 	
