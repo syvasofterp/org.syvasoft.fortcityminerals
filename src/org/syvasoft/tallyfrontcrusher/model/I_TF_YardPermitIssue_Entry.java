@@ -104,6 +104,19 @@ public interface I_TF_YardPermitIssue_Entry
 	  */
 	public int getCreatedBy();
 
+    /** Column name DateAcct */
+    public static final String COLUMNNAME_DateAcct = "DateAcct";
+
+	/** Set Account Date.
+	  * Accounting Date
+	  */
+	public void setDateAcct (Timestamp DateAcct);
+
+	/** Get Account Date.
+	  * Accounting Date
+	  */
+	public Timestamp getDateAcct();
+
     /** Column name Description */
     public static final String COLUMNNAME_Description = "Description";
 
@@ -156,6 +169,15 @@ public interface I_TF_YardPermitIssue_Entry
 	  */
 	public boolean isActive();
 
+    /** Column name MDPNo */
+    public static final String COLUMNNAME_MDPNo = "MDPNo";
+
+	/** Set MDP No	  */
+	public void setMDPNo (String MDPNo);
+
+	/** Get MDP No	  */
+	public String getMDPNo();
+
     /** Column name PermitIssue_Type */
     public static final String COLUMNNAME_PermitIssue_Type = "PermitIssue_Type";
 
@@ -181,10 +203,10 @@ public interface I_TF_YardPermitIssue_Entry
     /** Column name Processing */
     public static final String COLUMNNAME_Processing = "Processing";
 
-	/** Set Process Now	  */
+	/** Set Process Permit Issue Entry	  */
 	public void setProcessing (boolean Processing);
 
-	/** Get Process Now	  */
+	/** Get Process Permit Issue Entry	  */
 	public boolean isProcessing();
 
     /** Column name TF_VehicleType_ID */
@@ -209,6 +231,17 @@ public interface I_TF_YardPermitIssue_Entry
 
 	public I_TF_YardCustomerVehicle getTF_YardCustomerVehicle() throws RuntimeException;
 
+    /** Column name TF_YardEntryApprove_ID */
+    public static final String COLUMNNAME_TF_YardEntryApprove_ID = "TF_YardEntryApprove_ID";
+
+	/** Set Approve Yard Entry	  */
+	public void setTF_YardEntryApprove_ID (int TF_YardEntryApprove_ID);
+
+	/** Get Approve Yard Entry	  */
+	public int getTF_YardEntryApprove_ID();
+
+	public I_TF_YardEntryApprove getTF_YardEntryApprove() throws RuntimeException;
+
     /** Column name TF_YardPermitIssue_Entry_ID */
     public static final String COLUMNNAME_TF_YardPermitIssue_Entry_ID = "TF_YardPermitIssue_Entry_ID";
 
@@ -226,6 +259,15 @@ public interface I_TF_YardPermitIssue_Entry
 
 	/** Get TF_YardPermitIssue_Entry_UU	  */
 	public String getTF_YardPermitIssue_Entry_UU();
+
+    /** Column name Time */
+    public static final String COLUMNNAME_Time = "Time";
+
+	/** Set Time	  */
+	public void setTime (String Time);
+
+	/** Get Time	  */
+	public String getTime();
 
     /** Column name Tonnage */
     public static final String COLUMNNAME_Tonnage = "Tonnage";

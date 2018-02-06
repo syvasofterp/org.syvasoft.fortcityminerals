@@ -21,18 +21,18 @@ import java.sql.Timestamp;
 import org.compiere.model.*;
 import org.compiere.util.KeyNamePair;
 
-/** Generated Interface for TF_YardEntry
+/** Generated Interface for TF_YardEntryApproveLine
  *  @author iDempiere (generated) 
  *  @version Release 4.1
  */
 @SuppressWarnings("all")
-public interface I_TF_YardEntry 
+public interface I_TF_YardEntryApproveLine 
 {
 
-    /** TableName=TF_YardEntry */
-    public static final String Table_Name = "TF_YardEntry";
+    /** TableName=TF_YardEntryApproveLine */
+    public static final String Table_Name = "TF_YardEntryApproveLine";
 
-    /** AD_Table_ID=1000233 */
+    /** AD_Table_ID=1000251 */
     public static final int Table_ID = MTable.getTable_ID(Table_Name);
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);
@@ -63,15 +63,6 @@ public interface I_TF_YardEntry
 	  * Organizational entity within client
 	  */
 	public int getAD_Org_ID();
-
-    /** Column name Bucket_Discount */
-    public static final String COLUMNNAME_Bucket_Discount = "Bucket_Discount";
-
-	/** Set Buckets Discounted	  */
-	public void setBucket_Discount (BigDecimal Bucket_Discount);
-
-	/** Get Buckets Discounted	  */
-	public BigDecimal getBucket_Discount();
 
     /** Column name C_BPartner_ID */
     public static final String COLUMNNAME_C_BPartner_ID = "C_BPartner_ID";
@@ -142,32 +133,6 @@ public interface I_TF_YardEntry
 	  * Calculated amount of discount
 	  */
 	public BigDecimal getDiscountAmt();
-
-    /** Column name DocStatus */
-    public static final String COLUMNNAME_DocStatus = "DocStatus";
-
-	/** Set Document Status.
-	  * The current status of the document
-	  */
-	public void setDocStatus (String DocStatus);
-
-	/** Get Document Status.
-	  * The current status of the document
-	  */
-	public String getDocStatus();
-
-    /** Column name DocumentNo */
-    public static final String COLUMNNAME_DocumentNo = "DocumentNo";
-
-	/** Set Document No.
-	  * Document sequence number of the document
-	  */
-	public void setDocumentNo (String DocumentNo);
-
-	/** Get Document No.
-	  * Document sequence number of the document
-	  */
-	public String getDocumentNo();
 
     /** Column name ExtraBucketAmount */
     public static final String COLUMNNAME_ExtraBucketAmount = "ExtraBucketAmount";
@@ -254,19 +219,6 @@ public interface I_TF_YardEntry
 	/** Get Permit Sales Qty	  */
 	public BigDecimal getPermitSalesQty();
 
-    /** Column name Processed */
-    public static final String COLUMNNAME_Processed = "Processed";
-
-	/** Set Processed.
-	  * The document has been processed
-	  */
-	public void setProcessed (boolean Processed);
-
-	/** Get Processed.
-	  * The document has been processed
-	  */
-	public boolean isProcessed();
-
     /** Column name Processing */
     public static final String COLUMNNAME_Processing = "Processing";
 
@@ -296,14 +248,36 @@ public interface I_TF_YardEntry
 	/** Get Yard Entry	  */
 	public int getTF_YardEntry_ID();
 
-    /** Column name TF_YardEntry_UU */
-    public static final String COLUMNNAME_TF_YardEntry_UU = "TF_YardEntry_UU";
+	public I_TF_YardEntry getTF_YardEntry() throws RuntimeException;
 
-	/** Set TF_YardEntry_UU	  */
-	public void setTF_YardEntry_UU (String TF_YardEntry_UU);
+    /** Column name TF_YardEntryApprove_ID */
+    public static final String COLUMNNAME_TF_YardEntryApprove_ID = "TF_YardEntryApprove_ID";
 
-	/** Get TF_YardEntry_UU	  */
-	public String getTF_YardEntry_UU();
+	/** Set Approve Yard Entry	  */
+	public void setTF_YardEntryApprove_ID (int TF_YardEntryApprove_ID);
+
+	/** Get Approve Yard Entry	  */
+	public int getTF_YardEntryApprove_ID();
+
+	public I_TF_YardEntryApprove getTF_YardEntryApprove() throws RuntimeException;
+
+    /** Column name TF_YardEntryApproveLine_ID */
+    public static final String COLUMNNAME_TF_YardEntryApproveLine_ID = "TF_YardEntryApproveLine_ID";
+
+	/** Set Yard Entry Generated	  */
+	public void setTF_YardEntryApproveLine_ID (int TF_YardEntryApproveLine_ID);
+
+	/** Get Yard Entry Generated	  */
+	public int getTF_YardEntryApproveLine_ID();
+
+    /** Column name TF_YardEntryApproveLine_UU */
+    public static final String COLUMNNAME_TF_YardEntryApproveLine_UU = "TF_YardEntryApproveLine_UU";
+
+	/** Set TF_YardEntryApproveLine_UU	  */
+	public void setTF_YardEntryApproveLine_UU (String TF_YardEntryApproveLine_UU);
+
+	/** Get TF_YardEntryApproveLine_UU	  */
+	public String getTF_YardEntryApproveLine_UU();
 
     /** Column name TotalLoad */
     public static final String COLUMNNAME_TotalLoad = "TotalLoad";
@@ -329,15 +303,6 @@ public interface I_TF_YardEntry
 	  * User who updated this records
 	  */
 	public int getUpdatedBy();
-
-    /** Column name VehicleNo */
-    public static final String COLUMNNAME_VehicleNo = "VehicleNo";
-
-	/** Set Vehicle No	  */
-	public void setVehicleNo (String VehicleNo);
-
-	/** Get Vehicle No	  */
-	public String getVehicleNo();
 
     /** Column name WPAmount */
     public static final String COLUMNNAME_WPAmount = "WPAmount";

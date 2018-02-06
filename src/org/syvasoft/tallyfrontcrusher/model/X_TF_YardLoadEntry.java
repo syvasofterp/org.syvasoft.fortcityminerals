@@ -33,7 +33,7 @@ public class X_TF_YardLoadEntry extends PO implements I_TF_YardLoadEntry, I_Pers
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180201L;
+	private static final long serialVersionUID = 20180206L;
 
     /** Standard Constructor */
     public X_TF_YardLoadEntry (Properties ctx, int TF_YardLoadEntry_ID, String trxName)
@@ -43,7 +43,6 @@ public class X_TF_YardLoadEntry extends PO implements I_TF_YardLoadEntry, I_Pers
         {
 			setDateAcct (new Timestamp( System.currentTimeMillis() ));
 // @#Date@
-			setTF_VehicleType_ID (0);
 			setTF_YardLoadEntry_ID (0);
 			setVehicleNo (null);
         } */
@@ -130,6 +129,44 @@ public class X_TF_YardLoadEntry extends PO implements I_TF_YardLoadEntry, I_Pers
 	public String getBucket10 () 
 	{
 		return (String)get_Value(COLUMNNAME_Bucket10);
+	}
+
+	/** Full = F */
+	public static final String BUCKET11_Full = "F";
+	/** Half = H */
+	public static final String BUCKET11_Half = "H";
+	/** Set Bucket 11.
+		@param Bucket11 Bucket 11	  */
+	public void setBucket11 (String Bucket11)
+	{
+
+		set_Value (COLUMNNAME_Bucket11, Bucket11);
+	}
+
+	/** Get Bucket 11.
+		@return Bucket 11	  */
+	public String getBucket11 () 
+	{
+		return (String)get_Value(COLUMNNAME_Bucket11);
+	}
+
+	/** Full = F */
+	public static final String BUCKET12_Full = "F";
+	/** Half = H */
+	public static final String BUCKET12_Half = "H";
+	/** Set Bucket 12.
+		@param Bucket12 Bucket 12	  */
+	public void setBucket12 (String Bucket12)
+	{
+
+		set_Value (COLUMNNAME_Bucket12, Bucket12);
+	}
+
+	/** Get Bucket 12.
+		@return Bucket 12	  */
+	public String getBucket12 () 
+	{
+		return (String)get_Value(COLUMNNAME_Bucket12);
 	}
 
 	/** Full = F */
@@ -329,6 +366,23 @@ public class X_TF_YardLoadEntry extends PO implements I_TF_YardLoadEntry, I_Pers
 		return ii.intValue();
 	}
 
+	/** Set Comments.
+		@param Comments 
+		Comments or additional information
+	  */
+	public void setComments (String Comments)
+	{
+		set_Value (COLUMNNAME_Comments, Comments);
+	}
+
+	/** Get Comments.
+		@return Comments or additional information
+	  */
+	public String getComments () 
+	{
+		return (String)get_Value(COLUMNNAME_Comments);
+	}
+
 	/** Set Account Date.
 		@param DateAcct 
 		Accounting Date
@@ -468,15 +522,15 @@ public class X_TF_YardLoadEntry extends PO implements I_TF_YardLoadEntry, I_Pers
 		return false;
 	}
 
-	/** Set Process Now.
-		@param Processing Process Now	  */
+	/** Set Process Load Entry.
+		@param Processing Process Load Entry	  */
 	public void setProcessing (boolean Processing)
 	{
 		set_Value (COLUMNNAME_Processing, Boolean.valueOf(Processing));
 	}
 
-	/** Get Process Now.
-		@return Process Now	  */
+	/** Get Process Load Entry.
+		@return Process Load Entry	  */
 	public boolean isProcessing () 
 	{
 		Object oo = get_Value(COLUMNNAME_Processing);
@@ -539,6 +593,31 @@ public class X_TF_YardLoadEntry extends PO implements I_TF_YardLoadEntry, I_Pers
 		return ii.intValue();
 	}
 
+	public I_TF_YardEntryApprove getTF_YardEntryApprove() throws RuntimeException
+    {
+		return (I_TF_YardEntryApprove)MTable.get(getCtx(), I_TF_YardEntryApprove.Table_Name)
+			.getPO(getTF_YardEntryApprove_ID(), get_TrxName());	}
+
+	/** Set Approve Yard Entry.
+		@param TF_YardEntryApprove_ID Approve Yard Entry	  */
+	public void setTF_YardEntryApprove_ID (int TF_YardEntryApprove_ID)
+	{
+		if (TF_YardEntryApprove_ID < 1) 
+			set_Value (COLUMNNAME_TF_YardEntryApprove_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_YardEntryApprove_ID, Integer.valueOf(TF_YardEntryApprove_ID));
+	}
+
+	/** Get Approve Yard Entry.
+		@return Approve Yard Entry	  */
+	public int getTF_YardEntryApprove_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_YardEntryApprove_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	/** Set Yard Load Entry.
 		@param TF_YardLoadEntry_ID Yard Load Entry	  */
 	public void setTF_YardLoadEntry_ID (int TF_YardLoadEntry_ID)
@@ -571,6 +650,20 @@ public class X_TF_YardLoadEntry extends PO implements I_TF_YardLoadEntry, I_Pers
 	public String getTF_YardLoadEntry_UU () 
 	{
 		return (String)get_Value(COLUMNNAME_TF_YardLoadEntry_UU);
+	}
+
+	/** Set Time.
+		@param Time Time	  */
+	public void setTime (String Time)
+	{
+		set_Value (COLUMNNAME_Time, Time);
+	}
+
+	/** Get Time.
+		@return Time	  */
+	public String getTime () 
+	{
+		return (String)get_Value(COLUMNNAME_Time);
 	}
 
 	/** Set Total Bucket.

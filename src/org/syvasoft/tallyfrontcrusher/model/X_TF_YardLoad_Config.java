@@ -32,7 +32,7 @@ public class X_TF_YardLoad_Config extends PO implements I_TF_YardLoad_Config, I_
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180201L;
+	private static final long serialVersionUID = 20180206L;
 
     /** Standard Constructor */
     public X_TF_YardLoad_Config (Properties ctx, int TF_YardLoad_Config_ID, String trxName)

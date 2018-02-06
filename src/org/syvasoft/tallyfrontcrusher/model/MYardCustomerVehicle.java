@@ -29,8 +29,8 @@ public class MYardCustomerVehicle extends X_TF_YardCustomerVehicle {
 		List<MYardCustomerVehicle> vehicles = new Query(ctx, Table_Name, whereClause, trxName)
 				.setClient_ID().setParameters(AD_Org_ID).list();
 		if(vehicles.size() > 1) 
-			throw new AdempiereException("Please Specify Full Vehicle No!");	
-		else if(vehicles.size() == 0)
+			throw new AdempiereException(vehicles.size() + " vehicles found. Please Specify Full Vehicle No!");	
+		if(vehicles.size() == 0)
 			return null;
 		return vehicles.get(0);
 	}
@@ -44,7 +44,7 @@ public class MYardCustomerVehicle extends X_TF_YardCustomerVehicle {
 		if(VehicleNo.length() <=4 )
 			throw new AdempiereException("Please Specify Full Vehicle No!");
 		
-		if(TF_VehicleType_ID == 0)
+		if(TF_VehicleType_ID == 0 )
 			throw new AdempiereException("Please Specify Vehicle Type!");
 		
 		v = new MYardCustomerVehicle(ctx, 0, trxName);
@@ -56,6 +56,20 @@ public class MYardCustomerVehicle extends X_TF_YardCustomerVehicle {
 		v.saveEx();
 		
 		return v;
+	}
+	@Override
+	protected boolean beforeSave(boolean newRecord) {
+		if(newRecord || is_ValueChanged(COLUMNNAME_VehicleNo)) {
+			String whereClause = "AD_Org_ID = ? AND UPPER(REPLACE(VehicleNo,' ','')) =  REPLACE('" + 
+					getVehicleNo().toUpperCase() + "',' ','')";
+			List<MYardCustomerVehicle> vehicles = new Query(getCtx(), Table_Name, whereClause, get_TrxName())
+				.setClient_ID().setParameters(getAD_Org_ID()).list();
+			if(vehicles.size()>0 && newRecord)
+				throw new AdempiereException("This vehicle is already added!");
+			else if(!newRecord && vehicles.size() > 0 && getTF_YardCustomerVehicle_ID() != vehicles.get(0).getTF_YardCustomerVehicle_ID())
+				throw new AdempiereException("This vehicle is already added!");
+		}
+		return super.beforeSave(newRecord);
 	}
 
 }

@@ -91,6 +91,24 @@ public interface I_TF_YardLoadEntry
 	/** Get Bucket 10	  */
 	public String getBucket10();
 
+    /** Column name Bucket11 */
+    public static final String COLUMNNAME_Bucket11 = "Bucket11";
+
+	/** Set Bucket 11	  */
+	public void setBucket11 (String Bucket11);
+
+	/** Get Bucket 11	  */
+	public String getBucket11();
+
+    /** Column name Bucket12 */
+    public static final String COLUMNNAME_Bucket12 = "Bucket12";
+
+	/** Set Bucket 12	  */
+	public void setBucket12 (String Bucket12);
+
+	/** Get Bucket 12	  */
+	public String getBucket12();
+
     /** Column name Bucket2 */
     public static final String COLUMNNAME_Bucket2 = "Bucket2";
 
@@ -186,6 +204,19 @@ public interface I_TF_YardLoadEntry
 	public int getC_BPartner_ID();
 
 	public org.compiere.model.I_C_BPartner getC_BPartner() throws RuntimeException;
+
+    /** Column name Comments */
+    public static final String COLUMNNAME_Comments = "Comments";
+
+	/** Set Comments.
+	  * Comments or additional information
+	  */
+	public void setComments (String Comments);
+
+	/** Get Comments.
+	  * Comments or additional information
+	  */
+	public String getComments();
 
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
@@ -293,10 +324,10 @@ public interface I_TF_YardLoadEntry
     /** Column name Processing */
     public static final String COLUMNNAME_Processing = "Processing";
 
-	/** Set Process Now	  */
+	/** Set Process Load Entry	  */
 	public void setProcessing (boolean Processing);
 
-	/** Get Process Now	  */
+	/** Get Process Load Entry	  */
 	public boolean isProcessing();
 
     /** Column name TF_VehicleType_ID */
@@ -321,6 +352,17 @@ public interface I_TF_YardLoadEntry
 
 	public I_TF_YardCustomerVehicle getTF_YardCustomerVehicle() throws RuntimeException;
 
+    /** Column name TF_YardEntryApprove_ID */
+    public static final String COLUMNNAME_TF_YardEntryApprove_ID = "TF_YardEntryApprove_ID";
+
+	/** Set Approve Yard Entry	  */
+	public void setTF_YardEntryApprove_ID (int TF_YardEntryApprove_ID);
+
+	/** Get Approve Yard Entry	  */
+	public int getTF_YardEntryApprove_ID();
+
+	public I_TF_YardEntryApprove getTF_YardEntryApprove() throws RuntimeException;
+
     /** Column name TF_YardLoadEntry_ID */
     public static final String COLUMNNAME_TF_YardLoadEntry_ID = "TF_YardLoadEntry_ID";
 
@@ -338,6 +380,15 @@ public interface I_TF_YardLoadEntry
 
 	/** Get TF_YardLoadEntry_UU	  */
 	public String getTF_YardLoadEntry_UU();
+
+    /** Column name Time */
+    public static final String COLUMNNAME_Time = "Time";
+
+	/** Set Time	  */
+	public void setTime (String Time);
+
+	/** Get Time	  */
+	public String getTime();
 
     /** Column name Total_Bucket */
     public static final String COLUMNNAME_Total_Bucket = "Total_Bucket";
