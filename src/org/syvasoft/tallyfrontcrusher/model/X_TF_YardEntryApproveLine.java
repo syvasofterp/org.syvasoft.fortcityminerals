@@ -33,7 +33,7 @@ public class X_TF_YardEntryApproveLine extends PO implements I_TF_YardEntryAppro
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180206L;
+	private static final long serialVersionUID = 20180207L;
 
     /** Standard Constructor */
     public X_TF_YardEntryApproveLine (Properties ctx, int TF_YardEntryApproveLine_ID, String trxName)
@@ -76,6 +76,23 @@ public class X_TF_YardEntryApproveLine extends PO implements I_TF_YardEntryAppro
         .append(get_ID()).append("]");
       return sb.toString();
     }
+
+	/** Set Buckets Discounted.
+		@param Bucket_Discount Buckets Discounted	  */
+	public void setBucket_Discount (BigDecimal Bucket_Discount)
+	{
+		set_Value (COLUMNNAME_Bucket_Discount, Bucket_Discount);
+	}
+
+	/** Get Buckets Discounted.
+		@return Buckets Discounted	  */
+	public BigDecimal getBucket_Discount () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Bucket_Discount);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
 
 	public org.compiere.model.I_C_BPartner getC_BPartner() throws RuntimeException
     {
@@ -145,7 +162,7 @@ public class X_TF_YardEntryApproveLine extends PO implements I_TF_YardEntryAppro
 	  */
 	public void setDiscountAmt (BigDecimal DiscountAmt)
 	{
-		set_ValueNoCheck (COLUMNNAME_DiscountAmt, DiscountAmt);
+		set_Value (COLUMNNAME_DiscountAmt, DiscountAmt);
 	}
 
 	/** Get Discount Amount.

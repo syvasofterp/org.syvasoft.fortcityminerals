@@ -3,9 +3,12 @@ package org.syvasoft.tallyfrontcrusher.model;
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.List;
 import java.util.Properties;
 
 import org.adempiere.exceptions.AdempiereException;
+import org.compiere.model.Query;
+import org.compiere.process.DocAction;
 import org.compiere.util.DB;
 
 public class MYardEntryApprove extends X_TF_YardEntryApprove {
@@ -23,6 +26,12 @@ public class MYardEntryApprove extends X_TF_YardEntryApprove {
 		// TODO Auto-generated constructor stub
 	}
 
+	public List<MYardEntryApproveLine> getLines() {
+		List<MYardEntryApproveLine> lines = new Query(getCtx(), MYardEntryApproveLine.Table_Name, "TF_YardEntryApprove_ID = ?",
+				get_TrxName())
+				.setClient_ID().setParameters(getTF_YardEntryApprove_ID()).list();
+		return lines;
+	}
 	
 	public void createYardEntryLines(boolean reCreate) {		
 		if(!reCreate && get_ValueAsBoolean(COLUMNNAME_IsCreated))
@@ -35,14 +44,14 @@ public class MYardEntryApprove extends X_TF_YardEntryApprove {
 		}
 				
 		String sqlSelectLoadEntries = " UPDATE " + MYardLoadEntry.Table_Name + " SET TF_YardEntryApprove_ID " +
-				" = ? WHERE TF_YardEntryApprove_ID IS NULL AND DateAcct = ?" ;
+				" = ? WHERE TF_YardEntryApprove_ID IS NULL AND DateAcct = ? AND DocStatus='CO' " ;
 		Object[] params = new Object[2];
 		params[0] = getTF_YardEntryApprove_ID();
 		params[1] = getDateAcct();
 		DB.executeUpdateEx(sqlSelectLoadEntries, params, get_TrxName());
 		
 		String sqlSelectPermitEntries = "UPDATE " + MYardPermitIssueEntry.Table_Name + " SET TF_YardEntryApprove_ID = ? " +
-				" WHERE TF_YardEntryApprove_ID IS NULL AND DateAcct = ? ";
+				" WHERE TF_YardEntryApprove_ID IS NULL AND DateAcct = ? AND DocStatus='CO' ";
 		DB.executeUpdateEx(sqlSelectPermitEntries, params, get_TrxName());
 		
 		String sqlLoad = " SELECT bp.C_BPartner_ID, bp.Name Customer, l.DateAcct, vt.Name VehicleType, vt.TF_VehicleType_ID, COUNT(*)::numeric TotalLoad , "
@@ -117,6 +126,10 @@ public class MYardEntryApprove extends X_TF_YardEntryApprove {
 				line.setWpPrice(pConfig.getWpPrice());
 				line.setWPAmount(line.getWpPrice().multiply(line.getWPQty()));
 				
+				line.setExtraBucketQty(BigDecimal.ZERO);
+				line.setBucket_Discount(BigDecimal.ZERO);
+				line.setDiscountAmt(BigDecimal.ZERO);
+				
 				line.saveEx();
 				
 				if(xBckLine == null)
@@ -124,7 +137,8 @@ public class MYardEntryApprove extends X_TF_YardEntryApprove {
 				
 			}
 			DB.close(rs, pstmt);
-			xBckLine.setExtraBucketQty(xBucketQty);			
+			xBckLine.setExtraBucketQty(xBucketQty);
+			xBckLine.setBucket_Discount(DiscBucketQty);
 			MYardEntryConfig xConfig = MYardEntryConfig.getXBckConfig(getAD_Org_ID());			
 			if(xConfig != null)
 				xBckLine.setExtraBucketPrice(xConfig.getExtraBucketPrice());
@@ -145,4 +159,66 @@ public class MYardEntryApprove extends X_TF_YardEntryApprove {
 			DB.close(rs, pstmt);
 		}
 	}
+	
+	public void processIt(String docAction) {
+		if(DocAction.ACTION_Prepare.equals(docAction)) {
+			setDocStatus(DOCSTATUS_InProgress);
+		}
+		else if(DocAction.ACTION_Complete.equals(docAction)) {
+			setDocStatus(DOCSTATUS_Completed);
+			setProcessed(true);
+									
+			for(MYardEntryApproveLine line : getLines()) {
+				double totalLoad = line.getTotalLoad().doubleValue();
+				double pSalesQty = line.getPermitSalesQty().doubleValue();
+				double wpQty = line.getWPQty().doubleValue();
+				if(totalLoad != pSalesQty + wpQty)
+					throw new AdempiereException("Invalid Total Load for " + line.getTF_VehicleType().getName());
+				
+				if(wpQty < 0)
+					throw new AdempiereException("Please enter missing Load Entries for " + line.getTF_VehicleType().getName() + 
+							".\n Re-generate Yard Entries for approval!");
+				
+				MYardEntry yEntry = new MYardEntry(getCtx(), 0, get_TrxName());
+				yEntry.setAD_Org_ID(line.getAD_Org_ID());
+				yEntry.setDateAcct(line.getDateAcct());
+				yEntry.setTF_VehicleType_ID(line.getTF_VehicleType_ID());
+				yEntry.setC_BPartner_ID(line.getC_BPartner_ID());
+				yEntry.setTotalLoad(line.getTotalLoad());
+				yEntry.setPermitIssuedQty(line.getPermitIssuedQty());
+				yEntry.setPermitCancelledQty(line.getPermitCancelledQty());
+				yEntry.setPermitSalesQty(line.getPermitSalesQty());
+				yEntry.setPermitPrice(line.getPermitPrice());
+				yEntry.setPermitAmount(line.getPermitAmount());
+				yEntry.setExtraBucketQty(line.getExtraBucketQty());
+				yEntry.setExtraBucketPrice(line.getExtraBucketPrice());
+				yEntry.setExtraBucketAmount(line.getExtraBucketAmount());
+				yEntry.setWPQty(line.getWPQty());
+				yEntry.setWpPrice(line.getWpPrice());
+				yEntry.setWPAmount(line.getWPAmount());
+				yEntry.setDescription(line.getDescription());
+				yEntry.setDiscountAmt(line.getDiscountAmt());
+				yEntry.setBucket_Discount(line.getBucket_Discount());
+				yEntry.setProcessed(true);
+				yEntry.setTF_YardEntryApprove_ID(getTF_YardEntryApprove_ID());
+				yEntry.saveEx();
+				line.setTF_YardEntry_ID(yEntry.getTF_YardEntry_ID());				
+				line.saveEx();
+			}
+		}
+	}
+	
+	public void reverseIt() {
+		setProcessed(false);
+		setDocStatus(DOCSTATUS_InProgress);	
+		
+		for(MYardEntryApproveLine line : getLines()) {
+			MYardEntry yEntry = (MYardEntry) line.getTF_YardEntry();
+			line.setTF_YardEntry_ID(0);
+			line.saveEx();
+			yEntry.deleteEx(true);
+		}
+		
+	}
+	
 }

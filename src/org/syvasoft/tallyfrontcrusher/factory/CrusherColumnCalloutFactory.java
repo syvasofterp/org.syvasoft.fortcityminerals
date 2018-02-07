@@ -90,6 +90,7 @@ import org.syvasoft.tallyfrontcrusher.model.MVehicleRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentalContract;
 import org.syvasoft.tallyfrontcrusher.model.MWeighmentEntry;
 import org.syvasoft.tallyfrontcrusher.model.MYardEntry;
+import org.syvasoft.tallyfrontcrusher.model.MYardEntryApproveLine;
 import org.syvasoft.tallyfrontcrusher.model.TF_MElementValue;
 import org.syvasoft.tallyfrontcrusher.model.TF_MInvoice;
 import org.syvasoft.tallyfrontcrusher.model.TF_MJournal;
@@ -375,8 +376,9 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 			}
 		}
 		
-		if(tableName.equals(MYardEntry.Table_Name)) {
-			if(columnName.equals(MYardEntry.COLUMNNAME_TF_VehicleType_ID)) {
+		if(tableName.equals(MYardEntry.Table_Name) || tableName.equals(MYardEntryApproveLine.Table_Name)) {
+			if(columnName.equals(MYardEntry.COLUMNNAME_TF_VehicleType_ID) || 
+					columnName.equals(MYardEntry.COLUMNNAME_C_BPartner_ID)) {
 				list.add(new CalloutYardEntry_VehicleType());
 				list.add(new CalloutYardEntry_CalcAmount());
 			}

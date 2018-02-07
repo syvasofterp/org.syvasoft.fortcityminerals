@@ -305,6 +305,17 @@ public interface I_TF_YardEntry
 	/** Get TF_YardEntry_UU	  */
 	public String getTF_YardEntry_UU();
 
+    /** Column name TF_YardEntryApprove_ID */
+    public static final String COLUMNNAME_TF_YardEntryApprove_ID = "TF_YardEntryApprove_ID";
+
+	/** Set Approve Yard Entry	  */
+	public void setTF_YardEntryApprove_ID (int TF_YardEntryApprove_ID);
+
+	/** Get Approve Yard Entry	  */
+	public int getTF_YardEntryApprove_ID();
+
+	public I_TF_YardEntryApprove getTF_YardEntryApprove() throws RuntimeException;
+
     /** Column name TotalLoad */
     public static final String COLUMNNAME_TotalLoad = "TotalLoad";
 
