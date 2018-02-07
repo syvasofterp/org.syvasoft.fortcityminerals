@@ -278,6 +278,15 @@ public interface I_TF_YardPermitIssue_Entry
 	/** Get Tonnage	  */
 	public BigDecimal getTonnage();
 
+    /** Column name TripNo */
+    public static final String COLUMNNAME_TripNo = "TripNo";
+
+	/** Set Trip No	  */
+	public void setTripNo (BigDecimal TripNo);
+
+	/** Get Trip No	  */
+	public BigDecimal getTripNo();
+
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";
 

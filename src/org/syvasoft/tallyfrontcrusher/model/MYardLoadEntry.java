@@ -2,6 +2,7 @@ package org.syvasoft.tallyfrontcrusher.model;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.Properties;
 
 import org.adempiere.exceptions.AdempiereException;
@@ -60,7 +61,7 @@ public class MYardLoadEntry extends X_TF_YardLoadEntry {
 	protected boolean beforeSave(boolean newRecord) {		
 		boolean ok = super.beforeSave(newRecord);
 		
-		setTotal_Bucket(getTotalBucketQty());
+		//setTotal_Bucket(getTotalBucketQty());
 					
 		
 		MYardCustomerVehicle v = MYardCustomerVehicle.addCustomerVehicle(getCtx(), getAD_Org_ID(), getTF_VehicleType_ID(), getVehicleNo(), 
@@ -70,6 +71,20 @@ public class MYardLoadEntry extends X_TF_YardLoadEntry {
 		if(!newRecord && is_ValueChanged(COLUMNNAME_TF_VehicleType_ID)) {
 			v.setTF_VehicleType_ID(getTF_VehicleType_ID());
 			v.saveEx();
+		}
+		
+		if(newRecord && getDocStatus().equals(DOCSTATUS_Completed)) {
+			String sqlTime = "SELECT Created FROM TF_YardLoadEntry WHERE " +
+					" DateAcct = ? AND TF_YardCustomerVehicle_ID = ?  ORDER BY Created Desc ";
+			Timestamp prevTime = DB.getSQLValueTSEx(get_TrxName(), sqlTime, getDateAcct(), getTF_YardCustomerVehicle_ID());
+			
+			String sql = "SELECT (EXTRACT(EPOCH FROM now() - ?) / 60)::numeric ";			
+			BigDecimal interval = DB.getSQLValueBD(get_TrxName(), sql, prevTime);
+			
+			if(interval == null) 
+				interval = new BigDecimal(70);
+			if(interval.doubleValue() <= 60 )
+				throw new AdempiereException("Load Entry is already created for Vehicle: " + v.getVehicleNo() + " !");
 		}
 		
 		if(!newRecord && is_ValueChanged(COLUMNNAME_C_BPartner_ID)) {
@@ -107,6 +122,14 @@ public class MYardLoadEntry extends X_TF_YardLoadEntry {
 	
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {
+		if(newRecord) {
+			String sql = "SELECT COUNT(*) FROM TF_YardLoadEntry WHERE AD_Org_ID = ? AND DateAcct = ? AND TF_YardCustomerVehicle_ID = ?";
+			int tripNo = DB.getSQLValue(get_TrxName(), sql, getAD_Org_ID(), getDateAcct(), getTF_YardCustomerVehicle_ID());
+			String sqlUpdate = "UPDATE TF_YardLoadEntry SET TripNo = " + tripNo + " WHERE TF_YardLoadEntry_ID = " +
+					getTF_YardLoadEntry_ID();
+			DB.executeUpdate(sqlUpdate, get_TrxName());
+		}
+		
 		if(newRecord && getDocStatus().equals(DOCSTATUS_Completed)) {
 			processIt(DocAction.ACTION_Complete);
 			String sql = "UPDATE " + Table_Name + " SET Processed='Y' WHERE " + COLUMNNAME_TF_YardLoadEntry_ID + " = " + getTF_YardLoadEntry_ID();
