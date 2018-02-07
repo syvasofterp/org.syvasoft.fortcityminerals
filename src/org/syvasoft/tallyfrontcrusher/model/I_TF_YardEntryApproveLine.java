@@ -64,6 +64,15 @@ public interface I_TF_YardEntryApproveLine
 	  */
 	public int getAD_Org_ID();
 
+    /** Column name Bucket_Discount */
+    public static final String COLUMNNAME_Bucket_Discount = "Bucket_Discount";
+
+	/** Set Buckets Discounted	  */
+	public void setBucket_Discount (BigDecimal Bucket_Discount);
+
+	/** Get Buckets Discounted	  */
+	public BigDecimal getBucket_Discount();
+
     /** Column name C_BPartner_ID */
     public static final String COLUMNNAME_C_BPartner_ID = "C_BPartner_ID";
 

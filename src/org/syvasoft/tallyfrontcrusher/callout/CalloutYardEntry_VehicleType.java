@@ -15,7 +15,13 @@ public class CalloutYardEntry_VehicleType implements IColumnCallout {
 		if(mTab.getValue(MYardEntry.COLUMNNAME_TF_VehicleType_ID) != null) {
 			int AD_Org_ID = (int) mTab.getValue(MYardEntry.COLUMNNAME_AD_Org_ID);
 			int vehicleType = (int) mTab.getValue(MYardEntry.COLUMNNAME_TF_VehicleType_ID);
-			MYardEntryConfig config = MYardEntryConfig.getConfig(AD_Org_ID, vehicleType);
+			int C_BPartner_ID = 0;
+			
+			if(mTab.getValue(MYardEntry.COLUMNNAME_C_BPartner_ID) != null)
+				C_BPartner_ID = (int) mTab.getValue(MYardEntry.COLUMNNAME_C_BPartner_ID);
+			
+			MYardEntryConfig config = MYardEntryConfig.getConfig(AD_Org_ID, vehicleType, C_BPartner_ID);
+			
 			if(config != null) {
 				mTab.setValue(MYardEntry.COLUMNNAME_PermitPrice, config.getPermitPrice());
 				mTab.setValue(MYardEntry.COLUMNNAME_ExtraBucketPrice, config.getExtraBucketPrice());

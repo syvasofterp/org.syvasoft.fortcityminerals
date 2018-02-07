@@ -46,6 +46,9 @@ public class MYardEntryConfig extends X_TF_YardEntry_Config {
 	}
 	
 	public static MYardEntryConfig getConfig(int AD_Org_ID, int TF_VehicleType_ID, int C_BPartner_ID) {
+		if(C_BPartner_ID == 0)
+			C_BPartner_ID = 1000020;
+			
 		MYardEntryConfig config = new Query(Env.getCtx(), Table_Name, "AD_Org_ID = ? AND TF_VehicleType_ID =  ?"
 				+ " AND COALESCE(C_BPartner_ID,1000020) = ?", null)
 				.setClient_ID().setOnlyActiveRecords(true).setParameters(AD_Org_ID, TF_VehicleType_ID, C_BPartner_ID).first();

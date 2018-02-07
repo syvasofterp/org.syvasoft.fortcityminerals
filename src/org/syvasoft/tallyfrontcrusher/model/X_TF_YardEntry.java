@@ -33,7 +33,7 @@ public class X_TF_YardEntry extends PO implements I_TF_YardEntry, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180206L;
+	private static final long serialVersionUID = 20180207L;
 
     /** Standard Constructor */
     public X_TF_YardEntry (Properties ctx, int TF_YardEntry_ID, String trxName)
@@ -481,6 +481,31 @@ public class X_TF_YardEntry extends PO implements I_TF_YardEntry, I_Persistent
 	public String getTF_YardEntry_UU () 
 	{
 		return (String)get_Value(COLUMNNAME_TF_YardEntry_UU);
+	}
+
+	public I_TF_YardEntryApprove getTF_YardEntryApprove() throws RuntimeException
+    {
+		return (I_TF_YardEntryApprove)MTable.get(getCtx(), I_TF_YardEntryApprove.Table_Name)
+			.getPO(getTF_YardEntryApprove_ID(), get_TrxName());	}
+
+	/** Set Approve Yard Entry.
+		@param TF_YardEntryApprove_ID Approve Yard Entry	  */
+	public void setTF_YardEntryApprove_ID (int TF_YardEntryApprove_ID)
+	{
+		if (TF_YardEntryApprove_ID < 1) 
+			set_Value (COLUMNNAME_TF_YardEntryApprove_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_YardEntryApprove_ID, Integer.valueOf(TF_YardEntryApprove_ID));
+	}
+
+	/** Get Approve Yard Entry.
+		@return Approve Yard Entry	  */
+	public int getTF_YardEntryApprove_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_YardEntryApprove_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	/** Set Total Load.
