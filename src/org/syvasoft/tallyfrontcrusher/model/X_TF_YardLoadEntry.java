@@ -33,7 +33,7 @@ public class X_TF_YardLoadEntry extends PO implements I_TF_YardLoadEntry, I_Pers
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180206L;
+	private static final long serialVersionUID = 20180207L;
 
     /** Standard Constructor */
     public X_TF_YardLoadEntry (Properties ctx, int TF_YardLoadEntry_ID, String trxName)
@@ -678,6 +678,23 @@ public class X_TF_YardLoadEntry extends PO implements I_TF_YardLoadEntry, I_Pers
 	public BigDecimal getTotal_Bucket () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Total_Bucket);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set Trip No.
+		@param TripNo Trip No	  */
+	public void setTripNo (BigDecimal TripNo)
+	{
+		set_Value (COLUMNNAME_TripNo, TripNo);
+	}
+
+	/** Get Trip No.
+		@return Trip No	  */
+	public BigDecimal getTripNo () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_TripNo);
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;

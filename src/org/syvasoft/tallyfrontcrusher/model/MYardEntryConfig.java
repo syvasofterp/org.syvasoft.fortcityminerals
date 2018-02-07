@@ -28,11 +28,11 @@ public class MYardEntryConfig extends X_TF_YardEntry_Config {
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
 		if(newRecord) {
-			String sql = "SELECT COUNT(*) FROM " + Table_Name + 
-					" WHERE AD_Org_ID = ? AND TF_VehicleType_ID = ? ";
-			int count = DB.getSQLValue(get_TrxName(), sql, getAD_Org_ID(), getTF_VehicleType_ID());
-			if(count > 0)
-				throw new AdempiereException("Please specify new Vehicle Type!");
+			//String sql = "SELECT COUNT(*) FROM " + Table_Name + 
+			//		" WHERE AD_Org_ID = ? AND TF_VehicleType_ID = ? ";
+			//int count = DB.getSQLValue(get_TrxName(), sql, getAD_Org_ID(), getTF_VehicleType_ID());
+			//if(count > 0)
+			//	throw new AdempiereException("Please specify new Vehicle Type!");
 		}
 		
 		return super.beforeSave(newRecord);

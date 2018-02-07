@@ -399,6 +399,15 @@ public interface I_TF_YardLoadEntry
 	/** Get Total Bucket	  */
 	public BigDecimal getTotal_Bucket();
 
+    /** Column name TripNo */
+    public static final String COLUMNNAME_TripNo = "TripNo";
+
+	/** Set Trip No	  */
+	public void setTripNo (BigDecimal TripNo);
+
+	/** Get Trip No	  */
+	public BigDecimal getTripNo();
+
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";
 

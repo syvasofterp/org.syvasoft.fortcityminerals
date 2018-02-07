@@ -32,7 +32,7 @@ public class X_TF_YardCustomerVehicle extends PO implements I_TF_YardCustomerVeh
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180206L;
+	private static final long serialVersionUID = 20180207L;
 
     /** Standard Constructor */
     public X_TF_YardCustomerVehicle (Properties ctx, int TF_YardCustomerVehicle_ID, String trxName)

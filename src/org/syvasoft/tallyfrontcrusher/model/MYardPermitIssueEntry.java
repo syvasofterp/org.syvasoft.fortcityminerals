@@ -1,6 +1,8 @@
 package org.syvasoft.tallyfrontcrusher.model;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.Properties;
 
 import org.adempiere.exceptions.AdempiereException;
@@ -29,6 +31,33 @@ public class MYardPermitIssueEntry extends X_TF_YardPermitIssue_Entry {
 		MYardCustomerVehicle v = MYardCustomerVehicle.addCustomerVehicle(getCtx(), getAD_Org_ID(), getTF_VehicleType_ID(), getVehicleNo(), 
 				getC_BPartner_ID(), get_TrxName());
 		setTF_YardCustomerVehicle_ID(v.getTF_YardCustomerVehicle_ID());
+		
+		if(newRecord && getDocStatus().equals(DOCSTATUS_Completed) && 
+				getPermitIssue_Type().equals(PERMITISSUE_TYPE_Issued)) {
+			String sqlTime = "SELECT Created FROM TF_YardPermitIssue_Entry WHERE " +
+					" DateAcct = ? AND TF_YardCustomerVehicle_ID = ?  ORDER BY Created Desc ";
+			Timestamp prevTime = DB.getSQLValueTSEx(get_TrxName(), sqlTime, getDateAcct(), getTF_YardCustomerVehicle_ID());
+			
+			String sql = "SELECT (EXTRACT(EPOCH FROM now() - ?) / 60)::numeric ";			
+			BigDecimal interval = DB.getSQLValueBD(get_TrxName(), sql, prevTime);
+			
+			if(interval == null) 
+				interval = new BigDecimal(70);
+			if(interval.doubleValue() <= 60 )
+				throw new AdempiereException("Permit is already issued for Vehicle: " + v.getVehicleNo() + " !");
+		}
+		
+		if(newRecord) {
+			String sql = "SELECT COUNT(*) FROM TF_YardPermitIssue_Entry WHERE AD_Org_ID = ? AND TRIM(MDPNo) = TRIM(?)"
+					+ " AND PermitIssue_Type = ?";
+			int count = DB.getSQLValue(get_TrxName(), sql, getAD_Org_ID(), getMDPNo(), getPermitIssue_Type());
+			if(count > 0) {
+				String type = getPermitIssue_Type().equals(PERMITISSUE_TYPE_Issued) ? "issued" : "cancelled";
+				throw new AdempiereException("MDPNo is already "+ type +". Please specify new MDP No!");
+			}
+		}
+		
+		
 		
 		if(!newRecord && is_ValueChanged(COLUMNNAME_TF_VehicleType_ID)) {
 			v.setTF_VehicleType_ID(getTF_VehicleType_ID());
@@ -70,6 +99,13 @@ public class MYardPermitIssueEntry extends X_TF_YardPermitIssue_Entry {
 			processIt(DocAction.ACTION_Complete);
 			String sql = "UPDATE " + Table_Name + " SET Processed='Y' WHERE " + COLUMNNAME_TF_YardPermitIssue_Entry_ID + " = " + getTF_YardPermitIssue_Entry_ID();
 			DB.executeUpdate(sql, get_TrxName());
+		}
+		if(newRecord) {
+			String sql = "SELECT COUNT(*) FROM TF_YardPermitIssue_Entry WHERE AD_Org_ID = ? AND DateAcct = ? AND TF_YardCustomerVehicle_ID = ?";
+			int tripNo = DB.getSQLValue(get_TrxName(), sql, getAD_Org_ID(), getDateAcct(), getTF_YardCustomerVehicle_ID());
+			String sqlUpdate = "UPDATE TF_YardPermitIssue_Entry SET TripNo = " + tripNo + " WHERE TF_YardPermitIssue_Entry_ID = " +
+					getTF_YardPermitIssue_Entry_ID();
+			DB.executeUpdate(sqlUpdate, get_TrxName());
 		}
 		return ok;
 	}
