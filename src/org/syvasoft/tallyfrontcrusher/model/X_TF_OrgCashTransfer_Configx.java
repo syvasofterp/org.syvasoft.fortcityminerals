@@ -30,7 +30,7 @@ public class X_TF_OrgCashTransfer_Configx extends PO implements I_TF_OrgCashTran
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180129L;
+	private static final long serialVersionUID = 20180208L;
 
     /** Standard Constructor */
     public X_TF_OrgCashTransfer_Configx (Properties ctx, int TF_OrgCashTransfer_Configx_ID, String trxName)
@@ -39,6 +39,7 @@ public class X_TF_OrgCashTransfer_Configx extends PO implements I_TF_OrgCashTran
       /** if (TF_OrgCashTransfer_Configx_ID == 0)
         {
 			setC_DocType_ID (0);
+			setDescription (null);
 			setDest_Acct_ID (0);
 			setDest_Org_ID (0);
 // @Dest_Org_ID@
@@ -188,6 +189,31 @@ public class X_TF_OrgCashTransfer_Configx extends PO implements I_TF_OrgCashTran
 		return ii.intValue();
 	}
 
+	public org.compiere.model.I_C_BPartner getDest_Partner() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_BPartner)MTable.get(getCtx(), org.compiere.model.I_C_BPartner.Table_Name)
+			.getPO(getDest_Partner_ID(), get_TrxName());	}
+
+	/** Set Destination Org Business Partner.
+		@param Dest_Partner_ID Destination Org Business Partner	  */
+	public void setDest_Partner_ID (int Dest_Partner_ID)
+	{
+		if (Dest_Partner_ID < 1) 
+			set_Value (COLUMNNAME_Dest_Partner_ID, null);
+		else 
+			set_Value (COLUMNNAME_Dest_Partner_ID, Integer.valueOf(Dest_Partner_ID));
+	}
+
+	/** Get Destination Org Business Partner.
+		@return Destination Org Business Partner	  */
+	public int getDest_Partner_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Dest_Partner_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	/** Set Default.
 		@param IsDefault 
 		Default value
@@ -255,19 +281,5 @@ public class X_TF_OrgCashTransfer_Configx extends PO implements I_TF_OrgCashTran
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
-	}
-
-	/** Set TF_OrgCashTransfer_Configx_UU.
-		@param TF_OrgCashTransfer_Configx_UU TF_OrgCashTransfer_Configx_UU	  */
-	public void setTF_OrgCashTransfer_Configx_UU (String TF_OrgCashTransfer_Configx_UU)
-	{
-		set_ValueNoCheck (COLUMNNAME_TF_OrgCashTransfer_Configx_UU, TF_OrgCashTransfer_Configx_UU);
-	}
-
-	/** Get TF_OrgCashTransfer_Configx_UU.
-		@return TF_OrgCashTransfer_Configx_UU	  */
-	public String getTF_OrgCashTransfer_Configx_UU () 
-	{
-		return (String)get_Value(COLUMNNAME_TF_OrgCashTransfer_Configx_UU);
 	}
 }

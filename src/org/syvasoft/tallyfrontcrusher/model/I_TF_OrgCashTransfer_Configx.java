@@ -141,6 +141,17 @@ public interface I_TF_OrgCashTransfer_Configx
 	/** Get Destination Organization	  */
 	public int getDest_Org_ID();
 
+    /** Column name Dest_Partner_ID */
+    public static final String COLUMNNAME_Dest_Partner_ID = "Dest_Partner_ID";
+
+	/** Set Destination Org Business Partner	  */
+	public void setDest_Partner_ID (int Dest_Partner_ID);
+
+	/** Get Destination Org Business Partner	  */
+	public int getDest_Partner_ID();
+
+	public org.compiere.model.I_C_BPartner getDest_Partner() throws RuntimeException;
+
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";
 
@@ -186,15 +197,6 @@ public interface I_TF_OrgCashTransfer_Configx
 
 	/** Get Destination Org Additional Cash Transfer	  */
 	public int getTF_OrgCashTransfer_Configx_ID();
-
-    /** Column name TF_OrgCashTransfer_Configx_UU */
-    public static final String COLUMNNAME_TF_OrgCashTransfer_Configx_UU = "TF_OrgCashTransfer_Configx_UU";
-
-	/** Set TF_OrgCashTransfer_Configx_UU	  */
-	public void setTF_OrgCashTransfer_Configx_UU (String TF_OrgCashTransfer_Configx_UU);
-
-	/** Get TF_OrgCashTransfer_Configx_UU	  */
-	public String getTF_OrgCashTransfer_Configx_UU();
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";

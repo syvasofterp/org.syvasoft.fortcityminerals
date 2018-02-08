@@ -931,7 +931,16 @@ public class TF_MPayment extends MPayment {
 			payment2.setC_Charge_ID(charge.get_ID());
 		payment2.setUser1_ID(getUser1_ID());
 		payment2.setUser2_ID(getUser2_ID());
-		payment2.setC_BPartner_ID(getC_BPartner_ID());		
+		if(ctConfig.getDest_Partner_ID() > 0) {
+			payment2.setC_BPartner_ID(ctConfig.getDest_Partner_ID());
+			payment2.setTF_BPartner_ID(ctConfig.getDest_Partner_ID());			
+			payment2.setIsEmployee(payment2.getC_BPartner().isEmployee());
+		}
+		else {
+			MUser user = MUser.get(getCtx(), Env.getAD_User_ID(Env.getCtx()));				
+			int bPartnerID = user.getC_BPartner_ID();
+			payment2.setC_BPartner_ID(bPartnerID);
+		}				
 		payment2.setC_Currency_ID(getC_Currency_ID());
 		payment2.setPayAmt(getPayAmt());
 		payment2.setTenderType(getTenderType());
