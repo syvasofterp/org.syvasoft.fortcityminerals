@@ -33,7 +33,7 @@ public class X_TF_KatingEntry extends PO implements I_TF_KatingEntry, I_Persiste
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180122L;
+	private static final long serialVersionUID = 20180208L;
 
     /** Standard Constructor */
     public X_TF_KatingEntry (Properties ctx, int TF_KatingEntry_ID, String trxName)
@@ -42,6 +42,7 @@ public class X_TF_KatingEntry extends PO implements I_TF_KatingEntry, I_Persiste
       /** if (TF_KatingEntry_ID == 0)
         {
 			setDateAcct (new Timestamp( System.currentTimeMillis() ));
+// @#Date@
 			setDocumentNo (null);
 			setProcessed (false);
 			setTF_KatingEntry_ID (0);
@@ -110,7 +111,7 @@ public class X_TF_KatingEntry extends PO implements I_TF_KatingEntry, I_Persiste
 	  */
 	public void setDateAcct (Timestamp DateAcct)
 	{
-		set_ValueNoCheck (COLUMNNAME_DateAcct, DateAcct);
+		set_Value (COLUMNNAME_DateAcct, DateAcct);
 	}
 
 	/** Get Account Date.
@@ -383,6 +384,20 @@ public class X_TF_KatingEntry extends PO implements I_TF_KatingEntry, I_Persiste
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
+	}
+
+	/** Set Time.
+		@param Time Time	  */
+	public void setTime (String Time)
+	{
+		set_Value (COLUMNNAME_Time, Time);
+	}
+
+	/** Get Time.
+		@return Time	  */
+	public String getTime () 
+	{
+		return (String)get_Value(COLUMNNAME_Time);
 	}
 
 	/** Set Tonnage.
