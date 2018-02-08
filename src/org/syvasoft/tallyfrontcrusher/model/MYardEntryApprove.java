@@ -44,14 +44,15 @@ public class MYardEntryApprove extends X_TF_YardEntryApprove {
 		}
 				
 		String sqlSelectLoadEntries = " UPDATE " + MYardLoadEntry.Table_Name + " SET TF_YardEntryApprove_ID " +
-				" = ? WHERE TF_YardEntryApprove_ID IS NULL AND DateAcct = ? AND DocStatus='CO' " ;
-		Object[] params = new Object[2];
+				" = ? WHERE AD_Org_ID = ? AND TF_YardEntryApprove_ID IS NULL AND DateAcct = ? AND DocStatus='CO' " ;
+		Object[] params = new Object[3];
 		params[0] = getTF_YardEntryApprove_ID();
-		params[1] = getDateAcct();
+		params[1] = getAD_Org_ID();
+		params[2] = getDateAcct();
 		DB.executeUpdateEx(sqlSelectLoadEntries, params, get_TrxName());
 		
 		String sqlSelectPermitEntries = "UPDATE " + MYardPermitIssueEntry.Table_Name + " SET TF_YardEntryApprove_ID = ? " +
-				" WHERE TF_YardEntryApprove_ID IS NULL AND DateAcct = ? AND DocStatus='CO' ";
+				" WHERE AD_Org_ID = ? AND TF_YardEntryApprove_ID IS NULL AND DateAcct = ? AND DocStatus='CO' ";
 		DB.executeUpdateEx(sqlSelectPermitEntries, params, get_TrxName());
 		
 		String sqlLoad = " SELECT bp.C_BPartner_ID, bp.Name Customer, l.DateAcct, vt.Name VehicleType, vt.TF_VehicleType_ID, COUNT(*)::numeric TotalLoad , "
@@ -137,16 +138,18 @@ public class MYardEntryApprove extends X_TF_YardEntryApprove {
 				
 			}
 			DB.close(rs, pstmt);
-			xBckLine.setExtraBucketQty(xBucketQty);
-			xBckLine.setBucket_Discount(DiscBucketQty);
-			MYardEntryConfig xConfig = MYardEntryConfig.getXBckConfig(getAD_Org_ID());			
-			if(xConfig != null)
-				xBckLine.setExtraBucketPrice(xConfig.getExtraBucketPrice());
-			else
-				xBckLine.setExtraBucketPrice(BigDecimal.ZERO);
-			xBckLine.setExtraBucketAmount(xBckLine.getExtraBucketPrice().multiply(xBckLine.getExtraBucketQty()));
-			
-			xBckLine.saveEx();
+			if(xBckLine != null) {
+				xBckLine.setExtraBucketQty(xBucketQty);
+				xBckLine.setBucket_Discount(DiscBucketQty);
+				MYardEntryConfig xConfig = MYardEntryConfig.getXBckConfig(getAD_Org_ID());			
+				if(xConfig != null)
+					xBckLine.setExtraBucketPrice(xConfig.getExtraBucketPrice());
+				else
+					xBckLine.setExtraBucketPrice(BigDecimal.ZERO);
+				xBckLine.setExtraBucketAmount(xBckLine.getExtraBucketPrice().multiply(xBckLine.getExtraBucketQty()));
+				
+				xBckLine.saveEx();
+			}
 			setIsCreated("Y");
 			
 		}

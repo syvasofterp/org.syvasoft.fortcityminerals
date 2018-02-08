@@ -254,6 +254,15 @@ public interface I_TF_KatingEntry
 
 	public I_TF_RentedVehicle getTF_RentedVehicle() throws RuntimeException;
 
+    /** Column name Time */
+    public static final String COLUMNNAME_Time = "Time";
+
+	/** Set Time	  */
+	public void setTime (String Time);
+
+	/** Get Time	  */
+	public String getTime();
+
     /** Column name Tonnage */
     public static final String COLUMNNAME_Tonnage = "Tonnage";
 
