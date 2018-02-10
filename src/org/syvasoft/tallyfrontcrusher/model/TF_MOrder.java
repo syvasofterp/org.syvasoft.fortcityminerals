@@ -1284,7 +1284,48 @@ public class TF_MOrder extends MOrder {
 		return ii.intValue();
 	}
 
+    /** Column name TF_YardEntry_ID */
+    public static final String COLUMNNAME_TF_YardEntry_ID = "TF_YardEntry_ID";
+    /** Set Yard Entry.
+	@param TF_YardEntry_ID Yard Entry	  */
+	public void setTF_YardEntry_ID (int TF_YardEntry_ID)
+	{
+		if (TF_YardEntry_ID < 1) 
+			set_Value (COLUMNNAME_TF_YardEntry_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_YardEntry_ID, Integer.valueOf(TF_YardEntry_ID));
+	}
 	
+	/** Get Yard Entry.
+		@return Yard Entry	  */
+	public int getTF_YardEntry_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_YardEntry_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+	/** Column name TF_YardEntryApprove_ID */
+    public static final String COLUMNNAME_TF_YardEntryApprove_ID = "TF_YardEntryApprove_ID";
+    /** Set Approve Yard Entry.
+	@param TF_YardEntryApprove_ID Approve Yard Entry	  */
+	public void setTF_YardEntryApprove_ID (int TF_YardEntryApprove_ID)
+	{
+		if (TF_YardEntryApprove_ID < 1) 
+			set_Value (COLUMNNAME_TF_YardEntryApprove_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_YardEntryApprove_ID, Integer.valueOf(TF_YardEntryApprove_ID));
+	}
+	
+	/** Get Approve Yard Entry.
+		@return Approve Yard Entry	  */
+	public int getTF_YardEntryApprove_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_YardEntryApprove_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
 		success = super.afterSave(newRecord, success);
@@ -1382,7 +1423,8 @@ public class TF_MOrder extends MOrder {
 			
 			//ordLine.setLineNetAmt(getItem1_Amt());
 			DB.executeUpdate("UPDATE C_Order SET " + COLUMNNAME_Item1_C_OrderLine_ID + " = "
-				+ ordLine.getC_OrderLine_ID() + " WHERE C_Order_ID = " + getC_Order_ID(), get_TrxName());	
+				+ ordLine.getC_OrderLine_ID() + " WHERE C_Order_ID = " + getC_Order_ID(), get_TrxName());
+			setItem1_C_OrderLine_ID(ordLine.getC_OrderLine_ID());
 		}
 		//Item 2
 		if(getItem2_ID() > 0 && (is_ValueChanged(COLUMNNAME_Item2_ID) || is_ValueChanged(COLUMNNAME_Item2_Qty)
@@ -1420,7 +1462,8 @@ public class TF_MOrder extends MOrder {
 			}
 			
 			DB.executeUpdate("UPDATE C_Order SET " + COLUMNNAME_Item2_C_OrderLine_ID + " = "
-				+ ordLine.getC_OrderLine_ID() + " WHERE C_Order_ID = " + getC_Order_ID(), get_TrxName());	
+				+ ordLine.getC_OrderLine_ID() + " WHERE C_Order_ID = " + getC_Order_ID(), get_TrxName());
+			setItem2_C_OrderLine_ID(ordLine.getC_OrderLine_ID());
 		}
 		
 		

@@ -13,7 +13,8 @@ public class CalloutFuelIssue_TypeChange implements IColumnCallout {
 	@Override
 	public String start(Properties ctx, int WindowNo, GridTab mTab, GridField mField, Object value, Object oldValue) {
 		//Empty Account Expense when Subcontract is empty
-		if(mTab.getValue(MFuelIssue.COLUMNNAME_C_Project_ID) == null)
+		
+		if(mTab.getValue(MFuelIssue.COLUMNNAME_C_Project_ID) == null && !mField.getColumnName().equals(MFuelIssue.COLUMNNAME_Account_ID))
 			mTab.setValue(MFuelIssue.COLUMNNAME_Account_ID, null);
 		
 		if(mTab.getValue(MFuelIssue.COLUMNNAME_Account_ID) != null)

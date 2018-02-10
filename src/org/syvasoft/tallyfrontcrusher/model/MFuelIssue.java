@@ -46,8 +46,8 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
 		
-		MResource resource  = (MResource)getVehicle().getS_Resource();		
-		setC_ElementValue_ID(resource.get_ValueAsInt(COLUMNNAME_C_ElementValue_ID));
+		//MResource resource  = (MResource)getVehicle().getS_Resource();		
+		//setC_ElementValue_ID(resource.get_ValueAsInt(COLUMNNAME_C_ElementValue_ID));
 		
 		//Set Costing
 		//MProduct product = MProduct.get(getCtx(), getM_Product_ID());

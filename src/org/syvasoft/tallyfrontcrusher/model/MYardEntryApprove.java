@@ -17,6 +17,11 @@ public class MYardEntryApprove extends X_TF_YardEntryApprove {
 	 * 
 	 */
 	private static final long serialVersionUID = 2995552663424149296L;
+	
+	private int C_DocType_ID = 0;
+	private int M_Warehouse_ID = 0;
+	private boolean createSales = false;
+	
 	public MYardEntryApprove(Properties ctx, int TF_YardEntryApprove_ID, String trxName) {
 		super(ctx, TF_YardEntryApprove_ID, trxName);
 		// TODO Auto-generated constructor stub
@@ -26,6 +31,18 @@ public class MYardEntryApprove extends X_TF_YardEntryApprove {
 		// TODO Auto-generated constructor stub
 	}
 
+	public void setC_DocType_ID(int DocType_ID) {
+		C_DocType_ID = DocType_ID;
+	}
+	
+	public void setM_Warehouse_ID(int Warehouse_ID) {
+		M_Warehouse_ID = Warehouse_ID;
+	}
+	
+	public void setCreateSales(boolean create) {
+		createSales = create;
+	}
+	
 	public List<MYardEntryApproveLine> getLines() {
 		List<MYardEntryApproveLine> lines = new Query(getCtx(), MYardEntryApproveLine.Table_Name, "TF_YardEntryApprove_ID = ?",
 				get_TrxName())
@@ -42,7 +59,7 @@ public class MYardEntryApprove extends X_TF_YardEntryApprove {
 					getTF_YardEntryApprove_ID();
 			DB.executeUpdate(sqlDelete, get_TrxName());
 		}
-				
+		
 		String sqlSelectLoadEntries = " UPDATE " + MYardLoadEntry.Table_Name + " SET TF_YardEntryApprove_ID " +
 				" = ? WHERE AD_Org_ID = ? AND TF_YardEntryApprove_ID IS NULL AND DateAcct = ? AND DocStatus='CO' " ;
 		Object[] params = new Object[3];
@@ -205,6 +222,17 @@ public class MYardEntryApprove extends X_TF_YardEntryApprove {
 				yEntry.setProcessed(true);
 				yEntry.setTF_YardEntryApprove_ID(getTF_YardEntryApprove_ID());
 				yEntry.saveEx();
+				
+				if(createSales) {
+					if(C_DocType_ID == 0)
+						throw new AdempiereException("Please specify Sales Document Type!");
+					if(M_Warehouse_ID == 0)
+						throw new AdempiereException("Please specify Warehouse");
+					
+					yEntry.createSalesEntry(C_DocType_ID, M_Warehouse_ID);
+					yEntry.saveEx();
+				}
+				
 				line.setTF_YardEntry_ID(yEntry.getTF_YardEntry_ID());				
 				line.saveEx();
 			}
