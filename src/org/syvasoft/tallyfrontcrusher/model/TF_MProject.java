@@ -584,7 +584,8 @@ public class TF_MProject extends MProject {
 	}
 	
 	public void updateQtyProcessed() {
-		if(getSubcontractType().equals(SUBCONTRACTTYPE_KatingProject)) {
+		if(getSubcontractType().equals(SUBCONTRACTTYPE_KatingProject) ||
+				getSubcontractType().equals(SUBCONTRACTTYPE_SandMining)) {
 			String sql = "UPDATE C_Project SET QtyProcessed=COALESCE((SELECT  SUM(Tonnage) FROM TF_KatingEntry k "
 					+ "WHERE k.C_Project_ID = C_Project.C_Project_ID AND DocStatus='CO'),0) WHERE C_Project_ID = " + getC_Project_ID();
 			DB.executeUpdate(sql, get_TrxName());
@@ -596,15 +597,24 @@ public class TF_MProject extends MProject {
 	}
 	
 	public void updateQtyBilled() {
-		if(getSubcontractType().equals(SUBCONTRACTTYPE_KatingProject)) {
+		if(getSubcontractType().equals(SUBCONTRACTTYPE_KatingProject) ||
+				getSubcontractType().equals(SUBCONTRACTTYPE_SandMining)) {
+			String so = isSOTrx() ? "Y" : "N";
 			String sql = "SELECT 	SUM(QtyInvoiced) FROM C_Invoice i INNER JOIN C_InvoiceLine il  "
-					+ "ON i.C_Invoice_ID = il.C_Invoice_ID WHERE i.C_Project_ID = ? AND i.DocStatus = 'CO' AND i.IsSOTrx='Y'";
-			BigDecimal qtyInvoiced = DB.getSQLValueBD(get_TrxName(), sql, getC_Project_ID());
+					+ "ON i.C_Invoice_ID = il.C_Invoice_ID WHERE i.C_Project_ID = ? AND C_BPartner_ID = ? AND i.DocStatus = 'CO' AND i.IsSOTrx=?";
+			BigDecimal qtyInvoiced = DB.getSQLValueBD(get_TrxName(), sql, getC_Project_ID(), getC_BPartner_ID(), so);
 			if(qtyInvoiced == null)
 				qtyInvoiced = BigDecimal.ZERO;
 			setInvoicedQty(qtyInvoiced);
 			
-			//Invoiced Amount is updated by default.
+			//Set Amount 
+			sql = " SELECT SUM(GrandTotal) FROM C_Invoice i WHERE i.C_Project_ID = ? AND C_BPartner_ID = ? AND i.DocStatus = 'CO' AND i.IsSOTrx=?";
+			BigDecimal invoicedAmt = DB.getSQLValueBD(get_TrxName(), sql, getC_Project_ID(), getC_BPartner_ID(), so);
+			if(invoicedAmt == null)
+				invoicedAmt = BigDecimal.ZERO;
+			setInvoicedAmt(invoicedAmt);
+			
+			
 		}
 	}
 	

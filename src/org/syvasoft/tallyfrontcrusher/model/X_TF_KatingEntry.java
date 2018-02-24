@@ -33,7 +33,7 @@ public class X_TF_KatingEntry extends PO implements I_TF_KatingEntry, I_Persiste
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180208L;
+	private static final long serialVersionUID = 20180224L;
 
     /** Standard Constructor */
     public X_TF_KatingEntry (Properties ctx, int TF_KatingEntry_ID, String trxName)
@@ -325,6 +325,56 @@ public class X_TF_KatingEntry extends PO implements I_TF_KatingEntry, I_Persiste
 			return "Y".equals(oo);
 		}
 		return false;
+	}
+
+	public org.compiere.model.I_C_Invoice getSubcon_Invoice() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Invoice)MTable.get(getCtx(), org.compiere.model.I_C_Invoice.Table_Name)
+			.getPO(getSubcon_Invoice_ID(), get_TrxName());	}
+
+	/** Set Subcontractor Invoice.
+		@param Subcon_Invoice_ID Subcontractor Invoice	  */
+	public void setSubcon_Invoice_ID (int Subcon_Invoice_ID)
+	{
+		if (Subcon_Invoice_ID < 1) 
+			set_Value (COLUMNNAME_Subcon_Invoice_ID, null);
+		else 
+			set_Value (COLUMNNAME_Subcon_Invoice_ID, Integer.valueOf(Subcon_Invoice_ID));
+	}
+
+	/** Get Subcontractor Invoice.
+		@return Subcontractor Invoice	  */
+	public int getSubcon_Invoice_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Subcon_Invoice_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_M_InOut getSubcon_Receipt() throws RuntimeException
+    {
+		return (org.compiere.model.I_M_InOut)MTable.get(getCtx(), org.compiere.model.I_M_InOut.Table_Name)
+			.getPO(getSubcon_Receipt_ID(), get_TrxName());	}
+
+	/** Set Subcontractor Material Receipt.
+		@param Subcon_Receipt_ID Subcontractor Material Receipt	  */
+	public void setSubcon_Receipt_ID (int Subcon_Receipt_ID)
+	{
+		if (Subcon_Receipt_ID < 1) 
+			set_Value (COLUMNNAME_Subcon_Receipt_ID, null);
+		else 
+			set_Value (COLUMNNAME_Subcon_Receipt_ID, Integer.valueOf(Subcon_Receipt_ID));
+	}
+
+	/** Get Subcontractor Material Receipt.
+		@return Subcontractor Material Receipt	  */
+	public int getSubcon_Receipt_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Subcon_Receipt_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	/** Set Kating Entry.

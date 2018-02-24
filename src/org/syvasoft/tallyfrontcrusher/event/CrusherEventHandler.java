@@ -14,6 +14,7 @@ import org.compiere.model.MInOut;
 import org.compiere.model.MInOutLine;
 import org.compiere.model.MInvoice;
 import org.compiere.model.MInvoiceLine;
+import org.compiere.model.MJournal;
 import org.compiere.model.MOrder;
 import org.compiere.model.MPInstance;
 import org.compiere.model.MPayment;
@@ -41,6 +42,7 @@ import org.syvasoft.tallyfrontcrusher.model.MJobworkItemIssue;
 import org.syvasoft.tallyfrontcrusher.model.MTyre;
 import org.syvasoft.tallyfrontcrusher.model.TF_MCharge;
 import org.syvasoft.tallyfrontcrusher.model.TF_MInvoice;
+import org.syvasoft.tallyfrontcrusher.model.TF_MJournal;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrderLine;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrg;
@@ -61,6 +63,7 @@ public class CrusherEventHandler extends AbstractEventHandler {
 		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MInvoice.Table_Name);
 		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MTransaction.Table_Name);
 		registerTableEvent(IEventTopics.PO_AFTER_NEW, MTyre.Table_Name);
+		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MJournal.Table_Name);
 		registerEvent(IEventTopics.AFTER_LOGIN);		
 
 	}
@@ -223,6 +226,16 @@ public class CrusherEventHandler extends AbstractEventHandler {
 			MTyre tyre = (MTyre) po;
 			if(IEventTopics.PO_AFTER_NEW.equals(event.getTopic())) {
 				MTyre.createTyreLifeRecords(tyre);				
+			}
+		}
+		else if (po instanceof MJournal || po.get_TableName().equals(MJournal.Table_Name) ) {
+			MJournal j = (MJournal) po;
+			
+			if(j.getReversal_ID() > 0 && IEventTopics.PO_BEFORE_NEW.equals(event.getTopic())) {
+				MJournal revJ =  new MJournal(j.getCtx(), j.getReversal_ID(), j.get_TrxName());			
+				int C_Project_ID = revJ.get_ValueAsInt("C_Project_ID");
+				if(C_Project_ID > 0)
+					j.set_ValueOfColumn("C_Project_ID", C_Project_ID);
 			}
 		}
 	}
