@@ -47,8 +47,9 @@ public class CalloutOrder_SandBlockQtyPrice implements IColumnCallout {
 				tf_vehicletype_id = (int) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_VehicleType_ID);
 			int orgID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_AD_Org_ID) ;
 			if(isPermitSales) {
-				MSandBlockBucketConfig config = MSandBlockBucketConfig.getBucketConfig(orgID, MSandBlockBucketConfig.SANDTYPE_P, tf_vehicletype_id);		
-				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_PermitIssued, item1_BucketQty.multiply(config.getPermitTonnagePerBucket()));
+				MSandBlockBucketConfig config = MSandBlockBucketConfig.getBucketConfig(orgID, MSandBlockBucketConfig.SANDTYPE_P, tf_vehicletype_id);
+				if(config != null)
+					mTab.setValue(TF_MOrder.COLUMNNAME_Item1_PermitIssued, item1_BucketQty.multiply(config.getPermitTonnagePerBucket()));
 			}
 		}
 		

@@ -30,7 +30,7 @@ public class X_TF_SubcontractType extends PO implements I_TF_SubcontractType, I_
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180122L;
+	private static final long serialVersionUID = 20180224L;
 
     /** Standard Constructor */
     public X_TF_SubcontractType (Properties ctx, int TF_SubcontractType_ID, String trxName)
@@ -38,6 +38,8 @@ public class X_TF_SubcontractType extends PO implements I_TF_SubcontractType, I_
       super (ctx, TF_SubcontractType_ID, trxName);
       /** if (TF_SubcontractType_ID == 0)
         {
+			setCreateInvFromKating (false);
+// N
 			setInvoiceFor (null);
 			setInvoicePriceFrom (null);
 			setIsSOTrx (false);
@@ -89,6 +91,27 @@ public class X_TF_SubcontractType extends PO implements I_TF_SubcontractType, I_
 	public boolean isCreateBoulderReceipt () 
 	{
 		Object oo = get_Value(COLUMNNAME_CreateBoulderReceipt);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	/** Set Create Invoice From Kating.
+		@param CreateInvFromKating Create Invoice From Kating	  */
+	public void setCreateInvFromKating (boolean CreateInvFromKating)
+	{
+		set_Value (COLUMNNAME_CreateInvFromKating, Boolean.valueOf(CreateInvFromKating));
+	}
+
+	/** Get Create Invoice From Kating.
+		@return Create Invoice From Kating	  */
+	public boolean isCreateInvFromKating () 
+	{
+		Object oo = get_Value(COLUMNNAME_CreateInvFromKating);
 		if (oo != null) 
 		{
 			 if (oo instanceof Boolean) 

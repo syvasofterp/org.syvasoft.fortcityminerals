@@ -225,6 +225,28 @@ public interface I_TF_KatingEntry
 	/** Get Process Now	  */
 	public boolean isProcessing();
 
+    /** Column name Subcon_Invoice_ID */
+    public static final String COLUMNNAME_Subcon_Invoice_ID = "Subcon_Invoice_ID";
+
+	/** Set Subcontractor Invoice	  */
+	public void setSubcon_Invoice_ID (int Subcon_Invoice_ID);
+
+	/** Get Subcontractor Invoice	  */
+	public int getSubcon_Invoice_ID();
+
+	public org.compiere.model.I_C_Invoice getSubcon_Invoice() throws RuntimeException;
+
+    /** Column name Subcon_Receipt_ID */
+    public static final String COLUMNNAME_Subcon_Receipt_ID = "Subcon_Receipt_ID";
+
+	/** Set Subcontractor Material Receipt	  */
+	public void setSubcon_Receipt_ID (int Subcon_Receipt_ID);
+
+	/** Get Subcontractor Material Receipt	  */
+	public int getSubcon_Receipt_ID();
+
+	public org.compiere.model.I_M_InOut getSubcon_Receipt() throws RuntimeException;
+
     /** Column name TF_KatingEntry_ID */
     public static final String COLUMNNAME_TF_KatingEntry_ID = "TF_KatingEntry_ID";
 

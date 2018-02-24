@@ -1847,6 +1847,10 @@ public class TF_MOrder extends MOrder {
 		
 		MSubcontractType st = new MSubcontractType(getCtx(), proj.getTF_SubcontractType_ID(), get_TrxName());
 		
+		//Do not create invoice from sales
+		if(!st.isCreateInvFromSales())
+			return;
+		
 		int priceItem_Id = 0;
 		int priceItem2_id = 0;
 		if(st.getInvoicePriceFrom().equals(MSubcontractType.INVOICEPRICEFROM_Jobwork)) { 
@@ -1939,38 +1943,42 @@ public class TF_MOrder extends MOrder {
 		}
 		
 		//MM Receipt
-		MInOut inout = new MInOut(invoice, 1000014, getDateAcct(), getM_Warehouse_ID());
-		inout.setDescription(invoice.getDescription());
-		inout.setMovementType(MInOut.MOVEMENTTYPE_VendorReceipts);
-		inout.saveEx(get_TrxName());
-		
-		//Material Receipt Line - Item 1
-		MInOutLine ioLine = new MInOutLine(inout);
-		MWarehouse wh = (MWarehouse) getM_Warehouse();
-		ioLine.setInvoiceLine(invLine, wh.getDefaultLocator().get_ID(), getItem1_Qty());
-		ioLine.setQty(getItem1_Qty());
-		ioLine.saveEx(get_TrxName());
-		
-		//Material Receipt Line - Item 1
-		MInOutLine ioLine2 = new MInOutLine(inout);
-		if(getItem2_ID() > 0) {
-			ioLine2.setInvoiceLine(invLine2, wh.getDefaultLocator().get_ID(), getItem2_Qty());
-			ioLine2.setQty(getItem2_Qty());
-			ioLine2.saveEx(get_TrxName());
-		}
-		
-		//Material Receipt DocAction
-		if (!inout.processIt(DocAction.ACTION_Complete))
-			throw new AdempiereException("Failed when processing document - " + invoice.getProcessMsg());
-		inout.saveEx();
-		//End DocAction
-		
-		invLine.setM_InOutLine_ID(ioLine.getM_InOutLine_ID());
-		invLine.saveEx();
-		
-		if(getItem2_ID() > 0) {
-			invLine2.setM_InOutLine_ID(ioLine2.getM_InOutLine_ID());
-			invLine2.saveEx();
+		if(st.isCreateMRFromSales()) {
+			MInOut inout = new MInOut(invoice, 1000014, getDateAcct(), getM_Warehouse_ID());
+			inout.setDescription(invoice.getDescription());
+			inout.setMovementType(MInOut.MOVEMENTTYPE_VendorReceipts);
+			inout.saveEx(get_TrxName());
+			
+			//Material Receipt Line - Item 1
+			MInOutLine ioLine = new MInOutLine(inout);
+			MWarehouse wh = (MWarehouse) getM_Warehouse();
+			ioLine.setInvoiceLine(invLine, wh.getDefaultLocator().get_ID(), getItem1_Qty());
+			ioLine.setQty(getItem1_Qty());
+			ioLine.saveEx(get_TrxName());
+			
+			//Material Receipt Line - Item 2
+			MInOutLine ioLine2 = new MInOutLine(inout);
+			if(getItem2_ID() > 0) {
+				ioLine2.setInvoiceLine(invLine2, wh.getDefaultLocator().get_ID(), getItem2_Qty());
+				ioLine2.setQty(getItem2_Qty());
+				ioLine2.saveEx(get_TrxName());
+			}
+			
+			//Material Receipt DocAction
+			if (!inout.processIt(DocAction.ACTION_Complete))
+				throw new AdempiereException("Failed when processing document - " + invoice.getProcessMsg());
+			inout.saveEx();
+			//End DocAction
+			
+			invLine.setM_InOutLine_ID(ioLine.getM_InOutLine_ID());
+			invLine.saveEx();
+			
+			if(getItem2_ID() > 0) {
+				invLine2.setM_InOutLine_ID(ioLine2.getM_InOutLine_ID());
+				invLine2.saveEx();
+			}
+			
+			setSubcon_Receipt_ID(inout.getM_InOut_ID());
 		}
 		
 		//Invoice DocAction
@@ -1982,7 +1990,7 @@ public class TF_MOrder extends MOrder {
 			MSubcontractMaterialMovement.createMaterialMovement(get_TrxName(), getDateAcct(),getAD_Org_ID(), getC_Project_ID(),
 					invoice.getC_Invoice_ID(), invoice.getC_BPartner_ID(), getItem1_ID(), getItem1_Qty());
 		setSubcon_Invoice_ID(invoice.getC_Invoice_ID());
-		setSubcon_Receipt_ID(inout.getM_InOut_ID());		
+				
 	}
 	
 	public void reverseSubcontractPurchaseEntry() {

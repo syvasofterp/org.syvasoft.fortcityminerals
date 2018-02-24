@@ -438,6 +438,11 @@ public class TF_MInvoice extends MInvoice {
 	public String completeIt() {		
 		String msg = super.completeIt();
 		createCounterProjectSalesInvoice();
+		if(getC_Project_ID() > 0) {
+			TF_MProject proj = new TF_MProject(getCtx(), getC_Project_ID(), get_TrxName());
+			proj.updateQtyBilled();
+			proj.saveEx();
+		}
 		return msg;
 	}
 

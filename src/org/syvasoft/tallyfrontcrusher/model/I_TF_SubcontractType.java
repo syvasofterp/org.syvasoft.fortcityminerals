@@ -89,6 +89,15 @@ public interface I_TF_SubcontractType
 	  */
 	public int getCreatedBy();
 
+    /** Column name CreateInvFromKating */
+    public static final String COLUMNNAME_CreateInvFromKating = "CreateInvFromKating";
+
+	/** Set Create Invoice From Kating	  */
+	public void setCreateInvFromKating (boolean CreateInvFromKating);
+
+	/** Get Create Invoice From Kating	  */
+	public boolean isCreateInvFromKating();
+
     /** Column name CreateInvFromSales */
     public static final String COLUMNNAME_CreateInvFromSales = "CreateInvFromSales";
 
