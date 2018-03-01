@@ -21,6 +21,7 @@ import org.compiere.model.MPayment;
 import org.compiere.model.MProcess;
 import org.compiere.model.MProduct;
 import org.compiere.model.MProduction;
+import org.compiere.model.MRole;
 import org.compiere.model.MStorageOnHand;
 import org.compiere.model.MSysConfig;
 import org.compiere.model.MTransaction;
@@ -77,7 +78,7 @@ public class CrusherEventHandler extends AbstractEventHandler {
 			int COA_ID = DB.getSQLValue(null, sql, Env.getAD_Client_ID(Env.getCtx()));
 			Env.setContext(Env.getCtx(), "#C_Element_ID", COA_ID);
 			TF_MOrg org = new TF_MOrg(Env.getCtx(), Env.getAD_Org_ID(Env.getCtx()), null);
-			Env.setContext(Env.getCtx(), "#OrgType", org.getOrgType());
+			Env.setContext(Env.getCtx(), "#OrgType", org.getOrgType());			
 			return;
 		}
 		
