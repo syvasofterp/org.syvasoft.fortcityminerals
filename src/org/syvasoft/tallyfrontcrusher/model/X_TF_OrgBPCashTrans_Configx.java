@@ -30,7 +30,7 @@ public class X_TF_OrgBPCashTrans_Configx extends PO implements I_TF_OrgBPCashTra
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180129L;
+	private static final long serialVersionUID = 20180228L;
 
     /** Standard Constructor */
     public X_TF_OrgBPCashTrans_Configx (Properties ctx, int TF_OrgBPCashTrans_Configx_ID, String trxName)
@@ -39,10 +39,10 @@ public class X_TF_OrgBPCashTrans_Configx extends PO implements I_TF_OrgBPCashTra
       /** if (TF_OrgBPCashTrans_Configx_ID == 0)
         {
 			setC_DocType_ID (0);
+			setDescription (null);
 			setDest_Acct_ID (0);
 			setDest_Org_ID (0);
 // @Dest_Org_ID@
-			setDest_Partner_ID (0);
 			setTF_OrgBPCashTrans_Configx_ID (0);
 			setTF_OrgBPCashTransfer_Config_ID (0);
         } */

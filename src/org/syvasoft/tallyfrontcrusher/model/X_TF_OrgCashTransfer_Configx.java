@@ -30,7 +30,7 @@ public class X_TF_OrgCashTransfer_Configx extends PO implements I_TF_OrgCashTran
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180208L;
+	private static final long serialVersionUID = 20180228L;
 
     /** Standard Constructor */
     public X_TF_OrgCashTransfer_Configx (Properties ctx, int TF_OrgCashTransfer_Configx_ID, String trxName)
@@ -40,7 +40,6 @@ public class X_TF_OrgCashTransfer_Configx extends PO implements I_TF_OrgCashTran
         {
 			setC_DocType_ID (0);
 			setDescription (null);
-			setDest_Acct_ID (0);
 			setDest_Org_ID (0);
 // @Dest_Org_ID@
 			setTF_OrgCashTransfer_Config_ID (0);

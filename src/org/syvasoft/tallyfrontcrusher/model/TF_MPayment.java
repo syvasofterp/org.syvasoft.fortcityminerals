@@ -746,6 +746,11 @@ public class TF_MPayment extends MPayment {
 			 boolean ok = counter.reverseCorrectIt();
 			 counter.saveEx();
 		}
+		else if(counter.getDocStatus().equals(DOCSTATUS_InProgress)) {
+			boolean ok = counter.voidIt();
+			counter.setDocStatus(DOCSTATUS_Voided);
+			counter.saveEx();
+		}
 		
 		if(getRef2_Payment_ID() == 0)
 			return true;
@@ -757,7 +762,11 @@ public class TF_MPayment extends MPayment {
 			 counter.saveEx();
 			 return ok;
 		}		
-		
+		else if(counter.getDocStatus().equals(DOCSTATUS_InProgress)) {
+			boolean ok = counter.voidIt();
+			counter.setDocStatus(DOCSTATUS_Voided);
+			counter.saveEx();
+		}
 		return true;
 		
 	}
@@ -902,13 +911,15 @@ public class TF_MPayment extends MPayment {
 		payment.setC_Currency_ID(getC_Currency_ID());
 		payment.setPayAmt(getPayAmt());
 		payment.setTenderType(getTenderType());
-		payment.setDescription(getDescription());		
+		payment.setDescription(getDescription());
+		payment.setDocStatus(DOCSTATUS_InProgress);
 		payment.saveEx();
 		
-		if(!payment.processIt(DocAction.ACTION_Complete))
-			throw new AdempiereException("Failed when processing document - " + payment.getProcessMsg());
-		payment.saveEx();
-		
+		if(!config.isRequiredApproval()) {
+			if(!payment.processIt(DocAction.ACTION_Complete))
+				throw new AdempiereException("Failed when processing document - " + payment.getProcessMsg());
+			payment.saveEx();
+		}
 		setRef_Payment_ID(payment.getC_Payment_ID());
 		
 		//Additional Cash Transfer in Destination Organization
@@ -944,13 +955,15 @@ public class TF_MPayment extends MPayment {
 		payment2.setC_Currency_ID(getC_Currency_ID());
 		payment2.setPayAmt(getPayAmt());
 		payment2.setTenderType(getTenderType());
-		payment2.setDescription(getDescription());		
+		payment2.setDescription(getDescription());
+		payment2.setDocStatus(DOCSTATUS_InProgress);
 		payment2.saveEx();
 		
-		if(!payment2.processIt(DocAction.ACTION_Complete))
-			throw new AdempiereException("Failed when processing document - " + payment2.getProcessMsg());
-		payment2.saveEx();
-		
+		if(!config.isRequiredApproval()) {
+			if(!payment2.processIt(DocAction.ACTION_Complete))
+				throw new AdempiereException("Failed when processing document - " + payment2.getProcessMsg());
+			payment2.saveEx();
+		}
 		setRef2_Payment_ID(payment2.getC_Payment_ID());
 		payment.setRef2_Payment_ID(payment2.getC_Payment_ID());
 		payment.saveEx();
@@ -1014,13 +1027,15 @@ public class TF_MPayment extends MPayment {
 		payment.setC_Currency_ID(getC_Currency_ID());
 		payment.setPayAmt(getPayAmt());
 		payment.setTenderType(getTenderType());
-		payment.setDescription(getDescription());		
+		payment.setDescription(getDescription());
+		payment.setDocStatus(DOCSTATUS_InProgress);
 		payment.saveEx();
 		
-		if(!payment.processIt(DocAction.ACTION_Complete))
-			throw new AdempiereException("Failed when processing document - " + payment.getProcessMsg());
-		payment.saveEx();
-		
+		if(!config.isRequiredApproval()) {
+			if(!payment.processIt(DocAction.ACTION_Complete))
+				throw new AdempiereException("Failed when processing document - " + payment.getProcessMsg());
+			payment.saveEx();
+		}
 		setRef_Payment_ID(payment.getC_Payment_ID());
 		
 		//Additional BP Cash Transfer in Destination Organization
@@ -1057,13 +1072,14 @@ public class TF_MPayment extends MPayment {
 		payment2.setC_Currency_ID(getC_Currency_ID());
 		payment2.setPayAmt(getPayAmt());
 		payment2.setTenderType(getTenderType());
-		payment2.setDescription(getDescription());		
+		payment2.setDescription(getDescription());
+		payment2.setDocStatus(DOCSTATUS_InProgress);
 		payment2.saveEx();
-		
-		if(!payment2.processIt(DocAction.ACTION_Complete))
-			throw new AdempiereException("Failed when processing document - " + payment2.getProcessMsg());
-		payment2.saveEx();
-		
+		if(!config.isRequiredApproval()) {
+			if(!payment2.processIt(DocAction.ACTION_Complete))
+				throw new AdempiereException("Failed when processing document - " + payment2.getProcessMsg());
+			payment2.saveEx();
+		}
 		setRef2_Payment_ID(payment2.getC_Payment_ID());
 		payment.setRef2_Payment_ID(payment2.getC_Payment_ID());
 		payment.saveEx();

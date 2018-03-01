@@ -146,6 +146,19 @@ public interface I_TF_OrgCashTransfer_Config
 	  */
 	public boolean isActive();
 
+    /** Column name RequiredApproval */
+    public static final String COLUMNNAME_RequiredApproval = "RequiredApproval";
+
+	/** Set Required Approval.
+	  * Indicates that the transaction is required Approval
+	  */
+	public void setRequiredApproval (boolean RequiredApproval);
+
+	/** Get Required Approval.
+	  * Indicates that the transaction is required Approval
+	  */
+	public boolean isRequiredApproval();
+
     /** Column name Src_Acct_ID */
     public static final String COLUMNNAME_Src_Acct_ID = "Src_Acct_ID";
 

@@ -30,7 +30,7 @@ public class X_TF_OrgBPCashTransfer_Config extends PO implements I_TF_OrgBPCashT
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180129L;
+	private static final long serialVersionUID = 20180228L;
 
     /** Standard Constructor */
     public X_TF_OrgBPCashTransfer_Config (Properties ctx, int TF_OrgBPCashTransfer_Config_ID, String trxName)
@@ -44,6 +44,8 @@ public class X_TF_OrgBPCashTransfer_Config extends PO implements I_TF_OrgBPCashT
 			setDest_Partner_ID (0);
 			setDirection (null);
 // O
+			setRequiredApproval (true);
+// Y
 			setSrc_BankAccount_ID (0);
 			setSrc_Org_ID (0);
 			setSrc_Partner_ID (0);
@@ -208,6 +210,30 @@ public class X_TF_OrgBPCashTransfer_Config extends PO implements I_TF_OrgBPCashT
 	public String getDirection () 
 	{
 		return (String)get_Value(COLUMNNAME_Direction);
+	}
+
+	/** Set Required Approval.
+		@param RequiredApproval 
+		Indicates that the transaction is required Approval
+	  */
+	public void setRequiredApproval (boolean RequiredApproval)
+	{
+		set_Value (COLUMNNAME_RequiredApproval, Boolean.valueOf(RequiredApproval));
+	}
+
+	/** Get Required Approval.
+		@return Indicates that the transaction is required Approval
+	  */
+	public boolean isRequiredApproval () 
+	{
+		Object oo = get_Value(COLUMNNAME_RequiredApproval);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
 	}
 
 	public org.compiere.model.I_C_BankAccount getSrc_BankAccount() throws RuntimeException
