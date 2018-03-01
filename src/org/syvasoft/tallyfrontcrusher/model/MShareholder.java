@@ -77,7 +77,7 @@ public class MShareholder extends X_TF_Shareholder {
 			 acct.setValue(name);
 			 acct.setName(name);
 			 acct.setAccountGroup_ID(getAccountGroup_ID());
-			 acct.setAccountType(TF_MElementValue.ACCOUNTTYPE_Asset);
+			 acct.setAccountType(TF_MElementValue.ACCOUNTTYPE_OwnerSEquity);
 			 acct.setAccountSign(TF_MElementValue.ACCOUNTSIGN_Natural);
 			 acct.setPostActual(true);
 			 acct.setPostBudget(true);
