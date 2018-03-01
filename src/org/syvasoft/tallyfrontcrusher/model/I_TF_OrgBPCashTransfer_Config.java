@@ -157,6 +157,19 @@ public interface I_TF_OrgBPCashTransfer_Config
 	  */
 	public boolean isActive();
 
+    /** Column name RequiredApproval */
+    public static final String COLUMNNAME_RequiredApproval = "RequiredApproval";
+
+	/** Set Required Approval.
+	  * Indicates that the transaction is required Approval
+	  */
+	public void setRequiredApproval (boolean RequiredApproval);
+
+	/** Get Required Approval.
+	  * Indicates that the transaction is required Approval
+	  */
+	public boolean isRequiredApproval();
+
     /** Column name Src_BankAccount_ID */
     public static final String COLUMNNAME_Src_BankAccount_ID = "Src_BankAccount_ID";
 
