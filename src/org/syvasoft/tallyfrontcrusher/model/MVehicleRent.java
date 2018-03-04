@@ -71,7 +71,8 @@ public class MVehicleRent extends X_TF_Vehicle_Rent {
 			
 			//Invoice Line - Vehicle Rental Charge
 			MInvoiceLine invLine = new MInvoiceLine(invoice);
-			invLine.setM_Product_ID(vehicle.getM_Product_ID(), true);			
+			invLine.setM_Product_ID(vehicle.getM_Product_ID(), true);
+			invLine.setC_UOM_ID(getC_UOM_ID());
 			invLine.setQty(getQty());			
 			invLine.setPriceActual(getPrice());
 			invLine.setPriceList(getPrice());
