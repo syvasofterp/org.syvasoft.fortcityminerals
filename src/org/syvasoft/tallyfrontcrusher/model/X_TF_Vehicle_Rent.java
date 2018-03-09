@@ -33,7 +33,7 @@ public class X_TF_Vehicle_Rent extends PO implements I_TF_Vehicle_Rent, I_Persis
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180122L;
+	private static final long serialVersionUID = 20180308L;
 
     /** Standard Constructor */
     public X_TF_Vehicle_Rent (Properties ctx, int TF_Vehicle_Rent_ID, String trxName)
@@ -45,6 +45,8 @@ public class X_TF_Vehicle_Rent extends PO implements I_TF_Vehicle_Rent, I_Persis
 			setDateAcct (new Timestamp( System.currentTimeMillis() ));
 			setIsCalculated (true);
 // Y
+			setIsSOTrx (false);
+// N
 			setProcessed (false);
 			setTF_Vehicle_Rent_ID (0);
 			setVehicle_ID (0);
@@ -78,6 +80,34 @@ public class X_TF_Vehicle_Rent extends PO implements I_TF_Vehicle_Rent, I_Persis
         .append(get_ID()).append("]");
       return sb.toString();
     }
+
+	public org.compiere.model.I_C_BPartner getC_BPartner() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_BPartner)MTable.get(getCtx(), org.compiere.model.I_C_BPartner.Table_Name)
+			.getPO(getC_BPartner_ID(), get_TrxName());	}
+
+	/** Set Business Partner .
+		@param C_BPartner_ID 
+		Identifies a Business Partner
+	  */
+	public void setC_BPartner_ID (int C_BPartner_ID)
+	{
+		if (C_BPartner_ID < 1) 
+			set_Value (COLUMNNAME_C_BPartner_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_BPartner_ID, Integer.valueOf(C_BPartner_ID));
+	}
+
+	/** Get Business Partner .
+		@return Identifies a Business Partner
+	  */
+	public int getC_BPartner_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_BPartner_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
 
 	public org.compiere.model.I_C_ElementValue getC_ElementValue() throws RuntimeException
     {
@@ -397,6 +427,30 @@ public class X_TF_Vehicle_Rent extends PO implements I_TF_Vehicle_Rent, I_Persis
 	public boolean isCalculated () 
 	{
 		Object oo = get_Value(COLUMNNAME_IsCalculated);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	/** Set Sales Transaction.
+		@param IsSOTrx 
+		This is a Sales Transaction
+	  */
+	public void setIsSOTrx (boolean IsSOTrx)
+	{
+		set_Value (COLUMNNAME_IsSOTrx, Boolean.valueOf(IsSOTrx));
+	}
+
+	/** Get Sales Transaction.
+		@return This is a Sales Transaction
+	  */
+	public boolean isSOTrx () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsSOTrx);
 		if (oo != null) 
 		{
 			 if (oo instanceof Boolean) 
