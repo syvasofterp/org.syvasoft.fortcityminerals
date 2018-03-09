@@ -184,6 +184,21 @@ public interface I_TF_GLPosting_Config
 
 	public org.compiere.model.I_C_DocType getDebitNote_DocType() throws RuntimeException;
 
+    /** Column name DefaultSalesInvoiceDocType_ID */
+    public static final String COLUMNNAME_DefaultSalesInvoiceDocType_ID = "DefaultSalesInvoiceDocType_ID";
+
+	/** Set Vehicle Rent Sales Invoice Doc Type.
+	  * Vehicle Rent Sales Invoice
+	  */
+	public void setDefaultSalesInvoiceDocType_ID (int DefaultSalesInvoiceDocType_ID);
+
+	/** Get Vehicle Rent Sales Invoice Doc Type.
+	  * Vehicle Rent Sales Invoice
+	  */
+	public int getDefaultSalesInvoiceDocType_ID();
+
+	public org.compiere.model.I_C_DocType getDefaultSalesInvoiceDocType() throws RuntimeException;
+
     /** Column name Fuel_Product_ID */
     public static final String COLUMNNAME_Fuel_Product_ID = "Fuel_Product_ID";
 

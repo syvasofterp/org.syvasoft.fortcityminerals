@@ -43,23 +43,32 @@ public class MVehicleRent extends X_TF_Vehicle_Rent {
 			
 			MRentedVehicle vehicle = new MRentedVehicle(getCtx(), getVehicle_ID(), get_TrxName());
 			MBPartner bp = new MBPartner(getCtx(), vehicle.getC_BPartner_ID(), get_TrxName());
+			if(isSOTrx()) {
+				bp = new MBPartner(getCtx(), getC_BPartner_ID(), get_TrxName());
+			}
 			//Invoice Header
 			TF_MInvoice invoice = new TF_MInvoice(getCtx(), 0, get_TrxName());
 			invoice.setClientOrg(getAD_Client_ID(), getAD_Org_ID());
-			invoice.setC_DocTypeTarget_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getTransporterInvoiceDocType_ID());			
+			if(isSOTrx()) 
+				invoice.setC_DocTypeTarget_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getDefaultSalesInvoiceDocType_ID());
+			else
+				invoice.setC_DocTypeTarget_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getTransporterInvoiceDocType_ID());
+			
 			invoice.setDateInvoiced(getDateAcct());
 			invoice.setDateAcct(getDateAcct());
 			//
 			invoice.setSalesRep_ID(Env.getAD_User_ID(getCtx()));
 			//
 			invoice.setBPartner(bp);
-			invoice.setIsSOTrx(false);		
+			invoice.setIsSOTrx(isSOTrx());		
 			invoice.setDescription(getDescription());
 			
 			//Price List
 			int m_M_PriceList_ID = Env.getContextAsInt(getCtx(), "#M_PriceList_ID");
-			if(bp.getPO_PriceList_ID() > 0)
-				m_M_PriceList_ID = bp.getPO_PriceList_ID();			
+			if(!isSOTrx() && bp.getPO_PriceList_ID() > 0)
+				m_M_PriceList_ID = bp.getPO_PriceList_ID();
+			else
+				m_M_PriceList_ID = bp.getM_PriceList_ID();			
 			invoice.setM_PriceList_ID(m_M_PriceList_ID);
 			invoice.setC_Currency_ID(MPriceList.get(getCtx(), m_M_PriceList_ID, get_TrxName()).getC_Currency_ID());
 			
@@ -104,7 +113,6 @@ public class MVehicleRent extends X_TF_Vehicle_Rent {
 	
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
-				
 		
 		return super.beforeSave(newRecord);
 	}

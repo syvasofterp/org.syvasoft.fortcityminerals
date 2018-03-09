@@ -30,7 +30,7 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180112L;
+	private static final long serialVersionUID = 20180308L;
 
     /** Standard Constructor */
     public X_TF_GLPosting_Config (Properties ctx, int TF_GLPosting_Config_ID, String trxName)
@@ -285,6 +285,34 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	public int getDebitNote_DocType_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_DebitNote_DocType_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_DocType getDefaultSalesInvoiceDocType() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_DocType)MTable.get(getCtx(), org.compiere.model.I_C_DocType.Table_Name)
+			.getPO(getDefaultSalesInvoiceDocType_ID(), get_TrxName());	}
+
+	/** Set Vehicle Rent Sales Invoice Doc Type.
+		@param DefaultSalesInvoiceDocType_ID 
+		Vehicle Rent Sales Invoice
+	  */
+	public void setDefaultSalesInvoiceDocType_ID (int DefaultSalesInvoiceDocType_ID)
+	{
+		if (DefaultSalesInvoiceDocType_ID < 1) 
+			set_Value (COLUMNNAME_DefaultSalesInvoiceDocType_ID, null);
+		else 
+			set_Value (COLUMNNAME_DefaultSalesInvoiceDocType_ID, Integer.valueOf(DefaultSalesInvoiceDocType_ID));
+	}
+
+	/** Get Vehicle Rent Sales Invoice Doc Type.
+		@return Vehicle Rent Sales Invoice
+	  */
+	public int getDefaultSalesInvoiceDocType_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_DefaultSalesInvoiceDocType_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
