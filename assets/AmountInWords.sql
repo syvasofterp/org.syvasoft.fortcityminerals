@@ -81,11 +81,11 @@ BEGIN
 		RETURN amountinwords_tens(SUBSTR(TO_CHAR(amount,'99'), 1, 2) :: numeric) || 
 			(CASE WHEN (amount % 10 != 0) THEN ' ' ELSE '' END) || amountinwords_units(amount % 10);
 	ELSIF (amount < 1000) THEN
-		RETURN amountinwords_units(SUBSTR(TRIM(TO_CHAR(amount,'000')), 1, 2) :: numeric) || 		
-			' Hundred' || (CASE WHEN (amount % 100 != 0) THEN ' ' ELSE '' END) || amountinwords(amount % 100);
+		RETURN amountinwords(SUBSTR(TRIM(TO_CHAR(amount,'000')), 1, 1) :: numeric) || 		
+			' Hundred' || (CASE WHEN (amount % 100 != 0) THEN ' And ' ELSE '' END) || amountinwords(amount % 100);
 	ELSIF (amount < 100000) THEN
 		RETURN amountinwords(SUBSTR(TRIM(TO_CHAR(amount,'00999')), 1, 2) :: numeric) || 		
-			' Thounsand' || (CASE WHEN (amount % 1000 != 0) THEN ' ' ELSE '' END) || amountinwords(amount % 1000);
+			' Thousand' || (CASE WHEN (amount % 1000 != 0) THEN ' ' ELSE '' END) || amountinwords(amount % 1000);
 	ELSIF (amount < 10000000) THEN
 		RETURN amountinwords(SUBSTR(TRIM(TO_CHAR(amount,'0099999')), 1, 2) :: numeric) || 		
 			' Lakh' || (CASE WHEN (amount % 100000  != 0) THEN ' ' ELSE '' END) || amountinwords(amount % 100000);
