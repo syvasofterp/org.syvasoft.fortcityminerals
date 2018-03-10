@@ -1381,6 +1381,7 @@ public class TF_MOrder extends MOrder {
 		//Update modified item lines.		
 		//Item1
 		if(getItem1_ID() > 0 && (is_ValueChanged(COLUMNNAME_Item1_ID) || is_ValueChanged(COLUMNNAME_Item1_Qty)
+				|| is_ValueChanged(COLUMNNAME_Item1_Tax_ID)
 				|| is_ValueChanged(COLUMNNAME_Item1_TotalLoad) || is_ValueChanged(COLUMNNAME_Item1_VehicleType_ID)
 				|| is_ValueChanged(COLUMNNAME_Item1_SandType)
 				|| is_ValueChanged(COLUMNNAME_Item1_Price) || getItem1_C_OrderLine_ID() == 0)) {
@@ -1497,6 +1498,7 @@ public class TF_MOrder extends MOrder {
 					getDateOrdered(), getC_DocType().isSOTrx());
 			setOrderLine(ordLine, getVehicle_ID(), BigDecimal.ONE, getRent_Amt());
 			MResource res = MResource.get(getCtx(), getVehicle().getS_Resource_ID());
+			int defaultTaxID = Env.getContextAsInt(getCtx(), "#C_Tax_ID");
 			ordLine.setUser1_ID(res.get_ValueAsInt("C_ElementValue_ID"));
 			ordLine.setDescription("Vehicle Rent");
 			ordLine.saveEx();
@@ -1536,6 +1538,9 @@ public class TF_MOrder extends MOrder {
 			setOrderLine(ordLine, productID, BigDecimal.ONE, getRent_Amt());
 			int load_uom_id = MSysConfig.getIntValue("LOAD_UOM", 1000072, getAD_Client_ID());
 			ordLine.setC_UOM_ID(load_uom_id);
+			
+			int defaultTaxID = Env.getContextAsInt(getCtx(), "#C_Tax_ID");
+			ordLine.setC_Tax_ID(defaultTaxID);
 			
 			//MResource res = MResource.get(getCtx(), getVehicle().getS_Resource_ID());
 			//ordLine.setUser1_ID(res.get_ValueAsInt("C_ElementValue_ID"));
@@ -1800,12 +1805,14 @@ public class TF_MOrder extends MOrder {
 	public static MProductPrice addProductPricingIfNot(int M_Product_ID, int M_PriceList_ID, int C_BPartner_ID, 
 			BigDecimal Qty, BigDecimal price, Timestamp priceDate, boolean isSOTrx) {
 		//Get Unit Price from Latest Price List.
+		if(M_Product_ID == 0)
+			return null;
 		String sql = "SELECT plv.M_PriceList_Version_ID "
 				+ "FROM M_PriceList_Version plv "
 				+ "WHERE plv.M_PriceList_ID=? "	
 				+ " AND plv.ValidFrom <= ? "
 				+ "ORDER BY plv.ValidFrom DESC";
-		MProductPrice prodPrice = null;
+		MProductPrice prodPrice = null;		
 		int M_PriceList_Version_ID = DB.getSQLValueEx(null, sql, M_PriceList_ID, priceDate);	
 		sql = " SELECT Count(*) FROM M_ProductPrice WHERE M_PriceList_Version_ID =? AND M_Product_ID =? AND IsActive='Y'";
 		BigDecimal count = DB.getSQLValueBD(null, sql, M_PriceList_Version_ID,M_Product_ID);
