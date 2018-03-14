@@ -10,6 +10,8 @@ import org.compiere.model.MPayment;
 import org.jfree.chart.block.ColumnArrangement;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutBoulderReceipt_JobWork;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutBoulderReceipt_Warehouse;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutCrusherKatingEntry_CalcAmount;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutCrusherKatingEntry_SetPrice;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutElementValue_AccountGroup;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutEmployeeSalary;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutEmployeeSalaryIssue_CalcBalanceAmts;
@@ -74,6 +76,7 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutWeighmentEntry_Vehicle;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutYardEntry_CalcAmount;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutYardEntry_VehicleType;
 import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
+import org.syvasoft.tallyfrontcrusher.model.MCrusherKatingEntry;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalary;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryIssue;
 import org.syvasoft.tallyfrontcrusher.model.MFuelIssue;
@@ -426,6 +429,24 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		if(tableName.equals(TF_MOrder.Table_Name)) {
 			if(columnName.equals(TF_MOrder.COLUMNNAME_C_BPartner_ID)) {
 				list.add(new CalloutOrder_SetProject());
+			}
+		}
+		
+		if(tableName.equals(MCrusherKatingEntry.Table_Name)) {
+			if(columnName.equals(MCrusherKatingEntry.COLUMNNAME_TF_RentedVehicle_ID) || 
+					columnName.equals(MCrusherKatingEntry.COLUMNNAME_LoaderVehicle_ID) ||
+					columnName.equals(MCrusherKatingEntry.COLUMNNAME_KatingEntryType)) {
+				list.add(new CalloutCrusherKatingEntry_SetPrice());
+				list.add(new CalloutCrusherKatingEntry_CalcAmount());
+			}
+		}
+		
+		if(tableName.equals(MCrusherKatingEntry.Table_Name)) {
+			if(columnName.equals(MCrusherKatingEntry.COLUMNNAME_Tonnage) ||
+					columnName.equals(MCrusherKatingEntry.COLUMNNAME_TotalLoad) ||
+					columnName.equals(MCrusherKatingEntry.COLUMNNAME_Loading_Price) ||
+					columnName.equals(MCrusherKatingEntry.COLUMNNAME_Transport_Price)) {
+				list.add(new CalloutCrusherKatingEntry_CalcAmount());				
 			}
 		}
 		
