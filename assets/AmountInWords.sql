@@ -78,8 +78,8 @@ BEGIN
 	ELSIF (amount < 20) THEN
 		RETURN amountinwords_units(amount :: int);
 	ELSIF (amount < 100) THEN
-		RETURN amountinwords_tens(SUBSTR(TO_CHAR(amount,'99'), 1, 2) :: numeric) || 
-			(CASE WHEN (amount % 10 != 0) THEN ' ' ELSE '' END) || amountinwords_units(amount % 10);
+		RETURN amountinwords_tens(SUBSTR(TO_CHAR(amount,'09'), 1, 2) :: numeric) || 
+			(CASE WHEN (amount % 10 != 0) THEN ' ' ELSE '' END) || amountinwords(amount % 10);
 	ELSIF (amount < 1000) THEN
 		RETURN amountinwords(SUBSTR(TRIM(TO_CHAR(amount,'000')), 1, 1) :: numeric) || 		
 			' Hundred' || (CASE WHEN (amount % 100 != 0) THEN ' And ' ELSE '' END) || amountinwords(amount % 100);
@@ -91,8 +91,7 @@ BEGIN
 			' Lakh' || (CASE WHEN (amount % 100000  != 0) THEN ' ' ELSE '' END) || amountinwords(amount % 100000);
 	END IF;
 
-	--RETURN amountinwords(SUBSTR(TRIM(TO_CHAR(amount,'999999999999999')), 1, LENGTH(TRIM(TO_CHAR(amount,'999999999999999'))-) :: numeric) || 		
-	--		' Crore' || (CASE WHEN (amount % 100000  != 0) THEN ' ' ELSE '' END) || amountinwords(amount % 100000);
+	
 	RETURN 
 		amountinwords(SUBSTR(TRIM(TO_CHAR(amount,'099999999')), 1, 2) :: numeric) || 		
 		' Crore' || (CASE WHEN (amount % 10000000  != 0) THEN ' ' ELSE '' END) || amountinwords(amount % 10000000);

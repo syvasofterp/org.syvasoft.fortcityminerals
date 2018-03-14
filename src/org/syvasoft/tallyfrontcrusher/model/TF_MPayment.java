@@ -648,11 +648,19 @@ public class TF_MPayment extends MPayment {
 		if(getC_ElementValue_ID()==0)
 			setC_ElementValue_ID(0);
 		
+		if(getC_ElementValue_ID() > 0 && getTF_BPartner_ID() == 0 && getC_BPartner_ID() == 0) {
+			MUser user = MUser.get(getCtx(), Env.getAD_User_ID(getCtx()));				
+			int bPartnerID = user.getC_BPartner_ID();
+			setC_BPartner_ID(bPartnerID);
+		}
+		
 		if(getC_Invoice_ID() > 0 && isReceipt() != getC_Invoice().isSOTrx())
 			throw new AdempiereException("Invalid Invoice for the selected Document Type!");
 		
 		if(getC_Invoice_ID() > 0 && getC_BPartner_ID() > 0 && getTF_BPartner_ID() ==0)
 			setTF_BPartner_ID(getC_BPartner_ID());
+		
+		
 		
 		return super.beforeSave(newRecord);
 	}

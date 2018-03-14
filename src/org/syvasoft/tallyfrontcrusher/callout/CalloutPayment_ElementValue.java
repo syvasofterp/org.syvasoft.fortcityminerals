@@ -7,6 +7,7 @@ import java.util.Properties;
 import org.adempiere.base.IColumnCallout;
 import org.compiere.model.GridField;
 import org.compiere.model.GridTab;
+import org.compiere.model.MUser;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
 import org.syvasoft.tallyfrontcrusher.model.MGLPostingConfig;
@@ -85,6 +86,13 @@ public class CalloutPayment_ElementValue implements IColumnCallout {
 				else {
 					mTab.setValue(TF_MPayment.COLUMNNAME_C_Project_ID, null);	
 				}
+				
+				MUser user = MUser.get(ctx, Env.getAD_User_ID(ctx));				
+				int bPartnerID = user.getC_BPartner_ID();
+				
+				mTab.setValue(TF_MPayment.COLUMNNAME_IsEmployee, false);
+				mTab.setValue(TF_MPayment.COLUMNNAME_C_BPartner_ID, bPartnerID);
+				
 			}
 			
 		}
