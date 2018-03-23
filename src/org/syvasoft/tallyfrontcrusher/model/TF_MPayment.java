@@ -717,6 +717,7 @@ public class TF_MPayment extends MPayment {
 		payment.setRef_Payment_ID(getC_Payment_ID());
 		payment.setDateTrx(getDateTrx());
 		payment.setDateAcct(getDateAcct());		
+		payment.setDateBankTrx(getDateBankTrx());
 		payment.setC_BankAccount_ID(getFromTo_BankAccount_ID());
 		payment.setIsInterCashBookEntry(true);
 		payment.setFromTo_BankAccount_ID(getC_BankAccount_ID());
