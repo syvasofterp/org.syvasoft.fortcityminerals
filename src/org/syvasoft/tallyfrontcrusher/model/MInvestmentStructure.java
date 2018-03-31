@@ -64,7 +64,7 @@ public class MInvestmentStructure extends X_TF_InvestmentStructure {
 		reverseInitialExpenseAllocation();
 		if(getPayable_Amount().doubleValue() == 0) 
 			return;
-		
+		String usrDesc = getDescription();
 		TF_MOrg orgHO = new TF_MOrg(getCtx(), getAD_Org_ID(), get_TrxName()).getHeadOffice();
 		int investmentAccount = orgHO.getInvestmentAcct_ID();
 		int m_C_DocTypeTarget_ID = 1000000;		
@@ -89,7 +89,7 @@ public class MInvestmentStructure extends X_TF_InvestmentStructure {
 		jl = new MJournalLine(j);
 		jl.setLine(10);			
 		jl.setAccount_ID(getC_ElementValue_ID());		
-		jl.setDescription("Initial Expense Payable");
+		jl.setDescription(usrDesc != null ? usrDesc : "Initial Expense Payable");
 		jl.setAmtSourceCr(getPayable_Amount());
 		jl.setAmtAcctCr(getPayable_Amount());
 		jl.setIsGenerated(true);
@@ -97,7 +97,7 @@ public class MInvestmentStructure extends X_TF_InvestmentStructure {
 		TF_MOrg org = new TF_MOrg(getCtx(), getAD_Org_ID(), get_TrxName());
 		String sandPoint = org.getShortName();		
 		String desc = "In " + sandPoint;
-		String usrDesc = getDescription();
+		
 		List<MShareholder> partners = new Query(getCtx(), MShareholder.Table_Name, "AD_Org_ID=?" , get_TrxName())
 				.setParameters(getAD_Org_ID()).list();
 		int line = 10;
