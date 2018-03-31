@@ -5,7 +5,9 @@ import java.sql.Timestamp;
 import java.util.Properties;
 
 import org.adempiere.exceptions.AdempiereException;
+import org.compiere.model.MSysConfig;
 import org.compiere.model.Query;
+import org.compiere.util.DB;
 
 public class MWeighmentEntry extends X_TF_WeighmentEntry {
 
@@ -69,6 +71,11 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 			MRentedVehicle v = new MRentedVehicle(getCtx(), getTF_RentedVehicle_ID(), get_TrxName());
 			v.setTareWeight(getTareWeight());
 			v.saveEx();
+			int expiryDays = MSysConfig.getIntValue("TAREWEIGHT_EXPIRY_DAYS", 10);
+			String sql = "UPDATE TF_RentedVehicle SET DateTareweightExpiry = now() + " + expiryDays
+					+ " WHERE TF_RentedVehicle_ID = " + getTF_RentedVehicle_ID();
+			DB.executeUpdate(sql, get_TrxName());
+			
 		}
 		return ok;
 	}
