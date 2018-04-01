@@ -23,7 +23,7 @@ import org.compiere.util.KeyNamePair;
 
 /** Generated Interface for TF_Quarry
  *  @author iDempiere (generated) 
- *  @version Release 3.1
+ *  @version Release 4.1
  */
 @SuppressWarnings("all")
 public interface I_TF_Quarry 
@@ -76,13 +76,13 @@ public interface I_TF_Quarry
     /** Column name C_ElementValue_ID */
     public static final String COLUMNNAME_C_ElementValue_ID = "C_ElementValue_ID";
 
-	/** Set Profit Center.
-	  * Profit Center
+	/** Set Account Element.
+	  * Account Element
 	  */
 	public void setC_ElementValue_ID (int C_ElementValue_ID);
 
-	/** Get Profit Center.
-	  * Profit Center
+	/** Get Account Element.
+	  * Account Element
 	  */
 	public int getC_ElementValue_ID();
 
@@ -103,6 +103,15 @@ public interface I_TF_Quarry
 	  * User who created this records
 	  */
 	public int getCreatedBy();
+
+    /** Column name CreateProfitCenter */
+    public static final String COLUMNNAME_CreateProfitCenter = "CreateProfitCenter";
+
+	/** Set Create Profit Center	  */
+	public void setCreateProfitCenter (String CreateProfitCenter);
+
+	/** Get Create Profit Center	  */
+	public String getCreateProfitCenter();
 
     /** Column name Description */
     public static final String COLUMNNAME_Description = "Description";
@@ -151,6 +160,37 @@ public interface I_TF_Quarry
 	  * Alphanumeric identifier of the entity
 	  */
 	public String getName();
+
+    /** Column name QtyAvailable */
+    public static final String COLUMNNAME_QtyAvailable = "QtyAvailable";
+
+	/** Set Available Quantity.
+	  * Available Quantity (On Hand - Reserved)
+	  */
+	public void setQtyAvailable (BigDecimal QtyAvailable);
+
+	/** Get Available Quantity.
+	  * Available Quantity (On Hand - Reserved)
+	  */
+	public BigDecimal getQtyAvailable();
+
+    /** Column name QtyBalance */
+    public static final String COLUMNNAME_QtyBalance = "QtyBalance";
+
+	/** Set Balance Quantity	  */
+	public void setQtyBalance (BigDecimal QtyBalance);
+
+	/** Get Balance Quantity	  */
+	public BigDecimal getQtyBalance();
+
+    /** Column name QtyConsumed */
+    public static final String COLUMNNAME_QtyConsumed = "QtyConsumed";
+
+	/** Set Consumed Quantity	  */
+	public void setQtyConsumed (BigDecimal QtyConsumed);
+
+	/** Get Consumed Quantity	  */
+	public BigDecimal getQtyConsumed();
 
     /** Column name TenderAmount */
     public static final String COLUMNNAME_TenderAmount = "TenderAmount";

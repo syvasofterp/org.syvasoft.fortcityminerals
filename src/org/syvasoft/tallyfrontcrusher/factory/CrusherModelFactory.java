@@ -9,6 +9,8 @@ import org.compiere.util.Env;
 import org.syvasoft.tallyfrontcrusher.model.MBPOpeningBalance;
 import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MCOAOpeningBalance;
+import org.syvasoft.tallyfrontcrusher.model.MCrusherPermitLedger;
+import org.syvasoft.tallyfrontcrusher.model.MCrusherPermitLedgerLine;
 import org.syvasoft.tallyfrontcrusher.model.MCrusherProduction;
 import org.syvasoft.tallyfrontcrusher.model.MCrusherProductionConfig;
 import org.syvasoft.tallyfrontcrusher.model.MDestination;
@@ -46,6 +48,8 @@ import org.syvasoft.tallyfrontcrusher.model.MInterOrgBPCashTransferConfigLine;
 import org.syvasoft.tallyfrontcrusher.model.MInterOrgCashTransferConfigLine;
 import org.syvasoft.tallyfrontcrusher.model.MPermitLedger;
 import org.syvasoft.tallyfrontcrusher.model.MPermitLedgerLine;
+import org.syvasoft.tallyfrontcrusher.model.MPermitPurchase;
+import org.syvasoft.tallyfrontcrusher.model.MPermitPurchaseLine;
 import org.syvasoft.tallyfrontcrusher.model.MQuarry;
 import org.syvasoft.tallyfrontcrusher.model.MQuarryRent;
 import org.syvasoft.tallyfrontcrusher.model.MQuarryRentConfig;
@@ -55,6 +59,7 @@ import org.syvasoft.tallyfrontcrusher.model.MShareholder;
 import org.syvasoft.tallyfrontcrusher.model.MShareholderType;
 import org.syvasoft.tallyfrontcrusher.model.MSubcontractMaterialMovement;
 import org.syvasoft.tallyfrontcrusher.model.MSubcontractType;
+import org.syvasoft.tallyfrontcrusher.model.MTaxInvoice;
 import org.syvasoft.tallyfrontcrusher.model.MTripSheet;
 import org.syvasoft.tallyfrontcrusher.model.MTyre;
 import org.syvasoft.tallyfrontcrusher.model.MTyreAssignment;
@@ -263,6 +268,16 @@ public class CrusherModelFactory implements IModelFactory {
 			return MYardEntryApprove.class;
 		else if(MYardEntryApproveLine.Table_Name.equals(tableName))
 			return MYardEntryApproveLine.class;
+		else if(MCrusherPermitLedger.Table_Name.equals(tableName))
+			return MCrusherPermitLedger.class;
+		else if(MCrusherPermitLedgerLine.Table_Name.equals(tableName))
+			return MCrusherPermitLedgerLine.class;
+		else if(MTaxInvoice.Table_Name.equals(tableName))
+			return MTaxInvoice.class;
+		else if(MPermitPurchase.Table_Name.equals(tableName))
+			return MPermitPurchase.class;
+		else if(MPermitPurchaseLine.Table_Name.equals(tableName))
+			return MPermitPurchaseLine.class;
 		return null;
 	}
 
@@ -437,6 +452,16 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MYardEntryApprove(ctx, Record_ID, trxName);
 		else if(MYardEntryApproveLine.Table_Name.equals(tableName))
 			return new MYardEntryApproveLine(ctx, Record_ID, trxName);
+		else if(MCrusherPermitLedger.Table_Name.equals(tableName))
+			return new MCrusherPermitLedger(ctx, Record_ID, trxName);
+		else if(MCrusherPermitLedgerLine.Table_Name.equals(tableName))
+			return new MCrusherPermitLedgerLine(ctx, Record_ID, trxName);
+		else if(MTaxInvoice.Table_Name.equals(tableName))
+			return new MTaxInvoice(ctx, Record_ID, trxName);
+		else if(MPermitPurchase.Table_Name.equals(tableName))
+			return new MPermitPurchase(ctx, Record_ID, trxName);
+		else if(MPermitPurchaseLine.Table_Name.equals(tableName))
+			return new MPermitPurchaseLine(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -611,6 +636,16 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MYardEntryApprove(ctx, rs, trxName);
 		else if(MYardEntryApproveLine.Table_Name.equals(tableName))
 			return new MYardEntryApproveLine(ctx, rs, trxName);
+		else if(MCrusherPermitLedger.Table_Name.equals(tableName))
+			return new MCrusherPermitLedger(ctx, rs, trxName);
+		else if(MCrusherPermitLedgerLine.Table_Name.equals(tableName))
+			return new MCrusherPermitLedgerLine(ctx, rs, trxName);
+		else if(MTaxInvoice.Table_Name.equals(tableName))
+			return new MTaxInvoice(ctx, rs, trxName);
+		else if(MPermitPurchase.Table_Name.equals(tableName))
+			return new MPermitPurchase(ctx, rs, trxName);
+		else if(MPermitPurchaseLine.Table_Name.equals(tableName))
+			return new MPermitPurchaseLine(ctx, rs, trxName);
 		return null;
 	}
 
