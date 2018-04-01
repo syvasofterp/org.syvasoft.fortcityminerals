@@ -56,9 +56,12 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_ElementValue;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_FromToBankAccount;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_Org;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_TFBPartner;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutPermitPurchase_CalcAmount;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutProduct_CalcTotalValue;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutRentalContract_ResourceType;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutRentalContract_VehicleNo;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutTaxInvoice_CalcAmount;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutTaxInvoice_Product;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetFuelExpensed;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetJobwork;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetOpeningEntries;
@@ -85,6 +88,8 @@ import org.syvasoft.tallyfrontcrusher.model.MInvestmentReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkResourceRentEntry;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWage;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWageIssue;
+import org.syvasoft.tallyfrontcrusher.model.MPermitPurchase;
+import org.syvasoft.tallyfrontcrusher.model.MTaxInvoice;
 import org.syvasoft.tallyfrontcrusher.model.MTripSheet;
 import org.syvasoft.tallyfrontcrusher.model.MTyreAssignment;
 import org.syvasoft.tallyfrontcrusher.model.MTyreStatusChange;
@@ -450,6 +455,24 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 			}
 		}
 		
+		if(tableName.equals(MPermitPurchase.Table_Name)) {
+			if(columnName.equals(MPermitPurchase.COLUMNNAME_PermitQty) ||
+					columnName.equals(MPermitPurchase.COLUMNNAME_Price)) 
+				list.add(new CalloutPermitPurchase_CalcAmount());
+		}
+		
+		if(tableName.equals(MTaxInvoice.Table_Name)) {
+			if(columnName.equals(MTaxInvoice.COLUMNNAME_M_Product_ID)) {
+				list.add(new CalloutTaxInvoice_Product());
+			}
+			if(columnName.equals(MTaxInvoice.COLUMNNAME_Qty) ||
+					columnName.equals(MTaxInvoice.COLUMNNAME_Price) ||
+					columnName.equals(MTaxInvoice.COLUMNNAME_CGST_Rate) || 
+					columnName.equals(MTaxInvoice.COLUMNNAME_SGST_Rate) ||
+					columnName.equals(MTaxInvoice.COLUMNNAME_IGST_Rate) ||
+					columnName.equals(MTaxInvoice.COLUMNNAME_RoundingOff))
+				list.add(new CalloutTaxInvoice_CalcAmount());
+		}
 		return list != null ? list.toArray(new IColumnCallout[0]) : new IColumnCallout[0];
 	}
 

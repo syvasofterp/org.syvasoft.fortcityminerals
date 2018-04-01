@@ -26,14 +26,14 @@ import org.compiere.util.Env;
 
 /** Generated Model for TF_Quarry
  *  @author iDempiere (generated) 
- *  @version Release 3.1 - $Id$ */
+ *  @version Release 4.1 - $Id$ */
 public class X_TF_Quarry extends PO implements I_TF_Quarry, I_Persistent 
 {
 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170120L;
+	private static final long serialVersionUID = 20180331L;
 
     /** Standard Constructor */
     public X_TF_Quarry (Properties ctx, int TF_Quarry_ID, String trxName)
@@ -94,9 +94,9 @@ public class X_TF_Quarry extends PO implements I_TF_Quarry, I_Persistent
 		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
 			.getPO(getC_ElementValue_ID(), get_TrxName());	}
 
-	/** Set Profit Center.
+	/** Set Account Element.
 		@param C_ElementValue_ID 
-		Profit Center
+		Account Element
 	  */
 	public void setC_ElementValue_ID (int C_ElementValue_ID)
 	{
@@ -106,8 +106,8 @@ public class X_TF_Quarry extends PO implements I_TF_Quarry, I_Persistent
 			set_Value (COLUMNNAME_C_ElementValue_ID, Integer.valueOf(C_ElementValue_ID));
 	}
 
-	/** Get Profit Center.
-		@return Profit Center
+	/** Get Account Element.
+		@return Account Element
 	  */
 	public int getC_ElementValue_ID () 
 	{
@@ -115,6 +115,20 @@ public class X_TF_Quarry extends PO implements I_TF_Quarry, I_Persistent
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
+	}
+
+	/** Set Create Profit Center.
+		@param CreateProfitCenter Create Profit Center	  */
+	public void setCreateProfitCenter (String CreateProfitCenter)
+	{
+		set_Value (COLUMNNAME_CreateProfitCenter, CreateProfitCenter);
+	}
+
+	/** Get Create Profit Center.
+		@return Create Profit Center	  */
+	public String getCreateProfitCenter () 
+	{
+		return (String)get_Value(COLUMNNAME_CreateProfitCenter);
 	}
 
 	/** Set Description.
@@ -163,6 +177,59 @@ public class X_TF_Quarry extends PO implements I_TF_Quarry, I_Persistent
 	public String getName () 
 	{
 		return (String)get_Value(COLUMNNAME_Name);
+	}
+
+	/** Set Available Quantity.
+		@param QtyAvailable 
+		Available Quantity (On Hand - Reserved)
+	  */
+	public void setQtyAvailable (BigDecimal QtyAvailable)
+	{
+		set_Value (COLUMNNAME_QtyAvailable, QtyAvailable);
+	}
+
+	/** Get Available Quantity.
+		@return Available Quantity (On Hand - Reserved)
+	  */
+	public BigDecimal getQtyAvailable () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_QtyAvailable);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set Balance Quantity.
+		@param QtyBalance Balance Quantity	  */
+	public void setQtyBalance (BigDecimal QtyBalance)
+	{
+		throw new IllegalArgumentException ("QtyBalance is virtual column");	}
+
+	/** Get Balance Quantity.
+		@return Balance Quantity	  */
+	public BigDecimal getQtyBalance () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_QtyBalance);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set Consumed Quantity.
+		@param QtyConsumed Consumed Quantity	  */
+	public void setQtyConsumed (BigDecimal QtyConsumed)
+	{
+		set_Value (COLUMNNAME_QtyConsumed, QtyConsumed);
+	}
+
+	/** Get Consumed Quantity.
+		@return Consumed Quantity	  */
+	public BigDecimal getQtyConsumed () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_QtyConsumed);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
 	}
 
 	/** Set Tender Amount.
