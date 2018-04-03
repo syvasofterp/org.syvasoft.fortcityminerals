@@ -22,6 +22,7 @@ import org.compiere.model.MProcess;
 import org.compiere.model.MProduct;
 import org.compiere.model.MProduction;
 import org.compiere.model.MRole;
+import org.compiere.model.MSequence;
 import org.compiere.model.MStorageOnHand;
 import org.compiere.model.MSysConfig;
 import org.compiere.model.MTransaction;
@@ -92,8 +93,22 @@ public class CrusherEventHandler extends AbstractEventHandler {
 					else
 						payment.set_ValueOfColumn(TF_MPayment.COLUMNNAME_CashType, TF_MPayment.CASHTYPE_VendorPayment);
 					
-					payment.set_ValueOfColumn(TF_MPayment.COLUMNNAME_TF_BPartner_ID, payment.getC_BPartner_ID());
-				}				
+					payment.set_ValueOfColumn(TF_MPayment.COLUMNNAME_TF_BPartner_ID, payment.getC_BPartner_ID());					
+				}
+				if(!payment.getDocStatus().equals(payment.DOCSTATUS_Reversed))
+					return;
+				boolean isOnAccount = payment.get_ValueAsBoolean("OnAccount");
+				String documentNo2 = payment.get_ValueAsString("DocumentNo2");
+				if(!isOnAccount || (isOnAccount && documentNo2 != null && documentNo2.length() > 0))
+					return;
+				
+				MSequence seq = new Query(payment.getCtx(), MSequence.Table_Name, "Name='CashBook2'", payment.get_TrxName())
+						.setClient_ID().first();
+				if(seq == null)
+					throw new AdempiereException("Create CashBook2 Doument Sequence!");
+				
+				String seqNo = MSequence.getDocumentNoFromSeq(seq, payment.get_TrxName(), payment);
+				payment.set_ValueOfColumn("DocumentNo2", seqNo);;
 			}			
 			
 		}

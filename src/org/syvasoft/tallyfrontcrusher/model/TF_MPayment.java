@@ -10,6 +10,7 @@ import org.compiere.model.MDocTypeCounter;
 import org.compiere.model.MJournalLine;
 import org.compiere.model.MPayment;
 import org.compiere.model.MPeriod;
+import org.compiere.model.MSequence;
 import org.compiere.model.MTable;
 import org.compiere.model.MUser;
 import org.compiere.model.Query;
@@ -615,6 +616,45 @@ public class TF_MPayment extends MPayment {
 		return ii.intValue();
 	}
 	
+	  /** Column name OnAccount */
+    public static final String COLUMNNAME_OnAccount = "OnAccount";
+	/** Set On Account.
+	@param OnAccount On Account	  */
+	public void setOnAccount (boolean OnAccount)
+	{
+		set_Value (COLUMNNAME_OnAccount, Boolean.valueOf(OnAccount));
+	}
+	
+	/** Get On Account.
+		@return On Account	  */
+	public boolean isOnAccount () 
+	{
+		Object oo = get_Value(COLUMNNAME_OnAccount);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+	
+	/** Column name DocumentNo2 */
+    public static final String COLUMNNAME_DocumentNo2 = "DocumentNo2";
+    /** Set Document No 2.
+	@param DocumentNo2 Document No 2	  */
+	public void setDocumentNo2 (String DocumentNo2)
+	{
+		set_Value (COLUMNNAME_DocumentNo2, DocumentNo2);
+	}
+	
+	/** Get Document No 2.
+		@return Document No 2	  */
+	public String getDocumentNo2 () 
+	{
+		return (String)get_Value(COLUMNNAME_DocumentNo2);
+	}
+	
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {
 		
@@ -660,7 +700,7 @@ public class TF_MPayment extends MPayment {
 		if(getC_Invoice_ID() > 0 && getC_BPartner_ID() > 0 && getTF_BPartner_ID() ==0)
 			setTF_BPartner_ID(getC_BPartner_ID());
 		
-		
+		setDocumentNo2();	
 		
 		return super.beforeSave(newRecord);
 	}
@@ -714,6 +754,7 @@ public class TF_MPayment extends MPayment {
 		
 		TF_MPayment payment = new TF_MPayment(getCtx(), 0, get_TrxName());
 		payment.setAD_Org_ID(getAD_Org_ID());
+		payment.setOnAccount(isOnAccount());
 		payment.setRef_Payment_ID(getC_Payment_ID());
 		payment.setDateTrx(getDateTrx());
 		payment.setDateAcct(getDateAcct());		
@@ -905,6 +946,7 @@ public class TF_MPayment extends MPayment {
 		TF_MPayment payment = new TF_MPayment(getCtx(), 0, get_TrxName());
 		payment.setAD_Org_ID(counterOrgID);
 		payment.setRef_Payment_ID(getC_Payment_ID());
+		payment.setOnAccount(isOnAccount());
 		payment.setDateTrx(getDateTrx());
 		payment.setDateAcct(getDateAcct());		
 		payment.setC_BankAccount_ID(counterCashID);
@@ -938,6 +980,7 @@ public class TF_MPayment extends MPayment {
 		MInterOrgCashTransferConfigLine ctConfig = new MInterOrgCashTransferConfigLine(getCtx(), getTF_OrgCashTransfer_Configx_ID(), get_TrxName());		
 		TF_MPayment payment2 = new TF_MPayment(getCtx(), 0, get_TrxName());
 		payment2.setAD_Org_ID(ctConfig.getDest_Org_ID());
+		payment2.setOnAccount(isOnAccount());
 		payment2.setRef_Payment_ID(getRef_Payment_ID());
 		payment2.setRef2_Payment_ID(getC_Payment_ID());
 		payment2.setDateTrx(getDateTrx());
@@ -1019,6 +1062,7 @@ public class TF_MPayment extends MPayment {
 		
 		TF_MPayment payment = new TF_MPayment(getCtx(), 0, get_TrxName());
 		payment.setAD_Org_ID(counterOrgID);
+		payment.setOnAccount(isOnAccount());
 		payment.setRef_Payment_ID(getC_Payment_ID());
 		payment.setDateTrx(getDateTrx());
 		payment.setDateAcct(getDateAcct());		
@@ -1054,6 +1098,7 @@ public class TF_MPayment extends MPayment {
 		MInterOrgBPCashTransferConfigLine ctConfig = new MInterOrgBPCashTransferConfigLine(getCtx(), getTF_OrgBPCashTrans_Configx_ID(), get_TrxName());		
 		TF_MPayment payment2 = new TF_MPayment(getCtx(), 0, get_TrxName());
 		payment2.setAD_Org_ID(ctConfig.getDest_Org_ID());
+		payment2.setOnAccount(isOnAccount());
 		payment2.setRef_Payment_ID(getRef_Payment_ID());
 		payment2.setRef2_Payment_ID(getC_Payment_ID());
 		payment2.setDateTrx(getDateTrx());
@@ -1111,6 +1156,7 @@ public class TF_MPayment extends MPayment {
 		
 		TF_MPayment payment = new TF_MPayment(getCtx(), 0, get_TrxName());
 		payment.setAD_Org_ID(getAD_Org_ID());
+		payment.setOnAccount(isOnAccount());
 		payment.setRef_Payment_ID(getC_Payment_ID());
 		payment.setDateTrx(getDateTrx());
 		payment.setDateAcct(getDateAcct());		
@@ -1137,5 +1183,18 @@ public class TF_MPayment extends MPayment {
 		setRef_Payment_ID(payment.getC_Payment_ID());
 	}
 	
+	//This seq no is maintained for On Account Module
+	private void setDocumentNo2() {
+		if(!isOnAccount() || (isOnAccount() && getDocumentNo2() != null && getDocumentNo2().length() > 0))
+			return;
+		
+		MSequence seq = new Query(getCtx(), MSequence.Table_Name, "Name='CashBook2'", get_TrxName())
+				.setClient_ID().first();
+		if(seq == null)
+			throw new AdempiereException("Create CashBook2 Doument Sequence!");
+		
+		String seqNo = MSequence.getDocumentNoFromSeq(seq, get_TrxName(), this);
+		setDocumentNo2(seqNo);
+	}
 		
 }

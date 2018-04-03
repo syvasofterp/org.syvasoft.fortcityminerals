@@ -169,6 +169,15 @@ public interface I_TF_TaxInvoice
 	  */
 	public String getDescription();
 
+    /** Column name Destination */
+    public static final String COLUMNNAME_Destination = "Destination";
+
+	/** Set Destination	  */
+	public void setDestination (String Destination);
+
+	/** Get Destination	  */
+	public String getDestination();
+
     /** Column name DocStatus */
     public static final String COLUMNNAME_DocStatus = "DocStatus";
 
@@ -400,4 +409,13 @@ public interface I_TF_TaxInvoice
 	  * User who updated this records
 	  */
 	public int getUpdatedBy();
+
+    /** Column name VehicleNo */
+    public static final String COLUMNNAME_VehicleNo = "VehicleNo";
+
+	/** Set Vehicle No	  */
+	public void setVehicleNo (String VehicleNo);
+
+	/** Get Vehicle No	  */
+	public String getVehicleNo();
 }

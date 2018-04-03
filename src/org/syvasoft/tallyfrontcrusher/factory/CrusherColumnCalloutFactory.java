@@ -57,6 +57,7 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_FromToBankAccount;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_Org;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_TFBPartner;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPermitPurchase_CalcAmount;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutPermitPurchase_Quarry;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutProduct_CalcTotalValue;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutRentalContract_ResourceType;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutRentalContract_VehicleNo;
@@ -459,6 +460,8 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 			if(columnName.equals(MPermitPurchase.COLUMNNAME_PermitQty) ||
 					columnName.equals(MPermitPurchase.COLUMNNAME_Price)) 
 				list.add(new CalloutPermitPurchase_CalcAmount());
+			if(columnName.equals(MPermitPurchase.COLUMNNAME_TF_Quarry_ID))
+				list.add(new CalloutPermitPurchase_Quarry());
 		}
 		
 		if(tableName.equals(MTaxInvoice.Table_Name)) {

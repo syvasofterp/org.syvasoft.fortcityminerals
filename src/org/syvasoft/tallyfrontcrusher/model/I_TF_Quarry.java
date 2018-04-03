@@ -88,6 +88,17 @@ public interface I_TF_Quarry
 
 	public org.compiere.model.I_C_ElementValue getC_ElementValue() throws RuntimeException;
 
+    /** Column name C_ElementValuePermitExp_ID */
+    public static final String COLUMNNAME_C_ElementValuePermitExp_ID = "C_ElementValuePermitExp_ID";
+
+	/** Set Permit Expense Account Head	  */
+	public void setC_ElementValuePermitExp_ID (int C_ElementValuePermitExp_ID);
+
+	/** Get Permit Expense Account Head	  */
+	public int getC_ElementValuePermitExp_ID();
+
+	public org.compiere.model.I_C_ElementValue getC_ElementValuePermitExp() throws RuntimeException;
+
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
 
@@ -138,6 +149,15 @@ public interface I_TF_Quarry
 	  * The record is active in the system
 	  */
 	public boolean isActive();
+
+    /** Column name IsLeased */
+    public static final String COLUMNNAME_IsLeased = "IsLeased";
+
+	/** Set Leased	  */
+	public void setIsLeased (boolean IsLeased);
+
+	/** Get Leased	  */
+	public boolean isLeased();
 
     /** Column name LicenseNo */
     public static final String COLUMNNAME_LicenseNo = "LicenseNo";
