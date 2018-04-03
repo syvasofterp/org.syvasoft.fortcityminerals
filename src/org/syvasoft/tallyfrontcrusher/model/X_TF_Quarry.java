@@ -33,7 +33,7 @@ public class X_TF_Quarry extends PO implements I_TF_Quarry, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180331L;
+	private static final long serialVersionUID = 20180403L;
 
     /** Standard Constructor */
     public X_TF_Quarry (Properties ctx, int TF_Quarry_ID, String trxName)
@@ -41,6 +41,8 @@ public class X_TF_Quarry extends PO implements I_TF_Quarry, I_Persistent
       super (ctx, TF_Quarry_ID, trxName);
       /** if (TF_Quarry_ID == 0)
         {
+			setIsLeased (false);
+// N
 			setName (null);
 			setTF_Quarry_ID (0);
 			setValue (null);
@@ -117,6 +119,31 @@ public class X_TF_Quarry extends PO implements I_TF_Quarry, I_Persistent
 		return ii.intValue();
 	}
 
+	public org.compiere.model.I_C_ElementValue getC_ElementValuePermitExp() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getC_ElementValuePermitExp_ID(), get_TrxName());	}
+
+	/** Set Permit Expense Account Head.
+		@param C_ElementValuePermitExp_ID Permit Expense Account Head	  */
+	public void setC_ElementValuePermitExp_ID (int C_ElementValuePermitExp_ID)
+	{
+		if (C_ElementValuePermitExp_ID < 1) 
+			set_Value (COLUMNNAME_C_ElementValuePermitExp_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_ElementValuePermitExp_ID, Integer.valueOf(C_ElementValuePermitExp_ID));
+	}
+
+	/** Get Permit Expense Account Head.
+		@return Permit Expense Account Head	  */
+	public int getC_ElementValuePermitExp_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_ElementValuePermitExp_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	/** Set Create Profit Center.
 		@param CreateProfitCenter Create Profit Center	  */
 	public void setCreateProfitCenter (String CreateProfitCenter)
@@ -146,6 +173,27 @@ public class X_TF_Quarry extends PO implements I_TF_Quarry, I_Persistent
 	public String getDescription () 
 	{
 		return (String)get_Value(COLUMNNAME_Description);
+	}
+
+	/** Set Leased.
+		@param IsLeased Leased	  */
+	public void setIsLeased (boolean IsLeased)
+	{
+		set_Value (COLUMNNAME_IsLeased, Boolean.valueOf(IsLeased));
+	}
+
+	/** Get Leased.
+		@return Leased	  */
+	public boolean isLeased () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsLeased);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
 	}
 
 	/** Set License No.

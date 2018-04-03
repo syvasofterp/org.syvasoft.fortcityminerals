@@ -33,7 +33,7 @@ public class X_TF_TaxInvoice extends PO implements I_TF_TaxInvoice, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180401L;
+	private static final long serialVersionUID = 20180403L;
 
     /** Standard Constructor */
     public X_TF_TaxInvoice (Properties ctx, int TF_TaxInvoice_ID, String trxName)
@@ -234,6 +234,20 @@ public class X_TF_TaxInvoice extends PO implements I_TF_TaxInvoice, I_Persistent
 	public String getDescription () 
 	{
 		return (String)get_Value(COLUMNNAME_Description);
+	}
+
+	/** Set Destination.
+		@param Destination Destination	  */
+	public void setDestination (String Destination)
+	{
+		set_Value (COLUMNNAME_Destination, Destination);
+	}
+
+	/** Get Destination.
+		@return Destination	  */
+	public String getDestination () 
+	{
+		return (String)get_Value(COLUMNNAME_Destination);
 	}
 
 	/** DocStatus AD_Reference_ID=131 */
@@ -626,5 +640,19 @@ public class X_TF_TaxInvoice extends PO implements I_TF_TaxInvoice, I_Persistent
 	public String getTF_TaxInvoice_UU () 
 	{
 		return (String)get_Value(COLUMNNAME_TF_TaxInvoice_UU);
+	}
+
+	/** Set Vehicle No.
+		@param VehicleNo Vehicle No	  */
+	public void setVehicleNo (String VehicleNo)
+	{
+		set_Value (COLUMNNAME_VehicleNo, VehicleNo);
+	}
+
+	/** Get Vehicle No.
+		@return Vehicle No	  */
+	public String getVehicleNo () 
+	{
+		return (String)get_Value(COLUMNNAME_VehicleNo);
 	}
 }
