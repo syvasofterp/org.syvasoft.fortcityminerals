@@ -50,20 +50,20 @@ public class MCrusherPermitLedger extends X_TF_CrusherPermitLedger {
 		DB.executeUpdate(sql, trxName);
 	}
 	
-	public static BigDecimal getAvailablePermitStockQty(int TF_Quarry_ID, int M_Product_ID, String trxName) {
+	public static BigDecimal getAvailablePermitStockQty(int AD_Org_ID, int M_Product_ID, String trxName) {
 		String sql = "SELECT SUM(QtyPurchased-COALESCE(QtyIssued,0)) FROM TF_CrusherPermitLedger WHERE "
-				+ "TF_Quarry_ID = ? AND M_Product_ID = ?";
-		BigDecimal qty = DB.getSQLValueBD(trxName, sql, TF_Quarry_ID, M_Product_ID);
+				+ "AD_Org_ID = ? AND M_Product_ID = ?";
+		BigDecimal qty = DB.getSQLValueBD(trxName, sql, AD_Org_ID, M_Product_ID);
 		if(qty == null)
 			return BigDecimal.ZERO;
 		else
 			return qty;
 	}
 	
-	public static MCrusherPermitLedger getAvailablePermitLot(int TF_Quarry_ID, int M_Product_ID, String trxName) {
-		String whereClause = "TF_Quarry_ID = ? AND M_Product_ID = ? AND QtyPurchased > COALESCE(QtyIssued,0)";
+	public static MCrusherPermitLedger getAvailablePermitLot(int AD_Org_ID, int M_Product_ID, String trxName) {
+		String whereClause = "AD_Org_ID = ? AND M_Product_ID = ? AND QtyPurchased > COALESCE(QtyIssued,0)";
 		MCrusherPermitLedger pl = new Query(Env.getCtx(), Table_Name, whereClause, trxName)
-				.setClient_ID().setParameters(TF_Quarry_ID, M_Product_ID).setOrderBy("DateAcct, TF_CrusherPermitLedger_ID")
+				.setClient_ID().setParameters(AD_Org_ID, M_Product_ID).setOrderBy("DateAcct, TF_CrusherPermitLedger_ID")
 				.first();
 		
 		return pl;
@@ -113,11 +113,11 @@ public class MCrusherPermitLedger extends X_TF_CrusherPermitLedger {
 	
 	public static void issuePermit(MTaxInvoice inv) {
 		BigDecimal qtyIssue = inv.getQtyPermitDeducted();
-		BigDecimal qtyPermitStock = MCrusherPermitLedger.getAvailablePermitStockQty(inv.getTF_Quarry_ID(), inv.getM_Product_ID(), inv.get_TrxName());
+		BigDecimal qtyPermitStock = MCrusherPermitLedger.getAvailablePermitStockQty(inv.getAD_Org_ID(), inv.getM_Product_ID(), inv.get_TrxName());
 		if(qtyPermitStock.doubleValue() < qtyIssue.doubleValue())
 			throw new AdempiereException("Insufficient Permit Stock Available!");
 		while(qtyIssue.doubleValue()>0) {
-			MCrusherPermitLedger permit = getAvailablePermitLot(inv.getTF_Quarry_ID(), inv.getM_Product_ID(), inv.get_TrxName());
+			MCrusherPermitLedger permit = getAvailablePermitLot(inv.getAD_Org_ID(), inv.getM_Product_ID(), inv.get_TrxName());
 			BigDecimal qtyIssued = BigDecimal.ZERO;
 			if(permit.getQtyBalance().doubleValue() > qtyIssue.doubleValue())
 				qtyIssued = qtyIssue;
