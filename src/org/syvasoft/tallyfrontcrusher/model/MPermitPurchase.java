@@ -50,35 +50,36 @@ public class MPermitPurchase extends X_TF_PermitPurchase {
 			}
 			
 			MCrusherPermitLedger.purchasePermit(this);
-			
-			TF_MPayment payment = new TF_MPayment(getCtx(), 0, get_TrxName());
-			payment.setAD_Org_ID(getAD_Org_ID());			
-			payment.setOnAccount(true);
-			payment.setDateTrx(getDateAcct());
-			payment.setDateAcct(getDateAcct());	
-			payment.setDateBankTrx(getDateAcct());
-			payment.setC_BankAccount_ID(getC_BankAccount_ID());
-			payment.setC_DocType_ID(1000009);
-			payment.setIsReceipt(false);
-			payment.setC_ElementValue_ID(getC_ElementValue_ID());
-			TF_MCharge charge = TF_MCharge.createChargeFromAccount(getCtx(), payment.getC_ElementValue_ID(), get_TrxName());
-			if(charge != null )
-				payment.setC_Charge_ID(charge.get_ID());
-			MUser user = MUser.get(getCtx(), Env.getAD_User_ID(getCtx()));				
-			int bPartnerID = user.getC_BPartner_ID();	
-			payment.setC_BPartner_ID(bPartnerID);		
-			payment.setC_Currency_ID(Env.getContextAsInt(getCtx(), "$C_Currency_ID"));
-			payment.setPayAmt(getPermitAmount());
-			payment.setTenderType(TF_MPayment.TENDERTYPE_Cash);
-			String desc = "Permit Purchase:" + getDocumentNo();
-			if(getDescription() != null)
-				desc = desc + " | " + getDescription();
-			payment.setDescription(desc);
-			payment.saveEx();
-			if(!payment.processIt(DocAction.ACTION_Complete))
-				throw new AdempiereException("Failed when processing document - " + payment.getProcessMsg());
-			payment.saveEx();
-			setC_Payment_ID(payment.getC_Payment_ID());
+			if(getC_ElementValue_ID() > 0) {
+				TF_MPayment payment = new TF_MPayment(getCtx(), 0, get_TrxName());
+				payment.setAD_Org_ID(getAD_Org_ID());			
+				payment.setOnAccount(true);
+				payment.setDateTrx(getDateAcct());
+				payment.setDateAcct(getDateAcct());	
+				payment.setDateBankTrx(getDateAcct());
+				payment.setC_BankAccount_ID(getC_BankAccount_ID());
+				payment.setC_DocType_ID(1000009);
+				payment.setIsReceipt(false);
+				payment.setC_ElementValue_ID(getC_ElementValue_ID());
+				TF_MCharge charge = TF_MCharge.createChargeFromAccount(getCtx(), payment.getC_ElementValue_ID(), get_TrxName());
+				if(charge != null )
+					payment.setC_Charge_ID(charge.get_ID());
+				MUser user = MUser.get(getCtx(), Env.getAD_User_ID(getCtx()));				
+				int bPartnerID = user.getC_BPartner_ID();	
+				payment.setC_BPartner_ID(bPartnerID);		
+				payment.setC_Currency_ID(Env.getContextAsInt(getCtx(), "$C_Currency_ID"));
+				payment.setPayAmt(getPermitAmount());
+				payment.setTenderType(TF_MPayment.TENDERTYPE_Cash);
+				String desc = "Permit Purchase:" + getDocumentNo();
+				if(getDescription() != null)
+					desc = desc + " | " + getDescription();
+				payment.setDescription(desc);
+				payment.saveEx();
+				if(!payment.processIt(DocAction.ACTION_Complete))
+					throw new AdempiereException("Failed when processing document - " + payment.getProcessMsg());
+				payment.saveEx();
+				setC_Payment_ID(payment.getC_Payment_ID());
+			}
 			
 		}
 	}
