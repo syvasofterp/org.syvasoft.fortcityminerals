@@ -146,6 +146,39 @@ public interface I_TF_GLPosting_Config
 
 	public org.compiere.model.I_C_BankAccount getC_BankAccount() throws RuntimeException;
 
+    /** Column name C_ElementValueCGST_ID */
+    public static final String COLUMNNAME_C_ElementValueCGST_ID = "C_ElementValueCGST_ID";
+
+	/** Set CGST Account Head	  */
+	public void setC_ElementValueCGST_ID (int C_ElementValueCGST_ID);
+
+	/** Get CGST Account Head	  */
+	public int getC_ElementValueCGST_ID();
+
+	public org.compiere.model.I_C_ElementValue getC_ElementValueCGST() throws RuntimeException;
+
+    /** Column name C_ElementValueIGST_ID */
+    public static final String COLUMNNAME_C_ElementValueIGST_ID = "C_ElementValueIGST_ID";
+
+	/** Set IGST Account Head	  */
+	public void setC_ElementValueIGST_ID (int C_ElementValueIGST_ID);
+
+	/** Get IGST Account Head	  */
+	public int getC_ElementValueIGST_ID();
+
+	public org.compiere.model.I_C_ElementValue getC_ElementValueIGST() throws RuntimeException;
+
+    /** Column name C_ElementValueSGST_ID */
+    public static final String COLUMNNAME_C_ElementValueSGST_ID = "C_ElementValueSGST_ID";
+
+	/** Set SGST Account Head	  */
+	public void setC_ElementValueSGST_ID (int C_ElementValueSGST_ID);
+
+	/** Get SGST Account Head	  */
+	public int getC_ElementValueSGST_ID();
+
+	public org.compiere.model.I_C_ElementValue getC_ElementValueSGST() throws RuntimeException;
+
     /** Column name CapitalAdjAcct_ID */
     public static final String COLUMNNAME_CapitalAdjAcct_ID = "CapitalAdjAcct_ID";
 

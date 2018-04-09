@@ -33,7 +33,7 @@ public class X_TF_TaxInvoice extends PO implements I_TF_TaxInvoice, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180403L;
+	private static final long serialVersionUID = 20180409L;
 
     /** Standard Constructor */
     public X_TF_TaxInvoice (Properties ctx, int TF_TaxInvoice_ID, String trxName)
@@ -47,11 +47,9 @@ public class X_TF_TaxInvoice extends PO implements I_TF_TaxInvoice, I_Persistent
 // @#Date@
 			setDocumentNo (null);
 			setM_Product_ID (0);
-			setMDPNo (null);
 			setProcessed (false);
 			setQtyPermitDeducted (Env.ZERO);
 			setSGST_Amt (Env.ZERO);
-			setTF_Quarry_ID (0);
 			setTF_TaxInvoice_ID (0);
         } */
     }
@@ -135,6 +133,59 @@ public class X_TF_TaxInvoice extends PO implements I_TF_TaxInvoice, I_Persistent
 	public int getC_BPartner_Location_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_C_BPartner_Location_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_ElementValue getC_ElementValueGST() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getC_ElementValueGST_ID(), get_TrxName());	}
+
+	/** Set GST Account Head.
+		@param C_ElementValueGST_ID GST Account Head	  */
+	public void setC_ElementValueGST_ID (int C_ElementValueGST_ID)
+	{
+		if (C_ElementValueGST_ID < 1) 
+			set_Value (COLUMNNAME_C_ElementValueGST_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_ElementValueGST_ID, Integer.valueOf(C_ElementValueGST_ID));
+	}
+
+	/** Get GST Account Head.
+		@return GST Account Head	  */
+	public int getC_ElementValueGST_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_ElementValueGST_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_Invoice getC_Invoice() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Invoice)MTable.get(getCtx(), org.compiere.model.I_C_Invoice.Table_Name)
+			.getPO(getC_Invoice_ID(), get_TrxName());	}
+
+	/** Set Invoice.
+		@param C_Invoice_ID 
+		Invoice Identifier
+	  */
+	public void setC_Invoice_ID (int C_Invoice_ID)
+	{
+		if (C_Invoice_ID < 1) 
+			set_Value (COLUMNNAME_C_Invoice_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_Invoice_ID, Integer.valueOf(C_Invoice_ID));
+	}
+
+	/** Get Invoice.
+		@return Invoice Identifier
+	  */
+	public int getC_Invoice_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_Invoice_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
@@ -411,6 +462,27 @@ public class X_TF_TaxInvoice extends PO implements I_TF_TaxInvoice, I_Persistent
 	public String getMDPNo () 
 	{
 		return (String)get_Value(COLUMNNAME_MDPNo);
+	}
+
+	/** Set Post GST to Customer.
+		@param PostTaxToCustomer Post GST to Customer	  */
+	public void setPostTaxToCustomer (boolean PostTaxToCustomer)
+	{
+		set_Value (COLUMNNAME_PostTaxToCustomer, Boolean.valueOf(PostTaxToCustomer));
+	}
+
+	/** Get Post GST to Customer.
+		@return Post GST to Customer	  */
+	public boolean isPostTaxToCustomer () 
+	{
+		Object oo = get_Value(COLUMNNAME_PostTaxToCustomer);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
 	}
 
 	/** Set Price.

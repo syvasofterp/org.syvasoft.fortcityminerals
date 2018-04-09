@@ -148,7 +148,7 @@ public class MCrusherPermitLedger extends X_TF_CrusherPermitLedger {
 		DB.executeUpdate(sql, inv.get_TrxName());
 		
 		sql = " UPDATE TF_CrusherPermitLedger a SET QtyIssued = COALESCE((SELECT SUM(b.QtyIssued) FROM TF_CrusherPermitLedgerLine b WHERE " +
-				" b.TF_CrusherPermitLedger_ID = a.TF_CrusherPermitLedger_ID),0) WHERE a.TF_Quarry_ID = " + inv.getTF_Quarry_ID()
+				" b.TF_CrusherPermitLedger_ID = a.TF_CrusherPermitLedger_ID),0) WHERE a.AD_Org_ID = " + inv.getAD_Org_ID()
 				+ " AND a.M_Product_ID = " + inv.getM_Product_ID();
 		DB.executeUpdate(sql, inv.get_TrxName());
 		//update qtyissued for all permit lots.

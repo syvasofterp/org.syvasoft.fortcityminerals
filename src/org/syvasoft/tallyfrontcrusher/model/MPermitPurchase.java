@@ -50,7 +50,7 @@ public class MPermitPurchase extends X_TF_PermitPurchase {
 			}
 			
 			MCrusherPermitLedger.purchasePermit(this);
-			if(getC_ElementValue_ID() > 0) {
+			if(getC_ElementValue_ID() > 0 && getC_BankAccount_ID() > 0) {
 				TF_MPayment payment = new TF_MPayment(getCtx(), 0, get_TrxName());
 				payment.setAD_Org_ID(getAD_Org_ID());			
 				payment.setOnAccount(true);
