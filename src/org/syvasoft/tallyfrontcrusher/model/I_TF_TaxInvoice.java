@@ -94,6 +94,32 @@ public interface I_TF_TaxInvoice
 
 	public org.compiere.model.I_C_BPartner_Location getC_BPartner_Location() throws RuntimeException;
 
+    /** Column name C_ElementValueGST_ID */
+    public static final String COLUMNNAME_C_ElementValueGST_ID = "C_ElementValueGST_ID";
+
+	/** Set GST Account Head	  */
+	public void setC_ElementValueGST_ID (int C_ElementValueGST_ID);
+
+	/** Get GST Account Head	  */
+	public int getC_ElementValueGST_ID();
+
+	public org.compiere.model.I_C_ElementValue getC_ElementValueGST() throws RuntimeException;
+
+    /** Column name C_Invoice_ID */
+    public static final String COLUMNNAME_C_Invoice_ID = "C_Invoice_ID";
+
+	/** Set Invoice.
+	  * Invoice Identifier
+	  */
+	public void setC_Invoice_ID (int C_Invoice_ID);
+
+	/** Get Invoice.
+	  * Invoice Identifier
+	  */
+	public int getC_Invoice_ID();
+
+	public org.compiere.model.I_C_Invoice getC_Invoice() throws RuntimeException;
+
     /** Column name C_UOM_ID */
     public static final String COLUMNNAME_C_UOM_ID = "C_UOM_ID";
 
@@ -271,6 +297,15 @@ public interface I_TF_TaxInvoice
 
 	/** Get MDP No	  */
 	public String getMDPNo();
+
+    /** Column name PostTaxToCustomer */
+    public static final String COLUMNNAME_PostTaxToCustomer = "PostTaxToCustomer";
+
+	/** Set Post GST to Customer	  */
+	public void setPostTaxToCustomer (boolean PostTaxToCustomer);
+
+	/** Get Post GST to Customer	  */
+	public boolean isPostTaxToCustomer();
 
     /** Column name Price */
     public static final String COLUMNNAME_Price = "Price";

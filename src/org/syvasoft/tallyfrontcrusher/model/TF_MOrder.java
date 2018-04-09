@@ -1326,6 +1326,68 @@ public class TF_MOrder extends MOrder {
 			 return 0;
 		return ii.intValue();
 	}
+	
+	/** Column name OnAccount */
+    public static final String COLUMNNAME_OnAccount = "OnAccount";
+    /** Set On Account.
+	@param OnAccount On Account	  */
+	public void setOnAccount (boolean OnAccount)
+	{
+		set_Value (COLUMNNAME_OnAccount, Boolean.valueOf(OnAccount));
+	}
+	
+	/** Get On Account.
+		@return On Account	  */
+	public boolean isOnAccount () 
+	{
+		Object oo = get_Value(COLUMNNAME_OnAccount);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+	
+	/** Column name MDPNo */
+    public static final String COLUMNNAME_MDPNo = "MDPNo";
+    /** Set MDP No.
+	@param MDPNo MDP No	  */
+	public void setMDPNo (String MDPNo)
+	{
+		set_Value (COLUMNNAME_MDPNo, MDPNo);
+	}
+	
+	/** Get MDP No.
+		@return MDP No	  */
+	public String getMDPNo () 
+	{
+		return (String)get_Value(COLUMNNAME_MDPNo);
+	}
+	
+	/** Column name TF_TaxInvoice_ID */
+    public static final String COLUMNNAME_TF_TaxInvoice_ID = "TF_TaxInvoice_ID";
+    /** Set Tax Invoice.
+	@param TF_TaxInvoice_ID Tax Invoice	  */
+	public void setTF_TaxInvoice_ID (int TF_TaxInvoice_ID)
+	{
+		if (TF_TaxInvoice_ID < 1) 
+			set_Value (COLUMNNAME_TF_TaxInvoice_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_TaxInvoice_ID, Integer.valueOf(TF_TaxInvoice_ID));
+	}
+	
+	/** Get Tax Invoice.
+		@return Tax Invoice	  */
+	public int getTF_TaxInvoice_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_TaxInvoice_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+	
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
 		success = super.afterSave(newRecord, success);
@@ -1559,7 +1621,7 @@ public class TF_MOrder extends MOrder {
 		issuePermit();
 		createTransporterInvoice();
 		closeWeighmentEntry();
-		
+		createTaxInvoice();
 		return msg;
 	}
 
@@ -1627,6 +1689,7 @@ public class TF_MOrder extends MOrder {
 		reverseSubcontractPurchaseEntry();
 		reverseIssuedPermit();
 		reversePurchasedPermit();
+		voidTaxInvoice();
 		return super.voidIt();
 	}
 	
@@ -1666,6 +1729,7 @@ public class TF_MOrder extends MOrder {
 		reverseSubcontractPurchaseEntry();
 		reverseIssuedPermit();
 		reversePurchasedPermit();
+		voidTaxInvoice();
 		return super.reActivateIt();
 	}
 
@@ -2095,4 +2159,53 @@ public class TF_MOrder extends MOrder {
 			MPermitLedger.reverseIssuedPermit(getAD_Org_ID(), getItem1_C_OrderLine_ID(), get_TrxName());
 	}
 	
+	public void createTaxInvoice() {
+		if(!isOnAccount())
+			return;
+		
+		if(getItem1_PermitIssued().doubleValue() <= 0)
+			throw new AdempiereException("Invalid Permit Issued!");
+		
+		MTaxInvoice inv = new MTaxInvoice(getCtx(), 0, get_TrxName());
+		inv.setAD_Org_ID(getAD_Org_ID());
+		inv.setDateAcct(getDateAcct());
+		inv.setC_BPartner_ID(getC_BPartner_ID());
+		inv.setM_Product_ID(getItem1_ID());
+		inv.setC_UOM_ID(getItem1_UOM_ID());
+		inv.setQty(getItem1_Qty());
+		inv.setPrice(getItem1_UnitPrice());
+		BigDecimal taxRate = new BigDecimal(2.5); 
+		inv.setCGST_Rate(taxRate);
+		inv.setSGST_Rate(taxRate);
+		inv.setIGST_Rate(BigDecimal.ZERO);
+		inv.setRoundingOff(BigDecimal.ZERO);
+		inv.setMDPNo(getMDPNo());
+		inv.setQtyPermitDeducted(getItem1_PermitIssued());
+		inv.setVehicleNo(getVehicleNo());
+		inv.setDescription(getDescription());
+		inv.setDestination("test");
+		inv.saveEx();
+		inv.calcAmounts();
+		if(getTF_Destination_ID() > 0) {
+			MDestination dest = new MDestination(getCtx(), getTF_Destination_ID(), get_TrxName());
+			inv.setDestination(dest.getName());
+		}
+		inv.saveEx();
+		inv.processIt(DOCACTION_Complete);
+		inv.saveEx();
+		
+		setTF_TaxInvoice_ID(inv.getTF_TaxInvoice_ID());
+		
+	}
+	
+	public void voidTaxInvoice() {
+		if(getTF_TaxInvoice_ID() > 0) {
+			MTaxInvoice inv = new MTaxInvoice(getCtx(), getTF_TaxInvoice_ID(), get_TrxName());
+			inv.reverseIt();
+			inv.setDocStatus(DOCSTATUS_Voided);
+			inv.setProcessed(true);
+			inv.saveEx();
+			setTF_TaxInvoice_ID(0);
+		}
+	}
 }

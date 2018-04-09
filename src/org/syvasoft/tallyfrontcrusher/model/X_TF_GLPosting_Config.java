@@ -30,7 +30,7 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180308L;
+	private static final long serialVersionUID = 20180409L;
 
     /** Standard Constructor */
     public X_TF_GLPosting_Config (Properties ctx, int TF_GLPosting_Config_ID, String trxName)
@@ -235,6 +235,81 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	public int getC_BankAccount_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_C_BankAccount_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_ElementValue getC_ElementValueCGST() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getC_ElementValueCGST_ID(), get_TrxName());	}
+
+	/** Set CGST Account Head.
+		@param C_ElementValueCGST_ID CGST Account Head	  */
+	public void setC_ElementValueCGST_ID (int C_ElementValueCGST_ID)
+	{
+		if (C_ElementValueCGST_ID < 1) 
+			set_Value (COLUMNNAME_C_ElementValueCGST_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_ElementValueCGST_ID, Integer.valueOf(C_ElementValueCGST_ID));
+	}
+
+	/** Get CGST Account Head.
+		@return CGST Account Head	  */
+	public int getC_ElementValueCGST_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_ElementValueCGST_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_ElementValue getC_ElementValueIGST() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getC_ElementValueIGST_ID(), get_TrxName());	}
+
+	/** Set IGST Account Head.
+		@param C_ElementValueIGST_ID IGST Account Head	  */
+	public void setC_ElementValueIGST_ID (int C_ElementValueIGST_ID)
+	{
+		if (C_ElementValueIGST_ID < 1) 
+			set_Value (COLUMNNAME_C_ElementValueIGST_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_ElementValueIGST_ID, Integer.valueOf(C_ElementValueIGST_ID));
+	}
+
+	/** Get IGST Account Head.
+		@return IGST Account Head	  */
+	public int getC_ElementValueIGST_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_ElementValueIGST_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_ElementValue getC_ElementValueSGST() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getC_ElementValueSGST_ID(), get_TrxName());	}
+
+	/** Set SGST Account Head.
+		@param C_ElementValueSGST_ID SGST Account Head	  */
+	public void setC_ElementValueSGST_ID (int C_ElementValueSGST_ID)
+	{
+		if (C_ElementValueSGST_ID < 1) 
+			set_Value (COLUMNNAME_C_ElementValueSGST_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_ElementValueSGST_ID, Integer.valueOf(C_ElementValueSGST_ID));
+	}
+
+	/** Get SGST Account Head.
+		@return SGST Account Head	  */
+	public int getC_ElementValueSGST_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_ElementValueSGST_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
