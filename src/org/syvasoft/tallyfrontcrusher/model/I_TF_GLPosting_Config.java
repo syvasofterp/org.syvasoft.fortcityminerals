@@ -168,6 +168,17 @@ public interface I_TF_GLPosting_Config
 
 	public org.compiere.model.I_C_ElementValue getC_ElementValueIGST() throws RuntimeException;
 
+    /** Column name C_ElementValuePermitExp_ID */
+    public static final String COLUMNNAME_C_ElementValuePermitExp_ID = "C_ElementValuePermitExp_ID";
+
+	/** Set Permit Expense Account Head	  */
+	public void setC_ElementValuePermitExp_ID (int C_ElementValuePermitExp_ID);
+
+	/** Get Permit Expense Account Head	  */
+	public int getC_ElementValuePermitExp_ID();
+
+	public org.compiere.model.I_C_ElementValue getC_ElementValuePermitExp() throws RuntimeException;
+
     /** Column name C_ElementValueSGST_ID */
     public static final String COLUMNNAME_C_ElementValueSGST_ID = "C_ElementValueSGST_ID";
 

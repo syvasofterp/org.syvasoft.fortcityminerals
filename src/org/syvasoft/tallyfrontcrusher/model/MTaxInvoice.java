@@ -62,8 +62,12 @@ public class MTaxInvoice extends X_TF_TaxInvoice {
 				else 
 					throw new AdempiereException("Permit Qty should be greater than ZERO!");
 			
-			if(!isPostTaxToCustomer())
+			if(!isPostTaxToCustomer() && !isPostPermitAmtToCustomer() )
 				return;
+			
+			if(isPostPermitAmtToCustomer() && getPermitAmount().doubleValue() <= 0) {
+				throw new AdempiereException("Permit Amount should be greater than ZERO!");
+			}
 			
 			MGLPostingConfig config = MGLPostingConfig.getMGLPostingConfig(getCtx());
 			//Invoice Header
@@ -86,44 +90,57 @@ public class MTaxInvoice extends X_TF_TaxInvoice {
 				m_M_PriceList_ID = bp.getM_PriceList_ID();			
 			invoice.setM_PriceList_ID(m_M_PriceList_ID);
 			invoice.setC_Currency_ID(MPriceList.get(getCtx(), m_M_PriceList_ID, get_TrxName()).getC_Currency_ID());
-			invoice.setDescription("GST Tax : " + getDocumentNo());
+			invoice.setDescription("Tax Invoice: " + getDocumentNo());
 			invoice.saveEx();
 			//End Invoice Header
 			
 			//Invoice Line
 			MInvoiceLine invLine = null;
-			if(getCGST_Rate().doubleValue() > 0 || getSGST_Rate().doubleValue() > 0) {
-				//CGST
+			if(isPostTaxToCustomer()) {
+				if(getCGST_Rate().doubleValue() > 0 || getSGST_Rate().doubleValue() > 0) {
+					//CGST
+					invLine = new MInvoiceLine(invoice);
+					TF_MCharge chrg = TF_MCharge.createChargeFromAccount(getCtx(), config.getC_ElementValueCGST_ID(), null);
+					invLine.setC_Charge_ID(chrg.getC_Charge_ID());
+					invLine.setC_Tax_ID(1000000);
+					invLine.setQty(BigDecimal.ONE);			
+					invLine.setPrice(getCGST_Amt());
+					invLine.setDescription("CGST " +  getCGST_Rate() + "% of Rs." + getTaxableAmount());
+					invLine.saveEx();
+					
+					//SGST
+					invLine = new MInvoiceLine(invoice);
+					chrg = TF_MCharge.createChargeFromAccount(getCtx(), config.getC_ElementValueSGST_ID(), null);
+					invLine.setC_Charge_ID(chrg.getC_Charge_ID());
+					invLine.setC_Tax_ID(1000000);
+					invLine.setQty(BigDecimal.ONE);			
+					invLine.setPrice(getSGST_Amt());
+					invLine.setDescription("SGST " +  getSGST_Rate() + "% of Rs." + getTaxableAmount());
+					invLine.saveEx();				
+				}
+				else {
+					//IGST
+					invLine = new MInvoiceLine(invoice);
+					TF_MCharge chrg = TF_MCharge.createChargeFromAccount(getCtx(), config.getC_ElementValueIGST_ID(), null);
+					invLine.setC_Charge_ID(chrg.getC_Charge_ID());
+					invLine.setC_Tax_ID(1000000);
+					invLine.setQty(BigDecimal.ONE);			
+					invLine.setPrice(getIGST_Amt());
+					invLine.setDescription("IGST " +  getIGST_Rate() + "% of Rs." + getTaxableAmount());
+					invLine.saveEx();
+				}
+			}
+			if(isPostPermitAmtToCustomer()) {
 				invLine = new MInvoiceLine(invoice);
-				TF_MCharge chrg = TF_MCharge.createChargeFromAccount(getCtx(), config.getC_ElementValueCGST_ID(), null);
+				TF_MCharge chrg = TF_MCharge.createChargeFromAccount(getCtx(), config.getC_ElementValuePermitExp_ID(), null);
 				invLine.setC_Charge_ID(chrg.getC_Charge_ID());
 				invLine.setC_Tax_ID(1000000);
 				invLine.setQty(BigDecimal.ONE);			
-				invLine.setPrice(getCGST_Amt());
-				invLine.setDescription("CGST " +  getCGST_Rate() + "% of Rs." + getTaxableAmount());
+				invLine.setPrice(getPermitAmount());
+				invLine.setDescription("For " + getM_Product().getName() + " Qty: " + getQty() + " MT" );
 				invLine.saveEx();
+			}			
 				
-				//SGST
-				invLine = new MInvoiceLine(invoice);
-				chrg = TF_MCharge.createChargeFromAccount(getCtx(), config.getC_ElementValueSGST_ID(), null);
-				invLine.setC_Charge_ID(chrg.getC_Charge_ID());
-				invLine.setC_Tax_ID(1000000);
-				invLine.setQty(BigDecimal.ONE);			
-				invLine.setPrice(getSGST_Amt());
-				invLine.setDescription("SGST " +  getSGST_Rate() + "% of Rs." + getTaxableAmount());
-				invLine.saveEx();				
-			}
-			else {
-				//IGST
-				invLine = new MInvoiceLine(invoice);
-				TF_MCharge chrg = TF_MCharge.createChargeFromAccount(getCtx(), config.getC_ElementValueIGST_ID(), null);
-				invLine.setC_Charge_ID(chrg.getC_Charge_ID());
-				invLine.setC_Tax_ID(1000000);
-				invLine.setQty(BigDecimal.ONE);			
-				invLine.setPrice(getIGST_Amt());
-				invLine.setDescription("IGST " +  getIGST_Rate() + "% of Rs." + getTaxableAmount());
-				invLine.saveEx();
-			}
 			//End Invoice Line
 			//DocAction
 			if (!invoice.processIt(DocAction.ACTION_Complete))
