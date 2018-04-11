@@ -298,6 +298,24 @@ public interface I_TF_TaxInvoice
 	/** Get MDP No	  */
 	public String getMDPNo();
 
+    /** Column name PermitAmount */
+    public static final String COLUMNNAME_PermitAmount = "PermitAmount";
+
+	/** Set Permit Amount	  */
+	public void setPermitAmount (BigDecimal PermitAmount);
+
+	/** Get Permit Amount	  */
+	public BigDecimal getPermitAmount();
+
+    /** Column name PostPermitAmtToCustomer */
+    public static final String COLUMNNAME_PostPermitAmtToCustomer = "PostPermitAmtToCustomer";
+
+	/** Set Post Permit Amount to Customer	  */
+	public void setPostPermitAmtToCustomer (boolean PostPermitAmtToCustomer);
+
+	/** Get Post Permit Amount to Customer	  */
+	public boolean isPostPermitAmtToCustomer();
+
     /** Column name PostTaxToCustomer */
     public static final String COLUMNNAME_PostTaxToCustomer = "PostTaxToCustomer";
 

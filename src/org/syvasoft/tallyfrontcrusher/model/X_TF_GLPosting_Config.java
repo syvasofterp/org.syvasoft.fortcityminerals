@@ -30,7 +30,7 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180409L;
+	private static final long serialVersionUID = 20180411L;
 
     /** Standard Constructor */
     public X_TF_GLPosting_Config (Properties ctx, int TF_GLPosting_Config_ID, String trxName)
@@ -285,6 +285,31 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	public int getC_ElementValueIGST_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_C_ElementValueIGST_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_ElementValue getC_ElementValuePermitExp() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getC_ElementValuePermitExp_ID(), get_TrxName());	}
+
+	/** Set Permit Expense Account Head.
+		@param C_ElementValuePermitExp_ID Permit Expense Account Head	  */
+	public void setC_ElementValuePermitExp_ID (int C_ElementValuePermitExp_ID)
+	{
+		if (C_ElementValuePermitExp_ID < 1) 
+			set_Value (COLUMNNAME_C_ElementValuePermitExp_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_ElementValuePermitExp_ID, Integer.valueOf(C_ElementValuePermitExp_ID));
+	}
+
+	/** Get Permit Expense Account Head.
+		@return Permit Expense Account Head	  */
+	public int getC_ElementValuePermitExp_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_ElementValuePermitExp_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();

@@ -33,7 +33,7 @@ public class X_TF_TaxInvoice extends PO implements I_TF_TaxInvoice, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180409L;
+	private static final long serialVersionUID = 20180411L;
 
     /** Standard Constructor */
     public X_TF_TaxInvoice (Properties ctx, int TF_TaxInvoice_ID, String trxName)
@@ -462,6 +462,44 @@ public class X_TF_TaxInvoice extends PO implements I_TF_TaxInvoice, I_Persistent
 	public String getMDPNo () 
 	{
 		return (String)get_Value(COLUMNNAME_MDPNo);
+	}
+
+	/** Set Permit Amount.
+		@param PermitAmount Permit Amount	  */
+	public void setPermitAmount (BigDecimal PermitAmount)
+	{
+		set_Value (COLUMNNAME_PermitAmount, PermitAmount);
+	}
+
+	/** Get Permit Amount.
+		@return Permit Amount	  */
+	public BigDecimal getPermitAmount () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_PermitAmount);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set Post Permit Amount to Customer.
+		@param PostPermitAmtToCustomer Post Permit Amount to Customer	  */
+	public void setPostPermitAmtToCustomer (boolean PostPermitAmtToCustomer)
+	{
+		set_Value (COLUMNNAME_PostPermitAmtToCustomer, Boolean.valueOf(PostPermitAmtToCustomer));
+	}
+
+	/** Get Post Permit Amount to Customer.
+		@return Post Permit Amount to Customer	  */
+	public boolean isPostPermitAmtToCustomer () 
+	{
+		Object oo = get_Value(COLUMNNAME_PostPermitAmtToCustomer);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
 	}
 
 	/** Set Post GST to Customer.
