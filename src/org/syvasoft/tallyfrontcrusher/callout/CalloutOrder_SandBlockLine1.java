@@ -16,14 +16,22 @@ public class CalloutOrder_SandBlockLine1 implements IColumnCallout {
 	@Override
 	public String start(Properties ctx, int WindowNo, GridTab mTab, GridField mField, Object value, Object oldValue) {
 		String orgType  = (String) mTab.getValue(TF_MOrder.COLUMNNAME_OrgType);
+		boolean isPermitSales = mTab.getValueAsBoolean(TF_MOrder.COLUMNNAME_Item1_IsPermitSales);
 		
-		if(!orgType.equals(TF_MOrder.ORGTYPE_SandBlock) || !mTab.getValueAsBoolean(TF_MOrder.COLUMNNAME_IsSOTrx))
+		if(orgType.equals(TF_MOrder.ORGTYPE_SandBlockWeighbridge)) {
+			if(isPermitSales)
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_SandType, TF_MOrder.ITEM1_SANDTYPE_PermitSand);
+			else
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_SandType, TF_MOrder.ITEM1_SANDTYPE_WithoutPermit);
+		}
+		
+		if(!orgType.equals(TF_MOrder.ORGTYPE_SandBlockBucket) || !mTab.getValueAsBoolean(TF_MOrder.COLUMNNAME_IsSOTrx))
 			return null;
 		
 		if(mTab.getValue(TF_MOrder.COLUMNNAME_C_BPartner_ID) == null)
 			return null;
 		
-		boolean isPermitSales = mTab.getValueAsBoolean(TF_MOrder.COLUMNNAME_Item1_IsPermitSales);
+		
 		int tf_vehicletype_id = 0;
 		if(mTab.getValue(TF_MOrder.COLUMNNAME_Item1_VehicleType_ID) != null)
 			tf_vehicletype_id = (int) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_VehicleType_ID);

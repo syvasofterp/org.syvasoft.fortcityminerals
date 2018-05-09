@@ -946,11 +946,16 @@ public class TF_MOrder extends MOrder {
 	/** Column name OrgType */
     public static final String COLUMNNAME_OrgType = "OrgType";    
     /** Crusher = C */
+    /** Crusher = C */
 	public static final String ORGTYPE_Crusher = "C";
-	/** Sand Block = S */
-	public static final String ORGTYPE_SandBlock = "S";
+	/** Sand Block Bucket = S */
+	public static final String ORGTYPE_SandBlockBucket = "S";
 	/** Trading = T */
 	public static final String ORGTYPE_Trading = "T";
+	/** Head Office = H */
+	public static final String ORGTYPE_HeadOffice = "H";
+	/** Sand Block Weighbridge = W */
+	public static final String ORGTYPE_SandBlockWeighbridge = "W";
     /** Set Organization Type.
 	@param OrgType Organization Type	  */
 	public void setOrgType (String OrgType)
@@ -1479,7 +1484,7 @@ public class TF_MOrder extends MOrder {
 			ordLine.saveEx();
 			
 			//FIX: Set Bucket Rate based Total amount			
-			if(getOrgType().equals(ORGTYPE_SandBlock)) {
+			if(getOrgType().equals(ORGTYPE_SandBlockBucket)) {
 			DB.executeUpdate("UPDATE C_OrderLine SET " + TF_MOrderLine.COLUMNNAME_LineNetAmt + " = "
 					+ getItem1_Amt() + " WHERE C_OrderLine_ID = " + ordLine.getC_OrderLine_ID(), get_TrxName());
 			}
@@ -1519,7 +1524,7 @@ public class TF_MOrder extends MOrder {
 			ordLine.saveEx();			
 			
 			//FIX: Set Bucket Rate based Total amount
-			if(getOrgType().equals(ORGTYPE_SandBlock)) {
+			if(getOrgType().equals(ORGTYPE_SandBlockBucket)) {
 				DB.executeUpdate("UPDATE C_OrderLine SET " + TF_MOrderLine.COLUMNNAME_LineNetAmt + " = "
 						+ getItem2_Amt() + " WHERE C_OrderLine_ID = " + ordLine.getC_OrderLine_ID(), get_TrxName());
 			}
@@ -1638,7 +1643,7 @@ public class TF_MOrder extends MOrder {
 		TF_MOrg org = new TF_MOrg(getCtx(), getAD_Org_ID(), get_TrxName());
 		setOrgType(org.getOrgType());
 		
-		if(getOrgType().equals(ORGTYPE_SandBlock) && isSOTrx()) {
+		if(getOrgType().equals(ORGTYPE_SandBlockBucket) && isSOTrx()) {
 			if(getItem1_BucketQty().doubleValue()<=0)
 				throw new AdempiereException("Line 1: Bucket qty is Mandatory");
 			if(isItem1_IsPermitSales() && getItem1_PermitIssued().doubleValue()<=0.5)
@@ -1984,7 +1989,8 @@ public class TF_MOrder extends MOrder {
 		invLine.setC_Tax_ID(1000000);
 		//invLine.setDescription(getItem1_Desc());
 		
-		if(getOrgType().equals(TF_MOrder.ORGTYPE_SandBlock)) {
+		if(getOrgType().equals(TF_MOrder.ORGTYPE_SandBlockBucket) ||  
+				getOrgType().equals(TF_MOrder.ORGTYPE_SandBlockWeighbridge)) {
 			invLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_SandType, getItem1_SandType());
 			invLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_BucketQty, getItem1_BucketQty());
 			invLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_IsPermitSales, isItem1_IsPermitSales() );
@@ -2004,7 +2010,7 @@ public class TF_MOrder extends MOrder {
 			invLine2.setPriceEntered(purchasePrice2);		
 			invLine2.setC_Tax_ID(1000000);
 			//invLine2.setDescription(getItem2_Desc());
-			if(getOrgType().equals(TF_MOrder.ORGTYPE_SandBlock)) {
+			if(getOrgType().equals(TF_MOrder.ORGTYPE_SandBlockBucket) ) {
 				invLine2.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_SandType, getItem2_SandType());
 				invLine2.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_BucketQty, getItem2_BucketQty());
 				invLine2.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_IsPermitSales, isItem2_IsPermitSales() );
@@ -2118,8 +2124,15 @@ public class TF_MOrder extends MOrder {
 	public void issuePermit() {		
 		if(!isSOTrx()) 
 			return;
-		MSandBlockBucketConfig config = MSandBlockBucketConfig.getBucketConfig(getAD_Org_ID(), MSandBlockBucketConfig.SANDTYPE_P, getItem1_VehicleType_ID());
 		
+		if(!(getOrgType().equals(ORGTYPE_SandBlockBucket) || getOrgType().equals(ORGTYPE_SandBlockWeighbridge)))
+			return;
+		
+		MSandBlockBucketConfig config = MSandBlockBucketConfig.getBucketConfig(getAD_Org_ID(), MSandBlockBucketConfig.SANDTYPE_P, getItem1_VehicleType_ID());
+		if(isItem1_IsPermitSales() && (config == null || config.getM_ProductPermitLedger_ID() == 0)) {
+			MVehicleType vType = new MVehicleType(getCtx(), getItem1_VehicleType_ID(), get_TrxName());
+			throw new AdempiereException("For " + vType.getName() + ", please configure Permit Ledger in Sand Block Bucket Configuration!");
+		}
 		if(config != null && isItem1_IsPermitSales() && getItem1_ID() == config.getM_Product_ID()
 				&& config.getM_ProductPermitLedger_ID() > 0) {
 			BigDecimal qtyIssue = getItem1_PermitIssued(); 

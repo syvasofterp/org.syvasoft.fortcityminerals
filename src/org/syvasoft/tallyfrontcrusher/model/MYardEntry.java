@@ -71,9 +71,9 @@ public class MYardEntry extends X_TF_YardEntry {
 	}
 	
 	public boolean hasCreatedSalesEntry() {
-		TF_MOrder ord = new Query(getCtx(), TF_MOrder.Table_Name, "TF_YardEntry_ID=? AND DocStatus IN ('DR', 'CO', 'IP') ", get_TrxName())
-				.setClient_ID().setParameters(getTF_YardEntry_ID()).first();
-		return ord != null;
+		List<TF_MOrder> ords = new Query(getCtx(), TF_MOrder.Table_Name, "TF_YardEntry_ID=? AND DocStatus IN ('DR', 'CO', 'IP') ", get_TrxName())
+				.setClient_ID().setParameters(getTF_YardEntry_ID()).list();		
+		return ords.size() > 0;
 	}
 	
 	@Override
@@ -106,6 +106,10 @@ public class MYardEntry extends X_TF_YardEntry {
 		//pOrd.saveEx();
 		
 		//DocAction
+		//pOrd.setDocAction(DocAction.ACTION_Complete);
+		//pOrd.completeIt();
+		//pOrd.setDocStatus(DOCSTATUS_Completed);
+		//pOrd.saveEx();
 		//if (!pOrd.processIt(DocAction.ACTION_Complete))
 		//	throw new AdempiereException("Failed when processing document - " + pOrd.getProcessMsg());
 		//pOrd.saveEx();
@@ -118,6 +122,12 @@ public class MYardEntry extends X_TF_YardEntry {
 		createOrderHeader(wOrd, C_DocType_ID, M_Warehouse_ID);
 		createWithoutPermitSalesLine(wOrd);
 		wOrd.saveEx();
+		
+		//wOrd.setDocAction(DocAction.ACTION_Complete);
+		//wOrd.completeIt();
+		//wOrd.setDocStatus(DOCSTATUS_Completed);
+		//wOrd.saveEx();
+		
 		//DocAction
 		//if (!wOrd.processIt(DocAction.ACTION_Complete))
 		//	throw new AdempiereException("Failed when processing document - " + wOrd.getProcessMsg());
@@ -147,7 +157,7 @@ public class MYardEntry extends X_TF_YardEntry {
 		ord.setC_Currency_ID(MPriceList.get(getCtx(), m_M_PriceList_ID, get_TrxName()).getC_Currency_ID());
 		ord.setIsSOTrx(true);
 		ord.setTF_YardEntry_ID(getTF_YardEntry_ID());
-		ord.setTF_YardEntryApprove_ID(getTF_YardEntryApprove_ID());
+		ord.setTF_YardEntryApprove_ID(getTF_YardEntryApprove_ID());		
 	}
 	
 	private void createPermitSalesLine(TF_MOrder ord) {

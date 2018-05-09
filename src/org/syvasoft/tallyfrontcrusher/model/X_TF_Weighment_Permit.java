@@ -24,10 +24,10 @@ import java.util.Properties;
 import org.compiere.model.*;
 import org.compiere.util.Env;
 
-/** Generated Model for TF_WeighmentEntry
+/** Generated Model for TF_Weighment_Permit
  *  @author iDempiere (generated) 
  *  @version Release 4.1 - $Id$ */
-public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Persistent 
+public class X_TF_Weighment_Permit extends PO implements I_TF_Weighment_Permit, I_Persistent 
 {
 
 	/**
@@ -36,23 +36,25 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	private static final long serialVersionUID = 20180505L;
 
     /** Standard Constructor */
-    public X_TF_WeighmentEntry (Properties ctx, int TF_WeighmentEntry_ID, String trxName)
+    public X_TF_Weighment_Permit (Properties ctx, int TF_Weighment_Permit_ID, String trxName)
     {
-      super (ctx, TF_WeighmentEntry_ID, trxName);
-      /** if (TF_WeighmentEntry_ID == 0)
+      super (ctx, TF_Weighment_Permit_ID, trxName);
+      /** if (TF_Weighment_Permit_ID == 0)
         {
+			setActualDocumentNo (null);
 			setDocumentNo (null);
 			setM_Product_ID (0);
+			setPaymentRule (null);
 			setProcessed (false);
 			setStatus (null);
 // IP
-			setTF_WeighmentEntry_ID (0);
+			setTF_Weighment_Permit_ID (0);
 			setWeighmentEntryType (null);
         } */
     }
 
     /** Load Constructor */
-    public X_TF_WeighmentEntry (Properties ctx, ResultSet rs, String trxName)
+    public X_TF_Weighment_Permit (Properties ctx, ResultSet rs, String trxName)
     {
       super (ctx, rs, trxName);
     }
@@ -74,10 +76,24 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 
     public String toString()
     {
-      StringBuffer sb = new StringBuffer ("X_TF_WeighmentEntry[")
+      StringBuffer sb = new StringBuffer ("X_TF_Weighment_Permit[")
         .append(get_ID()).append("]");
       return sb.toString();
     }
+
+	/** Set Actual Document No.
+		@param ActualDocumentNo Actual Document No	  */
+	public void setActualDocumentNo (String ActualDocumentNo)
+	{
+		set_Value (COLUMNNAME_ActualDocumentNo, ActualDocumentNo);
+	}
+
+	/** Get Actual Document No.
+		@return Actual Document No	  */
+	public String getActualDocumentNo () 
+	{
+		return (String)get_Value(COLUMNNAME_ActualDocumentNo);
+	}
 
 	/** Set Amount.
 		@param Amount 
@@ -85,7 +101,7 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	  */
 	public void setAmount (BigDecimal Amount)
 	{
-		set_Value (COLUMNNAME_Amount, Amount);
+		set_ValueNoCheck (COLUMNNAME_Amount, Amount);
 	}
 
 	/** Get Amount.
@@ -111,9 +127,9 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public void setC_BPartner_ID (int C_BPartner_ID)
 	{
 		if (C_BPartner_ID < 1) 
-			set_Value (COLUMNNAME_C_BPartner_ID, null);
+			set_ValueNoCheck (COLUMNNAME_C_BPartner_ID, null);
 		else 
-			set_Value (COLUMNNAME_C_BPartner_ID, Integer.valueOf(C_BPartner_ID));
+			set_ValueNoCheck (COLUMNNAME_C_BPartner_ID, Integer.valueOf(C_BPartner_ID));
 	}
 
 	/** Get Business Partner .
@@ -139,9 +155,9 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public void setC_Order_ID (int C_Order_ID)
 	{
 		if (C_Order_ID < 1) 
-			set_Value (COLUMNNAME_C_Order_ID, null);
+			set_ValueNoCheck (COLUMNNAME_C_Order_ID, null);
 		else 
-			set_Value (COLUMNNAME_C_Order_ID, Integer.valueOf(C_Order_ID));
+			set_ValueNoCheck (COLUMNNAME_C_Order_ID, Integer.valueOf(C_Order_ID));
 	}
 
 	/** Get Order.
@@ -336,9 +352,9 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public void setM_Warehouse_ID (int M_Warehouse_ID)
 	{
 		if (M_Warehouse_ID < 1) 
-			set_Value (COLUMNNAME_M_Warehouse_ID, null);
+			set_ValueNoCheck (COLUMNNAME_M_Warehouse_ID, null);
 		else 
-			set_Value (COLUMNNAME_M_Warehouse_ID, Integer.valueOf(M_Warehouse_ID));
+			set_ValueNoCheck (COLUMNNAME_M_Warehouse_ID, Integer.valueOf(M_Warehouse_ID));
 	}
 
 	/** Get Warehouse.
@@ -501,7 +517,9 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	/** Voided = VO */
 	public static final String STATUS_Voided = "VO";
 	/** Set Status.
-		@param Status Status	  */
+		@param Status 
+		Status of the currently running check
+	  */
 	public void setStatus (String Status)
 	{
 
@@ -509,7 +527,8 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	}
 
 	/** Get Status.
-		@return Status	  */
+		@return Status of the currently running check
+	  */
 	public String getStatus () 
 	{
 		return (String)get_Value(COLUMNNAME_Status);
@@ -671,14 +690,53 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return ii.intValue();
 	}
 
+	/** Set Weighment Entry (Permit).
+		@param TF_Weighment_Permit_ID Weighment Entry (Permit)	  */
+	public void setTF_Weighment_Permit_ID (int TF_Weighment_Permit_ID)
+	{
+		if (TF_Weighment_Permit_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_TF_Weighment_Permit_ID, null);
+		else 
+			set_ValueNoCheck (COLUMNNAME_TF_Weighment_Permit_ID, Integer.valueOf(TF_Weighment_Permit_ID));
+	}
+
+	/** Get Weighment Entry (Permit).
+		@return Weighment Entry (Permit)	  */
+	public int getTF_Weighment_Permit_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Weighment_Permit_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Set TF_Weighment_Permit_UU.
+		@param TF_Weighment_Permit_UU TF_Weighment_Permit_UU	  */
+	public void setTF_Weighment_Permit_UU (String TF_Weighment_Permit_UU)
+	{
+		set_ValueNoCheck (COLUMNNAME_TF_Weighment_Permit_UU, TF_Weighment_Permit_UU);
+	}
+
+	/** Get TF_Weighment_Permit_UU.
+		@return TF_Weighment_Permit_UU	  */
+	public String getTF_Weighment_Permit_UU () 
+	{
+		return (String)get_Value(COLUMNNAME_TF_Weighment_Permit_UU);
+	}
+
+	public I_TF_WeighmentEntry getTF_WeighmentEntry() throws RuntimeException
+    {
+		return (I_TF_WeighmentEntry)MTable.get(getCtx(), I_TF_WeighmentEntry.Table_Name)
+			.getPO(getTF_WeighmentEntry_ID(), get_TrxName());	}
+
 	/** Set Weighment Entry.
 		@param TF_WeighmentEntry_ID Weighment Entry	  */
 	public void setTF_WeighmentEntry_ID (int TF_WeighmentEntry_ID)
 	{
 		if (TF_WeighmentEntry_ID < 1) 
-			set_ValueNoCheck (COLUMNNAME_TF_WeighmentEntry_ID, null);
+			set_Value (COLUMNNAME_TF_WeighmentEntry_ID, null);
 		else 
-			set_ValueNoCheck (COLUMNNAME_TF_WeighmentEntry_ID, Integer.valueOf(TF_WeighmentEntry_ID));
+			set_Value (COLUMNNAME_TF_WeighmentEntry_ID, Integer.valueOf(TF_WeighmentEntry_ID));
 	}
 
 	/** Get Weighment Entry.
@@ -689,20 +747,6 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
-	}
-
-	/** Set TF_WeighmentEntry_UU.
-		@param TF_WeighmentEntry_UU TF_WeighmentEntry_UU	  */
-	public void setTF_WeighmentEntry_UU (String TF_WeighmentEntry_UU)
-	{
-		set_ValueNoCheck (COLUMNNAME_TF_WeighmentEntry_UU, TF_WeighmentEntry_UU);
-	}
-
-	/** Get TF_WeighmentEntry_UU.
-		@return TF_WeighmentEntry_UU	  */
-	public String getTF_WeighmentEntry_UU () 
-	{
-		return (String)get_Value(COLUMNNAME_TF_WeighmentEntry_UU);
 	}
 
 	/** Set User Name.

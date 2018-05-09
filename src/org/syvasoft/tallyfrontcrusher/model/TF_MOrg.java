@@ -126,10 +126,14 @@ public class TF_MOrg extends MOrg {
     public static final String COLUMNNAME_OrgType = "OrgType";
     /** Crusher = C */
 	public static final String ORGTYPE_Crusher = "C";
-	/** Sand Block = S */
-	public static final String ORGTYPE_SandBlock = "S";
+	/** Sand Block Bucket = S */
+	public static final String ORGTYPE_SandBlockBucket = "S";
 	/** Trading = T */
 	public static final String ORGTYPE_Trading = "T";
+	/** Head Office = H */
+	public static final String ORGTYPE_HeadOffice = "H";
+	/** Sand Block Weighbridge = W */
+	public static final String ORGTYPE_SandBlockWeighbridge = "W";
 	/** Set Organization Type.
 		@param OrgType Organization Type	  */
     /** Set Organization Type.
