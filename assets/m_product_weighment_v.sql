@@ -81,4 +81,4 @@ CREATE OR REPLACE VIEW m_product_weighment_v AS
     u.name AS uom_name
    FROM m_product p
      JOIN c_uom u ON p.c_uom_id = u.c_uom_id
-  WHERE p.isactive = 'Y'::bpchar AND u.uomtype::text = 'WE'::text;
+  WHERE p.isactive = 'Y'::bpchar AND u.uomtype::text = 'WE'::text AND p.ProductType='I';

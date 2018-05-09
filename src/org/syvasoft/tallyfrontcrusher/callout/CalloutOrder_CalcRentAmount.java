@@ -12,8 +12,8 @@ public class CalloutOrder_CalcRentAmount implements IColumnCallout {
 
 	@Override
 	public String start(Properties ctx, int WindowNo, GridTab mTab, GridField mField, Object value, Object oldValue) {
-		BigDecimal distance = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Distance);
-		BigDecimal rate = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Rate);
+		BigDecimal distance = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Distance);		
+		BigDecimal rate = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Rate);		
 		BigDecimal tonnage = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Tonnage);;
 		Boolean isLumpSumRent = mTab.getValueAsBoolean(TF_MOrder.COLUMNNAME_IsLumpSumRent);
 		if(!isLumpSumRent) {

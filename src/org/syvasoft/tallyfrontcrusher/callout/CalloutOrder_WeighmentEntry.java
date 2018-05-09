@@ -11,6 +11,7 @@ import org.compiere.model.MBPartnerLocation;
 import org.compiere.model.MPriceList;
 import org.compiere.model.MProductPricing;
 import org.compiere.model.MSysConfig;
+import org.compiere.model.MTab;
 import org.compiere.model.MUser;
 import org.compiere.util.Env;
 import org.syvasoft.tallyfrontcrusher.model.MWeighmentEntry;
@@ -96,6 +97,30 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 				mTab.setValue(TF_MOrder.COLUMNNAME_PaymentRule, weighment.getPaymentRule());
 									
 			mTab.setValue(TF_MOrder.COLUMNNAME_VehicleNo, weighment.getVehicleNo());
+			
+			String orgType = (String) mTab.getValue(TF_MOrder.COLUMNNAME_OrgType);
+			if(orgType != null && orgType.equals(TF_MOrder.ORGTYPE_SandBlockWeighbridge)) {
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_IsPermitSales, weighment.isHasBalance());
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_PermitIssued, weighment.getPermitIssuedQty());
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_TotalLoad, BigDecimal.ONE);
+				mTab.setValue(TF_MOrder.COLUMNNAME_MDPNo, weighment.getMDPNo());
+				
+				if(weighment.getTF_VehicleType_ID() > 0)
+					mTab.setValue(TF_MOrder.COLUMNNAME_Item1_VehicleType_ID, weighment.getTF_VehicleType_ID());
+				
+				if(weighment.getPrice() != null)
+					mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Price, weighment.getPrice());				
+				
+				if(weighment.isHasBalance())
+					mTab.setValue(TF_MOrder.COLUMNNAME_Item1_SandType, TF_MOrder.ITEM1_SANDTYPE_PermitSand);
+				else
+					mTab.setValue(TF_MOrder.COLUMNNAME_Item1_SandType, TF_MOrder.ITEM1_SANDTYPE_WithoutPermit);
+					
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_BucketQty, null);
+			}
+			//TODO: need to add customer name from weighment entry into description
+			//This will be required only for sand blocks.
+			
 		}
 		return null;
 	}

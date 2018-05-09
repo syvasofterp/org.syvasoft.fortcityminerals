@@ -21,18 +21,18 @@ import java.sql.Timestamp;
 import org.compiere.model.*;
 import org.compiere.util.KeyNamePair;
 
-/** Generated Interface for TF_WeighmentEntry
+/** Generated Interface for TF_Weighment_Permit
  *  @author iDempiere (generated) 
  *  @version Release 4.1
  */
 @SuppressWarnings("all")
-public interface I_TF_WeighmentEntry 
+public interface I_TF_Weighment_Permit 
 {
 
-    /** TableName=TF_WeighmentEntry */
-    public static final String Table_Name = "TF_WeighmentEntry";
+    /** TableName=TF_Weighment_Permit */
+    public static final String Table_Name = "TF_Weighment_Permit";
 
-    /** AD_Table_ID=1000210 */
+    /** AD_Table_ID=1000263 */
     public static final int Table_ID = MTable.getTable_ID(Table_Name);
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);
@@ -42,6 +42,15 @@ public interface I_TF_WeighmentEntry
     BigDecimal accessLevel = BigDecimal.valueOf(1);
 
     /** Load Meta Data */
+
+    /** Column name ActualDocumentNo */
+    public static final String COLUMNNAME_ActualDocumentNo = "ActualDocumentNo";
+
+	/** Set Actual Document No	  */
+	public void setActualDocumentNo (String ActualDocumentNo);
+
+	/** Get Actual Document No	  */
+	public String getActualDocumentNo();
 
     /** Column name AD_Client_ID */
     public static final String COLUMNNAME_AD_Client_ID = "AD_Client_ID";
@@ -329,10 +338,14 @@ public interface I_TF_WeighmentEntry
     /** Column name Status */
     public static final String COLUMNNAME_Status = "Status";
 
-	/** Set Status	  */
+	/** Set Status.
+	  * Status of the currently running check
+	  */
 	public void setStatus (String Status);
 
-	/** Get Status	  */
+	/** Get Status.
+	  * Status of the currently running check
+	  */
 	public String getStatus();
 
     /** Column name TareWeight */
@@ -408,6 +421,24 @@ public interface I_TF_WeighmentEntry
 
 	public I_TF_VehicleType getTF_VehicleType() throws RuntimeException;
 
+    /** Column name TF_Weighment_Permit_ID */
+    public static final String COLUMNNAME_TF_Weighment_Permit_ID = "TF_Weighment_Permit_ID";
+
+	/** Set Weighment Entry (Permit)	  */
+	public void setTF_Weighment_Permit_ID (int TF_Weighment_Permit_ID);
+
+	/** Get Weighment Entry (Permit)	  */
+	public int getTF_Weighment_Permit_ID();
+
+    /** Column name TF_Weighment_Permit_UU */
+    public static final String COLUMNNAME_TF_Weighment_Permit_UU = "TF_Weighment_Permit_UU";
+
+	/** Set TF_Weighment_Permit_UU	  */
+	public void setTF_Weighment_Permit_UU (String TF_Weighment_Permit_UU);
+
+	/** Get TF_Weighment_Permit_UU	  */
+	public String getTF_Weighment_Permit_UU();
+
     /** Column name TF_WeighmentEntry_ID */
     public static final String COLUMNNAME_TF_WeighmentEntry_ID = "TF_WeighmentEntry_ID";
 
@@ -417,14 +448,7 @@ public interface I_TF_WeighmentEntry
 	/** Get Weighment Entry	  */
 	public int getTF_WeighmentEntry_ID();
 
-    /** Column name TF_WeighmentEntry_UU */
-    public static final String COLUMNNAME_TF_WeighmentEntry_UU = "TF_WeighmentEntry_UU";
-
-	/** Set TF_WeighmentEntry_UU	  */
-	public void setTF_WeighmentEntry_UU (String TF_WeighmentEntry_UU);
-
-	/** Get TF_WeighmentEntry_UU	  */
-	public String getTF_WeighmentEntry_UU();
+	public I_TF_WeighmentEntry getTF_WeighmentEntry() throws RuntimeException;
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";

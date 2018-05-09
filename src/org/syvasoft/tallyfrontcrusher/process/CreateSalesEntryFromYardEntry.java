@@ -34,7 +34,7 @@ public class CreateSalesEntryFromYardEntry extends SvrProcess {
 			ye.saveEx();
 		}
 		else {
-			throw new AdempiereException("Sales Entries are already created!");
+			return "Sales Entries are already created!";
 		}
 		
 		return "Sales Entries are created!";

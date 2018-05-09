@@ -31,7 +31,7 @@ public class X_TF_Weighment_ErrorLog extends PO implements I_TF_Weighment_ErrorL
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20171227L;
+	private static final long serialVersionUID = 20180505L;
 
     /** Standard Constructor */
     public X_TF_Weighment_ErrorLog (Properties ctx, int TF_Weighment_ErrorLog_ID, String trxName)

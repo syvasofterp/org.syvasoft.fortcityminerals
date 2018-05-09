@@ -10,6 +10,7 @@ import javax.security.auth.SubjectDomainCombiner;
 
 import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.MBPartner;
+import org.compiere.model.MClient;
 import org.compiere.model.MInvoice;
 import org.compiere.model.MInvoiceLine;
 import org.compiere.model.MJournal;
@@ -513,8 +514,8 @@ public class TF_MInvoice extends MInvoice {
 		
 		//Price List
 		int m_M_PriceList_ID = Env.getContextAsInt(getCtx(), "#M_PriceList_ID");
-		if(bp.getPO_PriceList_ID() > 0)
-			m_M_PriceList_ID = bp.getPO_PriceList_ID();			
+		if(bp.getM_PriceList_ID() > 0)
+			m_M_PriceList_ID = bp.getM_PriceList_ID();			
 		invoice.setM_PriceList_ID(m_M_PriceList_ID);
 		invoice.setC_Currency_ID(MPriceList.get(getCtx(), m_M_PriceList_ID, get_TrxName()).getC_Currency_ID());
 		
@@ -533,9 +534,9 @@ public class TF_MInvoice extends MInvoice {
 		int m_C_DocTypeTarget_ID = 1000000;						
 		TF_MJournal j = new TF_MJournal(getCtx(), 0, get_TrxName());		
 		j.setDescription("Unbilled Kating Jobwork Reversed from Sales - " + invoice.getDocumentNo());
-		j.setAD_Org_ID(invoice.getAD_Org_ID());
-		j.setC_AcctSchema_ID(Env.getContextAsInt(getCtx(), "$C_AcctSchema_ID"));
-		j.setC_Currency_ID(Env.getContextAsInt(getCtx(), "$C_Currency_ID"));
+		j.setAD_Org_ID(invoice.getAD_Org_ID());		
+		j.setC_AcctSchema_ID(MClient.get(getCtx()).getAcctSchema().get_ID());
+		j.setC_Currency_ID(invoice.getC_Currency_ID());
 		j.setPostingType(TF_MJournal.POSTINGTYPE_Actual);
 		j.setC_DocType_ID(m_C_DocTypeTarget_ID);
 		j.setDateDoc(getDateAcct());

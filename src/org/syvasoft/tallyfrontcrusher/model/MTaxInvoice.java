@@ -56,12 +56,15 @@ public class MTaxInvoice extends X_TF_TaxInvoice {
 		else if(DocAction.ACTION_Complete.equals(docAction)) {
 			setDocStatus(DOCSTATUS_Completed);
 			setProcessed(true);
-			if(getMDPNo() != null && getMDPNo().length() > 0)
-				if( getQtyPermitDeducted().doubleValue() > 0)
-					MCrusherPermitLedger.issuePermit(this);
+			if(getMDPNo() != null && getMDPNo().length() > 0) {
+				TF_MOrg org = new TF_MOrg(getCtx(), getAD_Org_ID(), get_TrxName());
+				if( getQtyPermitDeducted().doubleValue() > 0) {
+					if(org.getOrgType().equals(TF_MOrg.ORGTYPE_Crusher))
+						MCrusherPermitLedger.issuePermit(this);
+				}
 				else 
 					throw new AdempiereException("Permit Qty should be greater than ZERO!");
-			
+			}
 			if(!isPostTaxToCustomer() && !isPostPermitAmtToCustomer() )
 				return;
 			

@@ -33,7 +33,7 @@ public class X_TF_TaxInvoice extends PO implements I_TF_TaxInvoice, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180411L;
+	private static final long serialVersionUID = 20180506L;
 
     /** Standard Constructor */
     public X_TF_TaxInvoice (Properties ctx, int TF_TaxInvoice_ID, String trxName)
@@ -464,6 +464,20 @@ public class X_TF_TaxInvoice extends PO implements I_TF_TaxInvoice, I_Persistent
 		return (String)get_Value(COLUMNNAME_MDPNo);
 	}
 
+	/** Set Party Name.
+		@param PartyName Party Name	  */
+	public void setPartyName (String PartyName)
+	{
+		set_Value (COLUMNNAME_PartyName, PartyName);
+	}
+
+	/** Get Party Name.
+		@return Party Name	  */
+	public String getPartyName () 
+	{
+		return (String)get_Value(COLUMNNAME_PartyName);
+	}
+
 	/** Set Permit Amount.
 		@param PermitAmount Permit Amount	  */
 	public void setPermitAmount (BigDecimal PermitAmount)
@@ -750,6 +764,31 @@ public class X_TF_TaxInvoice extends PO implements I_TF_TaxInvoice, I_Persistent
 	public String getTF_TaxInvoice_UU () 
 	{
 		return (String)get_Value(COLUMNNAME_TF_TaxInvoice_UU);
+	}
+
+	public I_TF_Weighment_Permit getTF_Weighment_Permit() throws RuntimeException
+    {
+		return (I_TF_Weighment_Permit)MTable.get(getCtx(), I_TF_Weighment_Permit.Table_Name)
+			.getPO(getTF_Weighment_Permit_ID(), get_TrxName());	}
+
+	/** Set Weighment Entry (Permit).
+		@param TF_Weighment_Permit_ID Weighment Entry (Permit)	  */
+	public void setTF_Weighment_Permit_ID (int TF_Weighment_Permit_ID)
+	{
+		if (TF_Weighment_Permit_ID < 1) 
+			set_Value (COLUMNNAME_TF_Weighment_Permit_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_Weighment_Permit_ID, Integer.valueOf(TF_Weighment_Permit_ID));
+	}
+
+	/** Get Weighment Entry (Permit).
+		@return Weighment Entry (Permit)	  */
+	public int getTF_Weighment_Permit_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Weighment_Permit_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	/** Set Vehicle No.

@@ -74,6 +74,7 @@ import org.syvasoft.tallyfrontcrusher.model.MVehicleRentalContract;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleType;
 import org.syvasoft.tallyfrontcrusher.model.MWeighmentEntry;
 import org.syvasoft.tallyfrontcrusher.model.MWeighmentErrorLog;
+import org.syvasoft.tallyfrontcrusher.model.MWeighmentPermitEntry;
 import org.syvasoft.tallyfrontcrusher.model.MYardCustomerVehicle;
 import org.syvasoft.tallyfrontcrusher.model.MYardEntry;
 import org.syvasoft.tallyfrontcrusher.model.MYardEntryApprove;
@@ -278,6 +279,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return MPermitPurchase.class;
 		else if(MPermitPurchaseLine.Table_Name.equals(tableName))
 			return MPermitPurchaseLine.class;
+		else if(MWeighmentPermitEntry.Table_Name.equals(tableName))
+			return MWeighmentPermitEntry.class;
 		return null;
 	}
 
@@ -462,6 +465,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MPermitPurchase(ctx, Record_ID, trxName);
 		else if(MPermitPurchaseLine.Table_Name.equals(tableName))
 			return new MPermitPurchaseLine(ctx, Record_ID, trxName);
+		else if(MWeighmentPermitEntry.Table_Name.equals(tableName))
+			return new MWeighmentPermitEntry(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -646,6 +651,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MPermitPurchase(ctx, rs, trxName);
 		else if(MPermitPurchaseLine.Table_Name.equals(tableName))
 			return new MPermitPurchaseLine(ctx, rs, trxName);
+		else if(MWeighmentPermitEntry.Table_Name.equals(tableName))
+			return new MWeighmentPermitEntry(ctx, rs, trxName);
 		return null;
 	}
 

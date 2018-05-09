@@ -6,6 +6,7 @@ import java.util.Properties;
 
 import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.MAccount;
+import org.compiere.model.MClient;
 import org.compiere.model.MJournalLine;
 import org.compiere.model.MPeriod;
 import org.compiere.model.MProductCategoryAcct;
@@ -57,9 +58,9 @@ public class MPermitLedgerLine extends X_TF_PermitLedgerLine {
 		int m_C_DocTypeTarget_ID = 1000000;
 		TF_MJournal j = new TF_MJournal(getCtx(), 0, get_TrxName());
 		j.setDescription("Permit Expense");
-		j.setAD_Org_ID(getAD_Org_ID());
-		j.setC_AcctSchema_ID(Env.getContextAsInt(getCtx(), "$C_AcctSchema_ID"));
-		j.setC_Currency_ID(Env.getContextAsInt(getCtx(), "$C_Currency_ID"));
+		j.setAD_Org_ID(getAD_Org_ID());		
+		j.setC_AcctSchema_ID(MClient.get(getCtx()).getAcctSchema().get_ID());
+		j.setC_Currency_ID(MClient.get(getCtx()).getAcctSchema().getC_Currency_ID());
 		j.setPostingType(TF_MJournal.POSTINGTYPE_Actual);
 		j.setC_DocType_ID(m_C_DocTypeTarget_ID);
 		j.setDateDoc(getDateAcct());

@@ -298,6 +298,15 @@ public interface I_TF_TaxInvoice
 	/** Get MDP No	  */
 	public String getMDPNo();
 
+    /** Column name PartyName */
+    public static final String COLUMNNAME_PartyName = "PartyName";
+
+	/** Set Party Name	  */
+	public void setPartyName (String PartyName);
+
+	/** Get Party Name	  */
+	public String getPartyName();
+
     /** Column name PermitAmount */
     public static final String COLUMNNAME_PermitAmount = "PermitAmount";
 
@@ -446,6 +455,17 @@ public interface I_TF_TaxInvoice
 
 	/** Get TF_TaxInvoice_UU	  */
 	public String getTF_TaxInvoice_UU();
+
+    /** Column name TF_Weighment_Permit_ID */
+    public static final String COLUMNNAME_TF_Weighment_Permit_ID = "TF_Weighment_Permit_ID";
+
+	/** Set Weighment Entry (Permit)	  */
+	public void setTF_Weighment_Permit_ID (int TF_Weighment_Permit_ID);
+
+	/** Get Weighment Entry (Permit)	  */
+	public int getTF_Weighment_Permit_ID();
+
+	public I_TF_Weighment_Permit getTF_Weighment_Permit() throws RuntimeException;
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";
