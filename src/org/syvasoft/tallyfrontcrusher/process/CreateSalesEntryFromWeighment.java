@@ -2,6 +2,7 @@ package org.syvasoft.tallyfrontcrusher.process;
 
 import java.math.BigDecimal;
 import java.sql.Savepoint;
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.adempiere.exceptions.AdempiereException;
@@ -21,6 +22,10 @@ import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
 
 public class CreateSalesEntryFromWeighment extends SvrProcess {
 	private int C_DocType_ID = 0;
+	private int AD_Org_ID = 0;
+	private Timestamp DateFrom = null;
+	private Timestamp DateTo = null;
+	
 	@Override
 	protected void prepare() {		
 		ProcessInfoParameter[] para = getParameter();		
@@ -29,17 +34,25 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 			String name = para[i].getParameterName();
 			if(name.equals("C_DocType_ID"))
 				C_DocType_ID = para[i].getParameterAsInt();			
+			if(name.equals("AD_Org_ID"))
+				AD_Org_ID = para[i].getParameterAsInt();
+			if(name.equals("DateFrom"))
+				DateFrom = para[i].getParameterAsTimestamp();
+			if(name.equals("DateTo"))
+				DateTo = para[i].getParameterAsTimestamp();
 		}
 	}
 
 	@Override
 	protected String doIt() throws Exception {
-		String whereClause = "WeighmentEntryType = '1SO' AND Status = 'CO' AND (SELECT OrgType FROM AD_Org WHERE "
+		String whereClause = " AD_Org_ID = ? AND TRUNC(GrossWeightTime) >= ? AND TRUNC(GrossWeightTime) <= ? AND "
+				+ "WeighmentEntryType = '1SO' AND Status = 'CO' AND (SELECT OrgType FROM AD_Org WHERE "				
 				+ "AD_Org.AD_Org_ID = TF_WeighmentEntry.AD_Org_ID) = 'W'"
 				+ " AND NOT EXISTS(SELECT C_Order.TF_WeighmentEntry_ID FROM C_Order WHERE "
 				+ "C_Order.TF_WeighmentEntry_ID =  TF_WeighmentEntry.TF_WeighmentEntry_ID)";
+		int i = 0;
 		List<MWeighmentEntry> wEntries = new Query(getCtx(), MWeighmentEntry.Table_Name, whereClause, get_TrxName())
-				.setClient_ID().list();
+				.setClient_ID().setParameters(AD_Org_ID, DateFrom, DateTo).list();
 		for(MWeighmentEntry wEntry : wEntries) {
 			Trx trx = Trx.get(get_TrxName(), false);
 			Savepoint sp = null;
@@ -127,10 +140,11 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 							" | ERROR: " + ex.getMessage());					
 				}					
 				wEntry.saveEx();
-				addLog(wEntry.get_Table_ID(), wEntry.getUpdated(), null, ex.getMessage(), wEntry.get_Table_ID(), wEntry.get_ID());
+				addLog(wEntry.get_Table_ID(), wEntry.getGrossWeightTime(), null, ex.getMessage(), wEntry.get_Table_ID(), wEntry.get_ID());
 			}
+			i++;
 		}
-		return null;
+		return i + " Weighment Entries are processed!";
 	}
 
 }
