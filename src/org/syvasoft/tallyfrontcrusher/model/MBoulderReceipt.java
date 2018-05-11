@@ -424,18 +424,27 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 	
 	public void reverseIt() {
 		setProcessed(false);
-		setDocStatus(DOCSTATUS_Drafted);		
+		setDocStatus(DOCSTATUS_Drafted);
+		if(getSubcon2_Invoice_ID()>0) {			
+			//throw new AdempiereException("You cannot modify this entry before Reverse Correct Subcontractor Invoice!");
+			TF_MInvoice inv = new TF_MInvoice(getCtx(), getSubcon_Invoice_ID(), get_TrxName());
+			if(inv.getDocStatus().equals(DOCSTATUS_Completed))
+				inv.reverseCorrectIt();
+			inv.saveEx();
+			setSubcon2_Invoice_ID(0);
+		}		
 		if(getSubcon_Invoice_ID()>0) {			
 			//throw new AdempiereException("You cannot modify this entry before Reverse Correct Subcontractor Invoice!");
-			TF_MInvoice inv = new TF_MInvoice(getCtx(), getSubcon_Invoice_ID(), get_TrxName());			
-			inv.reverseCorrectIt();
+			TF_MInvoice inv = new TF_MInvoice(getCtx(), getSubcon_Invoice_ID(), get_TrxName());
+			if(inv.getDocStatus().equals(DOCSTATUS_Completed))
+				inv.reverseCorrectIt();
 			inv.saveEx();
 			MSubcontractMaterialMovement mov = new MSubcontractMaterialMovement(getCtx(), getTF_RMSubcon_Movement_ID(), get_TrxName());
 			mov.deleteEx(true);
 			setSubcon_Invoice_ID(0);
 			setTF_RMSubcon_Movement_ID(0);
 			return;
-		}
+		}		
 		
 		MWarehouse warehouse = MWarehouse.get(getCtx(), getM_Warehouse_ID());
 		int defaultLocatorID = warehouse.getDefaultLocator().getM_Locator_ID();
