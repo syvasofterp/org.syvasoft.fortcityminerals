@@ -33,7 +33,7 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20171227L;
+	private static final long serialVersionUID = 20180511L;
 
     /** Standard Constructor */
     public X_TF_Boulder_Receipt (Properties ctx, int TF_Boulder_Receipt_ID, String trxName)
@@ -97,7 +97,7 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 		return (org.compiere.model.I_C_Project)MTable.get(getCtx(), org.compiere.model.I_C_Project.Table_Name)
 			.getPO(getC_Project_ID(), get_TrxName());	}
 
-	/** Set Project.
+	/** Set Subcontract / Project.
 		@param C_Project_ID 
 		Financial Project
 	  */
@@ -109,7 +109,7 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 			set_Value (COLUMNNAME_C_Project_ID, Integer.valueOf(C_Project_ID));
 	}
 
-	/** Get Project.
+	/** Get Subcontract / Project.
 		@return Financial Project
 	  */
 	public int getC_Project_ID () 
@@ -574,14 +574,14 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 		return ii.intValue();
 	}
 
-	/** Set No of Load.
-		@param NoOfLoad No of Load	  */
+	/** Set No. of Load.
+		@param NoOfLoad No. of Load	  */
 	public void setNoOfLoad (BigDecimal NoOfLoad)
 	{
 		throw new IllegalArgumentException ("NoOfLoad is virtual column");	}
 
-	/** Get No of Load.
-		@return No of Load	  */
+	/** Get No. of Load.
+		@return No. of Load	  */
 	public BigDecimal getNoOfLoad () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_NoOfLoad);
@@ -770,6 +770,31 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 	public int getSubcon_Invoice_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_Subcon_Invoice_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_Invoice getSubcon2_Invoice() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Invoice)MTable.get(getCtx(), org.compiere.model.I_C_Invoice.Table_Name)
+			.getPO(getSubcon2_Invoice_ID(), get_TrxName());	}
+
+	/** Set Subcontractor 2 Invoice.
+		@param Subcon2_Invoice_ID Subcontractor 2 Invoice	  */
+	public void setSubcon2_Invoice_ID (int Subcon2_Invoice_ID)
+	{
+		if (Subcon2_Invoice_ID < 1) 
+			set_Value (COLUMNNAME_Subcon2_Invoice_ID, null);
+		else 
+			set_Value (COLUMNNAME_Subcon2_Invoice_ID, Integer.valueOf(Subcon2_Invoice_ID));
+	}
+
+	/** Get Subcontractor 2 Invoice.
+		@return Subcontractor 2 Invoice	  */
+	public int getSubcon2_Invoice_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Subcon2_Invoice_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();

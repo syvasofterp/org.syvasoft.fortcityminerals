@@ -67,12 +67,12 @@ public interface I_TF_Boulder_Receipt
     /** Column name C_Project_ID */
     public static final String COLUMNNAME_C_Project_ID = "C_Project_ID";
 
-	/** Set Project.
+	/** Set Subcontract / Project.
 	  * Financial Project
 	  */
 	public void setC_Project_ID (int C_Project_ID);
 
-	/** Get Project.
+	/** Get Subcontract / Project.
 	  * Financial Project
 	  */
 	public int getC_Project_ID();
@@ -327,10 +327,10 @@ public interface I_TF_Boulder_Receipt
     /** Column name NoOfLoad */
     public static final String COLUMNNAME_NoOfLoad = "NoOfLoad";
 
-	/** Set No of Load	  */
+	/** Set No. of Load	  */
 	public void setNoOfLoad (BigDecimal NoOfLoad);
 
-	/** Get No of Load	  */
+	/** Get No. of Load	  */
 	public BigDecimal getNoOfLoad();
 
     /** Column name PO_PriceList_ID */
@@ -431,6 +431,17 @@ public interface I_TF_Boulder_Receipt
 	public int getSubcon_Invoice_ID();
 
 	public org.compiere.model.I_C_Invoice getSubcon_Invoice() throws RuntimeException;
+
+    /** Column name Subcon2_Invoice_ID */
+    public static final String COLUMNNAME_Subcon2_Invoice_ID = "Subcon2_Invoice_ID";
+
+	/** Set Subcontractor 2 Invoice	  */
+	public void setSubcon2_Invoice_ID (int Subcon2_Invoice_ID);
+
+	/** Get Subcontractor 2 Invoice	  */
+	public int getSubcon2_Invoice_ID();
+
+	public org.compiere.model.I_C_Invoice getSubcon2_Invoice() throws RuntimeException;
 
     /** Column name Subcontractor_ID */
     public static final String COLUMNNAME_Subcontractor_ID = "Subcontractor_ID";

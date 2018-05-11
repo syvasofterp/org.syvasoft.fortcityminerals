@@ -527,6 +527,79 @@ public class TF_MProject extends MProject {
 		return ii.intValue();
 	}
 	
+	/** Column name C_BPartnerSubcon2_ID */
+    public static final String COLUMNNAME_C_BPartnerSubcon2_ID = "C_BPartnerSubcon2_ID";
+    public org.compiere.model.I_C_BPartner getC_BPartnerSubcon2() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_BPartner)MTable.get(getCtx(), org.compiere.model.I_C_BPartner.Table_Name)
+			.getPO(getC_BPartnerSubcon2_ID(), get_TrxName());	}
+
+	/** Set Subcontractor 2.
+		@param C_BPartnerSubcon2_ID Subcontractor 2	  */
+	public void setC_BPartnerSubcon2_ID (int C_BPartnerSubcon2_ID)
+	{
+		if (C_BPartnerSubcon2_ID < 1) 
+			set_Value (COLUMNNAME_C_BPartnerSubcon2_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_BPartnerSubcon2_ID, Integer.valueOf(C_BPartnerSubcon2_ID));
+	}
+
+	/** Get Subcontractor 2.
+		@return Subcontractor 2	  */
+	public int getC_BPartnerSubcon2_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_BPartnerSubcon2_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+	
+	/** Column name M_ProductSubcon2_ID */
+    public static final String COLUMNNAME_M_ProductSubcon2_ID = "M_ProductSubcon2_ID";
+    public org.compiere.model.I_M_Product getM_ProductSubcon2() throws RuntimeException
+    {
+		return (org.compiere.model.I_M_Product)MTable.get(getCtx(), org.compiere.model.I_M_Product.Table_Name)
+			.getPO(getM_ProductSubcon2_ID(), get_TrxName());	}
+
+	/** Set Product (Subcontract 2).
+		@param M_ProductSubcon2_ID Product (Subcontract 2)	  */
+	public void setM_ProductSubcon2_ID (int M_ProductSubcon2_ID)
+	{
+		if (M_ProductSubcon2_ID < 1) 
+			set_Value (COLUMNNAME_M_ProductSubcon2_ID, null);
+		else 
+			set_Value (COLUMNNAME_M_ProductSubcon2_ID, Integer.valueOf(M_ProductSubcon2_ID));
+	}
+
+	/** Get Product (Subcontract 2).
+		@return Product (Subcontract 2)	  */
+	public int getM_ProductSubcon2_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_M_ProductSubcon2_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Column name PriceSubcon2 */
+    public static final String COLUMNNAME_PriceSubcon2 = "PriceSubcon2";
+    /** Set Contract Price (Subcon2).
+	@param PriceSubcon2 Contract Price (Subcon2)	  */
+	public void setPriceSubcon2 (BigDecimal PriceSubcon2)
+	{
+		set_Value (COLUMNNAME_PriceSubcon2, PriceSubcon2);
+	}
+	
+	/** Get Contract Price (Subcon2).
+		@return Contract Price (Subcon2)	  */
+	public BigDecimal getPriceSubcon2 () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_PriceSubcon2);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
 	
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
