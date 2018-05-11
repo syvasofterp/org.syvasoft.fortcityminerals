@@ -59,7 +59,7 @@ public class MWeighmentPermitEntry extends X_TF_Weighment_Permit {
 			inv.setTaxableAmount(inv.getQty().multiply(inv.getPrice()));
 			inv.setCGST_Rate(new BigDecimal(2.5));
 			inv.setSGST_Rate(new BigDecimal(2.5));
-			inv.setSGST_Rate(BigDecimal.ZERO);
+			inv.setIGST_Rate(BigDecimal.ZERO);
 			inv.setVehicleNo(getVehicleNo());
 			
 			BigDecimal amount = inv.getTaxableAmount();

@@ -159,9 +159,10 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 		TF_MBPartner bp = new TF_MBPartner(getCtx(), proj.getC_BPartner_ID(), get_TrxName());
 		
 		//Purchase Invoice Header
+		MGLPostingConfig config = MGLPostingConfig.getMGLPostingConfig(getCtx());
 		TF_MInvoice invoice = new TF_MInvoice(getCtx(), 0, get_TrxName());
 		invoice.setClientOrg(getAD_Client_ID(), getAD_Org_ID());
-		invoice.setC_DocTypeTarget_ID(1000005);	// AP Invoice		
+		invoice.setC_DocTypeTarget_ID(config.getTransporterInvoiceDocType_ID());	// AP Invoice		
 		invoice.setDateInvoiced(getDateReceipt());
 		invoice.setDateAcct(getDateAcct());
 		//
@@ -215,6 +216,86 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 			throw new AdempiereException("Failed when processing document - " + invoice.getProcessMsg());
 		invoice.saveEx();
 		setSubcon_Invoice_ID(invoice.getC_Invoice_ID());
+		
+		if(proj.getC_BPartnerSubcon2_ID() > 0) {
+			CreateSubcontract2Invoice(proj.getC_BPartnerSubcon2_ID(), proj.getM_ProductSubcon2_ID(), proj.getPriceSubcon2());
+		}
+	}
+	
+	public void CreateSubcontract2Invoice(int C_BPartnerSubcon2_ID, int M_ProductSubcon2_ID, BigDecimal priceSubcon2) {
+		if(M_ProductSubcon2_ID == 0)
+			throw new AdempiereException("Please specify Product (Subcontract 2) in " + getC_Project().getName() +
+					" Subcontract to Create Subcontract 2 Invoice!");
+		
+		if(priceSubcon2 == null || priceSubcon2.doubleValue() == 0)
+			throw new AdempiereException("Please specify Contract Price (Subcontract 2) in " + getC_Project().getName() +
+					" Subcontract to Create Subcontract 2 Invoice!");
+		
+		int invoiceItem_id = M_ProductSubcon2_ID;
+		
+		//Crusher Production Subcontract Purchase		
+		BigDecimal purchasePrice = priceSubcon2;		
+		
+		TF_MBPartner bp = new TF_MBPartner(getCtx(), C_BPartnerSubcon2_ID, get_TrxName());
+		
+		//Purchase Invoice Header
+		MGLPostingConfig config = MGLPostingConfig.getMGLPostingConfig(getCtx());
+		TF_MInvoice invoice = new TF_MInvoice(getCtx(), 0, get_TrxName());
+		invoice.setClientOrg(getAD_Client_ID(), getAD_Org_ID());
+		invoice.setC_DocTypeTarget_ID(config.getTransporterInvoiceDocType_ID());	// AP Invoice		
+		invoice.setDateInvoiced(getDateReceipt());
+		invoice.setDateAcct(getDateAcct());
+		//
+		invoice.setSalesRep_ID(Env.getAD_User_ID(getCtx()));
+		//
+		
+		invoice.setBPartner(bp);
+		invoice.setIsSOTrx(false);		
+		invoice.setVehicleNo(getVehicleNo());
+		
+		String desc = "Boulder Receipt: " + getDocumentNo();
+		if(getTF_WeighmentEntry_ID() > 0 )
+			desc = desc + " | Ticket No: " + getTF_WeighmentEntry().getDocumentNo();
+		invoice.setDescription(desc);
+		
+		//Price List
+		int m_M_PriceList_ID = Env.getContextAsInt(getCtx(), "#M_PriceList_ID");
+		if(bp.getPO_PriceList_ID() > 0)
+			m_M_PriceList_ID = bp.getPO_PriceList_ID();
+		if(m_M_PriceList_ID == 0) {
+			MPriceList pl = new Query(getCtx(), MPriceList.Table_Name, "IsDefault='Y' AND IsActive='Y'", get_TrxName())
+					.setClient_ID().first();
+			if(pl != null)
+				m_M_PriceList_ID = pl.getM_PriceList_ID();
+		}
+		invoice.setC_Currency_ID(MPriceList.get(getCtx(), m_M_PriceList_ID, get_TrxName()).getC_Currency_ID());
+		if(invoice.getC_Currency_ID() == 0)
+			invoice.setC_Currency_ID(MClient.get(Env.getCtx()).getC_Currency_ID());
+		
+				
+		invoice.saveEx();
+		//End Invoice Header
+		
+		//Invoice Line - Vehicle Rental Charge
+		MInvoiceLine invLine = new MInvoiceLine(invoice);
+		invLine.setM_Product_ID(invoiceItem_id , true);				
+		
+		invLine.setQty(getQtyReceived());
+		invLine.setDescription(getDescription());
+		
+		invLine.setPriceActual(purchasePrice);
+		invLine.setPriceList(purchasePrice);
+		invLine.setPriceLimit(purchasePrice);
+		invLine.setPriceEntered(purchasePrice);
+		
+		invLine.setC_Tax_ID(1000000);
+		invLine.saveEx();
+		
+		//Invoice DocAction
+		if (!invoice.processIt(DocAction.ACTION_Complete))
+			throw new AdempiereException("Failed when processing document - " + invoice.getProcessMsg());
+		invoice.saveEx();
+		setSubcon2_Invoice_ID(invoice.getC_Invoice_ID());
 	}
 	
 	public String processIt(String DocAction) {
