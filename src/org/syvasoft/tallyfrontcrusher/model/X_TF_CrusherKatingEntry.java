@@ -33,7 +33,7 @@ public class X_TF_CrusherKatingEntry extends PO implements I_TF_CrusherKatingEnt
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180313L;
+	private static final long serialVersionUID = 20180520L;
 
     /** Standard Constructor */
     public X_TF_CrusherKatingEntry (Properties ctx, int TF_CrusherKatingEntry_ID, String trxName)
@@ -46,10 +46,10 @@ public class X_TF_CrusherKatingEntry extends PO implements I_TF_CrusherKatingEnt
 			setDocumentNo (null);
 			setKatingEntryType (null);
 // T
-			setLoaderVehicle_ID (0);
 			setM_Product_ID (0);
 			setProcessed (false);
 			setTF_CrusherKatingEntry_ID (0);
+			setTF_RentedVehicle_ID (0);
         } */
     }
 
@@ -366,6 +366,34 @@ public class X_TF_CrusherKatingEntry extends PO implements I_TF_CrusherKatingEnt
 		return ii.intValue();
 	}
 
+	public org.compiere.model.I_M_Warehouse getM_Warehouse() throws RuntimeException
+    {
+		return (org.compiere.model.I_M_Warehouse)MTable.get(getCtx(), org.compiere.model.I_M_Warehouse.Table_Name)
+			.getPO(getM_Warehouse_ID(), get_TrxName());	}
+
+	/** Set Warehouse.
+		@param M_Warehouse_ID 
+		Storage Warehouse and Service Point
+	  */
+	public void setM_Warehouse_ID (int M_Warehouse_ID)
+	{
+		if (M_Warehouse_ID < 1) 
+			set_Value (COLUMNNAME_M_Warehouse_ID, null);
+		else 
+			set_Value (COLUMNNAME_M_Warehouse_ID, Integer.valueOf(M_Warehouse_ID));
+	}
+
+	/** Get Warehouse.
+		@return Storage Warehouse and Service Point
+	  */
+	public int getM_Warehouse_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_M_Warehouse_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	/** Set Processed.
 		@param Processed 
 		The document has been processed
@@ -465,6 +493,31 @@ public class X_TF_CrusherKatingEntry extends PO implements I_TF_CrusherKatingEnt
 	public int getTF_RentedVehicle_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_TF_RentedVehicle_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public I_TF_WeighmentEntry getTF_WeighmentEntry() throws RuntimeException
+    {
+		return (I_TF_WeighmentEntry)MTable.get(getCtx(), I_TF_WeighmentEntry.Table_Name)
+			.getPO(getTF_WeighmentEntry_ID(), get_TrxName());	}
+
+	/** Set Weighment Entry.
+		@param TF_WeighmentEntry_ID Weighment Entry	  */
+	public void setTF_WeighmentEntry_ID (int TF_WeighmentEntry_ID)
+	{
+		if (TF_WeighmentEntry_ID < 1) 
+			set_Value (COLUMNNAME_TF_WeighmentEntry_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_WeighmentEntry_ID, Integer.valueOf(TF_WeighmentEntry_ID));
+	}
+
+	/** Get Weighment Entry.
+		@return Weighment Entry	  */
+	public int getTF_WeighmentEntry_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_WeighmentEntry_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();

@@ -12,6 +12,7 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutBoulderReceipt_JobWork;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutBoulderReceipt_Warehouse;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutCrusherKatingEntry_CalcAmount;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutCrusherKatingEntry_SetPrice;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutCrusherKatingEntry_WeighmentEntry;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutElementValue_AccountGroup;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutEmployeeSalary;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutEmployeeSalaryIssue_CalcBalanceAmts;
@@ -439,12 +440,19 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		}
 		
 		if(tableName.equals(MCrusherKatingEntry.Table_Name)) {
-			if(columnName.equals(MCrusherKatingEntry.COLUMNNAME_TF_RentedVehicle_ID) || 
-					columnName.equals(MCrusherKatingEntry.COLUMNNAME_LoaderVehicle_ID) ||
-					columnName.equals(MCrusherKatingEntry.COLUMNNAME_KatingEntryType)) {
+			if(columnName.equals(MCrusherKatingEntry.COLUMNNAME_AD_Org_ID)) { 
+				list.add(new CalloutCrusherKatingEntry_SetPrice());
+			}
+			if(columnName.equals(MCrusherKatingEntry.COLUMNNAME_TF_WeighmentEntry_ID)) { 
+				list.add(new CalloutCrusherKatingEntry_WeighmentEntry());
 				list.add(new CalloutCrusherKatingEntry_SetPrice());
 				list.add(new CalloutCrusherKatingEntry_CalcAmount());
 			}
+			if(columnName.equals(MCrusherKatingEntry.COLUMNNAME_TF_RentedVehicle_ID) || 
+					columnName.equals(MCrusherKatingEntry.COLUMNNAME_LoaderVehicle_ID) ||
+					columnName.equals(MCrusherKatingEntry.COLUMNNAME_KatingEntryType)) {				
+				list.add(new CalloutCrusherKatingEntry_CalcAmount());
+			}			
 		}
 		
 		if(tableName.equals(MCrusherKatingEntry.Table_Name)) {

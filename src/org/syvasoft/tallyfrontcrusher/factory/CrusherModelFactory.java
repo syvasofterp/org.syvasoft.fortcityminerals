@@ -9,6 +9,7 @@ import org.compiere.util.Env;
 import org.syvasoft.tallyfrontcrusher.model.MBPOpeningBalance;
 import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MCOAOpeningBalance;
+import org.syvasoft.tallyfrontcrusher.model.MCrusherKatingConfig;
 import org.syvasoft.tallyfrontcrusher.model.MCrusherPermitLedger;
 import org.syvasoft.tallyfrontcrusher.model.MCrusherPermitLedgerLine;
 import org.syvasoft.tallyfrontcrusher.model.MCrusherProduction;
@@ -281,6 +282,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return MPermitPurchaseLine.class;
 		else if(MWeighmentPermitEntry.Table_Name.equals(tableName))
 			return MWeighmentPermitEntry.class;
+		else if(MCrusherKatingConfig.Table_Name.equals(tableName))
+			return MCrusherKatingConfig.class;
 		return null;
 	}
 
@@ -467,6 +470,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MPermitPurchaseLine(ctx, Record_ID, trxName);
 		else if(MWeighmentPermitEntry.Table_Name.equals(tableName))
 			return new MWeighmentPermitEntry(ctx, Record_ID, trxName);
+		else if(MCrusherKatingConfig.Table_Name.equals(tableName))
+			return new MCrusherKatingConfig(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -653,6 +658,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MPermitPurchaseLine(ctx, rs, trxName);
 		else if(MWeighmentPermitEntry.Table_Name.equals(tableName))
 			return new MWeighmentPermitEntry(ctx, rs, trxName);
+		else if(MCrusherKatingConfig.Table_Name.equals(tableName))
+			return new MCrusherKatingConfig(ctx, rs, trxName);
 		return null;
 	}
 
