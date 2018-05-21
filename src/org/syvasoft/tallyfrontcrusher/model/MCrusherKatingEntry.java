@@ -60,7 +60,12 @@ public class MCrusherKatingEntry extends X_TF_CrusherKatingEntry {
 			int m_M_PriceList_ID = Env.getContextAsInt(getCtx(), "#M_PriceList_ID");
 			if(bp.getPO_PriceList_ID() > 0)
 				m_M_PriceList_ID = bp.getPO_PriceList_ID();
-						
+			
+			if(m_M_PriceList_ID == 0) {
+				m_M_PriceList_ID = MPriceList.getDefault(getCtx(), false).getM_PriceList_ID();
+			}
+				
+			
 			invoice.setM_PriceList_ID(m_M_PriceList_ID);
 			invoice.setC_Currency_ID(MPriceList.get(getCtx(), m_M_PriceList_ID, get_TrxName()).getC_Currency_ID());
 			
@@ -127,9 +132,13 @@ public class MCrusherKatingEntry extends X_TF_CrusherKatingEntry {
 				
 				//Price List
 				 m_M_PriceList_ID = Env.getContextAsInt(getCtx(), "#M_PriceList_ID");
-					if(bp.getPO_PriceList_ID() > 0)
-						m_M_PriceList_ID = bp.getPO_PriceList_ID();
-							
+				if(bp.getPO_PriceList_ID() > 0)
+					m_M_PriceList_ID = bp.getPO_PriceList_ID();
+				
+				if(m_M_PriceList_ID == 0) {
+					m_M_PriceList_ID = MPriceList.getDefault(getCtx(), false).getM_PriceList_ID();
+				}
+				
 				invoice.setM_PriceList_ID(m_M_PriceList_ID);
 				invoice.setC_Currency_ID(MPriceList.get(getCtx(), m_M_PriceList_ID, get_TrxName()).getC_Currency_ID());
 				
@@ -158,7 +167,12 @@ public class MCrusherKatingEntry extends X_TF_CrusherKatingEntry {
 				invoice.saveEx();
 				//End DocAction
 				
-				setLoaderInvoice_ID(invoice.getC_Invoice_ID());	
+				setLoaderInvoice_ID(invoice.getC_Invoice_ID());
+			}
+			MWeighmentEntry wEntry = (MWeighmentEntry) getTF_WeighmentEntry();
+			if(wEntry != null) {				
+				wEntry.close();
+				wEntry.saveEx();
 			}
 		}
 	}
@@ -180,6 +194,11 @@ public class MCrusherKatingEntry extends X_TF_CrusherKatingEntry {
 		}
 		setDocStatus(DOCSTATUS_InProgress);
 		setProcessed(false);
+		MWeighmentEntry wEntry = (MWeighmentEntry) getTF_WeighmentEntry();
+		if(wEntry != null) {				
+			wEntry.reverse();
+			wEntry.saveEx();
+		}
 	}
 
 }
