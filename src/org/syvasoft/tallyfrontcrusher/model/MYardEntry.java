@@ -96,10 +96,12 @@ public class MYardEntry extends X_TF_YardEntry {
 	public void createSalesEntry(int C_DocType_ID, int M_Warehouse_ID) {
 		loadBucketConfiguration();
 		
-		TF_MOrder pOrd = new TF_MOrder(getCtx(), 0, get_TrxName());
-		createOrderHeader(pOrd, C_DocType_ID, M_Warehouse_ID);
-		createPermitSalesLine(pOrd);
-		pOrd.saveEx();
+		if(getPermitSalesQty().doubleValue() > 0) {
+			TF_MOrder pOrd = new TF_MOrder(getCtx(), 0, get_TrxName());		
+			createOrderHeader(pOrd, C_DocType_ID, M_Warehouse_ID);
+			createPermitSalesLine(pOrd);
+			pOrd.saveEx();
+		}
 		
 		//if (!pOrd.processIt(DocAction.ACTION_Prepare))
 		//	throw new AdempiereException("Failed when processing document - " + pOrd.getProcessMsg());
