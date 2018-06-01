@@ -1834,7 +1834,8 @@ public class TF_MOrder extends MOrder {
 	public void reverseTransporterInvoice() {
 		if(getTransporterInvoice_ID() > 0 ) {
 			TF_MInvoice inv = new TF_MInvoice(getCtx(), getTransporterInvoice_ID(), get_TrxName());
-			inv.reverseCorrectIt();
+			if(inv.getDocStatus().equals(DOCSTATUS_Completed))
+				inv.reverseCorrectIt();
 			inv.saveEx();
 		}
 	}
