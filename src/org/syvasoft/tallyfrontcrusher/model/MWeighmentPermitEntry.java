@@ -53,7 +53,7 @@ public class MWeighmentPermitEntry extends X_TF_Weighment_Permit {
 			inv.setC_BPartner_ID(getC_BPartner_ID());
 			inv.setPartyName(getPartyName());
 			inv.setM_Product_ID(getM_Product_ID());
-			inv.setQty(getNetWeight().divide(new BigDecimal(1000)));
+			inv.setQty(getPermitIssuedQty());
 			inv.setC_UOM_ID(inv.getM_Product().getC_UOM_ID());			
 			inv.setPrice(getPrice());
 			inv.setTaxableAmount(inv.getQty().multiply(inv.getPrice()));
@@ -97,5 +97,14 @@ public class MWeighmentPermitEntry extends X_TF_Weighment_Permit {
 		return super.afterSave(newRecord, success);
 	}
 
+	public void reverseIt() {
+		setProcessed(false);
+		setStatus(STATUS_Unbilled);
+	}
+	
+	public void closeIt() {
+		setProcessed(true);
+		setStatus(STATUS_Billed);
+	}
 	
 }
