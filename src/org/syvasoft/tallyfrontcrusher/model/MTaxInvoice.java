@@ -152,6 +152,11 @@ public class MTaxInvoice extends X_TF_TaxInvoice {
 			
 			setC_Invoice_ID(invoice.getC_Invoice_ID());
 			
+			if(getTF_Weighment_Permit_ID() > 0) {
+				MWeighmentPermitEntry wEntry = new MWeighmentPermitEntry(getCtx(), getTF_Weighment_Permit_ID(), get_TrxName());
+				wEntry.closeIt();
+				wEntry.saveEx();
+			}
 		}
 	}
 	
@@ -167,6 +172,11 @@ public class MTaxInvoice extends X_TF_TaxInvoice {
 				inv.saveEx();
 			}
 			setC_Invoice_ID(0);
+		}
+		if(getTF_Weighment_Permit_ID() > 0) {
+			MWeighmentPermitEntry wEntry = new MWeighmentPermitEntry(getCtx(), getTF_Weighment_Permit_ID(), get_TrxName());
+			wEntry.reverseIt();
+			wEntry.saveEx();
 		}
 	}
 		 
