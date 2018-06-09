@@ -33,7 +33,7 @@ public class X_TF_YardEntry extends PO implements I_TF_YardEntry, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180207L;
+	private static final long serialVersionUID = 20180609L;
 
     /** Standard Constructor */
     public X_TF_YardEntry (Properties ctx, int TF_YardEntry_ID, String trxName)
@@ -43,6 +43,8 @@ public class X_TF_YardEntry extends PO implements I_TF_YardEntry, I_Persistent
         {
 			setDateAcct (new Timestamp( System.currentTimeMillis() ));
 			setDocumentNo (null);
+			setPaymentRule (null);
+// B
 			setProcessed (false);
 			setTF_VehicleType_ID (0);
 			setTF_YardEntry_ID (0);
@@ -77,6 +79,23 @@ public class X_TF_YardEntry extends PO implements I_TF_YardEntry, I_Persistent
       return sb.toString();
     }
 
+	/** Set Balance.
+		@param Balance Balance	  */
+	public void setBalance (BigDecimal Balance)
+	{
+		set_Value (COLUMNNAME_Balance, Balance);
+	}
+
+	/** Get Balance.
+		@return Balance	  */
+	public BigDecimal getBalance () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Balance);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
 	/** Set Buckets Discounted.
 		@param Bucket_Discount Buckets Discounted	  */
 	public void setBucket_Discount (BigDecimal Bucket_Discount)
@@ -89,6 +108,23 @@ public class X_TF_YardEntry extends PO implements I_TF_YardEntry, I_Persistent
 	public BigDecimal getBucket_Discount () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Bucket_Discount);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set Bucket / Load.
+		@param BucketPerLoad Bucket / Load	  */
+	public void setBucketPerLoad (BigDecimal BucketPerLoad)
+	{
+		set_Value (COLUMNNAME_BucketPerLoad, BucketPerLoad);
+	}
+
+	/** Get Bucket / Load.
+		@return Bucket / Load	  */
+	public BigDecimal getBucketPerLoad () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_BucketPerLoad);
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
@@ -120,6 +156,23 @@ public class X_TF_YardEntry extends PO implements I_TF_YardEntry, I_Persistent
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
+	}
+
+	/** Set Cash Received.
+		@param CashReceived Cash Received	  */
+	public void setCashReceived (BigDecimal CashReceived)
+	{
+		set_Value (COLUMNNAME_CashReceived, CashReceived);
+	}
+
+	/** Get Cash Received.
+		@return Cash Received	  */
+	public BigDecimal getCashReceived () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_CashReceived);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
 	}
 
 	/** Set Account Date.
@@ -294,6 +347,137 @@ public class X_TF_YardEntry extends PO implements I_TF_YardEntry, I_Persistent
 		return bd;
 	}
 
+	/** Set Has Balance.
+		@param HasBalance 
+		Permit Sales / Non Permit Sales
+	  */
+	public void setHasBalance (boolean HasBalance)
+	{
+		set_Value (COLUMNNAME_HasBalance, Boolean.valueOf(HasBalance));
+	}
+
+	/** Get Has Balance.
+		@return Permit Sales / Non Permit Sales
+	  */
+	public boolean isHasBalance () 
+	{
+		Object oo = get_Value(COLUMNNAME_HasBalance);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	/** Set Load Amount.
+		@param LoadAmount Load Amount	  */
+	public void setLoadAmount (BigDecimal LoadAmount)
+	{
+		set_Value (COLUMNNAME_LoadAmount, LoadAmount);
+	}
+
+	/** Get Load Amount.
+		@return Load Amount	  */
+	public BigDecimal getLoadAmount () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_LoadAmount);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	public org.compiere.model.I_M_Warehouse getM_Warehouse() throws RuntimeException
+    {
+		return (org.compiere.model.I_M_Warehouse)MTable.get(getCtx(), org.compiere.model.I_M_Warehouse.Table_Name)
+			.getPO(getM_Warehouse_ID(), get_TrxName());	}
+
+	/** Set Warehouse.
+		@param M_Warehouse_ID 
+		Storage Warehouse and Service Point
+	  */
+	public void setM_Warehouse_ID (int M_Warehouse_ID)
+	{
+		if (M_Warehouse_ID < 1) 
+			set_Value (COLUMNNAME_M_Warehouse_ID, null);
+		else 
+			set_Value (COLUMNNAME_M_Warehouse_ID, Integer.valueOf(M_Warehouse_ID));
+	}
+
+	/** Get Warehouse.
+		@return Storage Warehouse and Service Point
+	  */
+	public int getM_Warehouse_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_M_Warehouse_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Set MDP No.
+		@param MDPNo MDP No	  */
+	public void setMDPNo (String MDPNo)
+	{
+		set_Value (COLUMNNAME_MDPNo, MDPNo);
+	}
+
+	/** Get MDP No.
+		@return MDP No	  */
+	public String getMDPNo () 
+	{
+		return (String)get_Value(COLUMNNAME_MDPNo);
+	}
+
+	/** Set Party Name.
+		@param PartyName Party Name	  */
+	public void setPartyName (String PartyName)
+	{
+		set_Value (COLUMNNAME_PartyName, PartyName);
+	}
+
+	/** Get Party Name.
+		@return Party Name	  */
+	public String getPartyName () 
+	{
+		return (String)get_Value(COLUMNNAME_PartyName);
+	}
+
+	/** PaymentRule AD_Reference_ID=195 */
+	public static final int PAYMENTRULE_AD_Reference_ID=195;
+	/** Cash = B */
+	public static final String PAYMENTRULE_Cash = "B";
+	/** Credit Card = K */
+	public static final String PAYMENTRULE_CreditCard = "K";
+	/** Direct Deposit = T */
+	public static final String PAYMENTRULE_DirectDeposit = "T";
+	/** Check = S */
+	public static final String PAYMENTRULE_Check = "S";
+	/** On Credit = P */
+	public static final String PAYMENTRULE_OnCredit = "P";
+	/** Direct Debit = D */
+	public static final String PAYMENTRULE_DirectDebit = "D";
+	/** Mixed POS Payment = M */
+	public static final String PAYMENTRULE_MixedPOSPayment = "M";
+	/** Set Payment Rule.
+		@param PaymentRule 
+		How you pay the invoice
+	  */
+	public void setPaymentRule (String PaymentRule)
+	{
+
+		set_Value (COLUMNNAME_PaymentRule, PaymentRule);
+	}
+
+	/** Get Payment Rule.
+		@return How you pay the invoice
+	  */
+	public String getPaymentRule () 
+	{
+		return (String)get_Value(COLUMNNAME_PaymentRule);
+	}
+
 	/** Set Permit Amount.
 		@param PermitAmount Permit Amount	  */
 	public void setPermitAmount (BigDecimal PermitAmount)
@@ -379,6 +563,23 @@ public class X_TF_YardEntry extends PO implements I_TF_YardEntry, I_Persistent
 		return bd;
 	}
 
+	/** Set Price / Load.
+		@param PricePerLoad Price / Load	  */
+	public void setPricePerLoad (BigDecimal PricePerLoad)
+	{
+		set_Value (COLUMNNAME_PricePerLoad, PricePerLoad);
+	}
+
+	/** Get Price / Load.
+		@return Price / Load	  */
+	public BigDecimal getPricePerLoad () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_PricePerLoad);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
 	/** Set Processed.
 		@param Processed 
 		The document has been processed
@@ -422,6 +623,32 @@ public class X_TF_YardEntry extends PO implements I_TF_YardEntry, I_Persistent
 			return "Y".equals(oo);
 		}
 		return false;
+	}
+
+	/** In Progress = IP */
+	public static final String STATUS_InProgress = "IP";
+	/** Unbilled = CO */
+	public static final String STATUS_Unbilled = "CO";
+	/** Billed = CL */
+	public static final String STATUS_Billed = "CL";
+	/** Voided = VO */
+	public static final String STATUS_Voided = "VO";
+	/** Set Status.
+		@param Status 
+		Status of the currently running check
+	  */
+	public void setStatus (String Status)
+	{
+
+		set_Value (COLUMNNAME_Status, Status);
+	}
+
+	/** Get Status.
+		@return Status of the currently running check
+	  */
+	public String getStatus () 
+	{
+		return (String)get_Value(COLUMNNAME_Status);
 	}
 
 	public I_TF_VehicleType getTF_VehicleType() throws RuntimeException
@@ -506,6 +733,26 @@ public class X_TF_YardEntry extends PO implements I_TF_YardEntry, I_Persistent
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
+	}
+
+	/** Set Total Amount.
+		@param TotalAmt 
+		Total Amount
+	  */
+	public void setTotalAmt (BigDecimal TotalAmt)
+	{
+		set_Value (COLUMNNAME_TotalAmt, TotalAmt);
+	}
+
+	/** Get Total Amount.
+		@return Total Amount
+	  */
+	public BigDecimal getTotalAmt () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_TotalAmt);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
 	}
 
 	/** Set Total Load.
