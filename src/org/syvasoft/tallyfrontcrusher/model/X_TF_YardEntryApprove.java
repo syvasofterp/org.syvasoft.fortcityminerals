@@ -32,7 +32,7 @@ public class X_TF_YardEntryApprove extends PO implements I_TF_YardEntryApprove, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180207L;
+	private static final long serialVersionUID = 20180609L;
 
     /** Standard Constructor */
     public X_TF_YardEntryApprove (Properties ctx, int TF_YardEntryApprove_ID, String trxName)

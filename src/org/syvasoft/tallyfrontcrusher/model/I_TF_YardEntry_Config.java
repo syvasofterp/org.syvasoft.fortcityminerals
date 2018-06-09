@@ -104,6 +104,15 @@ public interface I_TF_YardEntry_Config
 	/** Get Extra Bucket Price	  */
 	public BigDecimal getExtraBucketPrice();
 
+    /** Column name ExtraBucketPriceLimit */
+    public static final String COLUMNNAME_ExtraBucketPriceLimit = "ExtraBucketPriceLimit";
+
+	/** Set Extra Bucket Price Limit( + / - )	  */
+	public void setExtraBucketPriceLimit (BigDecimal ExtraBucketPriceLimit);
+
+	/** Get Extra Bucket Price Limit( + / - )	  */
+	public BigDecimal getExtraBucketPriceLimit();
+
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";
 
@@ -125,6 +134,42 @@ public interface I_TF_YardEntry_Config
 
 	/** Get Permit Price	  */
 	public BigDecimal getPermitPrice();
+
+    /** Column name PermitPriceLimit */
+    public static final String COLUMNNAME_PermitPriceLimit = "PermitPriceLimit";
+
+	/** Set Permit Price Limit ( + / - )	  */
+	public void setPermitPriceLimit (BigDecimal PermitPriceLimit);
+
+	/** Get Permit Price Limit ( + / - )	  */
+	public BigDecimal getPermitPriceLimit();
+
+    /** Column name SalesTonnagePerBucket */
+    public static final String COLUMNNAME_SalesTonnagePerBucket = "SalesTonnagePerBucket";
+
+	/** Set Sales Tonnage Per Bucket	  */
+	public void setSalesTonnagePerBucket (BigDecimal SalesTonnagePerBucket);
+
+	/** Get Sales Tonnage Per Bucket	  */
+	public BigDecimal getSalesTonnagePerBucket();
+
+    /** Column name TareWeightMax */
+    public static final String COLUMNNAME_TareWeightMax = "TareWeightMax";
+
+	/** Set Tare Weight (Max)	  */
+	public void setTareWeightMax (BigDecimal TareWeightMax);
+
+	/** Get Tare Weight (Max)	  */
+	public BigDecimal getTareWeightMax();
+
+    /** Column name TareWeightMin */
+    public static final String COLUMNNAME_TareWeightMin = "TareWeightMin";
+
+	/** Set Tare Weight (Min)	  */
+	public void setTareWeightMin (BigDecimal TareWeightMin);
+
+	/** Get Tare Weight (Min)	  */
+	public BigDecimal getTareWeightMin();
 
     /** Column name TF_VehicleType_ID */
     public static final String COLUMNNAME_TF_VehicleType_ID = "TF_VehicleType_ID";
@@ -179,4 +224,13 @@ public interface I_TF_YardEntry_Config
 
 	/** Get W/P Price	  */
 	public BigDecimal getWpPrice();
+
+    /** Column name WpPriceLimit */
+    public static final String COLUMNNAME_WpPriceLimit = "WpPriceLimit";
+
+	/** Set W/P Price Limit ( + / - )	  */
+	public void setWpPriceLimit (BigDecimal WpPriceLimit);
+
+	/** Get W/P Price Limit ( + / - )	  */
+	public BigDecimal getWpPriceLimit();
 }

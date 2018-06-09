@@ -32,7 +32,7 @@ public class X_TF_YardEntry_Config extends PO implements I_TF_YardEntry_Config, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180207L;
+	private static final long serialVersionUID = 20180609L;
 
     /** Standard Constructor */
     public X_TF_YardEntry_Config (Properties ctx, int TF_YardEntry_Config_ID, String trxName)
@@ -118,6 +118,23 @@ public class X_TF_YardEntry_Config extends PO implements I_TF_YardEntry_Config, 
 		return bd;
 	}
 
+	/** Set Extra Bucket Price Limit( + / - ).
+		@param ExtraBucketPriceLimit Extra Bucket Price Limit( + / - )	  */
+	public void setExtraBucketPriceLimit (BigDecimal ExtraBucketPriceLimit)
+	{
+		set_Value (COLUMNNAME_ExtraBucketPriceLimit, ExtraBucketPriceLimit);
+	}
+
+	/** Get Extra Bucket Price Limit( + / - ).
+		@return Extra Bucket Price Limit( + / - )	  */
+	public BigDecimal getExtraBucketPriceLimit () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_ExtraBucketPriceLimit);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
 	/** Set Permit Price.
 		@param PermitPrice Permit Price	  */
 	public void setPermitPrice (BigDecimal PermitPrice)
@@ -130,6 +147,74 @@ public class X_TF_YardEntry_Config extends PO implements I_TF_YardEntry_Config, 
 	public BigDecimal getPermitPrice () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_PermitPrice);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set Permit Price Limit ( + / - ).
+		@param PermitPriceLimit Permit Price Limit ( + / - )	  */
+	public void setPermitPriceLimit (BigDecimal PermitPriceLimit)
+	{
+		set_Value (COLUMNNAME_PermitPriceLimit, PermitPriceLimit);
+	}
+
+	/** Get Permit Price Limit ( + / - ).
+		@return Permit Price Limit ( + / - )	  */
+	public BigDecimal getPermitPriceLimit () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_PermitPriceLimit);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set Sales Tonnage Per Bucket.
+		@param SalesTonnagePerBucket Sales Tonnage Per Bucket	  */
+	public void setSalesTonnagePerBucket (BigDecimal SalesTonnagePerBucket)
+	{
+		set_Value (COLUMNNAME_SalesTonnagePerBucket, SalesTonnagePerBucket);
+	}
+
+	/** Get Sales Tonnage Per Bucket.
+		@return Sales Tonnage Per Bucket	  */
+	public BigDecimal getSalesTonnagePerBucket () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_SalesTonnagePerBucket);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set Tare Weight (Max).
+		@param TareWeightMax Tare Weight (Max)	  */
+	public void setTareWeightMax (BigDecimal TareWeightMax)
+	{
+		set_Value (COLUMNNAME_TareWeightMax, TareWeightMax);
+	}
+
+	/** Get Tare Weight (Max).
+		@return Tare Weight (Max)	  */
+	public BigDecimal getTareWeightMax () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_TareWeightMax);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set Tare Weight (Min).
+		@param TareWeightMin Tare Weight (Min)	  */
+	public void setTareWeightMin (BigDecimal TareWeightMin)
+	{
+		set_Value (COLUMNNAME_TareWeightMin, TareWeightMin);
+	}
+
+	/** Get Tare Weight (Min).
+		@return Tare Weight (Min)	  */
+	public BigDecimal getTareWeightMin () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_TareWeightMin);
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
@@ -206,6 +291,23 @@ public class X_TF_YardEntry_Config extends PO implements I_TF_YardEntry_Config, 
 	public BigDecimal getWpPrice () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_WpPrice);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set W/P Price Limit ( + / - ).
+		@param WpPriceLimit W/P Price Limit ( + / - )	  */
+	public void setWpPriceLimit (BigDecimal WpPriceLimit)
+	{
+		set_Value (COLUMNNAME_WpPriceLimit, WpPriceLimit);
+	}
+
+	/** Get W/P Price Limit ( + / - ).
+		@return W/P Price Limit ( + / - )	  */
+	public BigDecimal getWpPriceLimit () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_WpPriceLimit);
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;

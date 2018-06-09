@@ -64,6 +64,15 @@ public interface I_TF_YardEntry
 	  */
 	public int getAD_Org_ID();
 
+    /** Column name Balance */
+    public static final String COLUMNNAME_Balance = "Balance";
+
+	/** Set Balance	  */
+	public void setBalance (BigDecimal Balance);
+
+	/** Get Balance	  */
+	public BigDecimal getBalance();
+
     /** Column name Bucket_Discount */
     public static final String COLUMNNAME_Bucket_Discount = "Bucket_Discount";
 
@@ -72,6 +81,15 @@ public interface I_TF_YardEntry
 
 	/** Get Buckets Discounted	  */
 	public BigDecimal getBucket_Discount();
+
+    /** Column name BucketPerLoad */
+    public static final String COLUMNNAME_BucketPerLoad = "BucketPerLoad";
+
+	/** Set Bucket / Load	  */
+	public void setBucketPerLoad (BigDecimal BucketPerLoad);
+
+	/** Get Bucket / Load	  */
+	public BigDecimal getBucketPerLoad();
 
     /** Column name C_BPartner_ID */
     public static final String COLUMNNAME_C_BPartner_ID = "C_BPartner_ID";
@@ -87,6 +105,15 @@ public interface I_TF_YardEntry
 	public int getC_BPartner_ID();
 
 	public org.compiere.model.I_C_BPartner getC_BPartner() throws RuntimeException;
+
+    /** Column name CashReceived */
+    public static final String COLUMNNAME_CashReceived = "CashReceived";
+
+	/** Set Cash Received	  */
+	public void setCashReceived (BigDecimal CashReceived);
+
+	/** Get Cash Received	  */
+	public BigDecimal getCashReceived();
 
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
@@ -196,6 +223,19 @@ public interface I_TF_YardEntry
 	/** Get Extra Bucket Qty	  */
 	public BigDecimal getExtraBucketQty();
 
+    /** Column name HasBalance */
+    public static final String COLUMNNAME_HasBalance = "HasBalance";
+
+	/** Set Has Balance.
+	  * Permit Sales / Non Permit Sales
+	  */
+	public void setHasBalance (boolean HasBalance);
+
+	/** Get Has Balance.
+	  * Permit Sales / Non Permit Sales
+	  */
+	public boolean isHasBalance();
+
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";
 
@@ -208,6 +248,61 @@ public interface I_TF_YardEntry
 	  * The record is active in the system
 	  */
 	public boolean isActive();
+
+    /** Column name LoadAmount */
+    public static final String COLUMNNAME_LoadAmount = "LoadAmount";
+
+	/** Set Load Amount	  */
+	public void setLoadAmount (BigDecimal LoadAmount);
+
+	/** Get Load Amount	  */
+	public BigDecimal getLoadAmount();
+
+    /** Column name M_Warehouse_ID */
+    public static final String COLUMNNAME_M_Warehouse_ID = "M_Warehouse_ID";
+
+	/** Set Warehouse.
+	  * Storage Warehouse and Service Point
+	  */
+	public void setM_Warehouse_ID (int M_Warehouse_ID);
+
+	/** Get Warehouse.
+	  * Storage Warehouse and Service Point
+	  */
+	public int getM_Warehouse_ID();
+
+	public org.compiere.model.I_M_Warehouse getM_Warehouse() throws RuntimeException;
+
+    /** Column name MDPNo */
+    public static final String COLUMNNAME_MDPNo = "MDPNo";
+
+	/** Set MDP No	  */
+	public void setMDPNo (String MDPNo);
+
+	/** Get MDP No	  */
+	public String getMDPNo();
+
+    /** Column name PartyName */
+    public static final String COLUMNNAME_PartyName = "PartyName";
+
+	/** Set Party Name	  */
+	public void setPartyName (String PartyName);
+
+	/** Get Party Name	  */
+	public String getPartyName();
+
+    /** Column name PaymentRule */
+    public static final String COLUMNNAME_PaymentRule = "PaymentRule";
+
+	/** Set Payment Rule.
+	  * How you pay the invoice
+	  */
+	public void setPaymentRule (String PaymentRule);
+
+	/** Get Payment Rule.
+	  * How you pay the invoice
+	  */
+	public String getPaymentRule();
 
     /** Column name PermitAmount */
     public static final String COLUMNNAME_PermitAmount = "PermitAmount";
@@ -254,6 +349,15 @@ public interface I_TF_YardEntry
 	/** Get Permit Sales Qty	  */
 	public BigDecimal getPermitSalesQty();
 
+    /** Column name PricePerLoad */
+    public static final String COLUMNNAME_PricePerLoad = "PricePerLoad";
+
+	/** Set Price / Load	  */
+	public void setPricePerLoad (BigDecimal PricePerLoad);
+
+	/** Get Price / Load	  */
+	public BigDecimal getPricePerLoad();
+
     /** Column name Processed */
     public static final String COLUMNNAME_Processed = "Processed";
 
@@ -275,6 +379,19 @@ public interface I_TF_YardEntry
 
 	/** Get Process Now	  */
 	public boolean isProcessing();
+
+    /** Column name Status */
+    public static final String COLUMNNAME_Status = "Status";
+
+	/** Set Status.
+	  * Status of the currently running check
+	  */
+	public void setStatus (String Status);
+
+	/** Get Status.
+	  * Status of the currently running check
+	  */
+	public String getStatus();
 
     /** Column name TF_VehicleType_ID */
     public static final String COLUMNNAME_TF_VehicleType_ID = "TF_VehicleType_ID";
@@ -315,6 +432,19 @@ public interface I_TF_YardEntry
 	public int getTF_YardEntryApprove_ID();
 
 	public I_TF_YardEntryApprove getTF_YardEntryApprove() throws RuntimeException;
+
+    /** Column name TotalAmt */
+    public static final String COLUMNNAME_TotalAmt = "TotalAmt";
+
+	/** Set Total Amount.
+	  * Total Amount
+	  */
+	public void setTotalAmt (BigDecimal TotalAmt);
+
+	/** Get Total Amount.
+	  * Total Amount
+	  */
+	public BigDecimal getTotalAmt();
 
     /** Column name TotalLoad */
     public static final String COLUMNNAME_TotalLoad = "TotalLoad";
