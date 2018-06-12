@@ -33,7 +33,7 @@ public class X_TF_YardEntry extends PO implements I_TF_YardEntry, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180609L;
+	private static final long serialVersionUID = 20180612L;
 
     /** Standard Constructor */
     public X_TF_YardEntry (Properties ctx, int TF_YardEntry_ID, String trxName)
@@ -347,6 +347,20 @@ public class X_TF_YardEntry extends PO implements I_TF_YardEntry, I_Persistent
 		return bd;
 	}
 
+	/** Set Gross Weight Time.
+		@param GrossWeightTime Gross Weight Time	  */
+	public void setGrossWeightTime (Timestamp GrossWeightTime)
+	{
+		set_Value (COLUMNNAME_GrossWeightTime, GrossWeightTime);
+	}
+
+	/** Get Gross Weight Time.
+		@return Gross Weight Time	  */
+	public Timestamp getGrossWeightTime () 
+	{
+		return (Timestamp)get_Value(COLUMNNAME_GrossWeightTime);
+	}
+
 	/** Set Has Balance.
 		@param HasBalance 
 		Permit Sales / Non Permit Sales
@@ -649,6 +663,20 @@ public class X_TF_YardEntry extends PO implements I_TF_YardEntry, I_Persistent
 	public String getStatus () 
 	{
 		return (String)get_Value(COLUMNNAME_Status);
+	}
+
+	/** Set Tare Weight Time.
+		@param TareWeightTime Tare Weight Time	  */
+	public void setTareWeightTime (Timestamp TareWeightTime)
+	{
+		set_Value (COLUMNNAME_TareWeightTime, TareWeightTime);
+	}
+
+	/** Get Tare Weight Time.
+		@return Tare Weight Time	  */
+	public Timestamp getTareWeightTime () 
+	{
+		return (Timestamp)get_Value(COLUMNNAME_TareWeightTime);
 	}
 
 	public I_TF_VehicleType getTF_VehicleType() throws RuntimeException
