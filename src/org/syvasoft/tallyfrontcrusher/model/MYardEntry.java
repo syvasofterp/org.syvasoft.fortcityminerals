@@ -77,6 +77,41 @@ public class MYardEntry extends X_TF_YardEntry {
 	}
 	
 	@Override
+	protected boolean beforeSave(boolean newRecord) {
+		//Yard Entry uploaded from Weighbridge Application.
+		if(getStatus().equals(STATUS_Unbilled)) {
+			if(getGrossWeightTime() != null) {
+				setDateAcct(getGrossWeightTime());
+			}
+			
+			//Permit Sales
+			if(isHasBalance()) {
+				setTotalLoad(BigDecimal.ONE);
+				setPermitCancelledQty(BigDecimal.ZERO);
+				setPermitSalesQty(BigDecimal.ONE);
+				setPermitPrice(getPricePerLoad());
+				setPermitAmount(getPricePerLoad());
+				setWPQty(BigDecimal.ZERO);
+				setWpPrice(BigDecimal.ZERO);
+				setWPAmount(BigDecimal.ZERO);				
+			}			
+			//Without Permit Sales
+			else {
+				setTotalLoad(BigDecimal.ONE);
+				setPermitCancelledQty(BigDecimal.ZERO);
+				setPermitSalesQty(BigDecimal.ZERO);
+				setPermitPrice(BigDecimal.ZERO);
+				setPermitAmount(BigDecimal.ZERO);
+				setWPQty(BigDecimal.ONE);
+				setWpPrice(getPricePerLoad());
+				setWPAmount(getPricePerLoad());
+			}
+
+		}
+		return super.beforeSave(newRecord);
+	}
+
+	@Override
 	protected boolean beforeDelete() {
 		List<TF_MOrder> orders = new Query(getCtx(), TF_MOrder.Table_Name, "TF_YardEntry_ID=? ", get_TrxName())
 				.setClient_ID().setParameters(getTF_YardEntry_ID()).list();

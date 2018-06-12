@@ -223,6 +223,15 @@ public interface I_TF_YardEntry
 	/** Get Extra Bucket Qty	  */
 	public BigDecimal getExtraBucketQty();
 
+    /** Column name GrossWeightTime */
+    public static final String COLUMNNAME_GrossWeightTime = "GrossWeightTime";
+
+	/** Set Gross Weight Time	  */
+	public void setGrossWeightTime (Timestamp GrossWeightTime);
+
+	/** Get Gross Weight Time	  */
+	public Timestamp getGrossWeightTime();
+
     /** Column name HasBalance */
     public static final String COLUMNNAME_HasBalance = "HasBalance";
 
@@ -392,6 +401,15 @@ public interface I_TF_YardEntry
 	  * Status of the currently running check
 	  */
 	public String getStatus();
+
+    /** Column name TareWeightTime */
+    public static final String COLUMNNAME_TareWeightTime = "TareWeightTime";
+
+	/** Set Tare Weight Time	  */
+	public void setTareWeightTime (Timestamp TareWeightTime);
+
+	/** Get Tare Weight Time	  */
+	public Timestamp getTareWeightTime();
 
     /** Column name TF_VehicleType_ID */
     public static final String COLUMNNAME_TF_VehicleType_ID = "TF_VehicleType_ID";
