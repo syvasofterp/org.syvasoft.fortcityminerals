@@ -450,6 +450,17 @@ public interface I_TF_Weighment_Permit
 
 	public I_TF_WeighmentEntry getTF_WeighmentEntry() throws RuntimeException;
 
+    /** Column name TF_YardEntry_ID */
+    public static final String COLUMNNAME_TF_YardEntry_ID = "TF_YardEntry_ID";
+
+	/** Set Yard Entry	  */
+	public void setTF_YardEntry_ID (int TF_YardEntry_ID);
+
+	/** Get Yard Entry	  */
+	public int getTF_YardEntry_ID();
+
+	public I_TF_YardEntry getTF_YardEntry() throws RuntimeException;
+
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";
 

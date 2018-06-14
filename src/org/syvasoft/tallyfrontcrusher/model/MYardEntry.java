@@ -135,6 +135,7 @@ public class MYardEntry extends X_TF_YardEntry {
 			TF_MOrder pOrd = new TF_MOrder(getCtx(), 0, get_TrxName());		
 			createOrderHeader(pOrd, C_DocType_ID, M_Warehouse_ID);
 			createPermitSalesLine(pOrd);
+			createExtraBucketLine(pOrd);
 			pOrd.saveEx();
 		}
 		
@@ -158,6 +159,7 @@ public class MYardEntry extends X_TF_YardEntry {
 		TF_MOrder wOrd = new TF_MOrder(getCtx(), 0, get_TrxName());
 		createOrderHeader(wOrd, C_DocType_ID, M_Warehouse_ID);
 		createWithoutPermitSalesLine(wOrd);
+		createExtraBucketLine(wOrd);
 		wOrd.saveEx();
 		
 		//wOrd.setDocAction(DocAction.ACTION_Complete);
@@ -216,26 +218,7 @@ public class MYardEntry extends X_TF_YardEntry {
 		ord.setItem1_Qty(bucketQty.multiply(tonnePerBucket));
 		BigDecimal price = bucketRate.divide(tonnePerBucket, 4, RoundingMode.HALF_EVEN);
 		ord.setItem1_Price(price);
-		ord.setItem1_Amt(ord.getItem1_Qty().multiply(ord.getItem1_Price()));
-		
-				
-		if(getExtraBucketQty().doubleValue() == 0)
-			return;
-		ord.setItem2_IsPermitSales(false);
-		ord.setItem2_SandType(ExtraBucket_SandType);
-		ord.setItem2_ID(xConfig.getM_Product_ID());
-		ord.setItem2_UOM_ID(ord.getItem2().getC_UOM_ID());
-		ord.setItem2_Tax_ID(1000000);
-		ord.setItem2_BucketQty(getExtraBucketQty());
-		tonnePerBucket = xConfig.getSalesTonnagePerBucket();
-		ord.setItem2_BucketRate(getExtraBucketPrice());
-		ord.setItem2_TonePerBucket(tonnePerBucket);
-		ord.setItem2_TotalLoad(BigDecimal.ZERO);		
-		ord.setItem2_Qty(getExtraBucketQty().multiply(tonnePerBucket));
-		price = getExtraBucketPrice().divide(tonnePerBucket, 4, RoundingMode.HALF_EVEN);
-		ord.setItem2_Price(price);
-		ord.setItem2_Amt(ord.getItem2_Qty().multiply(ord.getItem2_Price()));		
-		
+		ord.setItem1_Amt(ord.getItem1_Qty().multiply(ord.getItem1_Price()));		
 	}
 	
 	private void createWithoutPermitSalesLine(TF_MOrder ord) {
@@ -257,6 +240,38 @@ public class MYardEntry extends X_TF_YardEntry {
 		ord.setItem1_Qty(bucketQty.multiply(tonnePerBucket));
 		BigDecimal price = bucketRate.divide(tonnePerBucket, 4, RoundingMode.HALF_EVEN);
 		ord.setItem1_Price(price);
-		ord.setItem1_Amt(ord.getItem1_Qty().multiply(ord.getItem1_Price()));
+		ord.setItem1_Amt(ord.getItem1_Qty().multiply(ord.getItem1_Price()));				
 	}
+	
+	private void createExtraBucketLine(TF_MOrder ord) {
+		if(getExtraBucketQty().doubleValue() == 0)
+			return;
+		ord.setItem2_IsPermitSales(false);
+		ord.setItem2_SandType(ExtraBucket_SandType);
+		ord.setItem2_ID(xConfig.getM_Product_ID());
+		ord.setItem2_UOM_ID(ord.getItem2().getC_UOM_ID());
+		ord.setItem2_Tax_ID(1000000);
+		ord.setItem2_BucketQty(getExtraBucketQty());
+		BigDecimal tonnePerBucket = xConfig.getSalesTonnagePerBucket();
+		ord.setItem2_BucketRate(getExtraBucketPrice());
+		ord.setItem2_TonePerBucket(tonnePerBucket);
+		ord.setItem2_TotalLoad(BigDecimal.ZERO);		
+		ord.setItem2_Qty(getExtraBucketQty().multiply(tonnePerBucket));
+		BigDecimal price = getExtraBucketPrice().divide(tonnePerBucket, 4, RoundingMode.HALF_EVEN);
+		ord.setItem2_Price(price);
+		ord.setItem2_Amt(ord.getItem2_Qty().multiply(ord.getItem2_Price()));		
+	}
+	
+	public void close() {
+		if(isProcessed())
+			throw new AdempiereException("Weighment Entry is already processed!");
+		setStatus(STATUS_Billed);
+		setProcessed(true);		
+	}
+	
+	public void reverse() {
+		setStatus(STATUS_Unbilled);		
+		setProcessed(false);
+	}
+	
 }

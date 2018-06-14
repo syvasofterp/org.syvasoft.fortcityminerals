@@ -33,7 +33,7 @@ public class X_TF_YardEntry extends PO implements I_TF_YardEntry, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180612L;
+	private static final long serialVersionUID = 20180614L;
 
     /** Standard Constructor */
     public X_TF_YardEntry (Properties ctx, int TF_YardEntry_ID, String trxName)
@@ -543,6 +543,23 @@ public class X_TF_YardEntry extends PO implements I_TF_YardEntry, I_Persistent
 		return bd;
 	}
 
+	/** Set Permit Issued Tonnage.
+		@param PermitIssuedTonnage Permit Issued Tonnage	  */
+	public void setPermitIssuedTonnage (BigDecimal PermitIssuedTonnage)
+	{
+		set_Value (COLUMNNAME_PermitIssuedTonnage, PermitIssuedTonnage);
+	}
+
+	/** Get Permit Issued Tonnage.
+		@return Permit Issued Tonnage	  */
+	public BigDecimal getPermitIssuedTonnage () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_PermitIssuedTonnage);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
 	/** Set Permit Price.
 		@param PermitPrice Permit Price	  */
 	public void setPermitPrice (BigDecimal PermitPrice)
@@ -798,6 +815,20 @@ public class X_TF_YardEntry extends PO implements I_TF_YardEntry, I_Persistent
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
+	}
+
+	/** Set User Name.
+		@param UserName User Name	  */
+	public void setUserName (String UserName)
+	{
+		set_Value (COLUMNNAME_UserName, UserName);
+	}
+
+	/** Get User Name.
+		@return User Name	  */
+	public String getUserName () 
+	{
+		return (String)get_Value(COLUMNNAME_UserName);
 	}
 
 	/** Set Vehicle No.

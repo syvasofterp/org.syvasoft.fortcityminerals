@@ -36,8 +36,8 @@ public class CalloutOrder_SandBlockLine1 implements IColumnCallout {
 		if(mTab.getValue(TF_MOrder.COLUMNNAME_Item1_VehicleType_ID) != null)
 			tf_vehicletype_id = (int) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_VehicleType_ID);
 		int orgID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_AD_Org_ID) ;
-		if(isPermitSales) {
-			MSandBlockBucketConfig config ;
+		MSandBlockBucketConfig config ;
+		if(isPermitSales) {			
 			if(!mField.getColumnName().equals(TF_MOrder.COLUMNNAME_Item2_BucketQty)) {
 				if(mField.getColumnName().equals(TF_MOrder.COLUMNNAME_Item1_BucketQty)) {
 					BigDecimal item1_BucketQty = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_BucketQty);
@@ -47,9 +47,7 @@ public class CalloutOrder_SandBlockLine1 implements IColumnCallout {
 					}
 					else if (mTab.getValue(TF_MOrder.COLUMNNAME_Item1_ID) != null) {
 						return null;
-					}
-					
-										
+					}					
 				}
 				config = MSandBlockBucketConfig.getBucketConfig(orgID, MSandBlockBucketConfig.SANDTYPE_P, tf_vehicletype_id);
 				if(config == null) {
@@ -71,31 +69,10 @@ public class CalloutOrder_SandBlockLine1 implements IColumnCallout {
 				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Price, price);
 			}
 			
-			BigDecimal item2_BucketQty = BigDecimal.ZERO;
-			if(mField.getColumnName().equals(TF_MOrder.COLUMNNAME_Item2_BucketQty)) {
-				if(mTab.getValue(TF_MOrder.COLUMNNAME_Item2_BucketQty) != null)
-					item2_BucketQty = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Item2_BucketQty);
-				if(item2_BucketQty.doubleValue() != 0) {
-					config = MSandBlockBucketConfig.getBucketConfig(orgID, MSandBlockBucketConfig.SANDTYPE_X, 0);
-					if(config == null) {
-						mTab.setValue(TF_MOrder.COLUMNNAME_Item2_ID, null);
-						mTab.setValue(TF_MOrder.COLUMNNAME_Item2_SandType, null);
-						mTab.setValue(TF_MOrder.COLUMNNAME_Item2_BucketRate, BigDecimal.ZERO);
-						mTab.setValue(TF_MOrder.COLUMNNAME_Item2_TonePerBucket, BigDecimal.ZERO);						
-						return ("Sand Block Bucket Configuration is not found for Extra Bucket!");
-					}
-					mTab.setValue(TF_MOrder.COLUMNNAME_Item2_ID, config.getM_Product_ID());
-					mTab.setValue(TF_MOrder.COLUMNNAME_Item2_SandType, config.getSandType());
-					mTab.setValue(TF_MOrder.COLUMNNAME_Item2_BucketRate, config.getSalesRatePerBucket());
-					mTab.setValue(TF_MOrder.COLUMNNAME_Item2_TonePerBucket, config.getSalesTonnagePerBucket());
-				}
-				else {
-					mTab.setValue(TF_MOrder.COLUMNNAME_Item2_ID, null);
-				}
-			}									
+											
 		}
 		else {
-			MSandBlockBucketConfig config = MSandBlockBucketConfig.getBucketConfig(orgID, MSandBlockBucketConfig.SANDTYPE_W, tf_vehicletype_id);
+			config = MSandBlockBucketConfig.getBucketConfig(orgID, MSandBlockBucketConfig.SANDTYPE_W, tf_vehicletype_id);
 			if(config == null) {
 				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_ID, null);
 				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_SandType, null);
@@ -113,6 +90,30 @@ public class CalloutOrder_SandBlockLine1 implements IColumnCallout {
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item2_ID, null);
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_PermitIssued, BigDecimal.ZERO);
 		}
+		
+		BigDecimal item2_BucketQty = BigDecimal.ZERO;
+		if(mField.getColumnName().equals(TF_MOrder.COLUMNNAME_Item2_BucketQty)) {
+			if(mTab.getValue(TF_MOrder.COLUMNNAME_Item2_BucketQty) != null)
+				item2_BucketQty = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Item2_BucketQty);
+			if(item2_BucketQty.doubleValue() != 0) {
+				config = MSandBlockBucketConfig.getBucketConfig(orgID, MSandBlockBucketConfig.SANDTYPE_X, 0);
+				if(config == null) {
+					mTab.setValue(TF_MOrder.COLUMNNAME_Item2_ID, null);
+					mTab.setValue(TF_MOrder.COLUMNNAME_Item2_SandType, null);
+					mTab.setValue(TF_MOrder.COLUMNNAME_Item2_BucketRate, BigDecimal.ZERO);
+					mTab.setValue(TF_MOrder.COLUMNNAME_Item2_TonePerBucket, BigDecimal.ZERO);						
+					return ("Sand Block Bucket Configuration is not found for Extra Bucket!");
+				}
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item2_ID, config.getM_Product_ID());
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item2_SandType, config.getSandType());
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item2_BucketRate, config.getSalesRatePerBucket());
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item2_TonePerBucket, config.getSalesTonnagePerBucket());
+			}
+			else {
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item2_ID, null);
+			}
+		}	
+		
 		//mTab.setValue(TF_MOrder.COLUMNNAME_Item2_ID, item1_id);
 		//mTab.setValue(TF_MOrder.COLUMNNAME_Item2_Tax_ID, item1_tax);
 		//mTab.setValue(TF_MOrder.COLUMNNAME_Item2_UOM_ID, item1_uom);

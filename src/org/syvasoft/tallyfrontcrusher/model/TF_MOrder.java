@@ -1626,6 +1626,7 @@ public class TF_MOrder extends MOrder {
 		issuePermit();
 		createTransporterInvoice();
 		closeWeighmentEntry();
+		closeYardEntry();
 		createTaxInvoice();
 		return msg;
 	}
@@ -1691,6 +1692,7 @@ public class TF_MOrder extends MOrder {
 		MJobworkItemIssue.ReverseFromPO(this);
 		reverseTransporterInvoice();
 		reverseWeighmentEntry();
+		reverseYardEntry();
 		reverseSubcontractPurchaseEntry();
 		reverseIssuedPermit();
 		reversePurchasedPermit();
@@ -1731,6 +1733,7 @@ public class TF_MOrder extends MOrder {
 		MJobworkItemIssue.ReverseFromPO(this);
 		reverseTransporterInvoice();
 		reverseWeighmentEntry();
+		reverseYardEntry();
 		reverseSubcontractPurchaseEntry();
 		reverseIssuedPermit();
 		reversePurchasedPermit();
@@ -1856,6 +1859,29 @@ public class TF_MOrder extends MOrder {
 			weighment.saveEx();
 		}
 	}
+	
+	public void closeYardEntry() {
+		if(getTF_YardEntry_ID() > 0 ) {
+			MYardEntry ye = new MYardEntry(getCtx(), getTF_YardEntry_ID(), get_TrxName());
+			//If Yard Entry created From Weighbridge App
+			if(ye.getTotalAmt().doubleValue() > 0) {
+				ye.close();
+				ye.saveEx();
+			}
+		}
+	}
+	
+	public void reverseYardEntry() {
+		if(getTF_YardEntry_ID() > 0 ) {
+			MYardEntry ye = new MYardEntry(getCtx(), getTF_YardEntry_ID(), get_TrxName());
+			//If Yard Entry created From Weighbridge App
+			if(ye.getTotalAmt().doubleValue() > 0) {
+				ye.reverse();
+				ye.saveEx();
+			}
+		}
+	}
+	
 	public static MProductPricing getProductPricing(int M_Product_ID, int M_PriceList_ID, int C_BPartner_ID, 
 			BigDecimal Qty,	Timestamp priceDate, boolean isSOTrx) {
 		//Get Unit Price from Latest Price List.
