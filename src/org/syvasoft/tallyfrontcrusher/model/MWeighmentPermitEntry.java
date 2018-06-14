@@ -37,8 +37,18 @@ public class MWeighmentPermitEntry extends X_TF_Weighment_Permit {
 		
 		String sql = "SELECT TF_WeighmentEntry_ID FROM TF_WeighmentEntry WHERE DocumentNo = ?";
 		int TF_WeighmentEntry_ID = DB.getSQLValue(get_TrxName(), sql, getActualDocumentNo());
-		if(TF_WeighmentEntry_ID > 0)
+		if(TF_WeighmentEntry_ID > 0) {
 			setTF_WeighmentEntry_ID(TF_WeighmentEntry_ID);
+		}
+		else {
+			sql = "SELECT TF_YardEntry_ID FROM TF_YardEntry WHERE DocumentNo= ?";
+			int TF_YardEntry_ID = DB.getSQLValue(get_TrxName(), sql, getActualDocumentNo());
+			if(TF_YardEntry_ID > 0) {
+				setTF_YardEntry_ID(TF_YardEntry_ID);
+			}
+		}
+					
+		
 		return super.beforeSave(newRecord);
 	}
 

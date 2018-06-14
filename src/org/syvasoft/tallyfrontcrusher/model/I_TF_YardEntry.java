@@ -340,6 +340,15 @@ public interface I_TF_YardEntry
 	/** Get Permit Issued Qty	  */
 	public BigDecimal getPermitIssuedQty();
 
+    /** Column name PermitIssuedTonnage */
+    public static final String COLUMNNAME_PermitIssuedTonnage = "PermitIssuedTonnage";
+
+	/** Set Permit Issued Tonnage	  */
+	public void setPermitIssuedTonnage (BigDecimal PermitIssuedTonnage);
+
+	/** Get Permit Issued Tonnage	  */
+	public BigDecimal getPermitIssuedTonnage();
+
     /** Column name PermitPrice */
     public static final String COLUMNNAME_PermitPrice = "PermitPrice";
 
@@ -488,6 +497,15 @@ public interface I_TF_YardEntry
 	  * User who updated this records
 	  */
 	public int getUpdatedBy();
+
+    /** Column name UserName */
+    public static final String COLUMNNAME_UserName = "UserName";
+
+	/** Set User Name	  */
+	public void setUserName (String UserName);
+
+	/** Get User Name	  */
+	public String getUserName();
 
     /** Column name VehicleNo */
     public static final String COLUMNNAME_VehicleNo = "VehicleNo";

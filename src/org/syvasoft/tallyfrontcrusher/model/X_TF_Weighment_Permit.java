@@ -23,6 +23,7 @@ import java.sql.Timestamp;
 import java.util.Properties;
 import org.compiere.model.*;
 import org.compiere.util.Env;
+import org.compiere.util.KeyNamePair;
 
 /** Generated Model for TF_Weighment_Permit
  *  @author iDempiere (generated) 
@@ -33,7 +34,7 @@ public class X_TF_Weighment_Permit extends PO implements I_TF_Weighment_Permit, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180505L;
+	private static final long serialVersionUID = 20180614L;
 
     /** Standard Constructor */
     public X_TF_Weighment_Permit (Properties ctx, int TF_Weighment_Permit_ID, String trxName)
@@ -232,6 +233,14 @@ public class X_TF_Weighment_Permit extends PO implements I_TF_Weighment_Permit, 
 	{
 		return (String)get_Value(COLUMNNAME_DocumentNo);
 	}
+
+    /** Get Record ID/ColumnName
+        @return ID/ColumnName pair
+      */
+    public KeyNamePair getKeyNamePair() 
+    {
+        return new KeyNamePair(get_ID(), getDocumentNo());
+    }
 
 	/** Set Gross Weight (Kg).
 		@param GrossWeight Gross Weight (Kg)	  */
@@ -749,6 +758,31 @@ public class X_TF_Weighment_Permit extends PO implements I_TF_Weighment_Permit, 
 		return ii.intValue();
 	}
 
+	public I_TF_YardEntry getTF_YardEntry() throws RuntimeException
+    {
+		return (I_TF_YardEntry)MTable.get(getCtx(), I_TF_YardEntry.Table_Name)
+			.getPO(getTF_YardEntry_ID(), get_TrxName());	}
+
+	/** Set Yard Entry.
+		@param TF_YardEntry_ID Yard Entry	  */
+	public void setTF_YardEntry_ID (int TF_YardEntry_ID)
+	{
+		if (TF_YardEntry_ID < 1) 
+			set_Value (COLUMNNAME_TF_YardEntry_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_YardEntry_ID, Integer.valueOf(TF_YardEntry_ID));
+	}
+
+	/** Get Yard Entry.
+		@return Yard Entry	  */
+	public int getTF_YardEntry_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_YardEntry_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	/** Set User Name.
 		@param UserName User Name	  */
 	public void setUserName (String UserName)
@@ -785,6 +819,8 @@ public class X_TF_Weighment_Permit extends PO implements I_TF_Weighment_Permit, 
 	public static final String WEIGHMENTENTRYTYPE_OwnProductionReceipt = "3PR";
 	/** Subcontract Production Receipt = 4SR */
 	public static final String WEIGHMENTENTRYTYPE_SubcontractProductionReceipt = "4SR";
+	/** Kating = 5KA */
+	public static final String WEIGHMENTENTRYTYPE_Kating = "5KA";
 	/** Set Type.
 		@param WeighmentEntryType Type	  */
 	public void setWeighmentEntryType (String WeighmentEntryType)
