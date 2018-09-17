@@ -1,5 +1,6 @@
 package org.syvasoft.tallyfrontcrusher.callout;
 
+import java.math.BigInteger;
 import java.util.Properties;
 
 import org.adempiere.base.IColumnCallout;
@@ -72,7 +73,7 @@ public class CalloutPayment_TFBPartner implements IColumnCallout {
 				mTab.setValue(TF_MPayment.COLUMNNAME_IsInterOrgBPCashTransferX, isInterOrgBPCash);				
 			}
 		}
-		
+		 
 		return null;
 	}
 
