@@ -31,8 +31,8 @@ public class CalloutPayment_ElementValue implements IColumnCallout {
 		if(mTab.getValue(TF_MPayment.COLUMNNAME_C_ElementValue_ID) != null) {
 			mTab.setValue(TF_MPayment.COLUMNNAME_C_Invoice_ID, 0);
 			acct_id = (int) mTab.getValue(TF_MPayment.COLUMNNAME_C_ElementValue_ID);
-			isSalaryPayment = glConfig.getSalaryPayable_Acct() == acct_id && !isReceipt;
-			isSalaryAdvance = glConfig.getSalariesAdvanceAcct_ID() == acct_id && !isReceipt;
+			isSalaryPayment = glConfig.getSalaryPayable_Acct() == acct_id; // && !isReceipt;
+			isSalaryAdvance = glConfig.getSalariesAdvanceAcct_ID() == acct_id; // && !isReceipt;
 		}
 				
 		mTab.setValue(TF_MPayment.COLUMNNAME_IsSalaryPayment, isSalaryPayment);
