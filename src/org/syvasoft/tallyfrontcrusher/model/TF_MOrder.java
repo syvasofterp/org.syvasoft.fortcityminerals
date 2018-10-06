@@ -1950,6 +1950,11 @@ public class TF_MOrder extends MOrder {
 		
 		MSubcontractType st = new MSubcontractType(getCtx(), proj.getTF_SubcontractType_ID(), get_TrxName());
 		
+		if(st.isTrackMaterialMovement())
+			MSubcontractMaterialMovement.createMaterialMovement(get_TrxName(), getDateAcct(),getAD_Org_ID(), getC_Project_ID(),
+					getC_Invoice_ID(), proj.getC_BPartner_ID(), getItem1_ID(), getItem1_Qty(),
+					getTF_WeighmentEntry_ID());
+		
 		//Do not create invoice from sales
 		if(!st.isCreateInvFromSales())
 			return;
@@ -2090,14 +2095,13 @@ public class TF_MOrder extends MOrder {
 			throw new AdempiereException("Failed when processing document - " + invoice.getProcessMsg());
 		invoice.saveEx();
 		//End DocAction
-		if(st.isTrackMaterialMovement())
-			MSubcontractMaterialMovement.createMaterialMovement(get_TrxName(), getDateAcct(),getAD_Org_ID(), getC_Project_ID(),
-					invoice.getC_Invoice_ID(), invoice.getC_BPartner_ID(), getItem1_ID(), getItem1_Qty());
+		
 		setSubcon_Invoice_ID(invoice.getC_Invoice_ID());
 				
 	}
 	
 	public void reverseSubcontractPurchaseEntry() {
+		MSubcontractMaterialMovement.deleteWeighmentMovement(getTF_WeighmentEntry_ID(), get_TrxName());
 		if(getSubcon_Invoice_ID() > 0) {			
 			TF_MInvoice inv = new TF_MInvoice(getCtx(), getSubcon_Invoice_ID(), get_TrxName());
 			if(inv.getDocStatus().equals(DOCSTATUS_Completed)) {
