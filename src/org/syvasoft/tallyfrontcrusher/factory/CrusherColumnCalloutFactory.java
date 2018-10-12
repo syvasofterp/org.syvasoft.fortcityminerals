@@ -7,7 +7,6 @@ import org.adempiere.base.IColumnCallout;
 import org.adempiere.base.IColumnCalloutFactory;
 import org.compiere.model.MJournalLine;
 import org.compiere.model.MPayment;
-import org.jfree.chart.block.ColumnArrangement;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutBoulderReceipt_JobWork;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutBoulderReceipt_Warehouse;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutCrusherKatingEntry_CalcAmount;
