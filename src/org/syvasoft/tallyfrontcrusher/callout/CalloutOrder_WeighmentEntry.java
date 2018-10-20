@@ -73,6 +73,9 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 			MProductPricing pp = TF_MOrder.getProductPricing(weighment.getM_Product_ID(), priceList_id, bPartner_id,
 					qty, weighment.getGrossWeightTime(), isSOTrx);
 			BigDecimal price = pp.getPriceStd();
+			if(weighment.getPrice() != null)
+				price = weighment.getPrice();
+			
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Qty, qty);
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Price, price);
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_UnitPrice, price);
@@ -97,6 +100,8 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 				mTab.setValue(TF_MOrder.COLUMNNAME_PaymentRule, weighment.getPaymentRule());
 									
 			mTab.setValue(TF_MOrder.COLUMNNAME_VehicleNo, weighment.getVehicleNo());
+			
+	
 			
 			String orgType = (String) mTab.getValue(TF_MOrder.COLUMNNAME_OrgType);
 			if(orgType != null && orgType.equals(TF_MOrder.ORGTYPE_SandBlockWeighbridge)) {

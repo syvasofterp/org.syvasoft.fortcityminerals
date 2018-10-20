@@ -1892,7 +1892,8 @@ public class TF_MOrder extends MOrder {
 				+ "ORDER BY plv.ValidFrom DESC";
 		
 		int M_PriceList_Version_ID = DB.getSQLValueEx(null, sql, M_PriceList_ID, priceDate);
-		MProductPricing pp = new MProductPricing (M_Product_ID, C_BPartner_ID, Qty, isSOTrx);
+		MProductPricing pp = new MProductPricing (M_Product_ID, C_BPartner_ID, Qty, isSOTrx, null);		
+		pp.setM_PriceList_ID(M_PriceList_ID);
 		pp.setM_PriceList_Version_ID(M_PriceList_Version_ID);
 		pp.setPriceDate(priceDate);		
 		return pp;
