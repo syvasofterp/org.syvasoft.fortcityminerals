@@ -603,8 +603,10 @@ public class TF_MProject extends MProject {
 	
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
+		//if(newRecord)
+		//	setValue(getName());
 		if(getDocumentNo() != null && (getValue() == null || getValue().length()==0))
-			setValue(getDocumentNo());
+			setValue(getName());
 		
 		//Set Default Project Type - Subcontract
 		MProjectType projType = new MProjectType(getCtx(), 1000000, get_TrxName());		
