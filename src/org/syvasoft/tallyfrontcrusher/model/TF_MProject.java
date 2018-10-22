@@ -606,7 +606,7 @@ public class TF_MProject extends MProject {
 		//if(newRecord)
 		//	setValue(getName());
 		if(getDocumentNo() != null && (getValue() == null || getValue().length()==0))
-			setValue(getName());
+			setValue(getDocumentNo());
 		
 		//Set Default Project Type - Subcontract
 		MProjectType projType = new MProjectType(getCtx(), 1000000, get_TrxName());		
