@@ -60,6 +60,7 @@ public class CrusherEventHandler extends AbstractEventHandler {
 		registerTableEvent(IEventTopics.DOC_AFTER_COMPLETE, TF_MInvoice.Table_Name);
 		registerTableEvent(IEventTopics.DOC_AFTER_COMPLETE, MOrder.Table_Name);
 		registerTableEvent(IEventTopics.DOC_BEFORE_PREPARE, MProduction.Table_Name);
+		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MPayment.Table_Name);
 		registerTableEvent(IEventTopics.PO_BEFORE_CHANGE, MPayment.Table_Name);
 		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MInvoiceLine.Table_Name);
 		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MInvoice.Table_Name);
@@ -86,6 +87,15 @@ public class CrusherEventHandler extends AbstractEventHandler {
 		PO po = getPO(event);
 		if(po.get_TableName().equals(MPayment.Table_Name)) {
 			MPayment payment = (MPayment) po;
+			if(event.getTopic().equals(IEventTopics.PO_BEFORE_NEW)) {
+				//To show party name and phone for cash sales...
+				if(payment.getC_Invoice_ID() > 0 && payment.getReversal_ID() == 0) {
+					MInvoice inv =  (MInvoice) payment.getC_Invoice();
+					if(inv.getDescription() != null) {
+						payment.addDescription(inv.getDescription());
+					}
+				}
+			}
 			if(event.getTopic().equals(IEventTopics.PO_BEFORE_CHANGE)) {
 				if(payment.getC_Invoice_ID() > 0) {
 					if(payment.getC_DocType().isSOTrx())
