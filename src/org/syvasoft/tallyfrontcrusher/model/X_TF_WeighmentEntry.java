@@ -26,14 +26,14 @@ import org.compiere.util.Env;
 
 /** Generated Model for TF_WeighmentEntry
  *  @author iDempiere (generated) 
- *  @version Release 4.1 - $Id$ */
+ *  @version Release 5.1 - $Id$ */
 public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Persistent 
 {
 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180505L;
+	private static final long serialVersionUID = 20181029L;
 
     /** Standard Constructor */
     public X_TF_WeighmentEntry (Properties ctx, int TF_WeighmentEntry_ID, String trxName)
@@ -448,6 +448,23 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return bd;
 	}
 
+	/** Set Phone.
+		@param Phone 
+		Identifies a telephone number
+	  */
+	public void setPhone (String Phone)
+	{
+		set_Value (COLUMNNAME_Phone, Phone);
+	}
+
+	/** Get Phone.
+		@return Identifies a telephone number
+	  */
+	public String getPhone () 
+	{
+		return (String)get_Value(COLUMNNAME_Phone);
+	}
+
 	/** Set Price.
 		@param Price 
 		Price
@@ -501,7 +518,9 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	/** Voided = VO */
 	public static final String STATUS_Voided = "VO";
 	/** Set Status.
-		@param Status Status	  */
+		@param Status 
+		Status of the currently running check
+	  */
 	public void setStatus (String Status)
 	{
 
@@ -509,7 +528,8 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	}
 
 	/** Get Status.
-		@return Status	  */
+		@return Status of the currently running check
+	  */
 	public String getStatus () 
 	{
 		return (String)get_Value(COLUMNNAME_Status);
@@ -741,6 +761,8 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public static final String WEIGHMENTENTRYTYPE_OwnProductionReceipt = "3PR";
 	/** Subcontract Production Receipt = 4SR */
 	public static final String WEIGHMENTENTRYTYPE_SubcontractProductionReceipt = "4SR";
+	/** Kating = 5KA */
+	public static final String WEIGHMENTENTRYTYPE_Kating = "5KA";
 	/** Set Type.
 		@param WeighmentEntryType Type	  */
 	public void setWeighmentEntryType (String WeighmentEntryType)

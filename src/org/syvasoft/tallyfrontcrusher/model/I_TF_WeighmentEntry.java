@@ -23,7 +23,7 @@ import org.compiere.util.KeyNamePair;
 
 /** Generated Interface for TF_WeighmentEntry
  *  @author iDempiere (generated) 
- *  @version Release 4.1
+ *  @version Release 5.1
  */
 @SuppressWarnings("all")
 public interface I_TF_WeighmentEntry 
@@ -32,7 +32,7 @@ public interface I_TF_WeighmentEntry
     /** TableName=TF_WeighmentEntry */
     public static final String Table_Name = "TF_WeighmentEntry";
 
-    /** AD_Table_ID=1000210 */
+    /** AD_Table_ID=1000212 */
     public static final int Table_ID = MTable.getTable_ID(Table_Name);
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);
@@ -300,6 +300,19 @@ public interface I_TF_WeighmentEntry
 	/** Get Permit Issued Qty	  */
 	public BigDecimal getPermitIssuedQty();
 
+    /** Column name Phone */
+    public static final String COLUMNNAME_Phone = "Phone";
+
+	/** Set Phone.
+	  * Identifies a telephone number
+	  */
+	public void setPhone (String Phone);
+
+	/** Get Phone.
+	  * Identifies a telephone number
+	  */
+	public String getPhone();
+
     /** Column name Price */
     public static final String COLUMNNAME_Price = "Price";
 
@@ -329,10 +342,14 @@ public interface I_TF_WeighmentEntry
     /** Column name Status */
     public static final String COLUMNNAME_Status = "Status";
 
-	/** Set Status	  */
+	/** Set Status.
+	  * Status of the currently running check
+	  */
 	public void setStatus (String Status);
 
-	/** Get Status	  */
+	/** Get Status.
+	  * Status of the currently running check
+	  */
 	public String getStatus();
 
     /** Column name TareWeight */

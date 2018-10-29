@@ -101,6 +101,13 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 									
 			mTab.setValue(TF_MOrder.COLUMNNAME_VehicleNo, weighment.getVehicleNo());
 			
+			String description = "";
+			if(weighment.getPartyName() != null) 
+				description = "Party Name : " + weighment.getPartyName();				
+			if(weighment.getPhone() != null)
+				description = description + ", Phone: " + weighment.getPhone();
+			
+			mTab.setValue(TF_MOrder.COLUMNNAME_Description, description);
 	
 			
 			String orgType = (String) mTab.getValue(TF_MOrder.COLUMNNAME_OrgType);
