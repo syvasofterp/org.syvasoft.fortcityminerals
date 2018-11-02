@@ -1,54 +1,53 @@
-﻿--DROP VIEW TF_CashBookReport_Trans_V;
---Cash Book Report Transaction
---SELECT * FROM TF_CashBookReport_Trans_V;
-CREATE OR REPLACE VIEW TF_CashBookReport_Trans_V AS
+﻿-- View: tf_cashbookreport_trans_v
 
-SELECT
-	p.AD_Client_ID, p.AD_Org_ID, p.IsActive, p.Created,p.CreatedBy,p.Updated,p.Updatedby,
-	p.C_Payment_ID,
-	p.C_BankAccount_ID,
-	p.DateAcct,
-	p.DocumentNo,
-		
-	CASE
-	 WHEN p.FromTo_BankAccount_ID IS NOT NULL THEN 
-		(SELECT b.AccountNo || ' ' || c.Name FROM C_BankAccount b INNER JOIN C_Bank c ON b.C_Bank_ID = c.C_Bank_ID
-		WHERE b.C_BankAccount_ID = p.FromTo_BankAccount_ID)
-	 WHEN EXISTS(SELECT p.C_ElementValue_ID FROM TF_GLPosting_Config WHERE p.C_ElementValue_ID IN 
-		(SalaryPayable_Acct, SalariesAdvanceAcct_ID)) THEN bp.Name
-	 WHEN p.C_ElementValue_ID IS NOT NULL THEN c.Name
-	 WHEN bp.IsPOSCashBP='Y' AND p.IsReceipt='Y' THEN 'Cash Sales'
-	 WHEN bp.IsPOSCashBP='Y' AND p.IsReceipt='N' THEN 'Cash Purchase'
-	 ELSE bp.Name
-	END AccountHead,
+-- DROP VIEW tf_cashbookreport_trans_v;
 
-	CASE 
-	 WHEN p.C_Invoice_ID IS NOT NULL AND p.IsReceipt='Y' THEN 'Sales Invoice : ' || i.DocumentNo 
-	 WHEN p.C_Invoice_ID IS NOT NULL AND p.IsReceipt='N' THEN 'Purchase Invoice : ' || i.DocumentNo 
-	 ELSE '' 
-	END || COALESCE(' ' || p.Description,'') Description,
-	CASE
-	 WHEN p.IsReceipt = 'Y' THEN PayAmt
-	 ELSE NULL
-	END Receipt,
-	CASE
-	 WHEN p.IsReceipt = 'N' THEN PayAmt
-	 ELSE NULL
-	END Payment
-	
-FROM
-	C_Payment p 
-	INNER JOIN C_BPartner bp
-	 ON bp.C_BPartner_ID = p.C_BPartner_ID
-	LEFT OUTER JOIN C_Charge c
-	 ON c.C_Charge_ID = p.C_Charge_ID
-	LEFT OUTER JOIN C_Invoice i
-	 ON i.C_Invoice_ID = p.C_Invoice_ID
-	LEFT OUTER JOIN C_Project pr
-	 ON pr.C_Project_ID = p.C_Project_ID
-	LEFT OUTER JOIN C_ElementValue e
-	 ON e.C_ElementValue_ID = p.User1_ID
-WHERE
-	p.DocStatus IN ('CO','CL')
-ORDER BY
-	p.AD_Org_ID, p.C_BankAccount_ID, p.DateTrx;
+CREATE OR REPLACE VIEW tf_cashbookreport_trans_v AS 
+ SELECT p.ad_client_id,
+    p.ad_org_id,
+    p.isactive,
+    p.created,
+    p.createdby,
+    p.updated,
+    p.updatedby,
+    p.c_payment_id,
+    p.c_bankaccount_id,
+    p.dateacct,
+    p.documentno,
+        CASE
+            WHEN p.fromto_bankaccount_id IS NOT NULL THEN (( SELECT (b.accountno::text || ' '::text) || c_1.name::text
+               FROM c_bankaccount b
+                 JOIN c_bank c_1 ON b.c_bank_id = c_1.c_bank_id
+              WHERE b.c_bankaccount_id = p.fromto_bankaccount_id))::character varying
+            WHEN (EXISTS ( SELECT p.c_elementvalue_id
+               FROM tf_glposting_config
+              WHERE p.c_elementvalue_id = tf_glposting_config.salarypayable_acct OR p.c_elementvalue_id = tf_glposting_config.salariesadvanceacct_id)) THEN bp.name
+            WHEN p.c_elementvalue_id IS NOT NULL THEN c.name
+            WHEN bp.isposcashbp = 'Y'::bpchar AND p.isreceipt = 'Y'::bpchar THEN 'Cash Sales'::character varying || COALESCE(' - ' || pc.Name,'')
+            WHEN bp.isposcashbp = 'Y'::bpchar AND p.isreceipt = 'N'::bpchar THEN 'Cash Purchase'::character varying || COALESCE(' - ' || pc.Name,'')
+            ELSE bp.name
+        END AS accounthead,
+        CASE
+            WHEN p.c_invoice_id IS NOT NULL AND p.isreceipt = 'Y'::bpchar THEN 'Sales Invoice : '::text || i.documentno::text
+            WHEN p.c_invoice_id IS NOT NULL AND p.isreceipt = 'N'::bpchar THEN 'Purchase Invoice : '::text || i.documentno::text
+            ELSE ''::text
+        END || COALESCE(' '::text || p.description::text, ''::text) AS description,
+        CASE
+            WHEN p.isreceipt = 'Y'::bpchar THEN p.payamt
+            ELSE NULL::numeric
+        END AS receipt,
+        CASE
+            WHEN p.isreceipt = 'N'::bpchar THEN p.payamt
+            ELSE NULL::numeric
+        END AS payment
+   FROM c_payment p
+     JOIN c_bpartner bp ON bp.c_bpartner_id = p.c_bpartner_id
+     LEFT JOIN c_charge c ON c.c_charge_id = p.c_charge_id
+     LEFT JOIN c_invoice i ON i.c_invoice_id = p.c_invoice_id
+     LEFT JOIN c_project pr ON pr.c_project_id = p.c_project_id
+     LEFT JOIN c_elementvalue e ON e.c_elementvalue_id = p.user1_id
+     LEFT JOIN c_order o ON i.c_order_id = o.c_order_id
+     LEFT JOIN m_product p1 ON p1.M_Product_ID = o.Item1_ID
+     LEFT JOIN M_Product_Category pc ON p1.M_Product_Category_ID = pc.M_Product_Category_ID
+  WHERE p.docstatus = ANY (ARRAY['CO'::bpchar, 'CL'::bpchar])
+  ORDER BY p.ad_org_id, p.c_bankaccount_id, p.datetrx;
