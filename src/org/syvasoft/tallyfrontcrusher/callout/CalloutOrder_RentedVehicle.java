@@ -17,7 +17,7 @@ public class CalloutOrder_RentedVehicle implements IColumnCallout {
 		BigDecimal rate = BigDecimal.ZERO;
 		if(mTab.getValue(TF_MOrder.COLUMNNAME_TF_RentedVehicle_ID) == null) {
 			mTab.setValue(TF_MOrder.COLUMNNAME_Rent_Amt, BigDecimal.ZERO);
-			mTab.setValue(TF_MOrder.COLUMNNAME_IsLumpSumRent, false);
+			//mTab.setValue(TF_MOrder.COLUMNNAME_IsLumpSumRent, false);
 			mTab.setValue(TF_MOrder.COLUMNNAME_RentMargin, BigDecimal.ZERO);
 			mTab.setValue(TF_MOrder.COLUMNNAME_RentPayable, BigDecimal.ZERO);
 			mTab.setValue(TF_MOrder.COLUMNNAME_VehicleNo, null);

@@ -1620,6 +1620,9 @@ public class TF_MOrder extends MOrder {
 	
 	@Override
 	public String completeIt() {
+		if(getTF_RentedVehicle_ID() > 0 && getRent_Amt().doubleValue() <= 0)
+			throw new AdempiereException("Please specify Rent Amount!");
+		
 		createSubcontractPurchaseEntry();
 		String msg = super.completeIt();
 		purchasePermit();
