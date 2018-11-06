@@ -725,9 +725,9 @@ public class TF_MPayment extends MPayment {
 		}
 		
 		//Subcontract / Job Work
-		if(getC_Project_ID() > 0) {
-			MJobworkCharges.updateJobworkCharges(getCtx(), getC_Project_ID(), getC_Charge_ID(), getPayAmt().negate(), get_TrxName());
-		}
+		//if(getC_Project_ID() > 0) {
+		//	MJobworkCharges.updateJobworkCharges(getCtx(), getC_Project_ID(), getC_Charge_ID(), getPayAmt().negate(), get_TrxName());
+		//}
 		
 		reverseAdvanceAdjustmentJournal();
 		
