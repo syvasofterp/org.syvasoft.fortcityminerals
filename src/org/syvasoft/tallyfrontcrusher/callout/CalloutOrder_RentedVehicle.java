@@ -21,12 +21,13 @@ public class CalloutOrder_RentedVehicle implements IColumnCallout {
 			mTab.setValue(TF_MOrder.COLUMNNAME_RentMargin, BigDecimal.ZERO);
 			mTab.setValue(TF_MOrder.COLUMNNAME_RentPayable, BigDecimal.ZERO);
 			mTab.setValue(TF_MOrder.COLUMNNAME_VehicleNo, null);
+			mTab.setValue(TF_MOrder.COLUMNNAME_IsRentBreakup, false);
 		}
 		if(mTab.getValue(TF_MOrder.COLUMNNAME_TF_RentedVehicle_ID) != null) {
 			int vehicle_id = (int) mTab.getValue(TF_MOrder.COLUMNNAME_TF_RentedVehicle_ID);			
 			MRentedVehicle rv = new MRentedVehicle(ctx, vehicle_id, null);
 			mTab.setValue(TF_MOrder.COLUMNNAME_VehicleNo, rv.getVehicleNo());
-			
+			mTab.setValue(TF_MOrder.COLUMNNAME_IsRentBreakup, true);
 			if(mTab.getValue(TF_MOrder.COLUMNNAME_TF_Destination_ID) != null) {
 				int destination_id = (int) mTab.getValue(TF_MOrder.COLUMNNAME_TF_Destination_ID);
 				rate = MVehicleRentConfig.getRate(vehicle_id, destination_id);
