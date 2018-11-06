@@ -82,9 +82,15 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 			TF_MProject proj = TF_MProject.getCrusherProductionSubcontractByWarehouse(getM_Warehouse_ID());
 			if(proj != null) {
 				MSubcontractType st = new MSubcontractType(getCtx(), proj.getTF_SubcontractType_ID(), get_TrxName());
-				if(st.getSubcontractType().equals(MSubcontractType.SUBCONTRACTTYPE_CrusherProduction))
+				if(st.getSubcontractType().equals(MSubcontractType.SUBCONTRACTTYPE_CrusherProduction)) {
 					setTF_Send_To(TF_SEND_TO_SubcontractProduction);
+					if(getC_Project_ID() == 0) {
+						setC_Project_ID(proj.getC_Project_ID());
+						setSubcontractor_ID(proj.getC_BPartner_ID());
+						setJobWork_Product_ID(proj.getJobWork_Product_ID());						
+					}
 				}
+			}
 			else
 				setTF_Send_To(TF_SEND_TO_Stock); //for time being, it is set as Stock
 		}
@@ -113,12 +119,20 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 		setDateAcct(entry.getTareWeightTime());
 		setC_Project_ID(entry.getC_Project_ID());
 		setSubcontractor_ID(entry.getC_BPartner_ID());
-		TF_MProject proj = new TF_MProject(getCtx(), entry.getC_Project_ID(), get_TrxName());
-		setTF_Quarry_ID(proj.getTF_Quarry_ID());
-		setM_Product_ID(entry.getM_Product_ID());
-		setJobWork_Product_ID(proj.getJobWork_Product_ID());
+		TF_MProject proj = new TF_MProject(getCtx(), entry.getC_Project_ID(), get_TrxName());		
+		if(proj != null) {
+			setTF_Quarry_ID(proj.getTF_Quarry_ID());
+			setJobWork_Product_ID(proj.getJobWork_Product_ID());
+			setC_UOM_ID(proj.getC_UOM_ID());
+		}
+		if(entry.getTF_Quarry_ID() > 0) {
+			setTF_Quarry_ID(entry.getTF_Quarry_ID());
+			TF_MProduct prod = (TF_MProduct) entry.getM_Product();
+			setC_UOM_ID(prod.getC_UOM_ID());
+		}
+		setM_Product_ID(entry.getM_Product_ID());		
 		setQtyReceived( new BigDecimal(entry.getNetWeight().doubleValue()/1000));
-		setC_UOM_ID(proj.getC_UOM_ID());
+		
 		setM_Warehouse_ID(entry.getM_Warehouse_ID());
 		setDescription(entry.getDescription());
 		setVehicleNo(entry.getVehicleNo());		
@@ -427,7 +441,7 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 		setDocStatus(DOCSTATUS_Drafted);
 		if(getSubcon2_Invoice_ID()>0) {			
 			//throw new AdempiereException("You cannot modify this entry before Reverse Correct Subcontractor Invoice!");
-			TF_MInvoice inv = new TF_MInvoice(getCtx(), getSubcon_Invoice_ID(), get_TrxName());
+			TF_MInvoice inv = new TF_MInvoice(getCtx(), getSubcon2_Invoice_ID(), get_TrxName());
 			if(inv.getDocStatus().equals(DOCSTATUS_Completed))
 				inv.reverseCorrectIt();
 			inv.saveEx();

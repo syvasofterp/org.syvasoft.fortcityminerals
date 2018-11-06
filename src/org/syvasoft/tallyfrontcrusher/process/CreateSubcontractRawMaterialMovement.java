@@ -10,7 +10,6 @@ import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MSubcontractMaterialMovement;
 import org.syvasoft.tallyfrontcrusher.model.MSubcontractType;
 import org.syvasoft.tallyfrontcrusher.model.MWeighmentEntry;
-import org.syvasoft.tallyfrontcrusher.model.MWeighmentErrorLog;
 import org.syvasoft.tallyfrontcrusher.model.TF_MProject;
 
 public class CreateSubcontractRawMaterialMovement extends SvrProcess {
@@ -23,12 +22,14 @@ public class CreateSubcontractRawMaterialMovement extends SvrProcess {
 
 	@Override
 	protected String doIt() throws Exception {
+		
+		//Quarry Production to Crusher Production Raw Material movements		
 		//MSubcontractMaterialMovement.createRawmaterialMovementsFromWeighment(get_TrxName());
 		String whereClause = "C_Project_ID IS NOT NULL AND Status='CO' AND Processed='N' AND TareWeightTime IS NOT NULL AND GrossWeightTime IS NOT NULL";
 		List<MWeighmentEntry> wEntries = new Query(Env.getCtx(), MWeighmentEntry.Table_Name, whereClause, get_TrxName())
 				.list();
 		
-		for(MWeighmentEntry entry : wEntries) {
+		for(MWeighmentEntry entry : wEntries) {			
 			TF_MProject proj = new TF_MProject(getCtx(), entry.getC_Project_ID(), get_TrxName());
 			MSubcontractType st = new MSubcontractType(getCtx(), proj.getTF_SubcontractType_ID(), get_TrxName());
 			if(!st.isIncludeRMProduction()) {
@@ -85,6 +86,40 @@ public class CreateSubcontractRawMaterialMovement extends SvrProcess {
 				entry.setStatus(MWeighmentEntry.STATUS_Billed);
 				entry.setProcessed(true);					
 			}
+			entry.saveEx();	
+		}
+		
+		
+		//Own Quarry Production Receipt to Crusher Production
+		whereClause = "WeighmentEntryType = '3PR' AND Status='CO' AND Processed='N' AND TareWeightTime IS NOT NULL AND GrossWeightTime IS NOT NULL";
+		wEntries = new Query(Env.getCtx(), MWeighmentEntry.Table_Name, whereClause, get_TrxName())
+				.list();
+		
+		for(MWeighmentEntry entry : wEntries) {	
+			MBoulderReceipt br = new MBoulderReceipt(getCtx(), 0, get_TrxName());
+			try {
+				br.createFromWeighmentEntry(entry);
+				br.saveEx();
+				br.createSubcontractMovement();
+				br.saveEx();
+				if(!br.isProcessed()) {
+					br.processIt(MBoulderReceipt.DOCACTION_Complete);					
+					br.saveEx();					
+				}
+								
+			}
+			catch (Exception ex) {
+				String desc = br.getDescription();
+				if(desc == null)
+					desc = "";
+				if(!desc.contains("ERROR:")) {
+					br.setDescription(desc + 
+							" | ERROR: " + ex.getMessage());					
+				}					
+				br.saveEx();
+			}
+			entry.setStatus(MWeighmentEntry.STATUS_Billed);
+			entry.setProcessed(true);
 			entry.saveEx();	
 		}
 		

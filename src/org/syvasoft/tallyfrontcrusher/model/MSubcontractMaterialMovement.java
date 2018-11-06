@@ -67,6 +67,13 @@ public class MSubcontractMaterialMovement extends X_TF_RMSubcon_Movement {
 	
 	public static void createMaterialMovement(String trxName, Timestamp dateAcct,int AD_Org_ID, int C_Project_ID,  int C_Invoice_ID, 
 			int C_BPartner_ID, int M_Product_ID, BigDecimal QtyPayment, int TF_WeighmentEntry_ID) {
+		MJobworkProductPrice pp = new Query(Env.getCtx(), MJobworkProductPrice.Table_Name, 
+				"C_Project_ID = ? AND M_Product_ID = ? AND IsActive='Y'", null)
+				.setParameters(C_Project_ID, M_Product_ID)
+				.first();
+		if(pp == null) //do not create material movement
+			return;  //Items other than subcontracted production items
+		
 		MSubcontractMaterialMovement mov = new MSubcontractMaterialMovement(Env.getCtx(), 0, trxName);
 		mov.setAD_Org_ID(AD_Org_ID);
 		mov.setMovementDate(dateAcct);
