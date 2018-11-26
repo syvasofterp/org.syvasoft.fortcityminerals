@@ -1,6 +1,6 @@
 ﻿-- View: c_bpartner_weighment_v
 
--- DROP VIEW c_bpartner_weighment_v;
+ DROP VIEW c_bpartner_weighment_v;
 
 CREATE OR REPLACE VIEW c_bpartner_weighment_v AS 
  SELECT bp.c_bpartner_id,
@@ -97,7 +97,7 @@ CREATE OR REPLACE VIEW c_bpartner_weighment_v AS
     bpg.name AS bpartner_group
    FROM c_bpartner bp
      JOIN c_bp_group bpg ON bp.c_bp_group_id = bpg.c_bp_group_id
-  WHERE bp.isactive = 'Y'::bpchar;
+  WHERE bp.isactive = 'Y'::bpchar AND TRUNC(bp.UPDATED) >= now() - 7;
 
 ALTER TABLE c_bpartner_weighment_v
   OWNER TO adempiere;
