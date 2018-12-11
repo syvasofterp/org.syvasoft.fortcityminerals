@@ -14,6 +14,7 @@ import org.compiere.model.MSysConfig;
 import org.compiere.model.MTab;
 import org.compiere.model.MUser;
 import org.compiere.util.Env;
+import org.syvasoft.tallyfrontcrusher.model.MDriverBetaConfig;
 import org.syvasoft.tallyfrontcrusher.model.MWeighmentEntry;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
 
@@ -117,9 +118,6 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_TotalLoad, BigDecimal.ONE);
 				mTab.setValue(TF_MOrder.COLUMNNAME_MDPNo, weighment.getMDPNo());
 				
-				if(weighment.getTF_VehicleType_ID() > 0)
-					mTab.setValue(TF_MOrder.COLUMNNAME_Item1_VehicleType_ID, weighment.getTF_VehicleType_ID());
-				
 				if(weighment.getPrice() != null)
 					mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Price, weighment.getPrice());				
 				
@@ -132,6 +130,21 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 			}
 			//TODO: need to add customer name from weighment entry into description
 			//This will be required only for sand blocks.
+			if(weighment.getTF_VehicleType_ID() > 0)
+			{
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_VehicleType_ID, weighment.getTF_VehicleType_ID());
+				
+				if(weighment.getVehicleNo()!="" && weighment.getTF_RentedVehicle_ID()==0 && isSOTrx)
+				{
+					BigDecimal betaAmt= MDriverBetaConfig.getDriverBetaAmount(ctx, Env.getAD_Org_ID(ctx),weighment.getTF_VehicleType_ID(), null);
+					mTab.setValue(TF_MOrder.COLUMNNAME_DriverTips, betaAmt);
+				}
+				else
+				{
+					mTab.setValue(TF_MOrder.COLUMNNAME_DriverTips, BigDecimal.ZERO);
+				}
+			}
+
 			
 		}
 		return null;

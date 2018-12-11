@@ -42,6 +42,8 @@ import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MGLPostingConfig;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkItemIssue;
 import org.syvasoft.tallyfrontcrusher.model.MTyre;
+import org.syvasoft.tallyfrontcrusher.model.MVehicleType;
+import org.syvasoft.tallyfrontcrusher.model.TF_MBankAccount;
 import org.syvasoft.tallyfrontcrusher.model.TF_MCharge;
 import org.syvasoft.tallyfrontcrusher.model.TF_MInvoice;
 import org.syvasoft.tallyfrontcrusher.model.TF_MJournal;
@@ -287,21 +289,29 @@ public class CrusherEventHandler extends AbstractEventHandler {
 			return;
 		
 		MGLPostingConfig glConfig = MGLPostingConfig.getMGLPostingConfig(ord.getCtx());
+		
 		//Create Driver Tips Charge if it is not there already.
 		//It should be in atomic transaction to get account settings of Charge for the current docaction transaction.
 		TF_MCharge charge = TF_MCharge.createChargeFromAccount(ord.getCtx(), glConfig.getTipsExpenseAcct_ID(), null);
+		
+		int TF_VehicleType_ID = ord.get_ValueAsInt("Item1_VehicleType_ID");
+		
+		MVehicleType vtype=new MVehicleType(ord.getCtx(), TF_VehicleType_ID, ord.get_TrxName());
+
 		
 		//Posting Payment Document for Driver Tips
 		TF_MPayment payment = new TF_MPayment(ord.getCtx(), 0, ord.get_TrxName());
 		payment.setDateAcct(ord.getDateAcct());
 		payment.setDateTrx(ord.getDateAcct());
-		payment.setDescription("Generated from Sales Entry - " + ord.getDocumentNo());
-		payment.setCashType(TF_MPayment.CASHTYPE_GeneralExpense);
+		payment.setDescription("DRIVER BETA AMOUNT GIVEN FOR Sales Entry: "+ ord.getDocumentNo() +", Vehicle Type : "+vtype.getName());
+		//* Commented for Laxmi Stone */
+		//payment.setCashType(TF_MPayment.CASHTYPE_GeneralExpense);
 		payment.setC_DocType_ID(false);		
 		payment.setC_Charge_ID(charge.getC_Charge_ID());
 		payment.setUser1_ID(ord.getUser1_ID()); // Profit Center
 		payment.setC_ElementValue_ID(glConfig.getTipsExpenseAcct_ID());
-		payment.setC_BankAccount_ID(glConfig.getC_BankAccount_ID());
+		
+		payment.setC_BankAccount_ID(TF_MBankAccount.getDefaultCashAccount(ord.getCtx(), Env.getAD_Org_ID(ord.getCtx()), null));
 		MUser user = MUser.get(ord.getCtx(), Env.getAD_User_ID(ord.getCtx()));
 		payment.setC_BPartner_ID(user.getC_BPartner_ID());
 		payment.setPayAmt(amt);

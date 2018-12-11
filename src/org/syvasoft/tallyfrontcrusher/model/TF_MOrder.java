@@ -1639,7 +1639,11 @@ public class TF_MOrder extends MOrder {
 		if(getVehicle_ID()>0 && getRent_Amt().doubleValue()==0) {
 			throw new AdempiereUserError("Invalid Rent Amount");
 		}
-				
+		
+		if(getTF_RentedVehicle_ID()!=0 && getVehicleNo()=="" && isSOTrx()==false) {
+			setDriverTips(BigDecimal.ZERO);
+		}
+		
 		TF_MProject proj = TF_MProject.getCrusherProductionSubcontractByWarehouse(getM_Warehouse_ID());
 		if(proj != null && getC_Project_ID() == 0)
 			setC_Project_ID(proj.getC_Project_ID());
@@ -1665,83 +1669,89 @@ public class TF_MOrder extends MOrder {
 
 	@Override
 	public boolean voidIt() {
-		//POS Order's MR and Invoice should be reversed.
-		if(getC_DocType_ID() == 1000050 || getC_DocType_ID() == 1000041) {
-			//MR/Shipment reverse Correct
-			List<MInOut> inOutList = new Query(getCtx(), MInOut.Table_Name, "C_Order_ID=? AND DocStatus=?", get_TrxName())
-				.setClient_ID().setParameters(getC_Order_ID(),DOCSTATUS_Completed).list();
-			for(MInOut inout : inOutList) {
-				if(!inout.reverseCorrectIt())
-					return false;				
-				inout.saveEx();
-			}
-			
-			//Invoice reverse Correct
-			List<TF_MInvoice> invList = new Query(getCtx(), TF_MInvoice.Table_Name, "C_Order_ID=? AND DocStatus=?", get_TrxName())
-				.setClient_ID().setParameters(getC_Order_ID(), DOCSTATUS_Completed).list();
-			for(TF_MInvoice inv : invList) {
-				if(!inv.reverseCorrectIt())
-					return false;
-				inv.saveEx();
+			//POS Order's MR and Invoice should be reversed.
+			if(getC_DocType_ID() == 1000050 || getC_DocType_ID() == 1000041) {
+				//MR/Shipment reverse Correct
+				List<MInOut> inOutList = new Query(getCtx(), MInOut.Table_Name, "C_Order_ID=? AND DocStatus=?", get_TrxName())
+					.setClient_ID().setParameters(getC_Order_ID(),DOCSTATUS_Completed).list();
+				for(MInOut inout : inOutList) {
+					if(!inout.reverseCorrectIt())
+						return false;				
+					inout.saveEx();
+				}
+				
+				//Invoice reverse Correct
+				List<TF_MInvoice> invList = new Query(getCtx(), TF_MInvoice.Table_Name, "C_Order_ID=? AND DocStatus=?", get_TrxName())
+					.setClient_ID().setParameters(getC_Order_ID(), DOCSTATUS_Completed).list();
+				for(TF_MInvoice inv : invList) {
+					if(!inv.reverseCorrectIt())
+						return false;
+					inv.saveEx();
+				}
+				
+				
 			}
 			
 			if(getTF_DriverTips_Pay_ID() > 0) {
 				TF_MPayment payment = new TF_MPayment(getCtx(), getTF_DriverTips_Pay_ID(), get_TrxName());
-				payment.reverseCorrectIt();
+				if(payment.getDocStatus().equals(DOCSTATUS_Completed)) {
+					payment.reverseCorrectIt();
+				}
 				payment.saveEx();
 			}
-			
-		}
-		MJobworkItemIssue.ReverseFromPO(this);
-		reverseTransporterInvoice();
-		reverseWeighmentEntry();
-		reverseYardEntry();
-		reverseSubcontractPurchaseEntry();
-		reverseIssuedPermit();
-		reversePurchasedPermit();
-		voidTaxInvoice();
-		return super.voidIt();
+
+			MJobworkItemIssue.ReverseFromPO(this);
+			reverseTransporterInvoice();
+			reverseWeighmentEntry();
+			reverseYardEntry();
+			reverseSubcontractPurchaseEntry();
+			reverseIssuedPermit();
+			reversePurchasedPermit();
+			voidTaxInvoice();
+			return super.voidIt();
 	}
 	
 	@Override
 	public boolean reActivateIt() {
-		//Only for POS Purchase
-		//For POS Sales, Core already has this functionality.
-		if(getC_DocType_ID() == 1000050) {
-			//MR/Shipment reverse Correct
-			List<MInOut> inOutList = new Query(getCtx(), MInOut.Table_Name, "C_Order_ID=? AND DocStatus=?", get_TrxName())
-				.setClient_ID().setParameters(getC_Order_ID(),DOCSTATUS_Completed).list();
-			for(MInOut inout : inOutList) {
-				if(!inout.reverseCorrectIt())
-					return false;				
-				inout.saveEx();
+			//Only for POS Purchase
+			//For POS Sales, Core already has this functionality.
+			if(getC_DocType_ID() == 1000050) {
+				//MR/Shipment reverse Correct
+				List<MInOut> inOutList = new Query(getCtx(), MInOut.Table_Name, "C_Order_ID=? AND DocStatus=?", get_TrxName())
+					.setClient_ID().setParameters(getC_Order_ID(),DOCSTATUS_Completed).list();
+				for(MInOut inout : inOutList) {
+					if(!inout.reverseCorrectIt())
+						return false;				
+					inout.saveEx();
+				}
+				
+				//Invoice reverse Correct
+				List<TF_MInvoice> invList = new Query(getCtx(), TF_MInvoice.Table_Name, "C_Order_ID=? AND DocStatus=?", get_TrxName())
+					.setClient_ID().setParameters(getC_Order_ID(), DOCSTATUS_Completed).list();
+				for(TF_MInvoice inv : invList) {
+					if(!inv.reverseCorrectIt())
+						return false;
+					inv.saveEx();
+				}
+				
 			}
 			
-			//Invoice reverse Correct
-			List<TF_MInvoice> invList = new Query(getCtx(), TF_MInvoice.Table_Name, "C_Order_ID=? AND DocStatus=?", get_TrxName())
-				.setClient_ID().setParameters(getC_Order_ID(), DOCSTATUS_Completed).list();
-			for(TF_MInvoice inv : invList) {
-				if(!inv.reverseCorrectIt())
-					return false;
-				inv.saveEx();
+			if(getTF_DriverTips_Pay_ID() > 0) {
+				TF_MPayment payment = new TF_MPayment(getCtx(), getTF_DriverTips_Pay_ID(), get_TrxName());
+				if(payment.getDocStatus().equals(DOCSTATUS_Completed)){
+					payment.reverseCorrectIt();
+				}
+				payment.saveEx();
 			}
-			
-		}
-		
-		if(getTF_DriverTips_Pay_ID() > 0) {
-			TF_MPayment payment = new TF_MPayment(getCtx(), getTF_DriverTips_Pay_ID(), get_TrxName());
-			payment.reverseCorrectIt();
-			payment.saveEx();
-		}
-		MJobworkItemIssue.ReverseFromPO(this);
-		reverseTransporterInvoice();
-		reverseWeighmentEntry();
-		reverseYardEntry();
-		reverseSubcontractPurchaseEntry();
-		reverseIssuedPermit();
-		reversePurchasedPermit();
-		voidTaxInvoice();
-		return super.reActivateIt();
+			MJobworkItemIssue.ReverseFromPO(this);
+			reverseTransporterInvoice();
+			reverseWeighmentEntry();
+			reverseYardEntry();
+			reverseSubcontractPurchaseEntry();
+			reverseIssuedPermit();
+			reversePurchasedPermit();
+			voidTaxInvoice();
+			return super.reActivateIt();
 	}
 
 	public void createTransporterInvoice() {
