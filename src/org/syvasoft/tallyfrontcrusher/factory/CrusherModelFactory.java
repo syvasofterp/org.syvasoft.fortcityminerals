@@ -15,6 +15,7 @@ import org.syvasoft.tallyfrontcrusher.model.MCrusherPermitLedgerLine;
 import org.syvasoft.tallyfrontcrusher.model.MCrusherProduction;
 import org.syvasoft.tallyfrontcrusher.model.MCrusherProductionConfig;
 import org.syvasoft.tallyfrontcrusher.model.MDestination;
+import org.syvasoft.tallyfrontcrusher.model.MDriverBetaConfig;
 import org.syvasoft.tallyfrontcrusher.model.MEmpSalaryConfig;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalary;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryAdvance;
@@ -284,6 +285,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return MWeighmentPermitEntry.class;
 		else if(MCrusherKatingConfig.Table_Name.equals(tableName))
 			return MCrusherKatingConfig.class;
+		else if(MDriverBetaConfig.Table_Name.equals(tableName))
+			return MDriverBetaConfig.class;
 		return null;
 	}
 
@@ -472,6 +475,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MWeighmentPermitEntry(ctx, Record_ID, trxName);
 		else if(MCrusherKatingConfig.Table_Name.equals(tableName))
 			return new MCrusherKatingConfig(ctx, Record_ID, trxName);
+		else if(MDriverBetaConfig.Table_Name.equals(tableName))
+			return new MDriverBetaConfig(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -660,6 +665,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MWeighmentPermitEntry(ctx, rs, trxName);
 		else if(MCrusherKatingConfig.Table_Name.equals(tableName))
 			return new MCrusherKatingConfig(ctx, rs, trxName);
+		else if(MDriverBetaConfig.Table_Name.equals(tableName))
+			return new MDriverBetaConfig(ctx, rs, trxName);
 		return null;
 	}
 
