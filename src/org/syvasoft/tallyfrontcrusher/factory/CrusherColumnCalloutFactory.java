@@ -39,6 +39,7 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_SetVehicleN
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_CalcRentAmount;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_CalcRentPayable;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_Destination;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_Distance;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_Org;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_POSCashBP;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_RentedVehicle;
@@ -309,8 +310,13 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 
 		if(tableName.equals(TF_MOrder.Table_Name) && columnName.equals(TF_MOrder.COLUMNNAME_Item1_VehicleType_ID)) {
 			list.add(new CalloutOrder_VehicleType());
+			list.add(new CalloutOrder_Distance());
 		}
-		
+
+		if(tableName.equals(TF_MOrder.Table_Name) && columnName.equals(TF_MOrder.COLUMNNAME_Distance)) {
+			list.add(new CalloutOrder_Distance());
+		}
+				
 		
 		if(tableName.equals(TF_MOrder.Table_Name) && (columnName.equals(TF_MOrder.COLUMNNAME_Item1_Qty)
 					|| columnName.equals(TF_MOrder.COLUMNNAME_Item1_ID))) {

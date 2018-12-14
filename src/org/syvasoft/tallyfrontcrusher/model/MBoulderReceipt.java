@@ -116,12 +116,12 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 	public void createFromWeighmentEntry(MWeighmentEntry entry) {
 		setAD_Org_ID(entry.getAD_Org_ID());
 		setDateReceipt(entry.getTareWeightTime());
-		setDateAcct(entry.getTareWeightTime());
-		setC_Project_ID(entry.getC_Project_ID());
-		setSubcontractor_ID(entry.getC_BPartner_ID());
+		setDateAcct(entry.getTareWeightTime());		
 		TF_MProject proj = new TF_MProject(getCtx(), entry.getC_Project_ID(), get_TrxName());		
-		if(proj != null) {
-			setTF_Quarry_ID(proj.getTF_Quarry_ID());
+		if(proj != null && proj.getC_Project_ID() > 0) {
+			setC_Project_ID(entry.getC_Project_ID());
+			setSubcontractor_ID(entry.getC_BPartner_ID());
+			setTF_Quarry_ID(proj.getTF_Quarry_ID());			
 			setJobWork_Product_ID(proj.getJobWork_Product_ID());
 			setC_UOM_ID(proj.getC_UOM_ID());
 		}

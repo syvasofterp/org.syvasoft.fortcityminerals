@@ -13,8 +13,11 @@ import org.compiere.model.MProductPricing;
 import org.compiere.model.MSysConfig;
 import org.compiere.model.MTab;
 import org.compiere.model.MUser;
+import org.compiere.model.Query;
 import org.compiere.util.Env;
 import org.syvasoft.tallyfrontcrusher.model.MDriverBetaConfig;
+import org.syvasoft.tallyfrontcrusher.model.MLumpSumRentConfig;
+import org.syvasoft.tallyfrontcrusher.model.MVehicleRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MWeighmentEntry;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
 
@@ -87,10 +90,16 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 			else
 				mTab.setValue(TF_MOrder.COLUMNNAME_TF_RentedVehicle_ID, 0);
 			
-			if(weighment.getTF_Destination_ID() > 0)
+			if(weighment.getTF_Destination_ID() > 0) {
 				mTab.setValue(TF_MOrder.COLUMNNAME_TF_Destination_ID, weighment.getTF_Destination_ID());
-			else
-				mTab.setValue(TF_MOrder.COLUMNNAME_TF_Destination_ID, 0);
+				BigDecimal Distance=(BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Distance);
+				int TF_RentedVehicle_ID=weighment.getTF_RentedVehicle_ID();
+				if(TF_RentedVehicle_ID>0) {
+				    BigDecimal lumpsumrent=MLumpSumRentConfig.getLumpSumRent(weighment.getCtx(), Env.getAD_Client_ID(weighment.getCtx()), weighment.getTF_Destination_ID(), weighment.getTF_VehicleType_ID(),Distance, weighment.get_TrxName());
+				    mTab.setValue(TF_MOrder.COLUMNNAME_Rent_Amt, lumpsumrent);
+				}
+			}
+			
 			
 			if(weighment.getDescription() != null)
 				mTab.setValue(TF_MOrder.COLUMNNAME_Description, weighment.getDescription());
