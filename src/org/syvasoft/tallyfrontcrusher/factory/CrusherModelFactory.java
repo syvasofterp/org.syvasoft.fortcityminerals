@@ -45,6 +45,7 @@ import org.syvasoft.tallyfrontcrusher.model.MLabourWage;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWageAdvance;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWageConfig;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWageIssue;
+import org.syvasoft.tallyfrontcrusher.model.MLumpSumRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MInterOrgBPCashTransferConfig;
 import org.syvasoft.tallyfrontcrusher.model.MInterOrgBPCashTransferConfigLine;
 import org.syvasoft.tallyfrontcrusher.model.MInterOrgCashTransferConfigLine;
@@ -287,6 +288,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return MCrusherKatingConfig.class;
 		else if(MDriverBetaConfig.Table_Name.equals(tableName))
 			return MDriverBetaConfig.class;
+		else if(MLumpSumRentConfig.Table_Name.equals(tableName))
+			return MLumpSumRentConfig.class;
 		return null;
 	}
 
@@ -477,6 +480,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MCrusherKatingConfig(ctx, Record_ID, trxName);
 		else if(MDriverBetaConfig.Table_Name.equals(tableName))
 			return new MDriverBetaConfig(ctx, Record_ID, trxName);
+		else if(MLumpSumRentConfig.Table_Name.equals(tableName))
+			return new MLumpSumRentConfig(ctx, Record_ID, trxName);		
 		return null;
 	}
 
@@ -667,6 +672,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MCrusherKatingConfig(ctx, rs, trxName);
 		else if(MDriverBetaConfig.Table_Name.equals(tableName))
 			return new MDriverBetaConfig(ctx, rs, trxName);
+		else if(MLumpSumRentConfig.Table_Name.equals(tableName))
+			return new MLumpSumRentConfig(ctx, rs, trxName);
 		return null;
 	}
 
