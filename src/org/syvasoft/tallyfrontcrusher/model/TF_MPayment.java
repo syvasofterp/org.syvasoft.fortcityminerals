@@ -655,6 +655,30 @@ public class TF_MPayment extends MPayment {
 		return (String)get_Value(COLUMNNAME_DocumentNo2);
 	}
 	
+	/** Column name TF_CashCounter_ID */
+    public static final String COLUMNNAME_TF_CashCounter_ID = "TF_CashCounter_ID";
+    /** Set Cash Counter.
+	@param TF_CashCounter_ID Cash Counter	  */
+	public void setTF_CashCounter_ID (int TF_CashCounter_ID)
+	{
+		if (TF_CashCounter_ID < 1) 
+			set_Value (COLUMNNAME_TF_CashCounter_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_CashCounter_ID, Integer.valueOf(TF_CashCounter_ID));
+	}
+	
+	/** Get Cash Counter.
+		@return Cash Counter	  */
+	public int getTF_CashCounter_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_CashCounter_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+    
+	
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {
 		
@@ -701,6 +725,19 @@ public class TF_MPayment extends MPayment {
 			setTF_BPartner_ID(getC_BPartner_ID());
 		
 		setDocumentNo2();	
+		
+		// Set Default Cash Counter
+		if(newRecord && getTF_CashCounter_ID ()==0) {
+			String Where=" IsDefault='Y'";
+
+			MCashCounter cashCounter= new Query(getCtx(),MCashCounter.Table_Name , Where, get_TrxName())
+					.setClient_ID()
+					.setOnlyActiveRecords(true)
+					.first();
+			if(cashCounter!=null) {
+				setTF_CashCounter_ID(cashCounter.getTF_CashCounter_ID());
+			}
+		}
 		
 		return super.beforeSave(newRecord);
 	}

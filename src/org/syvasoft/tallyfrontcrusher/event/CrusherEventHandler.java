@@ -39,6 +39,7 @@ import org.compiere.util.Env;
 import org.compiere.util.Trx;
 import org.osgi.service.event.Event;
 import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
+import org.syvasoft.tallyfrontcrusher.model.MCashCounter;
 import org.syvasoft.tallyfrontcrusher.model.MGLPostingConfig;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkItemIssue;
 import org.syvasoft.tallyfrontcrusher.model.MTyre;
@@ -97,6 +98,23 @@ public class CrusherEventHandler extends AbstractEventHandler {
 						payment.addDescription(inv.getDescription());
 					}
 				}
+				// Set Default Cash Counter
+				
+				
+				
+			  if(payment.is_new() && payment.get_ValueAsInt("TF_CashCounter_ID")==0) {
+				 
+					String Where=" IsDefault='Y'";
+
+					MCashCounter cashCounter= new Query(payment.getCtx(),MCashCounter.Table_Name , Where, payment.get_TrxName())
+							.setClient_ID()
+							.setOnlyActiveRecords(true)
+							.first();
+					if(cashCounter!=null) {
+						payment.set_ValueNoCheck("TF_CashCounter_ID",cashCounter.getTF_CashCounter_ID());
+					}
+				}
+
 			}
 			if(event.getTopic().equals(IEventTopics.PO_BEFORE_CHANGE)) {
 				if(payment.getC_Invoice_ID() > 0) {

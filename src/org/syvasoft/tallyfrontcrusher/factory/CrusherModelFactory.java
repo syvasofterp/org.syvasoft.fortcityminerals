@@ -9,6 +9,7 @@ import org.compiere.util.Env;
 import org.syvasoft.tallyfrontcrusher.model.MBPOpeningBalance;
 import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MCOAOpeningBalance;
+import org.syvasoft.tallyfrontcrusher.model.MCashCounter;
 import org.syvasoft.tallyfrontcrusher.model.MCrusherKatingConfig;
 import org.syvasoft.tallyfrontcrusher.model.MCrusherPermitLedger;
 import org.syvasoft.tallyfrontcrusher.model.MCrusherPermitLedgerLine;
@@ -674,6 +675,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MDriverBetaConfig(ctx, rs, trxName);
 		else if(MLumpSumRentConfig.Table_Name.equals(tableName))
 			return new MLumpSumRentConfig(ctx, rs, trxName);
+		else if(MCashCounter.Table_Name.equals(tableName))
+			return new MCashCounter(ctx, rs, trxName);
 		return null;
 	}
 
