@@ -21,6 +21,7 @@ public class CalloutOrder_Distance implements IColumnCallout {
 		int TF_VehicleType_ID = 0;
 		BigDecimal Distance=BigDecimal.ZERO;
 		Boolean isLumpSumRent=false;
+		
 		if(mTab.getValue(TF_MOrder.COLUMNNAME_TF_RentedVehicle_ID) != null &&  mTab.getValue(TF_MOrder.COLUMNNAME_Distance) != null) {
 			
 			if(mTab.getValue(TF_MOrder.COLUMNNAME_IsLumpSumRent)!=null) {
@@ -34,13 +35,6 @@ public class CalloutOrder_Distance implements IColumnCallout {
 			}
 			if(mTab.getValue(TF_MOrder.COLUMNNAME_Item1_VehicleType_ID)!=null) {
 				TF_VehicleType_ID = (int)mTab.getValue(TF_MOrder.COLUMNNAME_Item1_VehicleType_ID);
-			}
-			if(mTab.getValue(TF_MOrder.COLUMNNAME_Distance)!=null) {
-				Distance =(BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Distance);
-			}
-			if(isLumpSumRent) {
-				BigDecimal lumpsumrent=MLumpSumRentConfig.getLumpSumRent(ctx,AD_Org_ID,TF_Destination_ID,TF_VehicleType_ID,Distance,null);
-				mTab.setValue(TF_MOrder.COLUMNNAME_Rent_Amt, lumpsumrent);
 			}
 		}
 		return null;

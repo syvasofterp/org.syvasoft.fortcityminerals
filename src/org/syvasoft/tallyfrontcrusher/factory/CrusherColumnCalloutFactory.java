@@ -48,6 +48,7 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_SandBlockLine1;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_SandBlockQtyPrice;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_SetProject;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_SetTonnage;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_VehicleRent;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_VehicleType;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_Warehouse;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_WeighmentEntry;
@@ -281,6 +282,7 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 			list.add(new CalloutOrder_RentedVehicle());
 			list.add(new CalloutOrder_CalcRentAmount());
 			list.add(new CalloutOrder_SOUnitPriceRent());
+			list.add(new CalloutOrder_VehicleRent());
 		}
 		
 		if(tableName.equals(TF_MOrder.Table_Name) && (columnName.equals(TF_MOrder.COLUMNNAME_Distance) ||
@@ -300,6 +302,7 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 					}
 			if(columnName.equals(MWeighmentEntry.COLUMNNAME_TF_RentedVehicle_ID)) {
 				list.add(new CalloutWeighmentEntry_Vehicle());
+				list.add(new CalloutOrder_VehicleRent());
 			}
 		}
 		
@@ -311,10 +314,12 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		if(tableName.equals(TF_MOrder.Table_Name) && columnName.equals(TF_MOrder.COLUMNNAME_Item1_VehicleType_ID)) {
 			list.add(new CalloutOrder_VehicleType());
 			list.add(new CalloutOrder_Distance());
+			list.add(new CalloutOrder_VehicleRent());
 		}
 
 		if(tableName.equals(TF_MOrder.Table_Name) && columnName.equals(TF_MOrder.COLUMNNAME_Distance)) {
 			list.add(new CalloutOrder_Distance());
+			//list.add(new CalloutOrder_VehicleRent());
 		}
 				
 		

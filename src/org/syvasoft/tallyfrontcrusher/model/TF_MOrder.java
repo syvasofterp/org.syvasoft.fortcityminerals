@@ -11,6 +11,7 @@ import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.MBPartner;
 import org.compiere.model.MInOut;
 import org.compiere.model.MInOutLine;
+import org.compiere.model.MInvoice;
 import org.compiere.model.MInvoiceLine;
 import org.compiere.model.MOrder;
 import org.compiere.model.MOrderLine;
@@ -20,6 +21,7 @@ import org.compiere.model.MProductPricing;
 import org.compiere.model.MResource;
 import org.compiere.model.MSysConfig;
 import org.compiere.model.MTable;
+import org.compiere.model.MUser;
 import org.compiere.model.MWarehouse;
 import org.compiere.model.Query;
 import org.compiere.process.DocAction;
@@ -1373,6 +1375,14 @@ public class TF_MOrder extends MOrder {
 	
 	/** Column name TF_TaxInvoice_ID */
     public static final String COLUMNNAME_TF_TaxInvoice_ID = "TF_TaxInvoice_ID";
+    
+    /** Column name SalesDiscountAmt */
+    public static final String COLUMNNAME_SalesDiscountAmt = "SalesDiscountAmt";
+
+    /** Column name C_PaymentSalesDiscount_ID */
+    public static final String COLUMNNAME_C_PaymentSalesDiscount_ID = "C_PaymentSalesDiscount_ID";
+
+    
     /** Set Tax Invoice.
 	@param TF_TaxInvoice_ID Tax Invoice	  */
 	public void setTF_TaxInvoice_ID (int TF_TaxInvoice_ID)
@@ -1631,12 +1641,13 @@ public class TF_MOrder extends MOrder {
 		closeWeighmentEntry();
 		closeYardEntry();
 		createTaxInvoice();
+		createCashSalesDiscountPayment();
 		return msg;
 	}
 
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
-		if(getVehicle_ID()>0 && getRent_Amt().doubleValue()==0) {
+		if(getTF_RentedVehicle_ID()>0 && getRent_Amt().doubleValue()==0) {
 			throw new AdempiereUserError("Invalid Rent Amount");
 		}
 		
@@ -1700,6 +1711,15 @@ public class TF_MOrder extends MOrder {
 				payment.saveEx();
 			}
 
+			if(getC_PaymentSalesDiscount_ID() > 0) {
+				TF_MPayment payment = new TF_MPayment(getCtx(), getC_PaymentSalesDiscount_ID(), get_TrxName());
+				if(payment.getDocStatus().equals(DOCSTATUS_Completed)) {
+					payment.reverseCorrectIt();
+				}
+				payment.saveEx();
+			}
+
+			
 			MJobworkItemIssue.ReverseFromPO(this);
 			reverseTransporterInvoice();
 			reverseWeighmentEntry();
@@ -1743,6 +1763,16 @@ public class TF_MOrder extends MOrder {
 				}
 				payment.saveEx();
 			}
+
+			if(getC_PaymentSalesDiscount_ID()> 0) {
+				TF_MPayment payment = new TF_MPayment(getCtx(), getC_PaymentSalesDiscount_ID(), get_TrxName());
+				if(payment.getDocStatus().equals(DOCSTATUS_Completed)){
+					payment.reverseCorrectIt();
+				}
+				payment.saveEx();
+			}
+			
+			
 			MJobworkItemIssue.ReverseFromPO(this);
 			reverseTransporterInvoice();
 			reverseWeighmentEntry();
@@ -2266,4 +2296,104 @@ public class TF_MOrder extends MOrder {
 			setTF_TaxInvoice_ID(0);
 		}
 	}
+
+	/** Set Cash Sales Discount.
+	@param SalesDiscountAmt Cash Sales Discount	  */
+	public void setSalesDiscountAmt (BigDecimal SalesDiscountAmt)
+	{
+		set_Value (COLUMNNAME_SalesDiscountAmt, SalesDiscountAmt);
+	}
+	
+	/** Get Cash Sales Discount.
+		@return Cash Sales Discount	  */
+	public BigDecimal getSalesDiscountAmt () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_SalesDiscountAmt);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	public org.compiere.model.I_C_Payment getC_PaymentSalesDiscount() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Payment)MTable.get(getCtx(), org.compiere.model.I_C_Payment.Table_Name)
+			.getPO(getC_PaymentSalesDiscount_ID(), get_TrxName());	}
+
+	/** Set Sales Discount Payment.
+		@param C_PaymentSalesDiscount_ID Sales Discount Payment	  */
+	public void setC_PaymentSalesDiscount_ID (int C_PaymentSalesDiscount_ID)
+	{
+		if (C_PaymentSalesDiscount_ID < 1) 
+			set_Value (COLUMNNAME_C_PaymentSalesDiscount_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_PaymentSalesDiscount_ID, Integer.valueOf(C_PaymentSalesDiscount_ID));
+	}
+
+	/** Get Sales Discount Payment.
+		@return Sales Discount Payment	  */
+	public int getC_PaymentSalesDiscount_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_PaymentSalesDiscount_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	
+	private void createCashSalesDiscountPayment() {
+		if(get_Value(TF_MOrder.COLUMNNAME_SalesDiscountAmt) == null)
+			return;
+		BigDecimal amt = (BigDecimal) get_Value(TF_MOrder.COLUMNNAME_SalesDiscountAmt);
+		if(amt.doubleValue() == 0)
+			return;
+		
+		MGLPostingConfig glConfig = MGLPostingConfig.getMGLPostingConfig(getCtx());
+		
+		//Create Driver Tips Charge if it is not there already.
+		//It should be in atomic transaction to get account settings of Charge for the current docaction transaction.
+		TF_MCharge charge = TF_MCharge.createChargeFromAccount(getCtx(), glConfig.getSalesDiscountAcct_ID(), null);
+		
+		//Get Invoice Document no
+		String Where=" C_Order_ID = ? AND DocStatus = 'CO'";
+		
+		MInvoice inv = new Query(getCtx(), MInvoice.Table_Name,Where, get_TrxName())
+				.setClient_ID()
+				.setOnlyActiveRecords(true)
+				.setParameters(getC_Order_ID())
+				.first();
+		
+		String invoiceNo="";
+		if(inv!=null) {
+			invoiceNo=inv.getDocumentNo();
+		}
+
+		//Posting Payment Document for Driver Tips
+		TF_MPayment payment = new TF_MPayment(getCtx(), 0, get_TrxName());
+		payment.setDateAcct(getDateAcct());
+		payment.setDateTrx(getDateAcct());
+		payment.setDescription("Cash Sales Discount for "+ invoiceNo);
+		//* Commented for Laxmi Stone */
+		//payment.setCashType(TF_MPayment.CASHTYPE_GeneralExpense);
+		payment.setC_DocType_ID(false);		
+		payment.setC_Charge_ID(charge.getC_Charge_ID());
+		payment.setUser1_ID(getUser1_ID()); // Profit Center
+		payment.setC_ElementValue_ID(glConfig.getSalesDiscountAcct_ID());
+		
+		payment.setC_BankAccount_ID(TF_MBankAccount.getDefaultCashAccount(getCtx(), Env.getAD_Org_ID(getCtx()), null));
+		MUser user = MUser.get(getCtx(), Env.getAD_User_ID(getCtx()));
+		payment.setC_BPartner_ID(user.getC_BPartner_ID());
+		payment.setPayAmt(amt);
+		payment.setC_Currency_ID(Env.getContextAsInt(getCtx(), "$C_Currency_ID"));
+		payment.setDocStatus(TF_MOrder.DOCSTATUS_InProgress);
+		payment.setTenderType(TF_MPayment.TENDERTYPE_Cash);
+		payment.saveEx();
+		payment.processIt(DocAction.ACTION_Complete);
+		payment.saveEx();
+		
+		TF_MOrder mOrder=new TF_MOrder(getCtx(), get_ID(), get_TrxName());
+		mOrder.set_ValueOfColumn(TF_MOrder.COLUMNNAME_C_PaymentSalesDiscount_ID, payment.getC_Payment_ID());
+		mOrder.saveEx();
+		
+	}
+
 }

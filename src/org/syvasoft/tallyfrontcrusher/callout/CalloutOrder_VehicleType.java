@@ -18,10 +18,7 @@ public class CalloutOrder_VehicleType implements IColumnCallout {
 		
 		boolean isSOTrx = Env.getContext(ctx, WindowNo, "IsSOTrx").equals("Y");
 		int TF_VehicleType_ID=0;
-		BigDecimal Distance=BigDecimal.ZERO;
-		BigDecimal RentAmt=BigDecimal.ZERO;
-		int TF_Destination_ID = 0;
-		int AD_Org_ID = 0;
+
 		if(mTab.getValue(TF_MOrder.COLUMNNAME_Item1_VehicleType_ID) != null) {
 
 			if(mTab.getValue(TF_MOrder.COLUMNNAME_VehicleNo)!="" && mTab.getValue(TF_MOrder.COLUMNNAME_Vehicle_ID)==null && isSOTrx)
@@ -33,18 +30,6 @@ public class CalloutOrder_VehicleType implements IColumnCallout {
 			else
 			{
 				mTab.setValue(TF_MOrder.COLUMNNAME_DriverTips, BigDecimal.ZERO);
-				if(mTab.getValue(TF_MOrder.COLUMNNAME_TF_RentedVehicle_ID)!=null) {
-					Boolean IsLumpSumRent=mTab.getValueAsBoolean(TF_MOrder.COLUMNNAME_IsLumpSumRent);
-					if(IsLumpSumRent) {
-						TF_VehicleType_ID = (int)mTab.getValue(TF_MOrder.COLUMNNAME_Item1_VehicleType_ID);
-						TF_Destination_ID = (int)mTab.getValue(TF_MOrder.COLUMNNAME_TF_Destination_ID);
-						AD_Org_ID = (int)mTab.getValue(TF_MOrder.COLUMNNAME_AD_Org_ID);
-						Distance = (BigDecimal)mTab.getValue(TF_MOrder.COLUMNNAME_Distance); 
-						RentAmt=MLumpSumRentConfig.getLumpSumRent(ctx,AD_Org_ID, TF_Destination_ID, TF_VehicleType_ID, Distance, null);
-						mTab.setValue(TF_MOrder.COLUMNNAME_Rent_Amt, RentAmt);						
-					}
-					
-				}
 			}
 
 		}

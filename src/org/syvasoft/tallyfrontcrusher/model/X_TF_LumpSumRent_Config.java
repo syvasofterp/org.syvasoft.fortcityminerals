@@ -32,7 +32,7 @@ public class X_TF_LumpSumRent_Config extends PO implements I_TF_LumpSumRent_Conf
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20181212L;
+	private static final long serialVersionUID = 20181217L;
 
     /** Standard Constructor */
     public X_TF_LumpSumRent_Config (Properties ctx, int TF_LumpSumRent_Config_ID, String trxName)
@@ -107,15 +107,32 @@ public class X_TF_LumpSumRent_Config extends PO implements I_TF_LumpSumRent_Conf
 		return ii.intValue();
 	}
 
-	/** Set Rent (Amount).
-		@param Rent_Amt Rent (Amount)	  */
+	/** Set RateKM.
+		@param ratekm RateKM	  */
+	public void setratekm (BigDecimal ratekm)
+	{
+		set_Value (COLUMNNAME_ratekm, ratekm);
+	}
+
+	/** Get RateKM.
+		@return RateKM	  */
+	public BigDecimal getratekm () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_ratekm);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set Lumpsum Rent Amount.
+		@param Rent_Amt Lumpsum Rent Amount	  */
 	public void setRent_Amt (BigDecimal Rent_Amt)
 	{
 		set_Value (COLUMNNAME_Rent_Amt, Rent_Amt);
 	}
 
-	/** Get Rent (Amount).
-		@return Rent (Amount)	  */
+	/** Get Lumpsum Rent Amount.
+		@return Lumpsum Rent Amount	  */
 	public BigDecimal getRent_Amt () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Rent_Amt);

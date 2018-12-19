@@ -15,7 +15,7 @@
  * or via info@compiere.org or http://www.compiere.org/license.html           *
  *****************************************************************************/
 /** Generated Model - DO NOT CHANGE */
-package org.syvasoft.tallyfrontcrusher.model;
+package org.syvasof.tallyfrontcrusher.model;
 
 import java.sql.ResultSet;
 import java.util.Properties;
