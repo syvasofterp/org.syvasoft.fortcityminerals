@@ -111,13 +111,22 @@ public interface I_TF_LumpSumRent_Config
 	/** Get MinKM	  */
 	public int getMinKM();
 
+    /** Column name ratekm */
+    public static final String COLUMNNAME_ratekm = "ratekm";
+
+	/** Set RateKM	  */
+	public void setratekm (BigDecimal ratekm);
+
+	/** Get RateKM	  */
+	public BigDecimal getratekm();
+
     /** Column name Rent_Amt */
     public static final String COLUMNNAME_Rent_Amt = "Rent_Amt";
 
-	/** Set Rent (Amount)	  */
+	/** Set Lumpsum Rent Amount	  */
 	public void setRent_Amt (BigDecimal Rent_Amt);
 
-	/** Get Rent (Amount)	  */
+	/** Get Lumpsum Rent Amount	  */
 	public BigDecimal getRent_Amt();
 
     /** Column name TF_Destination_ID */

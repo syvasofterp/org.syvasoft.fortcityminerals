@@ -316,12 +316,26 @@ public class CrusherEventHandler extends AbstractEventHandler {
 		
 		MVehicleType vtype=new MVehicleType(ord.getCtx(), TF_VehicleType_ID, ord.get_TrxName());
 
+		//Get Invoice Document no
+		String Where=" C_Order_ID = ? AND DocStatus = 'CO'";
+		
+		MInvoice inv = new Query(ord.getCtx(), MInvoice.Table_Name,Where, ord.get_TrxName())
+				.setClient_ID()
+				.setOnlyActiveRecords(true)
+				.setParameters(ord.getC_Order_ID())
+				.first();
+		
+		String invoiceNo="";
+		if(inv!=null) {
+			invoiceNo=inv.getDocumentNo();
+		}
+
 		
 		//Posting Payment Document for Driver Tips
 		TF_MPayment payment = new TF_MPayment(ord.getCtx(), 0, ord.get_TrxName());
 		payment.setDateAcct(ord.getDateAcct());
 		payment.setDateTrx(ord.getDateAcct());
-		payment.setDescription("DRIVER BETA AMOUNT GIVEN FOR Sales Entry: "+ ord.getDocumentNo() +", Vehicle Type : "+vtype.getName());
+		payment.setDescription("DRIVER BETA AMOUNT GIVEN FOR Sales Invoice: "+ invoiceNo +", Vehicle Type : "+vtype.getName());
 		//* Commented for Laxmi Stone */
 		//payment.setCashType(TF_MPayment.CASHTYPE_GeneralExpense);
 		payment.setC_DocType_ID(false);		
