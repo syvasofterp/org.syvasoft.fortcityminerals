@@ -94,16 +94,22 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 			setProcessed(true);			
 			MRentedVehicle rv = null;
 			TF_MProject proj = null;
-			
-			if(getVehicle_ID() > 0)
+			TF_MBPartner bp = null;
+
+			if(getC_BPartner_ID() > 0) {
+				 bp = new TF_MBPartner(getCtx(), getC_BPartner_ID(), get_TrxName());
+			}
+			else if(getVehicle_ID() > 0)
 				rv = new Query(getCtx(), MRentedVehicle.Table_Name, "M_Product_ID=?", get_TrxName())
 						.setParameters(getVehicle_ID()).first();
 			else if(getC_Project_ID() > 0)
 				proj = new TF_MProject(getCtx(), getC_Project_ID(), get_TrxName());
 			
+				
 			
-			if(ISSUETYPE_Payment.equals(getIssueType())  && (rv != null || proj != null)) {
-				createDebitNote(rv, proj);
+			
+			if(ISSUETYPE_Payment.equals(getIssueType())  && (rv != null || proj != null || bp!=null)) {
+				createDebitNote(rv, proj,bp);
 			}
 			else if(ISSUETYPE_OwnExpense.equals(getIssueType())) {
 				createInternalUseInventory(docAction);
@@ -147,14 +153,15 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 		setM_Inventory_ID(inv.getM_Inventory_ID());	
 	}
 	
-	private void createDebitNote(MRentedVehicle rv, TF_MProject proj) {	
+	private void createDebitNote(MRentedVehicle rv, TF_MProject proj,TF_MBPartner bp) {	
 		int bPartnerID = 0;
-		if(rv != null)
+
+		if(bp != null)
+			bPartnerID = bp.getC_BPartner_ID();
+		else if(rv != null)
 			bPartnerID = rv.getC_BPartner_ID();
 		else
 			bPartnerID = proj.getC_BPartner_ID();
-		
-		TF_MBPartner bp = new TF_MBPartner(getCtx(), bPartnerID, get_TrxName());
 		
 		//Debit Note Header
 		TF_MInvoice invoice = new TF_MInvoice(getCtx(), 0, get_TrxName());
@@ -206,6 +213,9 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 			invoice.addDescription("Fuel / Material Issued to " + rv.getVehicleNo());
 		else if(proj != null && getM_Product_ID() > 0)
 			invoice.addDescription("Fuel / Material Issued to " + proj.getName() + " Subcontract");
+		else if(bp != null && getC_BPartner_ID() > 0) {
+			invoice.addDescription("Fuel / Material Issued to " + bp.getName());
+		}
 		else {
 			TF_MCharge ch = TF_MCharge.createChargeFromAccount(getCtx(), getAccount_ID(), null);
 			invLine.setC_Charge_ID(ch.getC_Charge_ID());

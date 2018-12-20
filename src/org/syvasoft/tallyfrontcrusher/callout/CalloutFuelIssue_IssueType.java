@@ -14,7 +14,8 @@ public class CalloutFuelIssue_IssueType implements IColumnCallout {
 		mTab.setValue(MFuelIssue.COLUMNNAME_Vehicle_ID, null);
 		mTab.setValue(MFuelIssue.COLUMNNAME_C_Project_ID, null);
 		mTab.setValue(MFuelIssue.COLUMNNAME_M_Product_ID, null);
-		mTab.setValue(MFuelIssue.COLUMNNAME_C_ElementValue_ID, null);		
+		mTab.setValue(MFuelIssue.COLUMNNAME_C_ElementValue_ID, null);	
+		mTab.setValue(MFuelIssue.COLUMNNAME_C_BPartner_ID, null);
 		return null;
 	}	
 }

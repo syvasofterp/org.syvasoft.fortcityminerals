@@ -1651,8 +1651,12 @@ public class TF_MOrder extends MOrder {
 			throw new AdempiereUserError("Invalid Rent Amount");
 		}
 		
-		if(getTF_RentedVehicle_ID()!=0 && getVehicleNo()=="" && isSOTrx()==false) {
+		if(getTF_RentedVehicle_ID()>0 || !isSOTrx()) {
 			setDriverTips(BigDecimal.ZERO);
+		}
+		
+		if(!getPaymentRule().equals("B")) {
+			setSalesDiscountAmt(BigDecimal.ZERO);
 		}
 		
 		TF_MProject proj = TF_MProject.getCrusherProductionSubcontractByWarehouse(getM_Warehouse_ID());
