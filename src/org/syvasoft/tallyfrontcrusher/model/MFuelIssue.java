@@ -163,6 +163,9 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 		else
 			bPartnerID = proj.getC_BPartner_ID();
 		
+		if(bp == null)
+			bp = new TF_MBPartner(getCtx(), bPartnerID, get_TrxName());
+		
 		//Debit Note Header
 		TF_MInvoice invoice = new TF_MInvoice(getCtx(), 0, get_TrxName());
 		invoice.setClientOrg(getAD_Client_ID(), getAD_Org_ID());
