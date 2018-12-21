@@ -246,10 +246,9 @@ public class TF_MOrderLine extends MOrderLine {
 		sql = "UPDATE C_Order SET Tonnage = " + tonnage.doubleValue() + " WHERE C_Order_ID = " + getC_Order_ID();
 		DB.executeUpdate(sql, get_TrxName());
 				
-		sql = "UPDATE C_Order SET Rent_Amt = Distance * Rate * Tonnage WHERE C_Order_ID = " + getC_Order_ID()
+		sql = "UPDATE C_Order SET Rent_Amt = Distance * Rate WHERE C_Order_ID = " + getC_Order_ID()
 			+ " AND TF_Destination_ID IS NOT NULL AND TF_RentedVehicle_ID IS NOT NULL AND IsLumpSumRent='N'";
 		DB.executeUpdate(sql, get_TrxName());
-		
 	}
 
 	
