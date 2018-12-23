@@ -28,11 +28,12 @@ public class MLumpSumRentConfig extends X_TF_LumpSumRent_Config {
 		BigDecimal RateKM=BigDecimal.ZERO;
 		String Where;
 		
-		Where=" AD_Org_ID=? AND TF_VehicleType_ID=? AND TF_Destination_ID IS NULL AND ? between minkm AND maxkm";
+		Where=" AD_Org_ID=? AND TF_VehicleType_ID=? AND (COALESCE(TF_Destination_ID,0) = ? OR ? between minkm AND maxkm)";
 		MLumpSumRentConfig lumpDistConfig=new Query(ctx, Table_Name, Where, trxName)
 				.setClient_ID()
 				.setOnlyActiveRecords(true)
-				.setParameters(AD_Org_ID,TF_VehicleType_ID,Distinace)
+				.setParameters(AD_Org_ID,TF_VehicleType_ID,TF_Destination_ID, Distinace)
+				.setOrderBy("COALESCE(TF_Destination_ID,0) DESC")
 				.first();
 		if(lumpDistConfig!=null) {
 			RateKM=lumpDistConfig.getratekm();

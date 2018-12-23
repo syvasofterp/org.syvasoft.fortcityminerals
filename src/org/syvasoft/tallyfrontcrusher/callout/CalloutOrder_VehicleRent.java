@@ -43,11 +43,11 @@ public class CalloutOrder_VehicleRent implements IColumnCallout {
 			BigDecimal RateKm=MLumpSumRentConfig.getRateKm(ctx, AD_Org_ID, TF_Destination_ID, TF_VehicleType_ID, Distance, null);
 			mTab.setValue(TF_MOrder.COLUMNNAME_Rate, RateKm);
 			
-			if(RateKm.compareTo(BigDecimal.ZERO)==1) {
-				mTab.setValue(TF_MOrder.COLUMNNAME_IsLumpSumRent, false);
+			if(RateKm.equals(BigDecimal.ZERO)) {
+				mTab.setValue(TF_MOrder.COLUMNNAME_IsLumpSumRent, true);
 			}
 			else {
-				mTab.setValue(TF_MOrder.COLUMNNAME_IsLumpSumRent, true);
+				mTab.setValue(TF_MOrder.COLUMNNAME_IsLumpSumRent, false);
 			}
 			RentAmt=MLumpSumRentConfig.getLumpSumRent(ctx,AD_Org_ID, TF_Destination_ID, TF_VehicleType_ID, Distance, null);
 			mTab.setValue(TF_MOrder.COLUMNNAME_Rent_Amt, RentAmt);						
