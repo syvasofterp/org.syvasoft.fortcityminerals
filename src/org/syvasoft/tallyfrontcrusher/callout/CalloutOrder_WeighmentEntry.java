@@ -90,14 +90,15 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 			else
 				mTab.setValue(TF_MOrder.COLUMNNAME_TF_RentedVehicle_ID, 0);
 			
+			
 			if(weighment.getTF_Destination_ID() > 0) {
 				mTab.setValue(TF_MOrder.COLUMNNAME_TF_Destination_ID, weighment.getTF_Destination_ID());
 				BigDecimal Distance=(BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Distance);
-				int TF_RentedVehicle_ID=weighment.getTF_RentedVehicle_ID();
+				/*int TF_RentedVehicle_ID=weighment.getTF_RentedVehicle_ID();
 				if(TF_RentedVehicle_ID>0) {
 				    BigDecimal lumpsumrent=MLumpSumRentConfig.getLumpSumRent(weighment.getCtx(), Env.getAD_Client_ID(weighment.getCtx()), weighment.getTF_Destination_ID(), weighment.getTF_VehicleType_ID(),Distance, weighment.get_TrxName());
 				    mTab.setValue(TF_MOrder.COLUMNNAME_Rent_Amt, lumpsumrent);
-				}
+				}*/
 			}
 			
 			
