@@ -19,6 +19,7 @@ package org.syvasoft.tallyfrontcrusher.model;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.Properties;
 import org.compiere.model.*;
 import org.compiere.util.Env;
@@ -26,14 +27,14 @@ import org.compiere.util.KeyNamePair;
 
 /** Generated Model for TF_RentedVehicle
  *  @author iDempiere (generated) 
- *  @version Release 4.1 - $Id$ */
+ *  @version Release 5.1 - $Id$ */
 public class X_TF_RentedVehicle extends PO implements I_TF_RentedVehicle, I_Persistent 
 {
 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180122L;
+	private static final long serialVersionUID = 20181224L;
 
     /** Standard Constructor */
     public X_TF_RentedVehicle (Properties ctx, int TF_RentedVehicle_ID, String trxName)
@@ -133,6 +134,20 @@ public class X_TF_RentedVehicle extends PO implements I_TF_RentedVehicle, I_Pers
 		return ii.intValue();
 	}
 
+	/** Set Tareweight Expiry Date.
+		@param DateTareweightExpiry Tareweight Expiry Date	  */
+	public void setDateTareweightExpiry (Timestamp DateTareweightExpiry)
+	{
+		set_Value (COLUMNNAME_DateTareweightExpiry, DateTareweightExpiry);
+	}
+
+	/** Get Tareweight Expiry Date.
+		@return Tareweight Expiry Date	  */
+	public Timestamp getDateTareweightExpiry () 
+	{
+		return (Timestamp)get_Value(COLUMNNAME_DateTareweightExpiry);
+	}
+
 	/** Set Description.
 		@param Description 
 		Optional short description of the record
@@ -148,6 +163,27 @@ public class X_TF_RentedVehicle extends PO implements I_TF_RentedVehicle, I_Pers
 	public String getDescription () 
 	{
 		return (String)get_Value(COLUMNNAME_Description);
+	}
+
+	/** Set Transporter.
+		@param IsTransporter Transporter	  */
+	public void setIsTransporter (boolean IsTransporter)
+	{
+		set_Value (COLUMNNAME_IsTransporter, Boolean.valueOf(IsTransporter));
+	}
+
+	/** Get Transporter.
+		@return Transporter	  */
+	public boolean isTransporter () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsTransporter);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
 	}
 
 	public org.compiere.model.I_M_Product_Category getM_Product_Category() throws RuntimeException
@@ -276,6 +312,31 @@ public class X_TF_RentedVehicle extends PO implements I_TF_RentedVehicle, I_Pers
 	public String getTF_RentedVehicle_UU () 
 	{
 		return (String)get_Value(COLUMNNAME_TF_RentedVehicle_UU);
+	}
+
+	public I_TF_VehicleType getTF_VehicleType() throws RuntimeException
+    {
+		return (I_TF_VehicleType)MTable.get(getCtx(), I_TF_VehicleType.Table_Name)
+			.getPO(getTF_VehicleType_ID(), get_TrxName());	}
+
+	/** Set Vehicle Type.
+		@param TF_VehicleType_ID Vehicle Type	  */
+	public void setTF_VehicleType_ID (int TF_VehicleType_ID)
+	{
+		if (TF_VehicleType_ID < 1) 
+			set_Value (COLUMNNAME_TF_VehicleType_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_VehicleType_ID, Integer.valueOf(TF_VehicleType_ID));
+	}
+
+	/** Get Vehicle Type.
+		@return Vehicle Type	  */
+	public int getTF_VehicleType_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_VehicleType_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	/** Set Tonnage / Load.

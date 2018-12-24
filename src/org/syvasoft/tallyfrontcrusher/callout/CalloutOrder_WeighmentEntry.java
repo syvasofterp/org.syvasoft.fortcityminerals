@@ -17,6 +17,7 @@ import org.compiere.model.Query;
 import org.compiere.util.Env;
 import org.syvasoft.tallyfrontcrusher.model.MDriverBetaConfig;
 import org.syvasoft.tallyfrontcrusher.model.MLumpSumRentConfig;
+import org.syvasoft.tallyfrontcrusher.model.MRentedVehicle;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MWeighmentEntry;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
@@ -85,8 +86,15 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_UnitPrice, price);
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Amt, price.multiply(qty));
 			
-			if(weighment.getTF_RentedVehicle_ID() > 0)
-				mTab.setValue(TF_MOrder.COLUMNNAME_TF_RentedVehicle_ID, weighment.getTF_RentedVehicle_ID());			
+			MRentedVehicle rv;
+			if(weighment.getTF_RentedVehicle_ID() > 0) {
+				
+				rv = new MRentedVehicle(ctx,weighment.getTF_RentedVehicle_ID(),null);
+				if(rv.isTransporter())
+					mTab.setValue(TF_MOrder.COLUMNNAME_TF_RentedVehicle_ID, weighment.getTF_RentedVehicle_ID());
+				else
+					mTab.setValue(TF_MOrder.COLUMNNAME_VehicleNo, weighment.getVehicleNo());
+			}
 			else
 				mTab.setValue(TF_MOrder.COLUMNNAME_TF_RentedVehicle_ID, 0);
 			
