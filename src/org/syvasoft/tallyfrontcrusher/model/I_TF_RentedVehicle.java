@@ -23,7 +23,7 @@ import org.compiere.util.KeyNamePair;
 
 /** Generated Interface for TF_RentedVehicle
  *  @author iDempiere (generated) 
- *  @version Release 4.1
+ *  @version Release 5.1
  */
 @SuppressWarnings("all")
 public interface I_TF_RentedVehicle 
@@ -110,6 +110,15 @@ public interface I_TF_RentedVehicle
 	  */
 	public int getCreatedBy();
 
+    /** Column name DateTareweightExpiry */
+    public static final String COLUMNNAME_DateTareweightExpiry = "DateTareweightExpiry";
+
+	/** Set Tareweight Expiry Date	  */
+	public void setDateTareweightExpiry (Timestamp DateTareweightExpiry);
+
+	/** Get Tareweight Expiry Date	  */
+	public Timestamp getDateTareweightExpiry();
+
     /** Column name Description */
     public static final String COLUMNNAME_Description = "Description";
 
@@ -135,6 +144,15 @@ public interface I_TF_RentedVehicle
 	  * The record is active in the system
 	  */
 	public boolean isActive();
+
+    /** Column name IsTransporter */
+    public static final String COLUMNNAME_IsTransporter = "IsTransporter";
+
+	/** Set Transporter	  */
+	public void setIsTransporter (boolean IsTransporter);
+
+	/** Get Transporter	  */
+	public boolean isTransporter();
 
     /** Column name M_Product_Category_ID */
     public static final String COLUMNNAME_M_Product_Category_ID = "M_Product_Category_ID";
@@ -201,6 +219,17 @@ public interface I_TF_RentedVehicle
 
 	/** Get TF_RentedVehicle_UU	  */
 	public String getTF_RentedVehicle_UU();
+
+    /** Column name TF_VehicleType_ID */
+    public static final String COLUMNNAME_TF_VehicleType_ID = "TF_VehicleType_ID";
+
+	/** Set Vehicle Type	  */
+	public void setTF_VehicleType_ID (int TF_VehicleType_ID);
+
+	/** Get Vehicle Type	  */
+	public int getTF_VehicleType_ID();
+
+	public I_TF_VehicleType getTF_VehicleType() throws RuntimeException;
 
     /** Column name TonnagePerLoad */
     public static final String COLUMNNAME_TonnagePerLoad = "TonnagePerLoad";
