@@ -37,6 +37,25 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 				setC_BPartner_ID(bp.getC_BPartner_ID());
 		}
 		
+		if(getTF_RentedVehicle_ID()>0) {
+			String rvwhere="COALESCE(Tareweight,0)=0 AND IsTransporter='N' AND TF_RentedVehicle_ID=?";
+			MRentedVehicle rv= new Query(getCtx(), MRentedVehicle.Table_Name, rvwhere, get_TrxName())
+					.setClient_ID()
+					.setParameters(getTF_RentedVehicle_ID())
+					.first();
+			
+			if(rv!=null) {
+				rv.setTareWeight(getTareWeight());
+				rv.saveEx();
+			}
+					
+		}
+		
+		//	if(getTF_RentedVehicle_ID()>0	&& is_ValueChanged(COLUMNNAME_TareWeight)) {
+			//Timestamp tareWeightTime = new Timestamp(System.currentTimeMillis());
+			//setTareWeightTime(tareWeightTime);
+		//	setStatus(STATUS_InProgress);
+		
 		//if(getGrossWeight().doubleValue() > 0 && getTareWeight().doubleValue() <=0)
 		//	throw new AdempiereException("Tare Weight should be greater than ZERO!");
 		
@@ -67,6 +86,8 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 			//setGrossWeightTime(null);
 		//	setStatus(STATUS_InProgress);
 		//}
+		
+		/*
 		if(getTF_RentedVehicle_ID() > 0 && !getTF_RentedVehicle().getTareWeight().equals(getTareWeight())) {
 			MRentedVehicle v = new MRentedVehicle(getCtx(), getTF_RentedVehicle_ID(), get_TrxName());
 			v.setTareWeight(getTareWeight());
@@ -77,6 +98,7 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 			DB.executeUpdate(sql, get_TrxName());
 			
 		}
+		*/
 		return ok;
 	}
 	
