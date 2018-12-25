@@ -78,7 +78,7 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 			MProductPricing pp = TF_MOrder.getProductPricing(weighment.getM_Product_ID(), priceList_id, bPartner_id,
 					qty, weighment.getGrossWeightTime(), isSOTrx);
 			BigDecimal price = pp.getPriceStd();
-			if(weighment.getPrice() != null)
+			if(weighment.getPrice() != null && weighment.getPrice().doubleValue() > 0)
 				price = weighment.getPrice();
 			
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Qty, qty);
