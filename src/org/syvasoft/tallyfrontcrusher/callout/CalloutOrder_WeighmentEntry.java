@@ -92,11 +92,14 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 				rv = new MRentedVehicle(ctx,weighment.getTF_RentedVehicle_ID(),null);
 				if(rv.isTransporter())
 					mTab.setValue(TF_MOrder.COLUMNNAME_TF_RentedVehicle_ID, weighment.getTF_RentedVehicle_ID());
-				else
+				else {
 					mTab.setValue(TF_MOrder.COLUMNNAME_VehicleNo, weighment.getVehicleNo());
+					mTab.setValue(TF_MOrder.COLUMNNAME_TF_RentedVehicle_ID, null);
+				}
+					
 			}
 			else
-				mTab.setValue(TF_MOrder.COLUMNNAME_TF_RentedVehicle_ID, 0);
+				mTab.setValue(TF_MOrder.COLUMNNAME_TF_RentedVehicle_ID, null);
 			
 			
 			if(weighment.getTF_Destination_ID() > 0) {
@@ -148,10 +151,14 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 			}
 			//TODO: need to add customer name from weighment entry into description
 			//This will be required only for sand blocks.
+			
+					
 			if(weighment.getTF_VehicleType_ID() > 0)
 			{
 				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_VehicleType_ID, weighment.getTF_VehicleType_ID());
-				
+			
+				/*
+				 * this code is already in CalloutOrder_VehicleType hence it is commented here.
 				if(weighment.getVehicleNo()!="" && weighment.getTF_RentedVehicle_ID()==0 && isSOTrx)
 				{
 					BigDecimal betaAmt= MDriverBetaConfig.getDriverBetaAmount(ctx, Env.getAD_Org_ID(ctx),weighment.getTF_VehicleType_ID(), null);
@@ -161,8 +168,9 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 				{
 					mTab.setValue(TF_MOrder.COLUMNNAME_DriverTips, BigDecimal.ZERO);
 				}
+				*/
 			}
-
+			
 			
 		}
 		return null;
