@@ -184,6 +184,15 @@ public interface I_TF_RentedVehicle
 
 	public org.compiere.model.I_M_Product getM_Product() throws RuntimeException;
 
+    /** Column name OldTareweight */
+    public static final String COLUMNNAME_OldTareweight = "OldTareweight";
+
+	/** Set Old Tareweight	  */
+	public void setOldTareweight (BigDecimal OldTareweight);
+
+	/** Get Old Tareweight	  */
+	public BigDecimal getOldTareweight();
+
     /** Column name RequireRentConfig */
     public static final String COLUMNNAME_RequireRentConfig = "RequireRentConfig";
 
@@ -201,6 +210,15 @@ public interface I_TF_RentedVehicle
 
 	/** Get Tare Weight (Kg)	  */
 	public BigDecimal getTareWeight();
+
+    /** Column name TareWeightTime */
+    public static final String COLUMNNAME_TareWeightTime = "TareWeightTime";
+
+	/** Set Tare Weight Time	  */
+	public void setTareWeightTime (Timestamp TareWeightTime);
+
+	/** Get Tare Weight Time	  */
+	public Timestamp getTareWeightTime();
 
     /** Column name TF_RentedVehicle_ID */
     public static final String COLUMNNAME_TF_RentedVehicle_ID = "TF_RentedVehicle_ID";
