@@ -1,5 +1,6 @@
 package org.syvasoft.tallyfrontcrusher.model;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.Properties;
@@ -26,6 +27,14 @@ public class MRentedVehicle extends X_TF_RentedVehicle {
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override
+	protected boolean beforeSave(boolean newRecord) {
+		// TODO Auto-generated method stub
+		BigDecimal TareWeight=getTareWeight();
+		setOldTareweight(TareWeight);
+		boolean ok = super.beforeSave(newRecord);
+		return ok;
+	}
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
 		boolean ok = super.afterSave(newRecord, success);

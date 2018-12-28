@@ -34,7 +34,7 @@ public class X_TF_RentedVehicle extends PO implements I_TF_RentedVehicle, I_Pers
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20181224L;
+	private static final long serialVersionUID = 20181228L;
 
     /** Standard Constructor */
     public X_TF_RentedVehicle (Properties ctx, int TF_RentedVehicle_ID, String trxName)
@@ -242,6 +242,23 @@ public class X_TF_RentedVehicle extends PO implements I_TF_RentedVehicle, I_Pers
 		return ii.intValue();
 	}
 
+	/** Set Old Tareweight.
+		@param OldTareweight Old Tareweight	  */
+	public void setOldTareweight (BigDecimal OldTareweight)
+	{
+		set_Value (COLUMNNAME_OldTareweight, OldTareweight);
+	}
+
+	/** Get Old Tareweight.
+		@return Old Tareweight	  */
+	public BigDecimal getOldTareweight () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_OldTareweight);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
 	/** Set Rent Configuration.
 		@param RequireRentConfig Rent Configuration	  */
 	public void setRequireRentConfig (boolean RequireRentConfig)
@@ -278,6 +295,20 @@ public class X_TF_RentedVehicle extends PO implements I_TF_RentedVehicle, I_Pers
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
+	}
+
+	/** Set Tare Weight Time.
+		@param TareWeightTime Tare Weight Time	  */
+	public void setTareWeightTime (Timestamp TareWeightTime)
+	{
+		set_Value (COLUMNNAME_TareWeightTime, TareWeightTime);
+	}
+
+	/** Get Tare Weight Time.
+		@return Tare Weight Time	  */
+	public Timestamp getTareWeightTime () 
+	{
+		return (Timestamp)get_Value(COLUMNNAME_TareWeightTime);
 	}
 
 	/** Set Rented Vehicle.
