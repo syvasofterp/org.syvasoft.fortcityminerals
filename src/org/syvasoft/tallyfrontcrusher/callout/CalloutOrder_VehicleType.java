@@ -18,13 +18,14 @@ public class CalloutOrder_VehicleType implements IColumnCallout {
 		
 		boolean isSOTrx = Env.getContext(ctx, WindowNo, "IsSOTrx").equals("Y");
 		int TF_VehicleType_ID=0;
-
+		int AD_Org_ID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_AD_Org_ID);
+		
 		if(mTab.getValue(TF_MOrder.COLUMNNAME_Item1_VehicleType_ID) != null) {
 
-			if(mTab.getValue(TF_MOrder.COLUMNNAME_VehicleNo)!="" && mTab.getValue(TF_MOrder.COLUMNNAME_Vehicle_ID)==null && isSOTrx)
+			if(mTab.getValue(TF_MOrder.COLUMNNAME_VehicleNo)!="" && mTab.getValue(TF_MOrder.COLUMNNAME_TF_RentedVehicle_ID)==null && isSOTrx)
 			{
 				TF_VehicleType_ID=(int)mTab.getValue(TF_MOrder.COLUMNNAME_Item1_VehicleType_ID);
-				BigDecimal betaAmt= MDriverBetaConfig.getDriverBetaAmount(ctx, Env.getAD_Org_ID(ctx),TF_VehicleType_ID, null);
+				BigDecimal betaAmt= MDriverBetaConfig.getDriverBetaAmount(ctx, AD_Org_ID,TF_VehicleType_ID, null);
 				mTab.setValue(TF_MOrder.COLUMNNAME_DriverTips, betaAmt);
 			}
 			else

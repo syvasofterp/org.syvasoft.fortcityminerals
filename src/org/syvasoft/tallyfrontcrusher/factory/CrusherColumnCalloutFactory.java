@@ -310,6 +310,7 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 			list.add(new CalloutOrder_WeighmentEntry());
 			list.add(new CalloutOrder_SOUnitPriceRent());
 			list.add(new CalloutOrder_VehicleRent());
+			list.add(new CalloutOrder_VehicleType());
 		}
 
 		if(tableName.equals(TF_MOrder.Table_Name) && columnName.equals(TF_MOrder.COLUMNNAME_Item1_VehicleType_ID)) {
