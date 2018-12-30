@@ -38,13 +38,16 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		}
 		
 		if(getTF_RentedVehicle_ID()>0) {
-			String rvwhere="COALESCE(Tareweight,0)=0 AND IsTransporter='N' AND TF_RentedVehicle_ID=?";
+			String rvwhere="COALESCE(Tareweight,0)!=? AND IsTransporter='N' AND TF_RentedVehicle_ID=?";
 			MRentedVehicle rv= new Query(getCtx(), MRentedVehicle.Table_Name, rvwhere, get_TrxName())
 					.setClient_ID()
-					.setParameters(getTF_RentedVehicle_ID())
+					.setParameters(getTareWeight(),getTF_RentedVehicle_ID())
 					.first();
 			
 			if(rv!=null) {
+				if(rv.getTareWeight()!=null) {
+					rv.setOldTareweight(rv.getTareWeight());
+				}
 				rv.setTareWeight(getTareWeight());
 				rv.saveEx();
 			}
