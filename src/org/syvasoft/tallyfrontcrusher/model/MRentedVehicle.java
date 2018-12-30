@@ -30,8 +30,13 @@ public class MRentedVehicle extends X_TF_RentedVehicle {
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
 		// TODO Auto-generated method stub
-		BigDecimal TareWeight=getTareWeight();
-		setOldTareweight(TareWeight);
+
+		if(!newRecord && isTransporter() && is_ValueChanged(COLUMNNAME_TareWeight)) {
+			if(get_ValueOld(COLUMNNAME_TareWeight)!=null) {
+				BigDecimal TareWeight=(BigDecimal)get_ValueOld(COLUMNNAME_TareWeight);
+				setOldTareweight(TareWeight);
+			}
+		}
 		boolean ok = super.beforeSave(newRecord);
 		return ok;
 	}
