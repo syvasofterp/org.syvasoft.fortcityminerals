@@ -274,8 +274,9 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 	
 	public void reverseIt() {
 		if(getDebitNote_Invoice_ID() > 0) {			
-			TF_MInvoice inv = new TF_MInvoice(getCtx(), getDebitNote_Invoice_ID(), get_TrxName());			
-			inv.reverseCorrectIt();
+			TF_MInvoice inv = new TF_MInvoice(getCtx(), getDebitNote_Invoice_ID(), get_TrxName());
+			if(inv.getDocStatus().equals(DOCSTATUS_Completed))
+				inv.reverseCorrectIt();
 			inv.saveEx();
 			setDebitNote_Invoice_ID(0);
 		}
