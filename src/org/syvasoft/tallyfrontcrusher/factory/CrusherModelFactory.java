@@ -15,6 +15,7 @@ import org.syvasoft.tallyfrontcrusher.model.MCrusherPermitLedger;
 import org.syvasoft.tallyfrontcrusher.model.MCrusherPermitLedgerLine;
 import org.syvasoft.tallyfrontcrusher.model.MCrusherProduction;
 import org.syvasoft.tallyfrontcrusher.model.MCrusherProductionConfig;
+import org.syvasoft.tallyfrontcrusher.model.MDebitCreditNote;
 import org.syvasoft.tallyfrontcrusher.model.MDestination;
 import org.syvasoft.tallyfrontcrusher.model.MDriverBetaConfig;
 import org.syvasoft.tallyfrontcrusher.model.MEmpSalaryConfig;
@@ -291,6 +292,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return MDriverBetaConfig.class;
 		else if(MLumpSumRentConfig.Table_Name.equals(tableName))
 			return MLumpSumRentConfig.class;
+		else if(MDebitCreditNote.Table_Name.equals(tableName))
+			return MDebitCreditNote.class;
 		return null;
 	}
 
@@ -482,7 +485,9 @@ public class CrusherModelFactory implements IModelFactory {
 		else if(MDriverBetaConfig.Table_Name.equals(tableName))
 			return new MDriverBetaConfig(ctx, Record_ID, trxName);
 		else if(MLumpSumRentConfig.Table_Name.equals(tableName))
-			return new MLumpSumRentConfig(ctx, Record_ID, trxName);		
+			return new MLumpSumRentConfig(ctx, Record_ID, trxName);
+		else if(MDebitCreditNote.Table_Name.equals(tableName))
+			return new MDebitCreditNote(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -677,6 +682,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MLumpSumRentConfig(ctx, rs, trxName);
 		else if(MCashCounter.Table_Name.equals(tableName))
 			return new MCashCounter(ctx, rs, trxName);
+		else if(MDebitCreditNote.Table_Name.equals(tableName))
+			return new MDebitCreditNote(ctx, rs, trxName);
 		return null;
 	}
 
