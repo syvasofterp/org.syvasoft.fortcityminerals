@@ -38,7 +38,7 @@ CREATE OR REPLACE VIEW c_project_weighment_v AS
      JOIN c_currency cur ON cur.c_currency_id = pr.c_currency_id
      LEFT JOIN m_product pd ON pd.m_product_id = pr.jobwork_product_id
      JOIN c_uom u ON u.c_uom_id = pr.c_uom_id
-  WHERE pr.docstatus::text = 'IP'::text;
+  ;
 
 ALTER TABLE c_project_weighment_v
   OWNER TO adempiere;
