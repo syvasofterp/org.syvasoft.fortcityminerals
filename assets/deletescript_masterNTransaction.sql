@@ -196,6 +196,7 @@ delete from tf_bpopeningbalance WHERE ad_client_id=1000000;
 UPDATE c_order SET TF_TaxInvoice_ID = null WHERE ad_client_id=1000000;
 DELETE FROM tf_taxinvoice;
 UPDATE c_bpartner SET C_Invoice_ID = null WHERE ad_client_id=1000000;
+delete from tf_debitcreditnote;
 delete from c_Invoice WHERE ad_client_id=1000000;
 delete from PP_MRP WHERE ad_client_id=1000000;;
 delete from m_requisitionline  WHERE ad_client_id=1000000;;
@@ -331,6 +332,7 @@ DELETE FROM tf_yardentryapproveline;
 DELETE FROM tf_yardentry;
 DELETE FROM tf_orgcashtransfer_configx;
 DELETE FROM M_Product_PO WHERE ad_client_id=1000000;
+DELETE FROM gl_distribution WHERE ad_client_id=1000000;
 DELETE FROM c_bPARTNER WHERE ad_client_id=1000000 AND C_BPARTNER_ID NOT IN (1000010,1000005, 1000007, 1000006, 1000020, 1000034);
 
 
@@ -386,7 +388,7 @@ and m_product_id not in ( 1000086, 1000096, 1000195) ;;
 DELETE FROM  S_Resource WHERE ad_client_id = 1000000;
 
 
-
+-- DELETED UP TO HERE...
 
 --DELETE FROM AD_ARCHIVE WHERE ad_client_id=1000000;;
 DELETE FROM HR_EMPLOYEE WHERE ad_client_id=1000000;;
@@ -437,13 +439,15 @@ UPDATE C_validcombination SET user1_id = null WHERE AD_Client_ID = 1000000;
 
 SELECT * FROM C_ElementValue WHERE C_Element_ID=1000001 
 
+DELETE FROM tf_lumpsumrent_config WHERE AD_Client_ID = 1000000;
+
 DELETE FROM TF_Destination WHERE AD_Client_ID = 1000000;
 
 --UPDATE AD_User SET IsActive = 'N' WHERE AD_User_ID=0
 UPDATE C_Bank SET AD_Org_ID = 0 WHERE C_Bank_ID=1000032
 
 DELETE FROM AD_OrgInfo WHERE AD_Client_ID = 1000000 AND AD_Org_ID!=1000000;
-
+DELETE FROM tf_driverbeta_config;
 --SELECT *  FROM ad_role WHERE AD_Client_ID = 1000000 AND AD_Org_ID =1000022;
 DELETE FROM tf_labour_wage_config;
 DELETE FROM tf_vehicle_rent_config;
