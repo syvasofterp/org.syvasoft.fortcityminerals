@@ -57,7 +57,9 @@ public class MCrusherProduction extends X_TF_Crusher_Production {
 		deleteProductions();
 		//RM - Raw Material, BM - Blue Metal
 		double RMQtyUsed = getQtyUsed().doubleValue();		
-		MCrusherProductionConfig[] configs = MCrusherProductionConfig.getMCrusherProductionConfig(getCtx(), getTF_BlueMetal_Type());
+		MCrusherProductionConfig[] configs = MCrusherProductionConfig.getMCrusherProductionConfig(getCtx(),
+				getTF_ProductionPlant_ID(),
+				getTF_BlueMetal_Type());
 		//Creating Production Headers
 		for(MCrusherProductionConfig config : configs) {
 			double BMPercent = config.getPercent().doubleValue();			

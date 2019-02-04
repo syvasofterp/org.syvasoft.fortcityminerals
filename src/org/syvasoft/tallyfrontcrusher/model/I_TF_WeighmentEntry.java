@@ -269,6 +269,15 @@ public interface I_TF_WeighmentEntry
 	/** Get Net Weight (Kg)	  */
 	public BigDecimal getNetWeight();
 
+    /** Column name NetWeightUnit */
+    public static final String COLUMNNAME_NetWeightUnit = "NetWeightUnit";
+
+	/** Set Net Weight (Unit)	  */
+	public void setNetWeightUnit (BigDecimal NetWeightUnit);
+
+	/** Get Net Weight (Unit)	  */
+	public BigDecimal getNetWeightUnit();
+
     /** Column name PartyName */
     public static final String COLUMNNAME_PartyName = "PartyName";
 
@@ -370,6 +379,15 @@ public interface I_TF_WeighmentEntry
 	/** Get Tare Weight Time	  */
 	public Timestamp getTareWeightTime();
 
+    /** Column name TF_BlueMetal_Type */
+    public static final String COLUMNNAME_TF_BlueMetal_Type = "TF_BlueMetal_Type";
+
+	/** Set Blue Metal Type	  */
+	public void setTF_BlueMetal_Type (String TF_BlueMetal_Type);
+
+	/** Get Blue Metal Type	  */
+	public String getTF_BlueMetal_Type();
+
     /** Column name TF_Boulder_Receipt_ID */
     public static final String COLUMNNAME_TF_Boulder_Receipt_ID = "TF_Boulder_Receipt_ID";
 
@@ -392,6 +410,17 @@ public interface I_TF_WeighmentEntry
 
 	public I_TF_Destination getTF_Destination() throws RuntimeException;
 
+    /** Column name TF_ProductionPlant_ID */
+    public static final String COLUMNNAME_TF_ProductionPlant_ID = "TF_ProductionPlant_ID";
+
+	/** Set TF_ProductionPlant	  */
+	public void setTF_ProductionPlant_ID (int TF_ProductionPlant_ID);
+
+	/** Get TF_ProductionPlant	  */
+	public int getTF_ProductionPlant_ID();
+
+	public I_TF_ProductionPlant getTF_ProductionPlant() throws RuntimeException;
+
     /** Column name TF_Quarry_ID */
     public static final String COLUMNNAME_TF_Quarry_ID = "TF_Quarry_ID";
 
@@ -413,6 +442,15 @@ public interface I_TF_WeighmentEntry
 	public int getTF_RentedVehicle_ID();
 
 	public I_TF_RentedVehicle getTF_RentedVehicle() throws RuntimeException;
+
+    /** Column name TF_Send_To */
+    public static final String COLUMNNAME_TF_Send_To = "TF_Send_To";
+
+	/** Set Send To	  */
+	public void setTF_Send_To (String TF_Send_To);
+
+	/** Get Send To	  */
+	public String getTF_Send_To();
 
     /** Column name TF_VehicleType_ID */
     public static final String COLUMNNAME_TF_VehicleType_ID = "TF_VehicleType_ID";

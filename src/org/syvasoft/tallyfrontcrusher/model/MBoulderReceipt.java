@@ -51,48 +51,12 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
-		if(is_ValueChanged(COLUMNNAME_Subcontractor_ID)) {			
-			int priceList_ID = getSubcontractor().getPO_PriceList_ID();
-			if(priceList_ID == 0)
-				log.saveError("Error", "Please configure default Purchase Price List for Subcontractor!");
 				
-			setPO_PriceList_ID(priceList_ID);
-			
-			//Get Unit Price from Latest Price List.
-			String sql = "SELECT plv.M_PriceList_Version_ID "
-					+ "FROM M_PriceList_Version plv "
-					+ "WHERE plv.M_PriceList_ID=? "	
-					+ " AND plv.ValidFrom <= ? "
-					+ "ORDER BY plv.ValidFrom DESC";
-			int M_PriceList_Version_ID = DB.getSQLValueEx(null, sql, getPO_PriceList_ID(), getDateReceipt());
-			MProductPricing pp = new MProductPricing (getJobWork_Product_ID(), getSubcontractor_ID(), getQtyReceived(), false);
-			pp.setM_PriceList_Version_ID(M_PriceList_Version_ID);
-			pp.setPriceDate(getDateReceipt());
-			
-			BigDecimal priceStd = pp.getPriceStd();
-			if(priceStd == null) {
-				MPriceListVersion plv = new MPriceListVersion(getCtx(), M_PriceList_Version_ID, get_TrxName());
-				log.saveError("Error", "Please configure price for " + getJobWork_Product().getName() + " in Price List Version:" + plv.getName());
-			}
-			
-			setJobwork_StdPrice(priceStd);
-		}
-		
-		if(newRecord || is_ValueChanged(COLUMNNAME_M_Warehouse_ID)) {
-			TF_MProject proj = TF_MProject.getCrusherProductionSubcontractByWarehouse(getM_Warehouse_ID());
-			if(proj != null) {
-				MSubcontractType st = new MSubcontractType(getCtx(), proj.getTF_SubcontractType_ID(), get_TrxName());
-				if(st.getSubcontractType().equals(MSubcontractType.SUBCONTRACTTYPE_CrusherProduction)) {
-					setTF_Send_To(TF_SEND_TO_SubcontractProduction);
-					if(getC_Project_ID() == 0) {
-						setC_Project_ID(proj.getC_Project_ID());
-						setSubcontractor_ID(proj.getC_BPartner_ID());
-						setJobWork_Product_ID(proj.getJobWork_Product_ID());						
-					}
-				}
-			}
-			else
-				setTF_Send_To(TF_SEND_TO_Stock); //for time being, it is set as Stock
+		if(newRecord || is_ValueChanged(COLUMNNAME_C_Project_ID)) {
+			TF_MProject proj = new TF_MProject(getCtx(), getC_Project_ID(), get_TrxName());
+			setJobWork_Product_ID(proj.getJobWork_Product_ID());
+			BigDecimal purchasePrice = MJobworkProductPrice.getPrice(getCtx(), getC_Project_ID(), proj.getJobWork_Product_ID(), getDateAcct()) ;
+			setJobwork_StdPrice(purchasePrice);			
 		}
 		
 				
@@ -320,7 +284,7 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 		else if(MBoulderReceipt.DOCACTION_Complete.equals(DocAction)) {
 			
 			MWarehouse warehouse = MWarehouse.get(getCtx(), getM_Warehouse_ID());
-			//int defaultLocatorID = warehouse.getDefaultLocator().getM_Locator_ID();
+			int defaultLocatorID = warehouse.getDefaultLocator().getM_Locator_ID();
 			
 			if(getTF_Send_To().equals(TF_SEND_TO_SubcontractProduction)) {
 				createSubcontractMovement();
@@ -329,111 +293,101 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 				setProcessed(true);
 				return null;
 			}
-			else {				
-				String desc = getDescription();
-				if(desc == null)
-					desc = "";
-				if(!desc.contains("ERROR:")) {
-					setDescription(desc + 
-							" | ERROR: Send to Stock is not yet implemented!");					
-				}
-				return null;
-			}	
-		}
-		return null;
-			/*
-			//Update Storage for the received Product from the Joborder.
-			if (!MStorageOnHand.add(getCtx(), getM_Warehouse_ID(),
-					defaultLocatorID,
-					getM_Product_ID(),
-					0,
-					getQtyReceived(),getDateAcct(),
-					get_TrxName()))
+			else {		
+				
+				//Update Storage for the received Product from the Joborder.
+				if (!MStorageOnHand.add(getCtx(), getM_Warehouse_ID(),
+						defaultLocatorID,
+						getM_Product_ID(),
+						0,
+						getQtyReceived(),getDateAcct(),
+						get_TrxName()))
+					{
+						String lastError = CLogger.retrieveErrorString("");
+						m_processMsg = "Cannot correct Inventory OnHand (MA) [" + getM_Product().getValue() + "] - " + lastError;				
+						return m_processMsg;
+					}
+				//Update Transaction History
+				MTransaction mtrx = new MTransaction (getCtx(), getAD_Org_ID(),
+					"J+", defaultLocatorID,
+					getM_Product_ID(), 0,
+					getQtyReceived(), getDateAcct(), get_TrxName());
+				mtrx.set_ValueOfColumn(MBoulderReceipt.COLUMNNAME_TF_Boulder_Receipt_ID, getTF_Boulder_Receipt_ID());
+				if (!mtrx.save())
 				{
-					String lastError = CLogger.retrieveErrorString("");
-					m_processMsg = "Cannot correct Inventory OnHand (MA) [" + getM_Product().getValue() + "] - " + lastError;				
+					m_processMsg = "Could not create Material Transaction (MA) [" + getM_Product().getValue() + "]";			
 					return m_processMsg;
 				}
-			//Update Transaction History
-			MTransaction mtrx = new MTransaction (getCtx(), getAD_Org_ID(),
-				"J+", defaultLocatorID,
-				getM_Product_ID(), 0,
-				getQtyReceived(), getDateAcct(), get_TrxName());
-			mtrx.set_ValueOfColumn(MBoulderReceipt.COLUMNNAME_TF_Boulder_Receipt_ID, getTF_Boulder_Receipt_ID());
-			if (!mtrx.save())
-			{
-				m_processMsg = "Could not create Material Transaction (MA) [" + getM_Product().getValue() + "]";			
-				return m_processMsg;
+				
+				//Update Costing Record...
+				MAcctSchema as = (MAcctSchema) MGLPostingConfig.getMGLPostingConfig(getCtx()).getC_AcctSchema();			
+				MCostDetail.createBoulderReceipt(as, getAD_Org_ID(), getM_Product_ID(), 0, getTF_Boulder_Receipt_ID()
+						, 0, getJobwork_StdPrice().multiply(getQtyReceived()), getQtyReceived(), getDescription(), get_TrxName());
+				
+				//Posting GL journal for Jobwork expense 
+				MJournal j = new MJournal(getCtx(), 0, get_TrxName());
+				j.setDescription("Generated Jobwork Expense Journal Entry from Boulder Receipt - " + getDocumentNo());
+				j.setC_AcctSchema_ID(Env.getContextAsInt(getCtx(), "$C_AcctSchema_ID"));
+				j.setC_Currency_ID(Env.getContextAsInt(getCtx(), "$C_Currency_ID"));
+				j.setPostingType(MJournal.POSTINGTYPE_Actual);
+				j.setC_DocType_ID(1000000);
+				j.setDateDoc(getDateAcct());
+				j.setDateAcct(getDateAcct());
+				j.setDocStatus(DOCSTATUS_Drafted);
+				MPeriod period = MPeriod.get(getCtx(), getDateAcct());
+				j.setC_Period_ID(period.getC_Period_ID());
+				j.setGL_Category_ID(1000000);
+				j.setC_ConversionType_ID(114);
+				j.saveEx();
+				
+				BigDecimal amount = getQtyReceived().multiply(getJobwork_StdPrice());
+				
+				//Jobwork Expense
+				MJournalLine jl = new MJournalLine(j);
+				jl.setLine(10);			
+				jl.setAccount_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getJobworkExpenseAcct_ID());
+				jl.setC_BPartner_ID(getSubcontractor_ID());
+				jl.setM_Product_ID(getJobWork_Product_ID());			
+				jl.setUser1_ID(getTF_Quarry().getC_ElementValue_ID()); // Quarry Profit Center
+				jl.setAmtSourceDr(amount);
+				jl.setAmtAcctDr(amount);
+				jl.setIsGenerated(true);
+				jl.saveEx();
+				
+				//Jobwork Payable Clearing
+				jl = new MJournalLine(j);
+				jl.setLine(20);			
+				jl.setAccount_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getJobworkPayableClearingAcct_ID());
+				jl.setC_BPartner_ID(getSubcontractor_ID());
+				jl.setM_Product_ID(getJobWork_Product_ID());			
+				jl.setUser1_ID(getTF_Quarry().getC_ElementValue_ID()); // Quarry Profit Center
+				jl.setAmtSourceCr(amount);
+				jl.setAmtAcctCr(amount);
+				jl.setIsGenerated(true);
+				jl.saveEx();
+				
+				j.processIt(MJournal.ACTION_Complete);
+				j.saveEx();
+				
+				createSubcontractInvoice();
+				
+				setJobwork_Journal_ID(j.getGL_Journal_ID());			
+				setDocStatus(DOCSTATUS_Completed);
+				setProcessed(true);
+				setM_Transaction_ID(mtrx.getM_Transaction_ID());
+				
+			}
+		
+			
+			if(TF_SEND_TO_Production.equals(getTF_Send_To())) {
+				m_processMsg = postCrusherProduction();
 			}
 			
-			//Update Costing Record...
-			MAcctSchema as = (MAcctSchema) MGLPostingConfig.getMGLPostingConfig(getCtx()).getC_AcctSchema();			
-			MCostDetail.createBoulderReceipt(as, getAD_Org_ID(), getM_Product_ID(), 0, getTF_Boulder_Receipt_ID()
-					, 0, getJobwork_StdPrice().multiply(getQtyReceived()), getQtyReceived(), getDescription(), get_TrxName());
+			return m_processMsg;
+				
+		}	
+			return null;
 			
-			//Posting GL journal for Jobwork expense 
-			MJournal j = new MJournal(getCtx(), 0, get_TrxName());
-			j.setDescription("Generated Jobwork Expense Journal Entry from Boulder Receipt - " + getDocumentNo());
-			j.setC_AcctSchema_ID(Env.getContextAsInt(getCtx(), "$C_AcctSchema_ID"));
-			j.setC_Currency_ID(Env.getContextAsInt(getCtx(), "$C_Currency_ID"));
-			j.setPostingType(MJournal.POSTINGTYPE_Actual);
-			j.setC_DocType_ID(1000000);
-			j.setDateDoc(getDateAcct());
-			j.setDateAcct(getDateAcct());
-			j.setDocStatus(DOCSTATUS_Drafted);
-			MPeriod period = MPeriod.get(getCtx(), getDateAcct());
-			j.setC_Period_ID(period.getC_Period_ID());
-			j.setGL_Category_ID(1000000);
-			j.setC_ConversionType_ID(114);
-			j.saveEx();
-			
-			BigDecimal amount = getQtyReceived().multiply(getJobwork_StdPrice());
-			
-			//Jobwork Expense
-			MJournalLine jl = new MJournalLine(j);
-			jl.setLine(10);			
-			jl.setAccount_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getJobworkExpenseAcct_ID());
-			jl.setC_BPartner_ID(getSubcontractor_ID());
-			jl.setM_Product_ID(getJobWork_Product_ID());			
-			jl.setUser1_ID(getTF_Quarry().getC_ElementValue_ID()); // Quarry Profit Center
-			jl.setAmtSourceDr(amount);
-			jl.setAmtAcctDr(amount);
-			jl.setIsGenerated(true);
-			jl.saveEx();
-			
-			//Jobwork Payable Clearing
-			jl = new MJournalLine(j);
-			jl.setLine(20);			
-			jl.setAccount_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getJobworkPayableClearingAcct_ID());
-			jl.setC_BPartner_ID(getSubcontractor_ID());
-			jl.setM_Product_ID(getJobWork_Product_ID());			
-			jl.setUser1_ID(getTF_Quarry().getC_ElementValue_ID()); // Quarry Profit Center
-			jl.setAmtSourceCr(amount);
-			jl.setAmtAcctCr(amount);
-			jl.setIsGenerated(true);
-			jl.saveEx();
-			
-			j.processIt(MJournal.ACTION_Complete);
-			j.saveEx();
-			
-			setJobwork_Journal_ID(j.getGL_Journal_ID());			
-			setDocStatus(DOCSTATUS_Completed);
-			setProcessed(true);
-			setM_Transaction_ID(mtrx.getM_Transaction_ID());
-			
-		}
-		
-		if(getC_Project_ID() > 0) {
-			TF_MProject jobWork = new TF_MProject(getCtx(), getC_Project_ID(), get_TrxName());
-			jobWork.updateBoulderReceiptBasedFields(this);
-			jobWork.saveEx();
-		}
-		
-		if(TF_SEND_TO_Production.equals(getTF_Send_To())) {
-			m_processMsg = postCrusherProduction();
-		}
-		
-		return m_processMsg;*/
 	}
 	
 	public void reverseIt() {
@@ -456,8 +410,7 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 			MSubcontractMaterialMovement mov = new MSubcontractMaterialMovement(getCtx(), getTF_RMSubcon_Movement_ID(), get_TrxName());
 			mov.deleteEx(true);
 			setSubcon_Invoice_ID(0);
-			setTF_RMSubcon_Movement_ID(0);
-			return;
+			setTF_RMSubcon_Movement_ID(0);			
 		}		
 		
 		MWarehouse warehouse = MWarehouse.get(getCtx(), getM_Warehouse_ID());
@@ -514,13 +467,7 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 			DB.executeUpdate(sql, get_TrxName());
 			rent.deleteEx(true);
 		}
-		
-		//if(getC_Project_ID() > 0) {
-		//	TF_MProject jobWork = new TF_MProject(getCtx(), getC_Project_ID(), get_TrxName());
-		//	jobWork.reverseBoulderReceiptBasedFields(this);
-		//	jobWork.saveEx();
-		//}
-		
+						
 		setProcessed(false);
 		setDocStatus(DOCSTATUS_Drafted);		
 	}
@@ -530,6 +477,7 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 		String m_processMsg = null;
 		//Create Crusher Production
 		MCrusherProduction cProd = new MCrusherProduction(getCtx(), 0, get_TrxName());
+		cProd.setTF_ProductionPlant_ID(getTF_ProductionPlant_ID());		
 		cProd.setTF_BlueMetal_Type(getTF_BlueMetal_Type());
 		cProd.setMovementDate(getDateReceipt());
 		cProd.setC_UOM_ID(getC_UOM_ID());		

@@ -23,7 +23,7 @@ import org.compiere.util.KeyNamePair;
 
 /** Generated Interface for TF_Boulder_Receipt
  *  @author iDempiere (generated) 
- *  @version Release 4.1
+ *  @version Release 5.1
  */
 @SuppressWarnings("all")
 public interface I_TF_Boulder_Receipt 
@@ -327,10 +327,10 @@ public interface I_TF_Boulder_Receipt
     /** Column name NoOfLoad */
     public static final String COLUMNNAME_NoOfLoad = "NoOfLoad";
 
-	/** Set No. of Load	  */
+	/** Set No of Load	  */
 	public void setNoOfLoad (BigDecimal NoOfLoad);
 
-	/** Get No. of Load	  */
+	/** Get No of Load	  */
 	public BigDecimal getNoOfLoad();
 
     /** Column name PO_PriceList_ID */
@@ -502,6 +502,17 @@ public interface I_TF_Boulder_Receipt
 	public int getTF_Employee_Salary_ID();
 
 	public I_TF_Employee_Salary getTF_Employee_Salary() throws RuntimeException;
+
+    /** Column name TF_ProductionPlant_ID */
+    public static final String COLUMNNAME_TF_ProductionPlant_ID = "TF_ProductionPlant_ID";
+
+	/** Set TF_ProductionPlant	  */
+	public void setTF_ProductionPlant_ID (int TF_ProductionPlant_ID);
+
+	/** Get TF_ProductionPlant	  */
+	public int getTF_ProductionPlant_ID();
+
+	public I_TF_ProductionPlant getTF_ProductionPlant() throws RuntimeException;
 
     /** Column name TF_Quarry_ID */
     public static final String COLUMNNAME_TF_Quarry_ID = "TF_Quarry_ID";

@@ -23,7 +23,7 @@ import org.compiere.util.KeyNamePair;
 
 /** Generated Interface for TF_Crusher_Production
  *  @author iDempiere (generated) 
- *  @version Release 3.1
+ *  @version Release 5.1
  */
 @SuppressWarnings("all")
 public interface I_TF_Crusher_Production 
@@ -293,6 +293,17 @@ public interface I_TF_Crusher_Production
 
 	/** Get TF_Crusher_Production_UU	  */
 	public String getTF_Crusher_Production_UU();
+
+    /** Column name TF_ProductionPlant_ID */
+    public static final String COLUMNNAME_TF_ProductionPlant_ID = "TF_ProductionPlant_ID";
+
+	/** Set TF_ProductionPlant	  */
+	public void setTF_ProductionPlant_ID (int TF_ProductionPlant_ID);
+
+	/** Get TF_ProductionPlant	  */
+	public int getTF_ProductionPlant_ID();
+
+	public I_TF_ProductionPlant getTF_ProductionPlant() throws RuntimeException;
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";

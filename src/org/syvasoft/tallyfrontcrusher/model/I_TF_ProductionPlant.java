@@ -21,18 +21,18 @@ import java.sql.Timestamp;
 import org.compiere.model.*;
 import org.compiere.util.KeyNamePair;
 
-/** Generated Interface for TF_CrusherProduction_Config
+/** Generated Interface for TF_ProductionPlant
  *  @author iDempiere (generated) 
  *  @version Release 5.1
  */
 @SuppressWarnings("all")
-public interface I_TF_CrusherProduction_Config 
+public interface I_TF_ProductionPlant 
 {
 
-    /** TableName=TF_CrusherProduction_Config */
-    public static final String Table_Name = "TF_CrusherProduction_Config";
+    /** TableName=TF_ProductionPlant */
+    public static final String Table_Name = "TF_ProductionPlant";
 
-    /** AD_Table_ID=1000178 */
+    /** AD_Table_ID=1000285 */
     public static final int Table_ID = MTable.getTable_ID(Table_Name);
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);
@@ -106,80 +106,18 @@ public interface I_TF_CrusherProduction_Config
 	  */
 	public boolean isActive();
 
-    /** Column name M_Product_ID */
-    public static final String COLUMNNAME_M_Product_ID = "M_Product_ID";
+    /** Column name Name */
+    public static final String COLUMNNAME_Name = "Name";
 
-	/** Set Product.
-	  * Product, Service, Item
+	/** Set Name.
+	  * Alphanumeric identifier of the entity
 	  */
-	public void setM_Product_ID (int M_Product_ID);
+	public void setName (String Name);
 
-	/** Get Product.
-	  * Product, Service, Item
+	/** Get Name.
+	  * Alphanumeric identifier of the entity
 	  */
-	public int getM_Product_ID();
-
-	public org.compiere.model.I_M_Product getM_Product() throws RuntimeException;
-
-    /** Column name Percent */
-    public static final String COLUMNNAME_Percent = "Percent";
-
-	/** Set Percent.
-	  * Percentage
-	  */
-	public void setPercent (BigDecimal Percent);
-
-	/** Get Percent.
-	  * Percentage
-	  */
-	public BigDecimal getPercent();
-
-    /** Column name Production_Formula */
-    public static final String COLUMNNAME_Production_Formula = "Production_Formula";
-
-	/** Set Production Formula	  */
-	public void setProduction_Formula (BigDecimal Production_Formula);
-
-	/** Get Production Formula	  */
-	public BigDecimal getProduction_Formula();
-
-    /** Column name RM_Product_ID */
-    public static final String COLUMNNAME_RM_Product_ID = "RM_Product_ID";
-
-	/** Set Raw Material	  */
-	public void setRM_Product_ID (int RM_Product_ID);
-
-	/** Get Raw Material	  */
-	public int getRM_Product_ID();
-
-	public org.compiere.model.I_M_Product getRM_Product() throws RuntimeException;
-
-    /** Column name TF_BlueMetal_Type */
-    public static final String COLUMNNAME_TF_BlueMetal_Type = "TF_BlueMetal_Type";
-
-	/** Set Blue Metal Type	  */
-	public void setTF_BlueMetal_Type (String TF_BlueMetal_Type);
-
-	/** Get Blue Metal Type	  */
-	public String getTF_BlueMetal_Type();
-
-    /** Column name TF_CrusherProduction_Config_ID */
-    public static final String COLUMNNAME_TF_CrusherProduction_Config_ID = "TF_CrusherProduction_Config_ID";
-
-	/** Set Crusher Production Configuration	  */
-	public void setTF_CrusherProduction_Config_ID (int TF_CrusherProduction_Config_ID);
-
-	/** Get Crusher Production Configuration	  */
-	public int getTF_CrusherProduction_Config_ID();
-
-    /** Column name TF_CrusherProduction_Config_UU */
-    public static final String COLUMNNAME_TF_CrusherProduction_Config_UU = "TF_CrusherProduction_Config_UU";
-
-	/** Set TF_CrusherProduction_Config_UU	  */
-	public void setTF_CrusherProduction_Config_UU (String TF_CrusherProduction_Config_UU);
-
-	/** Get TF_CrusherProduction_Config_UU	  */
-	public String getTF_CrusherProduction_Config_UU();
+	public String getName();
 
     /** Column name TF_ProductionPlant_ID */
     public static final String COLUMNNAME_TF_ProductionPlant_ID = "TF_ProductionPlant_ID";
@@ -190,16 +128,14 @@ public interface I_TF_CrusherProduction_Config
 	/** Get TF_ProductionPlant	  */
 	public int getTF_ProductionPlant_ID();
 
-	public I_TF_ProductionPlant getTF_ProductionPlant() throws RuntimeException;
+    /** Column name TF_ProductionPlant_UU */
+    public static final String COLUMNNAME_TF_ProductionPlant_UU = "TF_ProductionPlant_UU";
 
-    /** Column name Unit_Divisor */
-    public static final String COLUMNNAME_Unit_Divisor = "Unit_Divisor";
+	/** Set TF_ProductionPlant_UU	  */
+	public void setTF_ProductionPlant_UU (String TF_ProductionPlant_UU);
 
-	/** Set Unit Divisor	  */
-	public void setUnit_Divisor (BigDecimal Unit_Divisor);
-
-	/** Get Unit Divisor	  */
-	public BigDecimal getUnit_Divisor();
+	/** Get TF_ProductionPlant_UU	  */
+	public String getTF_ProductionPlant_UU();
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";

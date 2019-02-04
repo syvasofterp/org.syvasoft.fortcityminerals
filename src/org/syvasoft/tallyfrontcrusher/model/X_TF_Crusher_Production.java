@@ -26,14 +26,14 @@ import org.compiere.util.Env;
 
 /** Generated Model for TF_Crusher_Production
  *  @author iDempiere (generated) 
- *  @version Release 3.1 - $Id$ */
+ *  @version Release 5.1 - $Id$ */
 public class X_TF_Crusher_Production extends PO implements I_TF_Crusher_Production, I_Persistent 
 {
 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170812L;
+	private static final long serialVersionUID = 20190204L;
 
     /** Standard Constructor */
     public X_TF_Crusher_Production (Properties ctx, int TF_Crusher_Production_ID, String trxName)
@@ -54,6 +54,7 @@ public class X_TF_Crusher_Production extends PO implements I_TF_Crusher_Producti
 			setRM_Product_ID (0);
 			setTF_BlueMetal_Type (null);
 			setTF_Crusher_Production_ID (0);
+			setTF_ProductionPlant_ID (0);
         } */
     }
 
@@ -506,5 +507,30 @@ public class X_TF_Crusher_Production extends PO implements I_TF_Crusher_Producti
 	public String getTF_Crusher_Production_UU () 
 	{
 		return (String)get_Value(COLUMNNAME_TF_Crusher_Production_UU);
+	}
+
+	public I_TF_ProductionPlant getTF_ProductionPlant() throws RuntimeException
+    {
+		return (I_TF_ProductionPlant)MTable.get(getCtx(), I_TF_ProductionPlant.Table_Name)
+			.getPO(getTF_ProductionPlant_ID(), get_TrxName());	}
+
+	/** Set TF_ProductionPlant.
+		@param TF_ProductionPlant_ID TF_ProductionPlant	  */
+	public void setTF_ProductionPlant_ID (int TF_ProductionPlant_ID)
+	{
+		if (TF_ProductionPlant_ID < 1) 
+			set_Value (COLUMNNAME_TF_ProductionPlant_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_ProductionPlant_ID, Integer.valueOf(TF_ProductionPlant_ID));
+	}
+
+	/** Get TF_ProductionPlant.
+		@return TF_ProductionPlant	  */
+	public int getTF_ProductionPlant_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_ProductionPlant_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 }
