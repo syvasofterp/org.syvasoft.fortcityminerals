@@ -23,10 +23,12 @@ public class MCrusherProductionConfig extends X_TF_CrusherProduction_Config {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public static MCrusherProductionConfig[] getMCrusherProductionConfig(Properties ctx, String TF_BlueMetal_Type) {
-		String where = " TF_BlueMetal_Type=?";
+	public static MCrusherProductionConfig[] getMCrusherProductionConfig(Properties ctx,
+			int TF_ProductionPlant_ID,
+			String TF_BlueMetal_Type) {
+		String where = " TF_ProductionPlant_ID = ? AND TF_BlueMetal_Type=?";
 		List<MCrusherProductionConfig> prodConfigs = new Query(ctx, Table_Name, where, null)
-		.setClient_ID().setParameters(TF_BlueMetal_Type).setOnlyActiveRecords(true)
+		.setClient_ID().setParameters(TF_ProductionPlant_ID, TF_BlueMetal_Type).setOnlyActiveRecords(true)
 		.setOrderBy("TF_CrusherProduction_Config_ID").list();	
 		MCrusherProductionConfig configs[] = new MCrusherProductionConfig[prodConfigs.size()];
 		return prodConfigs.toArray(configs);

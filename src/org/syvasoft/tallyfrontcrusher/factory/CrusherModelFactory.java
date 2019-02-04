@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.util.Properties;
 
 import org.adempiere.base.IModelFactory;
+import org.compiere.model.MProductionPlan;
 import org.compiere.model.PO;
 import org.compiere.util.Env;
 import org.syvasoft.tallyfrontcrusher.model.MBPOpeningBalance;
@@ -55,6 +56,7 @@ import org.syvasoft.tallyfrontcrusher.model.MPermitLedger;
 import org.syvasoft.tallyfrontcrusher.model.MPermitLedgerLine;
 import org.syvasoft.tallyfrontcrusher.model.MPermitPurchase;
 import org.syvasoft.tallyfrontcrusher.model.MPermitPurchaseLine;
+import org.syvasoft.tallyfrontcrusher.model.MProductionPlant;
 import org.syvasoft.tallyfrontcrusher.model.MQuarry;
 import org.syvasoft.tallyfrontcrusher.model.MQuarryRent;
 import org.syvasoft.tallyfrontcrusher.model.MQuarryRentConfig;
@@ -294,6 +296,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return MLumpSumRentConfig.class;
 		else if(MDebitCreditNote.Table_Name.equals(tableName))
 			return MDebitCreditNote.class;
+		else if(MProductionPlant.Table_Name.equals(tableName))
+			return MProductionPlant.class;
 		return null;
 	}
 
@@ -488,6 +492,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MLumpSumRentConfig(ctx, Record_ID, trxName);
 		else if(MDebitCreditNote.Table_Name.equals(tableName))
 			return new MDebitCreditNote(ctx, Record_ID, trxName);
+		else if(MProductionPlant.Table_Name.equals(tableName))
+			return new MProductionPlant(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -684,6 +690,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MCashCounter(ctx, rs, trxName);
 		else if(MDebitCreditNote.Table_Name.equals(tableName))
 			return new MDebitCreditNote(ctx, rs, trxName);
+		else if(MProductionPlant.Table_Name.equals(tableName))
+			return new MProductionPlant(ctx, rs, trxName);
 		return null;
 	}
 

@@ -26,14 +26,14 @@ import org.compiere.util.Env;
 
 /** Generated Model for TF_Boulder_Receipt
  *  @author iDempiere (generated) 
- *  @version Release 4.1 - $Id$ */
+ *  @version Release 5.1 - $Id$ */
 public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_Persistent 
 {
 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180511L;
+	private static final long serialVersionUID = 20190201L;
 
     /** Standard Constructor */
     public X_TF_Boulder_Receipt (Properties ctx, int TF_Boulder_Receipt_ID, String trxName)
@@ -56,7 +56,6 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 			setM_Product_ID (0);
 			setM_Warehouse_ID (0);
 			setProcessed (false);
-			setSubcontractor_ID (0);
 			setTF_Boulder_Receipt_ID (0);
 			setTF_Quarry_ID (0);
 			setTF_Send_To (null);
@@ -574,14 +573,14 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 		return ii.intValue();
 	}
 
-	/** Set No. of Load.
-		@param NoOfLoad No. of Load	  */
+	/** Set No of Load.
+		@param NoOfLoad No of Load	  */
 	public void setNoOfLoad (BigDecimal NoOfLoad)
 	{
 		throw new IllegalArgumentException ("NoOfLoad is virtual column");	}
 
-	/** Get No. of Load.
-		@return No. of Load	  */
+	/** Get No of Load.
+		@return No of Load	  */
 	public BigDecimal getNoOfLoad () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_NoOfLoad);
@@ -929,6 +928,31 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 	public int getTF_Employee_Salary_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Employee_Salary_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public I_TF_ProductionPlant getTF_ProductionPlant() throws RuntimeException
+    {
+		return (I_TF_ProductionPlant)MTable.get(getCtx(), I_TF_ProductionPlant.Table_Name)
+			.getPO(getTF_ProductionPlant_ID(), get_TrxName());	}
+
+	/** Set TF_ProductionPlant.
+		@param TF_ProductionPlant_ID TF_ProductionPlant	  */
+	public void setTF_ProductionPlant_ID (int TF_ProductionPlant_ID)
+	{
+		if (TF_ProductionPlant_ID < 1) 
+			set_Value (COLUMNNAME_TF_ProductionPlant_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_ProductionPlant_ID, Integer.valueOf(TF_ProductionPlant_ID));
+	}
+
+	/** Get TF_ProductionPlant.
+		@return TF_ProductionPlant	  */
+	public int getTF_ProductionPlant_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_ProductionPlant_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();

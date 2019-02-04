@@ -75,6 +75,11 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 				qty = qty.divide(new BigDecimal(1000));
 			}			
 			
+			if(weighment.getNetWeightUnit() != null && weighment.getNetWeightUnit().doubleValue() > 0) {
+				qty = weighment.getNetWeightUnit();
+			}
+				
+			
 			MProductPricing pp = TF_MOrder.getProductPricing(weighment.getM_Product_ID(), priceList_id, bPartner_id,
 					qty, weighment.getGrossWeightTime(), isSOTrx);
 			BigDecimal price = pp.getPriceStd();

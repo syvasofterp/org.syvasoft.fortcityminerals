@@ -23,14 +23,14 @@ import org.compiere.model.*;
 
 /** Generated Model for TF_Boulder_Receipt_LIne
  *  @author iDempiere (generated) 
- *  @version Release 4.1 - $Id$ */
+ *  @version Release 5.1 - $Id$ */
 public class X_TF_Boulder_Receipt_LIne extends PO implements I_TF_Boulder_Receipt_LIne, I_Persistent 
 {
 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20171226L;
+	private static final long serialVersionUID = 20190201L;
 
     /** Standard Constructor */
     public X_TF_Boulder_Receipt_LIne (Properties ctx, int TF_Boulder_Receipt_LIne_ID, String trxName)

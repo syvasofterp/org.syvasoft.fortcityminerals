@@ -33,7 +33,7 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20181029L;
+	private static final long serialVersionUID = 20190201L;
 
     /** Standard Constructor */
     public X_TF_WeighmentEntry (Properties ctx, int TF_WeighmentEntry_ID, String trxName)
@@ -383,6 +383,23 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return bd;
 	}
 
+	/** Set Net Weight (Unit).
+		@param NetWeightUnit Net Weight (Unit)	  */
+	public void setNetWeightUnit (BigDecimal NetWeightUnit)
+	{
+		set_Value (COLUMNNAME_NetWeightUnit, NetWeightUnit);
+	}
+
+	/** Get Net Weight (Unit).
+		@return Net Weight (Unit)	  */
+	public BigDecimal getNetWeightUnit () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_NetWeightUnit);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
 	/** Set Party Name.
 		@param PartyName Party Name	  */
 	public void setPartyName (String PartyName)
@@ -566,6 +583,31 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return (Timestamp)get_Value(COLUMNNAME_TareWeightTime);
 	}
 
+	/** Regular = R */
+	public static final String TF_BLUEMETAL_TYPE_Regular = "R";
+	/** Mix GSB = G */
+	public static final String TF_BLUEMETAL_TYPE_MixGSB = "G";
+	/** Mix WMM = W */
+	public static final String TF_BLUEMETAL_TYPE_MixWMM = "W";
+	/** Mix GSB + 40MM = G+ */
+	public static final String TF_BLUEMETAL_TYPE_MixGSBPlus40MM = "G+";
+	/** Mix WMM + 40MM = W+ */
+	public static final String TF_BLUEMETAL_TYPE_MixWMMPlus40MM = "W+";
+	/** Set Blue Metal Type.
+		@param TF_BlueMetal_Type Blue Metal Type	  */
+	public void setTF_BlueMetal_Type (String TF_BlueMetal_Type)
+	{
+
+		set_Value (COLUMNNAME_TF_BlueMetal_Type, TF_BlueMetal_Type);
+	}
+
+	/** Get Blue Metal Type.
+		@return Blue Metal Type	  */
+	public String getTF_BlueMetal_Type () 
+	{
+		return (String)get_Value(COLUMNNAME_TF_BlueMetal_Type);
+	}
+
 	public I_TF_Boulder_Receipt getTF_Boulder_Receipt() throws RuntimeException
     {
 		return (I_TF_Boulder_Receipt)MTable.get(getCtx(), I_TF_Boulder_Receipt.Table_Name)
@@ -611,6 +653,31 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public int getTF_Destination_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Destination_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public I_TF_ProductionPlant getTF_ProductionPlant() throws RuntimeException
+    {
+		return (I_TF_ProductionPlant)MTable.get(getCtx(), I_TF_ProductionPlant.Table_Name)
+			.getPO(getTF_ProductionPlant_ID(), get_TrxName());	}
+
+	/** Set TF_ProductionPlant.
+		@param TF_ProductionPlant_ID TF_ProductionPlant	  */
+	public void setTF_ProductionPlant_ID (int TF_ProductionPlant_ID)
+	{
+		if (TF_ProductionPlant_ID < 1) 
+			set_Value (COLUMNNAME_TF_ProductionPlant_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_ProductionPlant_ID, Integer.valueOf(TF_ProductionPlant_ID));
+	}
+
+	/** Get TF_ProductionPlant.
+		@return TF_ProductionPlant	  */
+	public int getTF_ProductionPlant_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_ProductionPlant_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
@@ -664,6 +731,27 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
+	}
+
+	/** Production = P */
+	public static final String TF_SEND_TO_Production = "P";
+	/** Stock = S */
+	public static final String TF_SEND_TO_Stock = "S";
+	/** Subcontract Production = T */
+	public static final String TF_SEND_TO_SubcontractProduction = "T";
+	/** Set Send To.
+		@param TF_Send_To Send To	  */
+	public void setTF_Send_To (String TF_Send_To)
+	{
+
+		set_Value (COLUMNNAME_TF_Send_To, TF_Send_To);
+	}
+
+	/** Get Send To.
+		@return Send To	  */
+	public String getTF_Send_To () 
+	{
+		return (String)get_Value(COLUMNNAME_TF_Send_To);
 	}
 
 	public I_TF_VehicleType getTF_VehicleType() throws RuntimeException
