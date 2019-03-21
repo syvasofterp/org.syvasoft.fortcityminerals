@@ -252,7 +252,7 @@ delete from I_GLJournal WHERE ad_client_id=1000000;;
 --delete from m_distributionrunline WHERE ad_client_id=1000000;;
 delete from c_rfqline WHERE ad_client_id=1000000;;
 delete from c_projectline where c_project_id not in (select c_project_id from c_acctschema_element) and ad_client_id=1000000;;
-delete from c_project where c_project_id not in (select c_project_id from c_acctschema_element) and ad_client_id=1000000;;
+--delete from c_project where c_project_id not in (select c_project_id from c_acctschema_element) and ad_client_id=1000000;;
 --update AD_Sequence set currentnext=startno where isTableID='N';
 
 --delete from ChuBoe_Replenish_Action;
