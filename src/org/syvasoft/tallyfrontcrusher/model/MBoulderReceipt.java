@@ -100,6 +100,9 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 		setM_Warehouse_ID(entry.getM_Warehouse_ID());
 		setDescription(entry.getDescription());
 		setVehicleNo(entry.getVehicleNo());		
+		setTF_Send_To(entry.getTF_Send_To());
+		setTF_ProductionPlant_ID(entry.getTF_ProductionPlant_ID());
+		setTF_BlueMetal_Type(entry.getTF_BlueMetal_Type());
 		setDocStatus(DOCSTATUS_Drafted);
 		setDocAction(DOCACTION_Complete);
 		setTF_WeighmentEntry_ID(entry.getTF_WeighmentEntry_ID());		
@@ -286,7 +289,7 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 			MWarehouse warehouse = MWarehouse.get(getCtx(), getM_Warehouse_ID());
 			int defaultLocatorID = warehouse.getDefaultLocator().getM_Locator_ID();
 			
-			if(getTF_Send_To().equals(TF_SEND_TO_SubcontractProduction)) {
+			if(getTF_Send_To().equals(TF_SEND_TO_Production)) {
 				createSubcontractMovement();
 				createSubcontractInvoice();
 				setDocStatus(DOCSTATUS_Completed);
