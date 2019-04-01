@@ -289,7 +289,7 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 			MWarehouse warehouse = MWarehouse.get(getCtx(), getM_Warehouse_ID());
 			int defaultLocatorID = warehouse.getDefaultLocator().getM_Locator_ID();
 			
-			if(getTF_Send_To().equals(TF_SEND_TO_Production)) {
+			if(getTF_Send_To().equals(TF_SEND_TO_SubcontractProduction)) {
 				createSubcontractMovement();
 				createSubcontractInvoice();
 				setDocStatus(DOCSTATUS_Completed);
