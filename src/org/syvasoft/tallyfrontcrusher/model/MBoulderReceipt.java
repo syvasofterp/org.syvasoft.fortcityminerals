@@ -329,9 +329,11 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 				
 				//Posting GL journal for Jobwork expense 
 				MJournal j = new MJournal(getCtx(), 0, get_TrxName());
+				j.setAD_Org_ID(getAD_Org_ID());
 				j.setDescription("Generated Jobwork Expense Journal Entry from Boulder Receipt - " + getDocumentNo());
-				j.setC_AcctSchema_ID(Env.getContextAsInt(getCtx(), "$C_AcctSchema_ID"));
-				j.setC_Currency_ID(Env.getContextAsInt(getCtx(), "$C_Currency_ID"));
+				j.setC_AcctSchema_ID(as.getC_AcctSchema_ID());
+				//j.setC_Currency_ID(Env.getContextAsInt(getCtx(), "$C_Currency_ID"));
+				j.setC_Currency_ID(MClient.get(Env.getCtx()).getC_Currency_ID());
 				j.setPostingType(MJournal.POSTINGTYPE_Actual);
 				j.setC_DocType_ID(1000000);
 				j.setDateDoc(getDateAcct());
@@ -480,6 +482,7 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 		String m_processMsg = null;
 		//Create Crusher Production
 		MCrusherProduction cProd = new MCrusherProduction(getCtx(), 0, get_TrxName());
+		cProd.setAD_Org_ID(getAD_Org_ID());
 		cProd.setTF_ProductionPlant_ID(getTF_ProductionPlant_ID());		
 		cProd.setTF_BlueMetal_Type(getTF_BlueMetal_Type());
 		cProd.setMovementDate(getDateReceipt());
