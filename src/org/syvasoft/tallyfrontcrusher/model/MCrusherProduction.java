@@ -69,6 +69,7 @@ public class MCrusherProduction extends X_TF_Crusher_Production {
 			
 			// Production Header
 			MProduction prod = new MProduction(getCtx(), 0, get_TrxName());
+			prod.setAD_Org_ID(getAD_Org_ID());
 			prod.set_ValueOfColumn("TF_Crusher_Production_ID", getTF_Crusher_Production_ID());
 			prod.setMovementDate(getMovementDate());
 			prod.set_ValueOfColumn("ProductionType", "P+");
