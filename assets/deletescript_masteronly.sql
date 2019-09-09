@@ -99,7 +99,7 @@ delete from gl_journalbatch WHERE ad_client_id=1000000 ;
 delete from gl_journalline WHERE ad_client_id=1000000; 
 delete from gl_journal WHERE ad_client_id=1000000;; 
 DELETE from c_validcombination WHERE C_Project_ID IN (SELECT C_Project_ID FROM C_Project WHERE C_Project_id !=1000000 AND ad_client_id=1000000);
-UPDATE C_Invoice SET C_Project_ID = null, tf_weighmententry_id = null WHERE AD_client_ID = 1000000;
+UPDATE C_Invoice SET C_Project_ID = null WHERE AD_client_ID = 1000000;
 UPDATE m_inventory SET C_Project_ID = null WHERE AD_Client_ID = 1000000;
 DELETE FROM TF_TripSheet WHERE ad_client_id=1000000;
 UPDATE C_Order SET tf_weighmententry_id = null, C_PROJECT_id = NULL, IssueToSubcontract_ID= null, SUBCON_invoice_id = null,

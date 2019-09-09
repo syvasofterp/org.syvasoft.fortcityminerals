@@ -444,7 +444,7 @@ DELETE FROM tf_lumpsumrent_config WHERE AD_Client_ID = 1000000;
 DELETE FROM TF_Destination WHERE AD_Client_ID = 1000000;
 
 --UPDATE AD_User SET IsActive = 'N' WHERE AD_User_ID=0
-UPDATE C_Bank SET AD_Org_ID = 0 WHERE C_Bank_ID=1000032
+UPDATE C_Bank SET AD_Org_ID = 0 WHERE C_Bank_ID=1000032;
 
 DELETE FROM AD_OrgInfo WHERE AD_Client_ID = 1000000 AND AD_Org_ID!=1000000;
 DELETE FROM tf_driverbeta_config;
