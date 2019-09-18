@@ -33,7 +33,7 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20190201L;
+	private static final long serialVersionUID = 20190918L;
 
     /** Standard Constructor */
     public X_TF_WeighmentEntry (Properties ctx, int TF_WeighmentEntry_ID, String trxName)
@@ -178,6 +178,34 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public int getC_Project_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_C_Project_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_UOM getC_UOM() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_UOM)MTable.get(getCtx(), org.compiere.model.I_C_UOM.Table_Name)
+			.getPO(getC_UOM_ID(), get_TrxName());	}
+
+	/** Set UOM.
+		@param C_UOM_ID 
+		Unit of Measure
+	  */
+	public void setC_UOM_ID (int C_UOM_ID)
+	{
+		if (C_UOM_ID < 1) 
+			set_Value (COLUMNNAME_C_UOM_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_UOM_ID, Integer.valueOf(C_UOM_ID));
+	}
+
+	/** Get UOM.
+		@return Unit of Measure
+	  */
+	public int getC_UOM_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_UOM_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
@@ -593,16 +621,28 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public static final String TF_BLUEMETAL_TYPE_MixGSBPlus40MM = "G+";
 	/** Mix WMM + 40MM = W+ */
 	public static final String TF_BLUEMETAL_TYPE_MixWMMPlus40MM = "W+";
-	/** Set Blue Metal Type.
-		@param TF_BlueMetal_Type Blue Metal Type	  */
+	/** M Sand Only = MSO */
+	public static final String TF_BLUEMETAL_TYPE_MSandOnly = "MSO";
+	/** M Sand Dust Only = MDO */
+	public static final String TF_BLUEMETAL_TYPE_MSandDustOnly = "MDO";
+	/** M Sand  59% + 6MM 30% = MSC */
+	public static final String TF_BLUEMETAL_TYPE_MSand59Plus6MM30 = "MSC";
+	/** M Sand 50% + 6MM 40% = MSD */
+	public static final String TF_BLUEMETAL_TYPE_MSand50Plus6MM40 = "MSD";
+	/** Dust 68% + 6MM 30% = MDC */
+	public static final String TF_BLUEMETAL_TYPE_Dust68Plus6MM30 = "MDC";
+	/** Dust 58% + Chips 40% = MDD */
+	public static final String TF_BLUEMETAL_TYPE_Dust58PlusChips40 = "MDD";
+	/** Set Production Type.
+		@param TF_BlueMetal_Type Production Type	  */
 	public void setTF_BlueMetal_Type (String TF_BlueMetal_Type)
 	{
 
 		set_Value (COLUMNNAME_TF_BlueMetal_Type, TF_BlueMetal_Type);
 	}
 
-	/** Get Blue Metal Type.
-		@return Blue Metal Type	  */
+	/** Get Production Type.
+		@return Production Type	  */
 	public String getTF_BlueMetal_Type () 
 	{
 		return (String)get_Value(COLUMNNAME_TF_BlueMetal_Type);

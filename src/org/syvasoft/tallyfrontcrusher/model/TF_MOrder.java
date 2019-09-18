@@ -21,6 +21,8 @@ import org.compiere.model.MProductPricing;
 import org.compiere.model.MResource;
 import org.compiere.model.MSysConfig;
 import org.compiere.model.MTable;
+import org.compiere.model.MUOM;
+import org.compiere.model.MUOMConversion;
 import org.compiere.model.MUser;
 import org.compiere.model.MWarehouse;
 import org.compiere.model.Query;
@@ -1431,6 +1433,25 @@ public class TF_MOrder extends MOrder {
 		setLinePrice(line, price);
 	}
 	
+	private void setOrderLine(MOrderLine line, int product_ID, int C_UOM_ID, BigDecimal qty, BigDecimal price) {
+		line.setM_Product_ID(product_ID, true);
+		line.setQtyEntered(qty);
+		BigDecimal multiplyRate =  MUOMConversion.getProductRateTo(getCtx(), product_ID, C_UOM_ID);
+		if(multiplyRate != null) {						
+			line.setQtyOrdered (qty.divide(multiplyRate,2, RoundingMode.HALF_EVEN));
+		}
+		else {
+			line.setQtyOrdered(qty); 
+			multiplyRate = BigDecimal.ONE;
+		}
+		
+		
+		line.setPriceActual(price.multiply(multiplyRate)); // Price in Default UOM such as Tonnage
+		line.setPriceList(price); // Price for the Sales UOM
+		line.setPriceLimit(line.getPriceActual()); // 
+		line.setPriceEntered(price); // Price for the Sales UOM
+	}
+	
 	public void updateQuickOrderLines() {
 		TF_MOrderLine ordLine = null;
 		//Delete empty item lines
@@ -1469,7 +1490,7 @@ public class TF_MOrder extends MOrder {
 				ordLine = new TF_MOrderLine(this);
 			TF_MOrder.addProductPricingIfNot(getItem1_ID(), getM_PriceList_ID(), getC_BPartner_ID(), getItem1_Qty(), getItem1_Price(), 
 					getDateOrdered(), getC_DocType().isSOTrx());
-			setOrderLine(ordLine, getItem1_ID(), getItem1_Qty(), getItem1_Price());
+			setOrderLine(ordLine, getItem1_ID(), getItem1_UOM_ID(), getItem1_Qty(), getItem1_Price());
 			
 			ordLine.setC_Tax_ID(getItem1_Tax_ID());
 			
@@ -1514,7 +1535,7 @@ public class TF_MOrder extends MOrder {
 				ordLine = new TF_MOrderLine(this);
 			TF_MOrder.addProductPricingIfNot(getItem2_ID(), getM_PriceList_ID(), getC_BPartner_ID(), getItem2_Qty(), getItem2_Price(), 
 					getDateOrdered(), getC_DocType().isSOTrx());
-			setOrderLine(ordLine, getItem2_ID(), getItem2_Qty(), getItem2_Price());
+			setOrderLine(ordLine, getItem2_ID(), getItem2_UOM_ID(), getItem2_Qty(), getItem2_Price());
 			
 			ordLine.setC_Tax_ID(getItem2_Tax_ID());
 			ordLine.setC_UOM_ID(getItem2_UOM_ID());

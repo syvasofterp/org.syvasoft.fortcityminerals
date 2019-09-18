@@ -35,6 +35,7 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutLabourWageIssue_SetOpenAmt;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutMJobworkResourceRentEntry_CalcContractAmt;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_CalcAmt;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_SetPrice;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_SetPriceUOM;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_SetVehicleNo;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_CalcRentAmount;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_CalcRentPayable;
@@ -135,8 +136,16 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		
 		//TF_MOrder / C_Invoice - Set Unit Price
 		if((tableName.equals(TF_MOrder.Table_Name) || tableName.equals(TF_MInvoice.Table_Name)) && (columnName.equals(TF_MOrder.COLUMNNAME_Item1_ID)				
-				|| columnName.equals(TF_MOrder.COLUMNNAME_Item2_ID)))
-			list.add(new CalloutOrderQuickEntry_SetPrice());		
+				|| columnName.equals(TF_MOrder.COLUMNNAME_Item2_ID))) {
+			list.add(new CalloutOrderQuickEntry_SetPrice());			
+		}
+		
+		//Set Price based on Selected UOM
+		if((tableName.equals(TF_MOrder.Table_Name) || tableName.equals(TF_MInvoice.Table_Name)) && (columnName.equals(TF_MOrder.COLUMNNAME_Item1_ID)				
+				|| columnName.equals(TF_MOrder.COLUMNNAME_Item2_ID) || columnName.equals(TF_MOrder.COLUMNNAME_Item1_UOM_ID) 
+				|| columnName.equals(TF_MOrder.COLUMNNAME_Item2_UOM_ID) )) {			
+			list.add(new CalloutOrderQuickEntry_SetPriceUOM());
+		}
 		
 		//TF_MOrder - Set Vehicle No
 		if(tableName.equals(TF_MOrder.Table_Name) && columnName.equals(TF_MOrder.COLUMNNAME_Vehicle_ID))

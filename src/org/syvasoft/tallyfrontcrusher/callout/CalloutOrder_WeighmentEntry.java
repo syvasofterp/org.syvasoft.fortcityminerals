@@ -17,6 +17,7 @@ import org.compiere.model.Query;
 import org.compiere.util.Env;
 import org.syvasoft.tallyfrontcrusher.model.MDriverBetaConfig;
 import org.syvasoft.tallyfrontcrusher.model.MLumpSumRentConfig;
+import org.syvasoft.tallyfrontcrusher.model.MPriceListUOM;
 import org.syvasoft.tallyfrontcrusher.model.MRentedVehicle;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MWeighmentEntry;
@@ -60,7 +61,11 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 			mTab.setValue(TF_MOrder.COLUMNNAME_C_Currency_ID, pl.getC_Currency_ID());
 
 			int uom_id = weighment.getM_Product().getC_UOM_ID();
+			if(weighment.getC_UOM_ID() > 0) {
+				uom_id = weighment.getC_UOM_ID();
+			}
 			int tonnage_uom_id = MSysConfig.getIntValue("TONNAGE_UOM", 1000069, Env.getAD_Client_ID(ctx));
+			
 			
 			if(weighment.getM_Warehouse_ID() > 0)
 				mTab.setValue(TF_MOrder.COLUMNNAME_M_Warehouse_ID, weighment.getM_Warehouse_ID());
@@ -83,10 +88,14 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 			MProductPricing pp = TF_MOrder.getProductPricing(weighment.getM_Product_ID(), priceList_id, bPartner_id,
 					qty, weighment.getGrossWeightTime(), isSOTrx);
 			BigDecimal price = pp.getPriceStd();
+			
+			price = MPriceListUOM.getPrice(ctx, weighment.getM_Product_ID(), uom_id,
+					weighment.getC_BPartner_ID(), isSOTrx);
+			
 			if(weighment.getPrice() != null && weighment.getPrice().doubleValue() > 0)
 				price = weighment.getPrice();
 			
-			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Qty, qty);
+			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Qty, qty);			
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Price, price);
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_UnitPrice, price);
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Amt, price.multiply(qty));
