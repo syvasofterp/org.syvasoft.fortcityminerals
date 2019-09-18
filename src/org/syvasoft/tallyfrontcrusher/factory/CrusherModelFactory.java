@@ -56,6 +56,7 @@ import org.syvasoft.tallyfrontcrusher.model.MPermitLedger;
 import org.syvasoft.tallyfrontcrusher.model.MPermitLedgerLine;
 import org.syvasoft.tallyfrontcrusher.model.MPermitPurchase;
 import org.syvasoft.tallyfrontcrusher.model.MPermitPurchaseLine;
+import org.syvasoft.tallyfrontcrusher.model.MPriceListUOM;
 import org.syvasoft.tallyfrontcrusher.model.MProductionPlant;
 import org.syvasoft.tallyfrontcrusher.model.MQuarry;
 import org.syvasoft.tallyfrontcrusher.model.MQuarryRent;
@@ -298,6 +299,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return MDebitCreditNote.class;
 		else if(MProductionPlant.Table_Name.equals(tableName))
 			return MProductionPlant.class;
+		else if(MPriceListUOM.Table_Name.equals(tableName))			
+			return MPriceListUOM.class;
 		return null;
 	}
 
@@ -494,6 +497,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MDebitCreditNote(ctx, Record_ID, trxName);
 		else if(MProductionPlant.Table_Name.equals(tableName))
 			return new MProductionPlant(ctx, Record_ID, trxName);
+		else if(MPriceListUOM.Table_Name.equals(tableName))			
+			return new MPriceListUOM(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -692,6 +697,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MDebitCreditNote(ctx, rs, trxName);
 		else if(MProductionPlant.Table_Name.equals(tableName))
 			return new MProductionPlant(ctx, rs, trxName);
+		else if(MPriceListUOM.Table_Name.equals(tableName))			
+			return new MPriceListUOM(ctx, rs, trxName);
 		return null;
 	}
 

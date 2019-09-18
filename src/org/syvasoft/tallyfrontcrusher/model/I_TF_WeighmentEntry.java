@@ -122,6 +122,21 @@ public interface I_TF_WeighmentEntry
 
 	public org.compiere.model.I_C_Project getC_Project() throws RuntimeException;
 
+    /** Column name C_UOM_ID */
+    public static final String COLUMNNAME_C_UOM_ID = "C_UOM_ID";
+
+	/** Set UOM.
+	  * Unit of Measure
+	  */
+	public void setC_UOM_ID (int C_UOM_ID);
+
+	/** Get UOM.
+	  * Unit of Measure
+	  */
+	public int getC_UOM_ID();
+
+	public org.compiere.model.I_C_UOM getC_UOM() throws RuntimeException;
+
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
 
@@ -382,10 +397,10 @@ public interface I_TF_WeighmentEntry
     /** Column name TF_BlueMetal_Type */
     public static final String COLUMNNAME_TF_BlueMetal_Type = "TF_BlueMetal_Type";
 
-	/** Set Blue Metal Type	  */
+	/** Set Production Type	  */
 	public void setTF_BlueMetal_Type (String TF_BlueMetal_Type);
 
-	/** Get Blue Metal Type	  */
+	/** Get Production Type	  */
 	public String getTF_BlueMetal_Type();
 
     /** Column name TF_Boulder_Receipt_ID */
