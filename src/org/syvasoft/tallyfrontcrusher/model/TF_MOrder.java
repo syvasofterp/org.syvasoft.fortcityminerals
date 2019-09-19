@@ -632,7 +632,9 @@ public class TF_MOrder extends MOrder {
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Tonnage);
 		if (bd == null)
-			 return Env.ZERO;
+			 return Env.ONE;
+		else if(bd.doubleValue() == 0)
+			return Env.ONE;
 		return bd;
 	}
 
@@ -1858,35 +1860,23 @@ public class TF_MOrder extends MOrder {
 		else {
 			hdrDescription = "Source : " + dest.getName();
 		}
-		if(!isLumpSumRent()) {
-			invLine.setQty(getDistance());
-			BigDecimal price = getRate().multiply(getTonnage());
-			BigDecimal rate = getRate();
-			if(isSOTrx()) {
-				price = getRentPayable().divide(getDistance(), 2, RoundingMode.HALF_UP);
-				rate = price.divide(getTonnage(), 2, RoundingMode.HALF_UP);
-			}
-			invLine.setPriceActual(price);
-			invLine.setPriceList(price);
-			invLine.setPriceLimit(price);
-			invLine.setPriceEntered(price);
-			hdrDescription = hdrDescription + ", Tonnage : " + getTonnage().doubleValue()
-					+ ", Rate/ton/km : " + rate.doubleValue();
+		if(!isLumpSumRent()) {			
+			hdrDescription = hdrDescription 
+					+ ", Rate/km : " + getRate().doubleValue()
+					+ ", Distance : " + getDistance() + " km";
 		}
-		else {
-			int load_uom_id = MSysConfig.getIntValue("LOAD_UOM", 1000072, getAD_Client_ID());
-			invLine.setC_UOM_ID(load_uom_id);
-			invLine.setQty(BigDecimal.ONE);
-			BigDecimal price = getRent_Amt();
-			if(isSOTrx()) {
-				price = getRentPayable();
-			}
-			invLine.setPriceActual(price);
-			invLine.setPriceList(price);
-			invLine.setPriceLimit(price);
-			invLine.setPriceEntered(price);
-			hdrDescription = hdrDescription + ", Tonnage : " + getTonnage().doubleValue();
-		}		
+		
+		int load_uom_id = MSysConfig.getIntValue("LOAD_UOM", 1000072, getAD_Client_ID());
+		invLine.setC_UOM_ID(load_uom_id);
+		invLine.setQty(BigDecimal.ONE);
+		BigDecimal price = getRent_Amt();
+		if(isSOTrx()) {
+			price = getRentPayable();
+		}
+		invLine.setPriceActual(price);
+		invLine.setPriceList(price);
+		invLine.setPriceLimit(price);
+		invLine.setPriceEntered(price);
 		invLine.saveEx();
 		
 		invoice.setDescription(hdrDescription);
