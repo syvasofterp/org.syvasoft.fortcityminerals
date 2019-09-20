@@ -33,7 +33,7 @@ public class X_TF_Crusher_Production extends PO implements I_TF_Crusher_Producti
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20190204L;
+	private static final long serialVersionUID = 20190920L;
 
     /** Standard Constructor */
     public X_TF_Crusher_Production (Properties ctx, int TF_Crusher_Production_ID, String trxName)
@@ -85,6 +85,34 @@ public class X_TF_Crusher_Production extends PO implements I_TF_Crusher_Producti
         .append(get_ID()).append("]");
       return sb.toString();
     }
+
+	public org.compiere.model.I_C_Project getC_Project() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Project)MTable.get(getCtx(), org.compiere.model.I_C_Project.Table_Name)
+			.getPO(getC_Project_ID(), get_TrxName());	}
+
+	/** Set Subcontract / Project.
+		@param C_Project_ID 
+		Financial Project
+	  */
+	public void setC_Project_ID (int C_Project_ID)
+	{
+		if (C_Project_ID < 1) 
+			set_Value (COLUMNNAME_C_Project_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_Project_ID, Integer.valueOf(C_Project_ID));
+	}
+
+	/** Get Subcontract / Project.
+		@return Financial Project
+	  */
+	public int getC_Project_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_Project_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
 
 	public org.compiere.model.I_C_UOM getC_UOM() throws RuntimeException
     {
@@ -450,6 +478,56 @@ public class X_TF_Crusher_Production extends PO implements I_TF_Crusher_Producti
 		return ii.intValue();
 	}
 
+	public org.compiere.model.I_C_Invoice getSubcon_Invoice() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Invoice)MTable.get(getCtx(), org.compiere.model.I_C_Invoice.Table_Name)
+			.getPO(getSubcon_Invoice_ID(), get_TrxName());	}
+
+	/** Set Subcontractor Invoice.
+		@param Subcon_Invoice_ID Subcontractor Invoice	  */
+	public void setSubcon_Invoice_ID (int Subcon_Invoice_ID)
+	{
+		if (Subcon_Invoice_ID < 1) 
+			set_Value (COLUMNNAME_Subcon_Invoice_ID, null);
+		else 
+			set_Value (COLUMNNAME_Subcon_Invoice_ID, Integer.valueOf(Subcon_Invoice_ID));
+	}
+
+	/** Get Subcontractor Invoice.
+		@return Subcontractor Invoice	  */
+	public int getSubcon_Invoice_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Subcon_Invoice_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_Invoice getSubcon2_Invoice() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Invoice)MTable.get(getCtx(), org.compiere.model.I_C_Invoice.Table_Name)
+			.getPO(getSubcon2_Invoice_ID(), get_TrxName());	}
+
+	/** Set Subcontractor 2 Invoice.
+		@param Subcon2_Invoice_ID Subcontractor 2 Invoice	  */
+	public void setSubcon2_Invoice_ID (int Subcon2_Invoice_ID)
+	{
+		if (Subcon2_Invoice_ID < 1) 
+			set_Value (COLUMNNAME_Subcon2_Invoice_ID, null);
+		else 
+			set_Value (COLUMNNAME_Subcon2_Invoice_ID, Integer.valueOf(Subcon2_Invoice_ID));
+	}
+
+	/** Get Subcontractor 2 Invoice.
+		@return Subcontractor 2 Invoice	  */
+	public int getSubcon2_Invoice_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Subcon2_Invoice_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	/** Regular = R */
 	public static final String TF_BLUEMETAL_TYPE_Regular = "R";
 	/** Mix GSB = G */
@@ -460,16 +538,28 @@ public class X_TF_Crusher_Production extends PO implements I_TF_Crusher_Producti
 	public static final String TF_BLUEMETAL_TYPE_MixGSBPlus40MM = "G+";
 	/** Mix WMM + 40MM = W+ */
 	public static final String TF_BLUEMETAL_TYPE_MixWMMPlus40MM = "W+";
-	/** Set Blue Metal Type.
-		@param TF_BlueMetal_Type Blue Metal Type	  */
+	/** M Sand Only = MSO */
+	public static final String TF_BLUEMETAL_TYPE_MSandOnly = "MSO";
+	/** M Sand Dust Only = MDO */
+	public static final String TF_BLUEMETAL_TYPE_MSandDustOnly = "MDO";
+	/** M Sand  59% + 6MM 30% = MSC */
+	public static final String TF_BLUEMETAL_TYPE_MSand59Plus6MM30 = "MSC";
+	/** M Sand 50% + 6MM 40% = MSD */
+	public static final String TF_BLUEMETAL_TYPE_MSand50Plus6MM40 = "MSD";
+	/** Dust 68% + 6MM 30% = MDC */
+	public static final String TF_BLUEMETAL_TYPE_Dust68Plus6MM30 = "MDC";
+	/** Dust 58% + Chips 40% = MDD */
+	public static final String TF_BLUEMETAL_TYPE_Dust58PlusChips40 = "MDD";
+	/** Set Production Type.
+		@param TF_BlueMetal_Type Production Type	  */
 	public void setTF_BlueMetal_Type (String TF_BlueMetal_Type)
 	{
 
 		set_Value (COLUMNNAME_TF_BlueMetal_Type, TF_BlueMetal_Type);
 	}
 
-	/** Get Blue Metal Type.
-		@return Blue Metal Type	  */
+	/** Get Production Type.
+		@return Production Type	  */
 	public String getTF_BlueMetal_Type () 
 	{
 		return (String)get_Value(COLUMNNAME_TF_BlueMetal_Type);
@@ -529,6 +619,31 @@ public class X_TF_Crusher_Production extends PO implements I_TF_Crusher_Producti
 	public int getTF_ProductionPlant_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_TF_ProductionPlant_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public I_TF_WeighmentEntry getTF_WeighmentEntry() throws RuntimeException
+    {
+		return (I_TF_WeighmentEntry)MTable.get(getCtx(), I_TF_WeighmentEntry.Table_Name)
+			.getPO(getTF_WeighmentEntry_ID(), get_TrxName());	}
+
+	/** Set Weighment Entry.
+		@param TF_WeighmentEntry_ID Weighment Entry	  */
+	public void setTF_WeighmentEntry_ID (int TF_WeighmentEntry_ID)
+	{
+		if (TF_WeighmentEntry_ID < 1) 
+			set_Value (COLUMNNAME_TF_WeighmentEntry_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_WeighmentEntry_ID, Integer.valueOf(TF_WeighmentEntry_ID));
+	}
+
+	/** Get Weighment Entry.
+		@return Weighment Entry	  */
+	public int getTF_WeighmentEntry_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_WeighmentEntry_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
