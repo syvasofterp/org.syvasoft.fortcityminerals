@@ -19,6 +19,7 @@ package org.syvasoft.tallyfrontcrusher.model;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.Properties;
 import org.compiere.model.*;
 import org.compiere.util.Env;
@@ -32,7 +33,7 @@ public class X_TF_PriceListUOM extends PO implements I_TF_PriceListUOM, I_Persis
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20190914L;
+	private static final long serialVersionUID = 20190920L;
 
     /** Standard Constructor */
     public X_TF_PriceListUOM (Properties ctx, int TF_PriceListUOM_ID, String trxName)
@@ -286,5 +287,22 @@ public class X_TF_PriceListUOM extends PO implements I_TF_PriceListUOM, I_Persis
 	public String getTF_PriceListUOM_UU () 
 	{
 		return (String)get_Value(COLUMNNAME_TF_PriceListUOM_UU);
+	}
+
+	/** Set Valid from.
+		@param ValidFrom 
+		Valid from including this date (first day)
+	  */
+	public void setValidFrom (Timestamp ValidFrom)
+	{
+		set_Value (COLUMNNAME_ValidFrom, ValidFrom);
+	}
+
+	/** Get Valid from.
+		@return Valid from including this date (first day)
+	  */
+	public Timestamp getValidFrom () 
+	{
+		return (Timestamp)get_Value(COLUMNNAME_ValidFrom);
 	}
 }
