@@ -64,6 +64,21 @@ public interface I_TF_Crusher_Production
 	  */
 	public int getAD_Org_ID();
 
+    /** Column name C_Project_ID */
+    public static final String COLUMNNAME_C_Project_ID = "C_Project_ID";
+
+	/** Set Subcontract / Project.
+	  * Financial Project
+	  */
+	public void setC_Project_ID (int C_Project_ID);
+
+	/** Get Subcontract / Project.
+	  * Financial Project
+	  */
+	public int getC_Project_ID();
+
+	public org.compiere.model.I_C_Project getC_Project() throws RuntimeException;
+
     /** Column name C_UOM_ID */
     public static final String COLUMNNAME_C_UOM_ID = "C_UOM_ID";
 
@@ -267,13 +282,35 @@ public interface I_TF_Crusher_Production
 
 	public org.compiere.model.I_M_Product getRM_Product() throws RuntimeException;
 
+    /** Column name Subcon_Invoice_ID */
+    public static final String COLUMNNAME_Subcon_Invoice_ID = "Subcon_Invoice_ID";
+
+	/** Set Subcontractor Invoice	  */
+	public void setSubcon_Invoice_ID (int Subcon_Invoice_ID);
+
+	/** Get Subcontractor Invoice	  */
+	public int getSubcon_Invoice_ID();
+
+	public org.compiere.model.I_C_Invoice getSubcon_Invoice() throws RuntimeException;
+
+    /** Column name Subcon2_Invoice_ID */
+    public static final String COLUMNNAME_Subcon2_Invoice_ID = "Subcon2_Invoice_ID";
+
+	/** Set Subcontractor 2 Invoice	  */
+	public void setSubcon2_Invoice_ID (int Subcon2_Invoice_ID);
+
+	/** Get Subcontractor 2 Invoice	  */
+	public int getSubcon2_Invoice_ID();
+
+	public org.compiere.model.I_C_Invoice getSubcon2_Invoice() throws RuntimeException;
+
     /** Column name TF_BlueMetal_Type */
     public static final String COLUMNNAME_TF_BlueMetal_Type = "TF_BlueMetal_Type";
 
-	/** Set Blue Metal Type	  */
+	/** Set Production Type	  */
 	public void setTF_BlueMetal_Type (String TF_BlueMetal_Type);
 
-	/** Get Blue Metal Type	  */
+	/** Get Production Type	  */
 	public String getTF_BlueMetal_Type();
 
     /** Column name TF_Crusher_Production_ID */
@@ -304,6 +341,17 @@ public interface I_TF_Crusher_Production
 	public int getTF_ProductionPlant_ID();
 
 	public I_TF_ProductionPlant getTF_ProductionPlant() throws RuntimeException;
+
+    /** Column name TF_WeighmentEntry_ID */
+    public static final String COLUMNNAME_TF_WeighmentEntry_ID = "TF_WeighmentEntry_ID";
+
+	/** Set Weighment Entry	  */
+	public void setTF_WeighmentEntry_ID (int TF_WeighmentEntry_ID);
+
+	/** Get Weighment Entry	  */
+	public int getTF_WeighmentEntry_ID();
+
+	public I_TF_WeighmentEntry getTF_WeighmentEntry() throws RuntimeException;
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";

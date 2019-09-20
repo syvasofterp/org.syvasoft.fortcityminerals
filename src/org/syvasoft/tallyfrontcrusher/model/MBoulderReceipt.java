@@ -485,6 +485,7 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 		cProd.setAD_Org_ID(getAD_Org_ID());
 		cProd.setTF_ProductionPlant_ID(getTF_ProductionPlant_ID());		
 		cProd.setTF_BlueMetal_Type(getTF_BlueMetal_Type());
+		cProd.setTF_WeighmentEntry_ID(getTF_WeighmentEntry_ID());
 		cProd.setMovementDate(getDateReceipt());
 		cProd.setC_UOM_ID(getC_UOM_ID());		
 		cProd.setM_Warehouse_ID(getM_Warehouse_ID());
