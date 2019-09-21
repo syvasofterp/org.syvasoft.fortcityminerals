@@ -31,7 +31,9 @@ public class CalloutOrderQuickEntry_SetPriceUOM implements IColumnCallout {
 			
 			BigDecimal qty = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_Qty);
 			
-			BigDecimal price = MPriceListUOM.getPrice(ctx, product_ID, C_UOM_ID, bPartner_ID, isSOTrx);
+			Timestamp dateAcct = (Timestamp) mTab.getValue(TF_MOrder.COLUMNNAME_DateAcct);
+			
+			BigDecimal price = MPriceListUOM.getPrice(ctx, product_ID, C_UOM_ID, bPartner_ID, isSOTrx, dateAcct);
 			if(price == null)
 				price = BigDecimal.ZERO;
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Price, price);

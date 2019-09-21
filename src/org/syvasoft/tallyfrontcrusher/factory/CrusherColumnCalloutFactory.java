@@ -136,14 +136,15 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		
 		//TF_MOrder / C_Invoice - Set Unit Price
 		if((tableName.equals(TF_MOrder.Table_Name) || tableName.equals(TF_MInvoice.Table_Name)) && (columnName.equals(TF_MOrder.COLUMNNAME_Item1_ID)				
-				|| columnName.equals(TF_MOrder.COLUMNNAME_Item2_ID))) {
+				|| columnName.equals(TF_MOrder.COLUMNNAME_Item2_ID)  )) {
 			list.add(new CalloutOrderQuickEntry_SetPrice());			
 		}
 		
 		//Set Price based on Selected UOM
 		if((tableName.equals(TF_MOrder.Table_Name) || tableName.equals(TF_MInvoice.Table_Name)) && (columnName.equals(TF_MOrder.COLUMNNAME_Item1_ID)				
 				|| columnName.equals(TF_MOrder.COLUMNNAME_Item2_ID) || columnName.equals(TF_MOrder.COLUMNNAME_Item1_UOM_ID) 
-				|| columnName.equals(TF_MOrder.COLUMNNAME_Item2_UOM_ID) )) {			
+				|| columnName.equals(TF_MOrder.COLUMNNAME_Item2_UOM_ID) || columnName.equals(TF_MOrder.COLUMNNAME_DateAcct)
+				|| columnName.equals(TF_MOrder.COLUMNNAME_C_BPartner_ID) )) {			
 			list.add(new CalloutOrderQuickEntry_SetPriceUOM());
 		}
 		
