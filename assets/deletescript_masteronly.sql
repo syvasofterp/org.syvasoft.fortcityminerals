@@ -414,3 +414,5 @@ UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000323;
 --  Internal Use Inventory -
 UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000326;
 
+
+DELETE FROM AD_Sequence_No WHERE ad_client_id=1000000;
