@@ -94,6 +94,15 @@ public interface I_TF_RentedVehicle
 
 	public org.compiere.model.I_C_UOM getC_UOM() throws RuntimeException;
 
+    /** Column name Capacity_CFT */
+    public static final String COLUMNNAME_Capacity_CFT = "Capacity_CFT";
+
+	/** Set Capacity (CFT)	  */
+	public void setCapacity_CFT (BigDecimal Capacity_CFT);
+
+	/** Get Capacity (CFT)	  */
+	public BigDecimal getCapacity_CFT();
+
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
 

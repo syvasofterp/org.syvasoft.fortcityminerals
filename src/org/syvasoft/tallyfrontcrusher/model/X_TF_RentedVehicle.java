@@ -34,7 +34,7 @@ public class X_TF_RentedVehicle extends PO implements I_TF_RentedVehicle, I_Pers
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20181228L;
+	private static final long serialVersionUID = 20190926L;
 
     /** Standard Constructor */
     public X_TF_RentedVehicle (Properties ctx, int TF_RentedVehicle_ID, String trxName)
@@ -44,6 +44,8 @@ public class X_TF_RentedVehicle extends PO implements I_TF_RentedVehicle, I_Pers
         {
 			setC_BPartner_ID (0);
 			setC_UOM_ID (0);
+			setCapacity_CFT (Env.ZERO);
+// 0
 			setM_Product_Category_ID (0);
 			setTF_RentedVehicle_ID (0);
 			setVehicleNo (null);
@@ -132,6 +134,23 @@ public class X_TF_RentedVehicle extends PO implements I_TF_RentedVehicle, I_Pers
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
+	}
+
+	/** Set Capacity (CFT).
+		@param Capacity_CFT Capacity (CFT)	  */
+	public void setCapacity_CFT (BigDecimal Capacity_CFT)
+	{
+		set_Value (COLUMNNAME_Capacity_CFT, Capacity_CFT);
+	}
+
+	/** Get Capacity (CFT).
+		@return Capacity (CFT)	  */
+	public BigDecimal getCapacity_CFT () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Capacity_CFT);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
 	}
 
 	/** Set Tareweight Expiry Date.
