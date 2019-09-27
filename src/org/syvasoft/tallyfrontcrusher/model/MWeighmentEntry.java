@@ -1,5 +1,7 @@
 package org.syvasoft.tallyfrontcrusher.model;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.Properties;
@@ -115,5 +117,15 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		setStatus(STATUS_Unbilled);		
 		setProcessed(false);
 	}
+	
+	public BigDecimal getCFTMultiplyRate() {
+		if(getNetWeightUnit() == null)
+			return null;
+		
+		return getNetWeightUnit().divide(getNetWeight()
+					.divide(new BigDecimal(1000), 2, RoundingMode.HALF_EVEN)
+					, 2, RoundingMode.HALF_EVEN);
+	}
+	
 	
 }

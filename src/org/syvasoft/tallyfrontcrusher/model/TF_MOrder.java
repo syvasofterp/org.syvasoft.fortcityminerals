@@ -1439,6 +1439,11 @@ public class TF_MOrder extends MOrder {
 		line.setM_Product_ID(product_ID, true);
 		line.setQtyEntered(qty);
 		BigDecimal multiplyRate =  MUOMConversion.getProductRateTo(getCtx(), product_ID, C_UOM_ID);
+		
+		MWeighmentEntry wEntry = new MWeighmentEntry(getCtx(), getTF_WeighmentEntry_ID(), get_TrxName());
+		if(getTF_WeighmentEntry_ID() > 0 && wEntry.getCFTMultiplyRate() != null)
+			multiplyRate = wEntry.getCFTMultiplyRate();
+		
 		if(multiplyRate != null) {						
 			line.setQtyOrdered (qty.divide(multiplyRate,2, RoundingMode.HALF_EVEN));
 		}
