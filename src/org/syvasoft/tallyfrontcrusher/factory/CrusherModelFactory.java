@@ -7,103 +7,7 @@ import org.adempiere.base.IModelFactory;
 import org.compiere.model.MProductionPlan;
 import org.compiere.model.PO;
 import org.compiere.util.Env;
-import org.syvasoft.tallyfrontcrusher.model.MBPOpeningBalance;
-import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
-import org.syvasoft.tallyfrontcrusher.model.MCOAOpeningBalance;
-import org.syvasoft.tallyfrontcrusher.model.MCashCounter;
-import org.syvasoft.tallyfrontcrusher.model.MCrusherKatingConfig;
-import org.syvasoft.tallyfrontcrusher.model.MCrusherPermitLedger;
-import org.syvasoft.tallyfrontcrusher.model.MCrusherPermitLedgerLine;
-import org.syvasoft.tallyfrontcrusher.model.MCrusherProduction;
-import org.syvasoft.tallyfrontcrusher.model.MCrusherProductionConfig;
-import org.syvasoft.tallyfrontcrusher.model.MDebitCreditNote;
-import org.syvasoft.tallyfrontcrusher.model.MDestination;
-import org.syvasoft.tallyfrontcrusher.model.MDriverBetaConfig;
-import org.syvasoft.tallyfrontcrusher.model.MEmpSalaryConfig;
-import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalary;
-import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryAdvance;
-import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryIssue;
-import org.syvasoft.tallyfrontcrusher.model.MFuelIssue;
-import org.syvasoft.tallyfrontcrusher.model.MGLPostingConfig;
-import org.syvasoft.tallyfrontcrusher.model.MHomePageShortcuts;
-import org.syvasoft.tallyfrontcrusher.model.MInterOrgCashTransfer;
-import org.syvasoft.tallyfrontcrusher.model.MInvestmentReceipt;
-import org.syvasoft.tallyfrontcrusher.model.MInvestmentStructure;
-import org.syvasoft.tallyfrontcrusher.model.MItemReceiptOtherSrc;
-import org.syvasoft.tallyfrontcrusher.model.MJobworkAssignedAccount;
-import org.syvasoft.tallyfrontcrusher.model.MJobworkAssignedBPartner;
-import org.syvasoft.tallyfrontcrusher.model.MJobworkAssignedEmployee;
-import org.syvasoft.tallyfrontcrusher.model.MJobworkAssignedVehicle;
-import org.syvasoft.tallyfrontcrusher.model.MJobworkCharges;
-import org.syvasoft.tallyfrontcrusher.model.MJobworkExpense;
-import org.syvasoft.tallyfrontcrusher.model.MJobworkExpenseEntry;
-import org.syvasoft.tallyfrontcrusher.model.MJobworkIssuedItems;
-import org.syvasoft.tallyfrontcrusher.model.MJobworkIssuedResource;
-import org.syvasoft.tallyfrontcrusher.model.MJobworkItemIssue;
-import org.syvasoft.tallyfrontcrusher.model.MJobworkProductPrice;
-import org.syvasoft.tallyfrontcrusher.model.MJobworkReceivedItems;
-import org.syvasoft.tallyfrontcrusher.model.MJobworkResourceRentEntry;
-import org.syvasoft.tallyfrontcrusher.model.MKatingEntry;
-import org.syvasoft.tallyfrontcrusher.model.MLabourWage;
-import org.syvasoft.tallyfrontcrusher.model.MLabourWageAdvance;
-import org.syvasoft.tallyfrontcrusher.model.MLabourWageConfig;
-import org.syvasoft.tallyfrontcrusher.model.MLabourWageIssue;
-import org.syvasoft.tallyfrontcrusher.model.MLumpSumRentConfig;
-import org.syvasoft.tallyfrontcrusher.model.MInterOrgBPCashTransferConfig;
-import org.syvasoft.tallyfrontcrusher.model.MInterOrgBPCashTransferConfigLine;
-import org.syvasoft.tallyfrontcrusher.model.MInterOrgCashTransferConfigLine;
-import org.syvasoft.tallyfrontcrusher.model.MPermitLedger;
-import org.syvasoft.tallyfrontcrusher.model.MPermitLedgerLine;
-import org.syvasoft.tallyfrontcrusher.model.MPermitPurchase;
-import org.syvasoft.tallyfrontcrusher.model.MPermitPurchaseLine;
-import org.syvasoft.tallyfrontcrusher.model.MPriceListUOM;
-import org.syvasoft.tallyfrontcrusher.model.MProductionPlant;
-import org.syvasoft.tallyfrontcrusher.model.MQuarry;
-import org.syvasoft.tallyfrontcrusher.model.MQuarryRent;
-import org.syvasoft.tallyfrontcrusher.model.MQuarryRentConfig;
-import org.syvasoft.tallyfrontcrusher.model.MRentedVehicle;
-import org.syvasoft.tallyfrontcrusher.model.MSandBlockBucketConfig;
-import org.syvasoft.tallyfrontcrusher.model.MShareholder;
-import org.syvasoft.tallyfrontcrusher.model.MShareholderType;
-import org.syvasoft.tallyfrontcrusher.model.MSubcontractMaterialMovement;
-import org.syvasoft.tallyfrontcrusher.model.MSubcontractType;
-import org.syvasoft.tallyfrontcrusher.model.MTaxInvoice;
-import org.syvasoft.tallyfrontcrusher.model.MTripSheet;
-import org.syvasoft.tallyfrontcrusher.model.MTyre;
-import org.syvasoft.tallyfrontcrusher.model.MTyreAssignment;
-import org.syvasoft.tallyfrontcrusher.model.MTyreLife;
-import org.syvasoft.tallyfrontcrusher.model.MTyrePosition;
-import org.syvasoft.tallyfrontcrusher.model.MTyreStatus;
-import org.syvasoft.tallyfrontcrusher.model.MTyreStatusChange;
-import org.syvasoft.tallyfrontcrusher.model.MTyreType;
-import org.syvasoft.tallyfrontcrusher.model.MVehicleRent;
-import org.syvasoft.tallyfrontcrusher.model.MVehicleRentConfig;
-import org.syvasoft.tallyfrontcrusher.model.MVehicleRentalContract;
-import org.syvasoft.tallyfrontcrusher.model.MVehicleType;
-import org.syvasoft.tallyfrontcrusher.model.MWeighmentEntry;
-import org.syvasoft.tallyfrontcrusher.model.MWeighmentErrorLog;
-import org.syvasoft.tallyfrontcrusher.model.MWeighmentPermitEntry;
-import org.syvasoft.tallyfrontcrusher.model.MYardCustomerVehicle;
-import org.syvasoft.tallyfrontcrusher.model.MYardEntry;
-import org.syvasoft.tallyfrontcrusher.model.MYardEntryApprove;
-import org.syvasoft.tallyfrontcrusher.model.MYardEntryApproveLine;
-import org.syvasoft.tallyfrontcrusher.model.MYardEntryConfig;
-import org.syvasoft.tallyfrontcrusher.model.MYardLoadConfig;
-import org.syvasoft.tallyfrontcrusher.model.MYardLoadEntry;
-import org.syvasoft.tallyfrontcrusher.model.MYardPermitIssueEntry;
-import org.syvasoft.tallyfrontcrusher.model.TF_MBPartner;
-import org.syvasoft.tallyfrontcrusher.model.TF_MBankAccount;
-import org.syvasoft.tallyfrontcrusher.model.TF_MCharge;
-import org.syvasoft.tallyfrontcrusher.model.TF_MElementValue;
-import org.syvasoft.tallyfrontcrusher.model.TF_MInvoice;
-import org.syvasoft.tallyfrontcrusher.model.TF_MJournal;
-import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
-import org.syvasoft.tallyfrontcrusher.model.TF_MOrderLine;
-import org.syvasoft.tallyfrontcrusher.model.TF_MPayment;
-import org.syvasoft.tallyfrontcrusher.model.TF_MProduct;
-import org.syvasoft.tallyfrontcrusher.model.TF_MProject;
-import org.syvasoft.tallyfrontcrusher.model.TF_MResource;
-import org.syvasoft.tallyfrontcrusher.model.TF_MResourceType;
+import org.syvasoft.tallyfrontcrusher.model.*;
 
 public class CrusherModelFactory implements IModelFactory {
 
@@ -301,6 +205,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return MProductionPlant.class;
 		else if(MPriceListUOM.Table_Name.equals(tableName))			
 			return MPriceListUOM.class;
+		else if(MSmsNotification.Table_Name.equals(tableName))			
+			return MSmsNotification.class;
+		else if(MSmsReceipient.Table_Name.equals(tableName))			
+			return MSmsReceipient.class;
 		return null;
 	}
 
@@ -499,6 +407,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MProductionPlant(ctx, Record_ID, trxName);
 		else if(MPriceListUOM.Table_Name.equals(tableName))			
 			return new MPriceListUOM(ctx, Record_ID, trxName);
+		else if(MSmsNotification.Table_Name.equals(tableName))			
+			return new MSmsNotification(ctx, Record_ID, trxName);
+		else if(MSmsReceipient.Table_Name.equals(tableName))			
+			return new MSmsReceipient(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -699,6 +611,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MProductionPlant(ctx, rs, trxName);
 		else if(MPriceListUOM.Table_Name.equals(tableName))			
 			return new MPriceListUOM(ctx, rs, trxName);
+		else if(MSmsNotification.Table_Name.equals(tableName))			
+			return new MSmsNotification(ctx, rs, trxName);
+		else if(MSmsReceipient.Table_Name.equals(tableName))			
+			return new MSmsReceipient(ctx, rs, trxName);
 		return null;
 	}
 
