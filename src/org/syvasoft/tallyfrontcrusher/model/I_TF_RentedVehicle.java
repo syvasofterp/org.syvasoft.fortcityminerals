@@ -154,6 +154,15 @@ public interface I_TF_RentedVehicle
 	  */
 	public boolean isActive();
 
+    /** Column name IsOwnVehicle */
+    public static final String COLUMNNAME_IsOwnVehicle = "IsOwnVehicle";
+
+	/** Set Own Vehicle	  */
+	public void setIsOwnVehicle (boolean IsOwnVehicle);
+
+	/** Get Own Vehicle	  */
+	public boolean isOwnVehicle();
+
     /** Column name IsTransporter */
     public static final String COLUMNNAME_IsTransporter = "IsTransporter";
 

@@ -53,10 +53,18 @@ public class MRentedVehicle extends X_TF_RentedVehicle {
 		prod.setProductType(MProduct.PRODUCTTYPE_Resource);
 		prod.setIsPurchased(true);
 		prod.setIsSold(true);
-		prod.setDescription("Rented from " + getC_BPartner().getName());
+		prod.set_ValueOfColumn("IsRented", false);
+		if(!isTransporter() && !isOwnVehicle())
+			prod.setDescription("Customer Vehicle from " + getC_BPartner().getName());
+		else if(isOwnVehicle()) 
+			prod.setDescription("Own Vehicle/Machinery");			
+		else if(isTransporter()) {
+			prod.setDescription("Rented from " + getC_BPartner().getName());
+			prod.set_ValueOfColumn("IsRented", true);
+		}
 		prod.setIsActive(isActive());
 		prod.setC_TaxCategory_ID(Env.getContextAsInt(getCtx(), "#C_TaxCategory_ID"));
-		prod.set_ValueOfColumn("IsRented", true);
+		
 		prod.saveEx();
 		if(getM_Product_ID() == 0) {
 			DB.executeUpdate("UPDATE TF_RentedVehicle SET M_Product_ID = " + prod.getM_Product_ID() +

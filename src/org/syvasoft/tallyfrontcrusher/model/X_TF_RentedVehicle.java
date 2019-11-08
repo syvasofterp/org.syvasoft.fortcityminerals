@@ -34,7 +34,7 @@ public class X_TF_RentedVehicle extends PO implements I_TF_RentedVehicle, I_Pers
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20190926L;
+	private static final long serialVersionUID = 20191108L;
 
     /** Standard Constructor */
     public X_TF_RentedVehicle (Properties ctx, int TF_RentedVehicle_ID, String trxName)
@@ -42,10 +42,11 @@ public class X_TF_RentedVehicle extends PO implements I_TF_RentedVehicle, I_Pers
       super (ctx, TF_RentedVehicle_ID, trxName);
       /** if (TF_RentedVehicle_ID == 0)
         {
-			setC_BPartner_ID (0);
 			setC_UOM_ID (0);
 			setCapacity_CFT (Env.ZERO);
 // 0
+			setIsOwnVehicle (false);
+// N
 			setM_Product_Category_ID (0);
 			setTF_RentedVehicle_ID (0);
 			setVehicleNo (null);
@@ -182,6 +183,27 @@ public class X_TF_RentedVehicle extends PO implements I_TF_RentedVehicle, I_Pers
 	public String getDescription () 
 	{
 		return (String)get_Value(COLUMNNAME_Description);
+	}
+
+	/** Set Own Vehicle.
+		@param IsOwnVehicle Own Vehicle	  */
+	public void setIsOwnVehicle (boolean IsOwnVehicle)
+	{
+		set_Value (COLUMNNAME_IsOwnVehicle, Boolean.valueOf(IsOwnVehicle));
+	}
+
+	/** Get Own Vehicle.
+		@return Own Vehicle	  */
+	public boolean isOwnVehicle () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsOwnVehicle);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
 	}
 
 	/** Set Transporter.
