@@ -1675,7 +1675,8 @@ public class TF_MOrder extends MOrder {
 
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
-		if(getTF_RentedVehicle_ID()>0 && getRent_Amt().doubleValue()==0) {
+		MRentedVehicle rv = new MRentedVehicle(getCtx(), getTF_RentedVehicle_ID(), get_TrxName());
+		if(!rv.isOwnVehicle() && getTF_RentedVehicle_ID()>0 && getRent_Amt().doubleValue()==0) {
 			throw new AdempiereUserError("Invalid Rent Amount");
 		}
 		
@@ -1818,6 +1819,9 @@ public class TF_MOrder extends MOrder {
 
 	public void createTransporterInvoice() {
 		if(getTF_RentedVehicle_ID() == 0 || getRent_Amt().doubleValue() == 0)
+			return;
+		MRentedVehicle rv = new MRentedVehicle(getCtx(), getTF_RentedVehicle_ID(), get_TrxName());
+		if(rv.isOwnVehicle())
 			return;
 		//if(getRent_Amt().doubleValue() > 0 && getTF_RentedVehicle_ID() == 0)
 		//	throw new AdempiereException("Please Select Rented Vehicle or Reset Rent (Amount) to ZERO!");
