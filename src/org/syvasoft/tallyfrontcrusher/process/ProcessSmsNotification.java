@@ -35,7 +35,7 @@ public class ProcessSmsNotification extends SvrProcess {
 	protected String doIt() throws Exception {
 		// TODO Auto-generated method stub
 		
-		String Sql="SELECT * FROM TF_SmsNotification WHERE IsActive='Y' AND to_timestamp(deliverytime,'HH24:MI') :: time = to_timestamp(to_char(now(),'HH24:MI'),'HH24:MI')::time";
+		String Sql="SELECT * FROM TF_SmsNotification WHERE IsActive='Y' AND  to_timestamp(deliverytime,'HH24:MI') :: time = to_timestamp(to_char(now(),'HH24:MI'),'HH24:MI')::time";
 		PreparedStatement pstmt =  null;
 		PreparedStatement rpPstmt = null;
 		ResultSet rs = null;

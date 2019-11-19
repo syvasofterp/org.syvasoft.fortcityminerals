@@ -76,8 +76,8 @@ public class MTripSheet extends X_TF_TripSheet {
 		
 		//Set Issued Resource/Vehicle
 		if(getC_Project_ID() > 0) {
-			MJobworkIssuedResource res = MJobworkIssuedResource.getByResource(getCtx(), getC_Project_ID(), getVehicle_ID(), get_TrxName());
-			setTF_Jobwork_IssuedResource_ID(res.getTF_Jobwork_IssuedResource_ID());
+			//MJobworkIssuedResource res = MJobworkIssuedResource.getByResource(getCtx(), getC_Project_ID(), getVehicle_ID(), get_TrxName());
+			//setTF_Jobwork_IssuedResource_ID(res.getTF_Jobwork_IssuedResource_ID());
 		}
 		else {
 			setTF_Jobwork_IssuedResource_ID(0);
@@ -154,16 +154,6 @@ public class MTripSheet extends X_TF_TripSheet {
 				
 				setTF_Labour_Wage_ID(wage.getTF_Labour_Wage_ID());
 			}
-			
-			//Update Subcontract Issued Items for Diesel
-			MJobworkIssuedResource issuedResource = MJobworkIssuedResource.getByResource(getCtx(), getC_Project_ID(), getVehicle_ID(), get_TrxName());
-			if(issuedResource != null && !issuedResource.isFuelIncluded()) {
-				
-				MGLPostingConfig glConfig = MGLPostingConfig.getMGLPostingConfig(getCtx());  
-				MJobworkIssuedItems.addIssuedItem(getCtx(), getC_Project_ID(), 
-						glConfig.getFuel_Product_ID(), glConfig.getFuel_Product().getC_UOM_ID(), getExpensed_Fuel() , get_TrxName());
-				
-			}
 						
 		}
 	}
@@ -190,20 +180,6 @@ public class MTripSheet extends X_TF_TripSheet {
 				issue.deleteEx(true,get_TrxName());
 			}
 		}
-		//Update Subcontract Issued Items for Diesel
-		MJobworkIssuedResource issuedResource = MJobworkIssuedResource.getByResource(getCtx(), getC_Project_ID(), getVehicle_ID(), get_TrxName());
-		if(issuedResource != null && !issuedResource.isFuelIncluded()) {
-			
-			MGLPostingConfig glConfig = MGLPostingConfig.getMGLPostingConfig(getCtx());  
-			MJobworkIssuedItems.addIssuedItem(getCtx(), getC_Project_ID(), 
-					glConfig.getFuel_Product_ID(), glConfig.getFuel_Product().getC_UOM_ID(), getExpensed_Fuel().negate() , get_TrxName());
-			
-		}
-		
-		//if(issuedResource != null && !issuedResource.isOperatorWageIncluded()) {			
-		//	issuedResource.setOperatorTotalWage(issuedResource.getOperatorTotalWage().subtract(getTotal_Wage()));
-		//	issuedResource.saveEx();
-		//}
 		
 		setProcessed(false);
 		setDocStatus(DOCSTATUS_Drafted);
