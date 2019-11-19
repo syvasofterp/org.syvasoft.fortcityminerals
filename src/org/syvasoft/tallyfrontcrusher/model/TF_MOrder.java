@@ -1675,9 +1675,10 @@ public class TF_MOrder extends MOrder {
 
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
-		MRentedVehicle rv = new MRentedVehicle(getCtx(), getTF_RentedVehicle_ID(), get_TrxName());
-		if(!rv.isOwnVehicle() && getTF_RentedVehicle_ID()>0 && getRent_Amt().doubleValue()==0) {
-			throw new AdempiereUserError("Invalid Rent Amount");
+		MRentedVehicle rv = new MRentedVehicle(getCtx(), getTF_RentedVehicle_ID(), get_TrxName());		
+		if(getTF_RentedVehicle_ID()>0 && getRent_Amt().doubleValue()==0) {
+			if((rv.isOwnVehicle() && isSOTrx()) || rv.isTransporter())
+				throw new AdempiereUserError("Invalid Rent Amount");
 		}
 		
 		if(getTF_RentedVehicle_ID()>0 || !isSOTrx()) {
