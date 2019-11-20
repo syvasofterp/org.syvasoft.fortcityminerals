@@ -104,7 +104,7 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 			if(weighment.getTF_RentedVehicle_ID() > 0) {
 				
 				rv = new MRentedVehicle(ctx,weighment.getTF_RentedVehicle_ID(),null);
-				if(rv.isTransporter())
+				if(rv.isTransporter() || rv.isOwnVehicle())
 					mTab.setValue(TF_MOrder.COLUMNNAME_TF_RentedVehicle_ID, weighment.getTF_RentedVehicle_ID());
 				else {
 					mTab.setValue(TF_MOrder.COLUMNNAME_VehicleNo, weighment.getVehicleNo());
