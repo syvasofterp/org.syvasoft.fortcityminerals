@@ -45,8 +45,9 @@ public class MRentedVehicle extends X_TF_RentedVehicle {
 		boolean ok = super.afterSave(newRecord, success);
 		int M_Product_ID = getM_Product_ID();		
 		MProduct prod = new MProduct(getCtx(), M_Product_ID, get_TrxName());
-		prod.setAD_Org_ID(getAD_Org_ID());
-		prod.setValue(getVehicleNo());
+		TF_MOrg org = new TF_MOrg(getCtx(), getAD_Org_ID(), get_TrxName());
+		prod.setAD_Org_ID(getAD_Org_ID());		
+		prod.setValue(org.getValue() + "_" + getVehicleNo());
 		prod.setName(getVehicleNo());
 		prod.setC_UOM_ID(getC_UOM_ID());
 		prod.setM_Product_Category_ID(getM_Product_Category_ID());
