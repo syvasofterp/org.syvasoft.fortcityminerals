@@ -209,6 +209,14 @@ public class CrusherModelFactory implements IModelFactory {
 			return MSmsNotification.class;
 		else if(MSmsReceipient.Table_Name.equals(tableName))			
 			return MSmsReceipient.class;
+		else if(MTRTaxInvoice.Table_Name.equals(tableName))			
+			return MTRTaxInvoice.class;
+		else if(MTRTaxInvoiceLine.Table_Name.equals(tableName))			
+			return MTRTaxInvoiceLine.class;
+		else if(MCounterTransactionSetup.Table_Name.equals(tableName))			
+			return MCounterTransactionSetup.class;
+		else if(MCounterTransProductSetup.Table_Name.equals(tableName))			
+			return MCounterTransProductSetup.class;
 		return null;
 	}
 
@@ -411,6 +419,14 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MSmsNotification(ctx, Record_ID, trxName);
 		else if(MSmsReceipient.Table_Name.equals(tableName))			
 			return new MSmsReceipient(ctx, Record_ID, trxName);
+		else if(MTRTaxInvoice.Table_Name.equals(tableName))			
+			return new MTRTaxInvoice(ctx, Record_ID, trxName);
+		else if(MTRTaxInvoiceLine.Table_Name.equals(tableName))			
+			return new MTRTaxInvoiceLine(ctx, Record_ID, trxName);
+		else if(MCounterTransactionSetup.Table_Name.equals(tableName))			
+			return new MCounterTransactionSetup(ctx, Record_ID, trxName);
+		else if(MCounterTransProductSetup.Table_Name.equals(tableName))			
+			return new MCounterTransProductSetup(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -615,6 +631,14 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MSmsNotification(ctx, rs, trxName);
 		else if(MSmsReceipient.Table_Name.equals(tableName))			
 			return new MSmsReceipient(ctx, rs, trxName);
+		else if(MTRTaxInvoice.Table_Name.equals(tableName))			
+			return new MTRTaxInvoice(ctx, rs, trxName);
+		else if(MTRTaxInvoiceLine.Table_Name.equals(tableName))			
+			return new MTRTaxInvoiceLine(ctx, rs, trxName);
+		else if(MCounterTransactionSetup.Table_Name.equals(tableName))			
+			return new MCounterTransactionSetup(ctx, rs, trxName);
+		else if(MCounterTransProductSetup.Table_Name.equals(tableName))			
+			return new MCounterTransProductSetup(ctx, rs, trxName);
 		return null;
 	}
 
