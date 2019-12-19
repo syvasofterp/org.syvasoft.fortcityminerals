@@ -444,6 +444,7 @@ public class TF_MInvoice extends MInvoice {
 			proj.updateQtyBilled();
 			proj.saveEx();
 		}
+		createCounterInvoice();
 		return msg;
 	}
 
@@ -624,4 +625,69 @@ public class TF_MInvoice extends MInvoice {
 		setRef_Invoice_ID(invoice.getC_Invoice_ID());
 	}
 
+	public void createCounterInvoice() {
+		MCounterTransactionSetup ctransSetup = MCounterTransactionSetup.getCounterTransaction
+				(getCtx(), getAD_Org_ID(), getC_DocTypeTarget_ID(), getC_BPartner_ID());
+		if(ctransSetup == null) 
+			return;
+		
+		TF_MBPartner bp = new TF_MBPartner(getCtx(), ctransSetup.getTo_Bpartner_ID(), get_TrxName());
+		
+		//Invoice Header
+		TF_MInvoice invoice = new TF_MInvoice(getCtx(), 0, get_TrxName());
+		invoice.setClientOrg(getAD_Client_ID(), ctransSetup.getTo_Org_ID());
+		invoice.setC_DocTypeTarget_ID(ctransSetup.getTo_Doctype_ID());	// Counter Doc
+		invoice.setIsSOTrx(ctransSetup.getTo_Doctype().isSOTrx());
+		invoice.setDateInvoiced(getDateInvoiced());
+		invoice.setDateAcct(getDateAcct());
+		//
+		invoice.setSalesRep_ID(Env.getAD_User_ID(getCtx()));		
+		//
+		
+		invoice.setBPartner(bp);				
+		invoice.setVehicleNo(getVehicleNo());		
+		invoice.setDescription("Created from :" + getDocumentNo());
+		invoice.addDescription(getDescription());
+		
+		//Price List
+		int m_M_PriceList_ID = Env.getContextAsInt(getCtx(), "#M_PriceList_ID");
+		
+		if(!isSOTrx() && bp.getM_PriceList_ID() > 0)
+			m_M_PriceList_ID = bp.getM_PriceList_ID();
+		else if(isSOTrx() && bp.getPO_PriceList_ID() > 0)
+			m_M_PriceList_ID = bp.getPO_PriceList_ID();
+		
+		invoice.setM_PriceList_ID(m_M_PriceList_ID);
+		invoice.setC_Currency_ID(MPriceList.get(getCtx(), m_M_PriceList_ID, get_TrxName()).getC_Currency_ID());
+		
+		//Financial Dimension - Profit Center		
+		//invoice.setC_Project_ID(counterProj.getC_Project_ID());
+		invoice.setRef_Invoice_ID(getC_Invoice_ID());
+		invoice.saveEx();
+		
+		
+		for(MInvoiceLine srcLine : getLines()) {
+			//Create Invoice Line
+			MInvoiceLine invLine = new MInvoiceLine(invoice);
+			int M_Product_ID = ctransSetup.getCounterProduct_ID(getAD_Org_ID(), srcLine.getM_Product_ID());
+			invLine.setM_Product_ID(M_Product_ID , true);
+			invLine.setQty(srcLine.getQtyInvoiced());					
+			invLine.setPriceActual(srcLine.getPriceActual());
+			invLine.setPriceList(srcLine.getPriceList());
+			invLine.setPriceLimit(srcLine.getPriceLimit());
+			invLine.setPriceEntered(srcLine.getPriceEntered());		
+			invLine.setC_Tax_ID(srcLine.getC_Tax_ID());
+			invLine.setDescription(srcLine.getDescription());
+			//invLine.setC_Project_ID(counterProj.getC_Project_ID());
+			invLine.saveEx();
+		}
+		
+		//Invoice DocAction
+		if (!invoice.processIt(DocAction.ACTION_Complete))
+			throw new AdempiereException("Failed when processing document - " + invoice.getProcessMsg());
+		invoice.saveEx();
+		
+		setRef_Invoice_ID(invoice.getC_Invoice_ID());
+		
+	}
 }
