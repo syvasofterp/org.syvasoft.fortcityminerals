@@ -1407,6 +1407,33 @@ public class TF_MOrder extends MOrder {
 		return ii.intValue();
 	}
 	
+	/** Column name Rent_Tax_ID */
+    public static final String COLUMNNAME_Rent_Tax_ID = "Rent_Tax_ID";
+    public org.compiere.model.I_C_Tax getRent_Tax() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Tax)MTable.get(getCtx(), org.compiere.model.I_C_Tax.Table_Name)
+			.getPO(getRent_Tax_ID(), get_TrxName());	}
+
+	/** Set Tax for Delivery.
+		@param Rent_Tax_ID Tax for Delivery	  */
+	public void setRent_Tax_ID (int Rent_Tax_ID)
+	{
+		if (Rent_Tax_ID < 1) 
+			set_Value (COLUMNNAME_Rent_Tax_ID, null);
+		else 
+			set_Value (COLUMNNAME_Rent_Tax_ID, Integer.valueOf(Rent_Tax_ID));
+	}
+
+	/** Get Tax for Delivery.
+		@return Tax for Delivery	  */
+	public int getRent_Tax_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Rent_Tax_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+	
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
 		success = super.afterSave(newRecord, success);

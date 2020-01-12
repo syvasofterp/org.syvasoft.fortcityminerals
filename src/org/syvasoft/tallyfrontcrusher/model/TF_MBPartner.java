@@ -433,6 +433,82 @@ public class TF_MBPartner extends MBPartner {
     /** Column name Std_Wage */
     public static final String COLUMNNAME_Std_Wage = "Std_Wage";
 	
+    /** Column name IsRentBreakup */
+    public static final String COLUMNNAME_IsRentBreakup = "IsRentBreakup";
+    /** Set Show Rent Breakup.
+	@param IsRentBreakup Show Rent Breakup	  */
+	public void setIsRentBreakup (boolean IsRentBreakup)
+	{
+		set_Value (COLUMNNAME_IsRentBreakup, Boolean.valueOf(IsRentBreakup));
+	}
+	
+	/** Get Show Rent Breakup.
+		@return Show Rent Breakup	  */
+	public boolean isRentBreakup () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsRentBreakup);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+    
+	 /** Column name IsRentInclusive */
+    public static final String COLUMNNAME_IsRentInclusive = "IsRentInclusive";
+    
+    /** Set Rent Inclusive.
+	@param IsRentInclusive 
+	Whether Unit Price includes rent?
+  */
+	public void setIsRentInclusive (boolean IsRentInclusive)
+	{
+		set_Value (COLUMNNAME_IsRentInclusive, Boolean.valueOf(IsRentInclusive));
+	}
+	
+	/** Get Rent Inclusive.
+		@return Whether Unit Price includes rent?
+	  */
+	public boolean isRentInclusive () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsRentInclusive);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	 /** Column name IsTaxIncluded */
+    public static final String COLUMNNAME_IsTaxIncluded = "IsTaxIncluded";
+    /** Set Price includes Tax.
+	@param IsTaxIncluded 
+	Tax is included in the price 
+  */
+	public void setIsTaxIncluded (boolean IsTaxIncluded)
+	{
+		set_Value (COLUMNNAME_IsTaxIncluded, Boolean.valueOf(IsTaxIncluded));
+	}
+	
+	/** Get Price includes Tax.
+		@return Tax is included in the price 
+	  */
+	public boolean isTaxIncluded () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsTaxIncluded);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+	
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
 		boolean ok = super.afterSave(newRecord, success);

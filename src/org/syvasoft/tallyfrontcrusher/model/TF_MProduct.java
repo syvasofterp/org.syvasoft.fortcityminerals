@@ -15,8 +15,10 @@ import org.compiere.model.MInventoryLine;
 import org.compiere.model.MProduct;
 import org.compiere.model.MProductCategory;
 import org.compiere.model.MTable;
+import org.compiere.model.MTax;
 import org.compiere.model.MWarehouse;
 import org.compiere.model.MWarehousePrice;
+import org.compiere.model.Query;
 import org.compiere.process.DocAction;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
@@ -204,6 +206,38 @@ public class TF_MProduct extends MProduct {
 		MProductCategory pc = (MProductCategory) getM_Product_Category();
 		int permitExpAcct_ID = pc.get_ValueAsInt("C_ElementValuePermitExpense_ID");
 		return permitExpAcct_ID;
+	}
+	
+	/** Column name GSTRate */
+    public static final String COLUMNNAME_GSTRate = "GSTRate";
+    /** Set GST %.
+	@param GSTRate GST %	  */
+	public void setGSTRate (BigDecimal GSTRate)
+	{
+		set_Value (COLUMNNAME_GSTRate, GSTRate);
+	}
+	
+	/** Get GST %.
+		@return GST %	  */
+	public BigDecimal getGSTRate () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_GSTRate);
+		if (bd == null || bd.equals(Env.ZERO)) {
+			MProductCategory pc = (MProductCategory) getM_Product_Category();
+			bd = (BigDecimal) pc.get_Value(COLUMNNAME_GSTRate);
+			if(bd == null)
+				return Env.ZERO;
+		}
+		return bd;
+	}
+	
+	public int getTax_ID(boolean isTaxIncluded) {
+		String whereClause = "Rate=? AND IsSummary=?";
+		MTax tax = new Query(getCtx(), MTax.Table_Name, whereClause, get_TrxName())
+				.setClient_ID()
+				.setParameters(isTaxIncluded?getGSTRate():Env.ZERO, isTaxIncluded ? "Y" : "N")
+				.first();
+		return tax.getC_Tax_ID();
 	}
 	
 	@Override

@@ -33,7 +33,7 @@ public class X_TF_PriceListUOM extends PO implements I_TF_PriceListUOM, I_Persis
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20190920L;
+	private static final long serialVersionUID = 20200101L;
 
     /** Standard Constructor */
     public X_TF_PriceListUOM (Properties ctx, int TF_PriceListUOM_ID, String trxName)
@@ -42,9 +42,15 @@ public class X_TF_PriceListUOM extends PO implements I_TF_PriceListUOM, I_Persis
       /** if (TF_PriceListUOM_ID == 0)
         {
 			setC_UOM_ID (0);
+			setIsRentInclusive (false);
+// N
 			setIsSOTrx (false);
+			setIsTaxIncluded (false);
+// N
 			setM_Product_ID (0);
 			setTF_PriceListUOM_ID (0);
+			setValidFrom (new Timestamp( System.currentTimeMillis() ));
+// @#Date@
         } */
     }
 
@@ -149,6 +155,30 @@ public class X_TF_PriceListUOM extends PO implements I_TF_PriceListUOM, I_Persis
 		return (String)get_Value(COLUMNNAME_Description);
 	}
 
+	/** Set Rent Inclusive.
+		@param IsRentInclusive 
+		Whether Unit Price includes rent?
+	  */
+	public void setIsRentInclusive (boolean IsRentInclusive)
+	{
+		set_Value (COLUMNNAME_IsRentInclusive, Boolean.valueOf(IsRentInclusive));
+	}
+
+	/** Get Rent Inclusive.
+		@return Whether Unit Price includes rent?
+	  */
+	public boolean isRentInclusive () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsRentInclusive);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
 	/** Set Sales Transaction.
 		@param IsSOTrx 
 		This is a Sales Transaction
@@ -164,6 +194,30 @@ public class X_TF_PriceListUOM extends PO implements I_TF_PriceListUOM, I_Persis
 	public boolean isSOTrx () 
 	{
 		Object oo = get_Value(COLUMNNAME_IsSOTrx);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	/** Set Price includes Tax.
+		@param IsTaxIncluded 
+		Tax is included in the price 
+	  */
+	public void setIsTaxIncluded (boolean IsTaxIncluded)
+	{
+		set_Value (COLUMNNAME_IsTaxIncluded, Boolean.valueOf(IsTaxIncluded));
+	}
+
+	/** Get Price includes Tax.
+		@return Tax is included in the price 
+	  */
+	public boolean isTaxIncluded () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsTaxIncluded);
 		if (oo != null) 
 		{
 			 if (oo instanceof Boolean) 

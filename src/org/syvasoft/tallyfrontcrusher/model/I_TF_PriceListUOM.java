@@ -136,6 +136,19 @@ public interface I_TF_PriceListUOM
 	  */
 	public boolean isActive();
 
+    /** Column name IsRentInclusive */
+    public static final String COLUMNNAME_IsRentInclusive = "IsRentInclusive";
+
+	/** Set Rent Inclusive.
+	  * Whether Unit Price includes rent?
+	  */
+	public void setIsRentInclusive (boolean IsRentInclusive);
+
+	/** Get Rent Inclusive.
+	  * Whether Unit Price includes rent?
+	  */
+	public boolean isRentInclusive();
+
     /** Column name IsSOTrx */
     public static final String COLUMNNAME_IsSOTrx = "IsSOTrx";
 
@@ -148,6 +161,19 @@ public interface I_TF_PriceListUOM
 	  * This is a Sales Transaction
 	  */
 	public boolean isSOTrx();
+
+    /** Column name IsTaxIncluded */
+    public static final String COLUMNNAME_IsTaxIncluded = "IsTaxIncluded";
+
+	/** Set Price includes Tax.
+	  * Tax is included in the price 
+	  */
+	public void setIsTaxIncluded (boolean IsTaxIncluded);
+
+	/** Get Price includes Tax.
+	  * Tax is included in the price 
+	  */
+	public boolean isTaxIncluded();
 
     /** Column name M_Product_ID */
     public static final String COLUMNNAME_M_Product_ID = "M_Product_ID";

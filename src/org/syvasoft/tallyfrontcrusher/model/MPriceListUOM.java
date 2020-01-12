@@ -115,4 +115,38 @@ public class MPriceListUOM extends X_TF_PriceListUOM {
 		}
 			
 	}
+	
+	public static MPriceListUOM getPriceListUOM(Properties ctx, int M_Product_ID, int C_UOM_ID, 
+			int C_BPartner_ID, boolean isSOTrx, Timestamp dateAcct) {
+		String whereClause = "M_Product_ID = ? AND C_UOM_ID = ? AND IsSOTrx=? "
+				+ " AND C_BPartner_ID "
+				+ (C_BPartner_ID == 0 ? " IS NULL " : " = " + C_BPartner_ID)
+				+ " AND ValidFrom <= ?";
+		MPriceListUOM priceUOM = new Query(ctx, Table_Name, whereClause, null)
+				.setClient_ID()
+				.setParameters(M_Product_ID, C_UOM_ID, isSOTrx ? "Y" : "N", dateAcct)
+				.setOrderBy("ValidFrom DESC")
+				.first();
+		if(priceUOM != null) {
+			return priceUOM;
+		}
+		else {
+			whereClause = "M_Product_ID = ? AND C_UOM_ID = ? AND IsSOTrx=? "
+					+ " AND C_BPartner_ID IS NULL"
+					+ " AND ValidFrom <= ?";
+			priceUOM = new Query(ctx, Table_Name, whereClause, null)
+					.setClient_ID()
+					.setParameters(M_Product_ID, C_UOM_ID, isSOTrx ? "Y" : "N", dateAcct)
+					.setOrderBy("ValidFrom DESC")
+					.first();
+			if(priceUOM != null) {
+				return priceUOM;
+			}
+			else {
+				return null;
+			}
+		}
+			
+	}
+	
 }
