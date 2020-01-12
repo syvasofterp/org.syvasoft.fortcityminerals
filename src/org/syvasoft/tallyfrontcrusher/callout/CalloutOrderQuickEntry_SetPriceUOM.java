@@ -19,6 +19,7 @@ public class CalloutOrderQuickEntry_SetPriceUOM implements IColumnCallout {
 	@Override
 	public String start(Properties ctx, int WindowNo, GridTab mTab, GridField mField, Object value, Object oldValue) {
 		boolean isSOTrx = Env.getContext(ctx, WindowNo, "IsSOTrx").equals("Y");
+		Timestamp dateAcct = (Timestamp) mTab.getValue(TF_MOrder.COLUMNNAME_DateAcct);
 		if(value != null
 				&& mTab.getValue(TF_MOrder.COLUMNNAME_C_BPartner_ID) != null
 				&& mTab.getValue(TF_MOrder.COLUMNNAME_Item1_UOM_ID) != null
@@ -31,9 +32,9 @@ public class CalloutOrderQuickEntry_SetPriceUOM implements IColumnCallout {
 			
 			BigDecimal qty = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_Qty);
 			
-			Timestamp dateAcct = (Timestamp) mTab.getValue(TF_MOrder.COLUMNNAME_DateAcct);
 			
-			BigDecimal price = MPriceListUOM.getPrice(ctx, product_ID, C_UOM_ID, bPartner_ID, isSOTrx, dateAcct);
+			MPriceListUOM priceUOM = MPriceListUOM.getPriceListUOM(ctx, product_ID, C_UOM_ID, bPartner_ID, isSOTrx, dateAcct);
+			BigDecimal price = priceUOM.getPrice();
 			if(price == null)
 				price = BigDecimal.ZERO;
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Price, price);
@@ -52,8 +53,8 @@ public class CalloutOrderQuickEntry_SetPriceUOM implements IColumnCallout {
 					
 			BigDecimal qty = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Item2_Qty);
 			int C_UOM_ID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_Item2_UOM_ID);
-			
-			BigDecimal price = MPriceListUOM.getPrice(ctx, product_ID, C_UOM_ID, bPartner_ID, isSOTrx);
+			MPriceListUOM priceUOM = MPriceListUOM.getPriceListUOM(ctx, product_ID, C_UOM_ID, bPartner_ID, isSOTrx, dateAcct);
+			BigDecimal price = priceUOM.getPrice();
 			if(price == null)
 				price = BigDecimal.ZERO;
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item2_Price, price);

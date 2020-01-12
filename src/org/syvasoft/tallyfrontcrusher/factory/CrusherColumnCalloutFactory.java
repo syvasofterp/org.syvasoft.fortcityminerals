@@ -62,6 +62,7 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_Org;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_TFBPartner;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPermitPurchase_CalcAmount;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPermitPurchase_Quarry;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutPriceList_BPartner;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutProduct_CalcTotalValue;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutRentalContract_ResourceType;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutRentalContract_VehicleNo;
@@ -96,6 +97,7 @@ import org.syvasoft.tallyfrontcrusher.model.MJobworkResourceRentEntry;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWage;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWageIssue;
 import org.syvasoft.tallyfrontcrusher.model.MPermitPurchase;
+import org.syvasoft.tallyfrontcrusher.model.MPriceListUOM;
 import org.syvasoft.tallyfrontcrusher.model.MTRTaxInvoice;
 import org.syvasoft.tallyfrontcrusher.model.MTRTaxInvoiceLine;
 import org.syvasoft.tallyfrontcrusher.model.MTaxInvoice;
@@ -531,6 +533,12 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 				list.add(new CalloutTRTaxInvoiceLine_CalcAmount());
 			}
 			
+		}
+		
+		if(tableName.equals(MPriceListUOM.Table_Name)) {
+			if(columnName.equals(MPriceListUOM.COLUMNNAME_C_BPartner_ID) ||
+					columnName.equals(MPriceListUOM.COLUMNNAME_M_Product_ID) )
+				list.add(new CalloutPriceList_BPartner());
 		}
 		
 		return list != null ? list.toArray(new IColumnCallout[0]) : new IColumnCallout[0];
