@@ -48,16 +48,20 @@ public class CalloutOrder_SOUnitPriceRent implements IColumnCallout {
 				}
 			}
 			String orgType = (String) mTab.getValue(TF_MOrder.COLUMNNAME_OrgType);
-			if(orgType.equals(TF_MOrder.ORGTYPE_SandBlockWeighbridge)) {
-				MWeighmentEntry weighment = null;
-				if(mTab.getValue(TF_MOrder.COLUMNNAME_TF_WeighmentEntry_ID) != null) {
-					int weighment_id = (int) mTab.getValue(TF_MOrder.COLUMNNAME_TF_WeighmentEntry_ID);
-					weighment = new MWeighmentEntry(ctx, weighment_id, null);
+			
+			if(orgType != null)
+			{
+				if(orgType.equals(TF_MOrder.ORGTYPE_SandBlockWeighbridge)) {
+					MWeighmentEntry weighment = null;
+					if(mTab.getValue(TF_MOrder.COLUMNNAME_TF_WeighmentEntry_ID) != null) {
+						int weighment_id = (int) mTab.getValue(TF_MOrder.COLUMNNAME_TF_WeighmentEntry_ID);
+						weighment = new MWeighmentEntry(ctx, weighment_id, null);
+					}
+					if(weighment != null && weighment.getPrice() != null) 
+						price = weighment.getPrice();
 				}
-				if(weighment != null && weighment.getPrice() != null) 
-					price = weighment.getPrice();
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Price, price);
 			}
-			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Price, price);		
 		}
 		return null;
 	}

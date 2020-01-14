@@ -21,6 +21,7 @@ import org.compiere.model.MProductPricing;
 import org.compiere.model.MResource;
 import org.compiere.model.MSysConfig;
 import org.compiere.model.MTable;
+import org.compiere.model.MTax;
 import org.compiere.model.MUOM;
 import org.compiere.model.MUOMConversion;
 import org.compiere.model.MUser;
@@ -1657,7 +1658,7 @@ public class TF_MOrder extends MOrder {
 		//Vehicle Rent
 		if(isRentBreakup())
 		 if(getTF_RentedVehicle_ID() > 0 && (is_ValueChanged(COLUMNNAME_TF_RentedVehicle_ID) || is_ValueChanged(COLUMNNAME_Rent_Amt)
-				|| getVehicle_C_OrderLine_ID() == 0)) {
+				|| getVehicle_C_OrderLine_ID() == 0 || is_ValueChanged(COLUMNNAME_IsTaxIncluded))) {
 			
 			if(getVehicle_C_OrderLine_ID() > 0) 
 				ordLine = new MOrderLine(getCtx(), getVehicle_C_OrderLine_ID(), get_TrxName());
@@ -1665,14 +1666,33 @@ public class TF_MOrder extends MOrder {
 				ordLine = new MOrderLine(this);
 			MRentedVehicle rentVehicle = new MRentedVehicle(getCtx(), getTF_RentedVehicle_ID(), get_TrxName());
 			int productID = rentVehicle.getM_Product_ID();
-			TF_MOrder.addProductPricingIfNot(productID, getM_PriceList_ID(), getC_BPartner_ID(), BigDecimal.ONE, getRent_Amt(), 
+			int defaultTaxID = 0;
+			BigDecimal rentAmount = new BigDecimal(0);
+			
+			if(getRent_Tax_ID() > 0)
+			{
+				defaultTaxID = getRent_Tax_ID();
+				
+				MTax tax = new MTax(getCtx(), defaultTaxID, get_TrxName());
+				BigDecimal taxRate = (BigDecimal)tax.getRate();
+				BigDecimal hundred = new BigDecimal("100");
+				
+				rentAmount = getRent_Amt().divide(BigDecimal.ONE.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);
+			}
+			else
+			{
+				defaultTaxID = Env.getContextAsInt(getCtx(), "#C_Tax_ID");
+				rentAmount = getDistance().multiply(getRate());
+			}
+			ordLine.setC_Tax_ID(defaultTaxID);
+			
+			TF_MOrder.addProductPricingIfNot(productID, getM_PriceList_ID(), getC_BPartner_ID(), BigDecimal.ONE, rentAmount, 
 					getDateOrdered(), getC_DocType().isSOTrx());
-			setOrderLine(ordLine, productID, BigDecimal.ONE, getRent_Amt());
+			setOrderLine(ordLine, productID, BigDecimal.ONE, rentAmount);
 			int load_uom_id = MSysConfig.getIntValue("LOAD_UOM", 1000072, getAD_Client_ID());
 			ordLine.setC_UOM_ID(load_uom_id);
 			
-			int defaultTaxID = Env.getContextAsInt(getCtx(), "#C_Tax_ID");
-			ordLine.setC_Tax_ID(defaultTaxID);
+			
 			
 			//MResource res = MResource.get(getCtx(), getVehicle().getS_Resource_ID());
 			//ordLine.setUser1_ID(res.get_ValueAsInt("C_ElementValue_ID"));
@@ -1906,9 +1926,33 @@ public class TF_MOrder extends MOrder {
 		int load_uom_id = MSysConfig.getIntValue("LOAD_UOM", 1000072, getAD_Client_ID());
 		invLine.setC_UOM_ID(load_uom_id);
 		invLine.setQty(BigDecimal.ONE);
-		BigDecimal price = getRent_Amt();
+		
+		int defaultTaxID = 0;
+		BigDecimal rentAmount = new BigDecimal(0);
+		BigDecimal taxRate = new BigDecimal(0);
+		BigDecimal hundred = new BigDecimal("100");
+		
+		if(getRent_Tax_ID() > 0){
+			defaultTaxID = getRent_Tax_ID();
+			
+			MTax tax = new MTax(getCtx(), defaultTaxID, get_TrxName());
+			taxRate = (BigDecimal)tax.getRate();
+			rentAmount = getRent_Amt().divide(BigDecimal.ONE.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);
+		}
+		else{
+			defaultTaxID = Env.getContextAsInt(getCtx(), "#C_Tax_ID");
+			rentAmount = getDistance().multiply(getRate());
+		}
+		invLine.setC_Tax_ID(defaultTaxID);
+		
+		BigDecimal price = rentAmount;
 		if(isSOTrx()) {
-			price = getRentPayable();
+			if(defaultTaxID > 0){
+				price = getRentPayable().divide(BigDecimal.ONE.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);
+			}
+			else {
+				price = getRentPayable();
+			}
 		}
 		invLine.setPriceActual(price);
 		invLine.setPriceList(price);
@@ -2306,7 +2350,7 @@ public class TF_MOrder extends MOrder {
 		if(getItem1_PermitIssued().doubleValue() <= 0)
 			throw new AdempiereException("Invalid Permit Issued!");
 		
-		MTaxInvoice inv = new MTaxInvoice(getCtx(), 0, get_TrxName());
+		/* MTaxInvoice inv = new MTaxInvoice(getCtx(), 0, get_TrxName());
 		inv.setAD_Org_ID(getAD_Org_ID());
 		inv.setDateAcct(getDateAcct());
 		inv.setC_BPartner_ID(getC_BPartner_ID());
@@ -2334,7 +2378,7 @@ public class TF_MOrder extends MOrder {
 		inv.processIt(DOCACTION_Complete);
 		inv.saveEx();
 		
-		setTF_TaxInvoice_ID(inv.getTF_TaxInvoice_ID());
+		setTF_TaxInvoice_ID(inv.getTF_TaxInvoice_ID());*/
 		
 	}
 	

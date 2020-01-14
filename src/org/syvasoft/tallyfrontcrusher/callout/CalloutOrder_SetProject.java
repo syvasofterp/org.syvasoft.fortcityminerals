@@ -15,23 +15,24 @@ public class CalloutOrder_SetProject implements IColumnCallout {
 	public String start(Properties ctx, int WindowNo, GridTab mTab, GridField mField, Object value, Object oldValue) {
 		//if(mTab.getValue(TF_MOrder.COLUMNNAME_C_Project_ID) != null)			
 		//	return null;
-		
-		int AD_Org_ID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_AD_Org_ID);
-		int C_Project_ID = 0;
-		if(mField.getColumnName().equals(TF_MOrder.COLUMNNAME_C_BPartner_ID)) {
-			int C_BPartner_ID = 0;			
-			if(mTab.getValue(TF_MOrder.COLUMNNAME_C_BPartner_ID) != null)
-				C_BPartner_ID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_C_BPartner_ID);
-			MJobworkAssignedBPartner jwBP = MJobworkAssignedBPartner.getJobwork(AD_Org_ID, C_BPartner_ID);
-			if(jwBP != null)
-				C_Project_ID = jwBP.getC_Project_ID();
+		if(value != null)
+		{
+			int AD_Org_ID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_AD_Org_ID);
+			int C_Project_ID = 0;
+			if(mField.getColumnName().equals(TF_MOrder.COLUMNNAME_C_BPartner_ID)) {
+				int C_BPartner_ID = 0;			
+				if(mTab.getValue(TF_MOrder.COLUMNNAME_C_BPartner_ID) != null)
+					C_BPartner_ID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_C_BPartner_ID);
+				MJobworkAssignedBPartner jwBP = MJobworkAssignedBPartner.getJobwork(AD_Org_ID, C_BPartner_ID);
+				if(jwBP != null)
+					C_Project_ID = jwBP.getC_Project_ID();
+			}
+					
+			if(C_Project_ID > 0)
+				mTab.setValue(TF_MOrder.COLUMNNAME_C_Project_ID, C_Project_ID);
+			else
+				mTab.setValue(TF_MOrder.COLUMNNAME_C_Project_ID, null);
 		}
-				
-		if(C_Project_ID > 0)
-			mTab.setValue(TF_MOrder.COLUMNNAME_C_Project_ID, C_Project_ID);
-		else
-			mTab.setValue(TF_MOrder.COLUMNNAME_C_Project_ID, null);
-		
 		return null;
 	}
 
