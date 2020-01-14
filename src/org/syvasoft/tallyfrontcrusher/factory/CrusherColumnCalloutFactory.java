@@ -41,6 +41,7 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_CalcRentAmount;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_CalcRentPayable;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_Destination;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_Distance;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_Item1Tax;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_Org;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_POSCashBP;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_RentedVehicle;
@@ -86,6 +87,9 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutWeighmentEntry_CalcNetWeigh
 import org.syvasoft.tallyfrontcrusher.callout.CalloutWeighmentEntry_Vehicle;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutYardEntry_CalcAmount;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutYardEntry_VehicleType;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_CreateTaxInvoice;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_PriceIncludesTax;
+
 import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MCrusherKatingEntry;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalary;
@@ -136,8 +140,10 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		
 		//TF_MOrder - Set Cash Payment Rule for POS BP
 		if(tableName.equals(TF_MOrder.Table_Name) && columnName.equals(TF_MOrder.COLUMNNAME_C_BPartner_ID))
+		{
 			list.add(new CalloutOrder_POSCashBP());
-		
+			list.add(new CalloutOrder_CreateTaxInvoice());
+		}
 		//TF_MOrder / C_Invoice - Set Unit Price
 		if((tableName.equals(TF_MOrder.Table_Name) || tableName.equals(TF_MInvoice.Table_Name)) && (columnName.equals(TF_MOrder.COLUMNNAME_Item1_ID)				
 				|| columnName.equals(TF_MOrder.COLUMNNAME_Item2_ID)  )) {
@@ -541,6 +547,14 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 				list.add(new CalloutPriceList_BPartner());
 		}
 		
+		if(tableName.equals(TF_MOrder.Table_Name)) {
+			if(columnName.equals(TF_MOrder.COLUMNNAME_C_BPartner_ID) || 
+					columnName.equals(TF_MOrder.COLUMNNAME_Item1_ID) ||
+					columnName.equals(TF_MOrder.COLUMNNAME_IsTaxIncluded)) {
+				list.add(new CalloutOrder_PriceIncludesTax());
+				list.add(new CalloutOrder_Item1Tax());
+			}
+		}
 		return list != null ? list.toArray(new IColumnCallout[0]) : new IColumnCallout[0];
 	}
 

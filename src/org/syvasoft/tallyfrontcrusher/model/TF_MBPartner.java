@@ -509,6 +509,32 @@ public class TF_MBPartner extends MBPartner {
 		return false;
 	}
 	
+	/** Column name IsRequiredTaxInvoicePerLoad */
+    public static final String COLUMNNAME_IsRequiredTaxInvoicePerLoad = "IsRequiredTaxInvoicePerLoad";
+    
+    /** Set Tax Invoice Per Load.
+	@param IsRequiredTaxInvoicePerLoad
+  */
+	public void setIsRequiredTaxInvoicePerLoad (boolean IsRequiredTaxInvoicePerLoad )
+	{
+		set_Value (COLUMNNAME_IsRequiredTaxInvoicePerLoad, Boolean.valueOf(IsRequiredTaxInvoicePerLoad ));
+	}
+	
+	/** Get Price includes Tax.
+		@return Tax is included in the price 
+	  */
+	public boolean IsRequiredTaxInvoicePerLoad () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsRequiredTaxInvoicePerLoad);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+	
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
 		boolean ok = super.afterSave(newRecord, success);
