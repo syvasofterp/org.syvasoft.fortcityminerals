@@ -30,7 +30,7 @@ public class CalloutOrder_Item1Tax implements IColumnCallout{
 			boolean isRentBreakup = mTab.getValueAsBoolean(TF_MOrder.COLUMNNAME_IsRentBreakup);
 			boolean isRentInclusive = mTab.getValueAsBoolean(TF_MOrder.COLUMNNAME_IsRentInclusive);
 			
-			if(((boolean)mTab.getValue(TF_MOrder.COLUMNNAME_IsTaxIncluded)) == true) {
+			if(((boolean)mTab.getValue(TF_MOrder.COLUMNNAME_IsTaxIncluded1)) == true) {
 				BigDecimal priceExcludesTax;
 				int tax_ID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_Tax_ID);
 				MTax tax = new MTax(ctx, tax_ID, null);
@@ -68,59 +68,39 @@ public class CalloutOrder_Item1Tax implements IColumnCallout{
 			else {
 				BigDecimal price = BigDecimal.ZERO;		
 				
-				if((mField.getColumnName().equals(TF_MOrder.COLUMNNAME_Item1_ID) || mField.getColumnName().equals(TF_MOrder.COLUMNNAME_IsTaxIncluded)) && value != null
+				if((mField.getColumnName().equals(TF_MOrder.COLUMNNAME_Item1_ID) || mField.getColumnName().equals(TF_MOrder.COLUMNNAME_IsTaxIncluded1)) && value != null
 						&& mTab.getValue(TF_MOrder.COLUMNNAME_C_BPartner_ID) != null
 						&& mTab.getValue(TF_MOrder.COLUMNNAME_DateAcct) != null
 						&& mTab.getValue(TF_MOrder.COLUMNNAME_M_PriceList_ID) != null) {
-					int bPartner_ID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_C_BPartner_ID);
-					Timestamp dateAcct = (Timestamp) mTab.getValue(TF_MOrder.COLUMNNAME_DateAcct);
-					int product_ID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_ID);
-					int priceList_ID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_M_PriceList_ID);
-					int C_UOM_ID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_UOM_ID);
-					
-					boolean isSOTrx = Env.getContext(ctx, WindowNo, "IsSOTrx").equals("Y");
 					BigDecimal qty = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_Qty);
+					unitPrice = (BigDecimal)mTab.getValue(TF_MOrder.COLUMNNAME_Item1_UnitPrice);
+										
+					BigDecimal unitRent = BigDecimal.ZERO;
+					BigDecimal rentAmount = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Rent_Amt);
 					
-					MPriceListUOM priceUOM = MPriceListUOM.getPriceListUOM(ctx, product_ID, C_UOM_ID, bPartner_ID, isSOTrx, dateAcct);
+					if(qty.doubleValue() != 0)
+						unitRent = rentAmount.divide(qty,2,RoundingMode.HALF_UP);
 					
-					if(priceUOM != null) {
-						unitPrice = priceUOM.getPrice();
-						
-						if(unitPrice == null)
-							unitPrice = BigDecimal.ZERO;
-						
-						price = unitPrice;				
-						BigDecimal unitRent = BigDecimal.ZERO;
-						BigDecimal rentAmount = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Rent_Amt);
-						
-						if(qty.doubleValue() != 0)
-							unitRent = rentAmount.divide(qty,2,RoundingMode.HALF_UP);
-						
-						if(isRentInclusive) { 
-							if(isRentBreakup) {
-								price = unitPrice.subtract(unitRent);
-							}
-							else {
-								price = unitPrice;
-							}
+					if(isRentInclusive) { 
+						if(isRentBreakup) {
+							price = unitPrice.subtract(unitRent);
 						}
 						else {
-							if(isRentBreakup) {
-								price = unitPrice;
-							}
-							else {
-								price = unitPrice.add(unitRent);
-							}
+							price = unitPrice;
 						}
-						
-						mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Price, price);
-						mTab.setValue(TF_MOrder.COLUMNNAME_Item1_UnitPrice, unitPrice);
-						
-						if(qty != null)
-							mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Amt, price.multiply(qty).divide(BigDecimal.ONE, 2, RoundingMode.HALF_UP));
 					}
-					else
-						price = BigDecimal.ZERO;
+					else {
+						if(isRentBreakup) {
+							price = unitPrice;
+						}
+						else {
+							price = unitPrice.add(unitRent);
+						}
+					}
+					
+					mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Price, price);
+					if(qty != null)
+						mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Amt, price.multiply(qty).divide(BigDecimal.ONE, 2, RoundingMode.HALF_UP));
 				}
 			}
 				
