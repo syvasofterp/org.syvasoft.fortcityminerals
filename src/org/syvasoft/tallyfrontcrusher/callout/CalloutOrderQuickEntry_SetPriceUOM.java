@@ -54,6 +54,14 @@ public class CalloutOrderQuickEntry_SetPriceUOM implements IColumnCallout {
 				mTab.setValue(TF_MOrder.COLUMNNAME_IsRentInclusive, isRentInclusive);
 				mTab.setValue(TF_MOrder.COLUMNNAME_IsTaxIncluded, isTaxIncluded);
 			}
+			else{
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Price, BigDecimal.ZERO);
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_UnitPrice, BigDecimal.ZERO);
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Amt, BigDecimal.ZERO);
+				
+				mTab.setValue(TF_MOrder.COLUMNNAME_IsRentInclusive, false);
+				mTab.setValue(TF_MOrder.COLUMNNAME_IsTaxIncluded, false);
+			}
 		}
 		
 		if(value != null
@@ -79,6 +87,10 @@ public class CalloutOrderQuickEntry_SetPriceUOM implements IColumnCallout {
 				mTab.setValue(TF_MOrder.COLUMNNAME_Item2_UOM_ID, prod.getC_UOM_ID());
 				int defaultTaxID = Env.getContextAsInt(ctx, "#C_Tax_ID");
 				mTab.setValue(TF_MOrder.COLUMNNAME_Item2_Tax_ID, defaultTaxID);
+			}
+			else{
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item2_Price, BigDecimal.ZERO);
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item2_Amt, BigDecimal.ZERO);
 			}
 		}
 		return null;

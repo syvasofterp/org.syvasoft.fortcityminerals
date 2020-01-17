@@ -27,6 +27,8 @@ public class CalloutOrder_Item1Tax implements IColumnCallout{
 	public String start(Properties ctx, int WindowNo, GridTab mTab, GridField mField, Object value, Object oldValue) {		
 		if(value != null){
 			BigDecimal unitPrice = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_UnitPrice);
+			boolean isRentBreakup = mTab.getValueAsBoolean(TF_MOrder.COLUMNNAME_IsRentBreakup);
+			boolean isRentInclusive = mTab.getValueAsBoolean(TF_MOrder.COLUMNNAME_IsRentInclusive);
 			
 			if(((boolean)mTab.getValue(TF_MOrder.COLUMNNAME_IsTaxIncluded)) == true) {
 				BigDecimal priceExcludesTax;
@@ -35,8 +37,33 @@ public class CalloutOrder_Item1Tax implements IColumnCallout{
 				BigDecimal taxRate = (BigDecimal)tax.getRate();
 				BigDecimal hundred = new BigDecimal("100");
 				
-				priceExcludesTax = unitPrice.divide(BigDecimal.ONE.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);
-				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_UnitPrice, priceExcludesTax);
+				BigDecimal price = unitPrice;				
+				BigDecimal unitRent = BigDecimal.ZERO;
+				BigDecimal rentAmount = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Rent_Amt);
+				BigDecimal qty = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_Qty);
+				
+				if(qty.doubleValue() != 0)
+					unitRent = rentAmount.divide(qty,2,RoundingMode.HALF_UP);
+				
+				if(isRentInclusive) { 
+					if(isRentBreakup) {
+						price = unitPrice.subtract(unitRent);
+					}
+					else {
+						price = unitPrice;
+					}
+				}
+				else {
+					if(isRentBreakup) {
+						price = unitPrice;
+					}
+					else {
+						price = unitPrice.add(unitRent);
+					}
+				}
+				
+				priceExcludesTax = price.divide(BigDecimal.ONE.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Price, priceExcludesTax);
 			}
 			else {
 				BigDecimal price = BigDecimal.ZERO;		
@@ -49,17 +76,51 @@ public class CalloutOrder_Item1Tax implements IColumnCallout{
 					Timestamp dateAcct = (Timestamp) mTab.getValue(TF_MOrder.COLUMNNAME_DateAcct);
 					int product_ID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_ID);
 					int priceList_ID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_M_PriceList_ID);
+					int C_UOM_ID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_UOM_ID);
+					
 					boolean isSOTrx = Env.getContext(ctx, WindowNo, "IsSOTrx").equals("Y");
 					BigDecimal qty = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_Qty);
 					
-					MProductPricing pp = TF_MOrder.getProductPricing(product_ID, priceList_ID, bPartner_ID, qty, dateAcct, isSOTrx);
-					price = pp.getPriceStd();
-					if(price == null)
+					MPriceListUOM priceUOM = MPriceListUOM.getPriceListUOM(ctx, product_ID, C_UOM_ID, bPartner_ID, isSOTrx, dateAcct);
+					
+					if(priceUOM != null) {
+						unitPrice = priceUOM.getPrice();
+						
+						if(unitPrice == null)
+							unitPrice = BigDecimal.ZERO;
+						
+						price = unitPrice;				
+						BigDecimal unitRent = BigDecimal.ZERO;
+						BigDecimal rentAmount = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Rent_Amt);
+						
+						if(qty.doubleValue() != 0)
+							unitRent = rentAmount.divide(qty,2,RoundingMode.HALF_UP);
+						
+						if(isRentInclusive) { 
+							if(isRentBreakup) {
+								price = unitPrice.subtract(unitRent);
+							}
+							else {
+								price = unitPrice;
+							}
+						}
+						else {
+							if(isRentBreakup) {
+								price = unitPrice;
+							}
+							else {
+								price = unitPrice.add(unitRent);
+							}
+						}
+						
+						mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Price, price);
+						mTab.setValue(TF_MOrder.COLUMNNAME_Item1_UnitPrice, unitPrice);
+						
+						if(qty != null)
+							mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Amt, price.multiply(qty).divide(BigDecimal.ONE, 2, RoundingMode.HALF_UP));
+					}
+					else
 						price = BigDecimal.ZERO;
-					mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Price, price);
-					mTab.setValue(TF_MOrder.COLUMNNAME_Item1_UnitPrice, price);
-					if(qty != null)
-						mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Amt, price.multiply(qty).divide(BigDecimal.ONE, 2, RoundingMode.HALF_UP));
 				}
 			}
 				

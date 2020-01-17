@@ -48,13 +48,15 @@ public class CalloutOrder_PriceIncludesTax implements IColumnCallout {
 			
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Tax_ID, tax_ID);
 			
-			MRentedVehicle rentedVehicle = new MRentedVehicle(ctx, vehicle_ID, null);
-			
-			if(rentedVehicle != null){
-				TF_MProduct vehicle = new TF_MProduct(ctx, rentedVehicle.getM_Product_ID(), null);
-				int vehicle_tax_ID = vehicle.getTax_ID(isTaxIncluded);
+			if(vehicle_ID > 0) {
+				MRentedVehicle rentedVehicle = new MRentedVehicle(ctx, vehicle_ID, null);
 				
-				mTab.setValue(TF_MOrder.COLUMNNAME_Rent_Tax_ID, vehicle_tax_ID);
+				if(rentedVehicle != null){
+					TF_MProduct vehicle = new TF_MProduct(ctx, rentedVehicle.getM_Product_ID(), null);
+					int vehicle_tax_ID = vehicle.getTax_ID(isTaxIncluded);
+					
+					mTab.setValue(TF_MOrder.COLUMNNAME_Rent_Tax_ID, vehicle_tax_ID);
+				}
 			}
 		}
 		return null;
