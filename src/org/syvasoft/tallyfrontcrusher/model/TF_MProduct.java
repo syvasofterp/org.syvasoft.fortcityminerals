@@ -222,7 +222,7 @@ public class TF_MProduct extends MProduct {
 	public BigDecimal getGSTRate () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_GSTRate);
-		if (bd == null || bd.equals(Env.ZERO)) {
+		if (bd == null || bd.equals(BigDecimal.ZERO)) {
 			MProductCategory pc = (MProductCategory) getM_Product_Category();
 			bd = (BigDecimal) pc.get_Value(COLUMNNAME_GSTRate);
 			if(bd == null)
@@ -232,12 +232,16 @@ public class TF_MProduct extends MProduct {
 	}
 	
 	public int getTax_ID(boolean isTaxIncluded) {
-		String whereClause = "Rate=? AND IsSummary=?";
+		String whereClause = "Rate=? AND IsSummary=? AND ad_org_id=0";
 		MTax tax = new Query(getCtx(), MTax.Table_Name, whereClause, get_TrxName())
 				.setClient_ID()
 				.setParameters(isTaxIncluded?getGSTRate():Env.ZERO, isTaxIncluded ? "Y" : "N")
 				.first();
-		return tax.getC_Tax_ID();
+		
+		if(tax != null)
+			return tax.getC_Tax_ID();
+		else
+			return 0;
 	}
 	
 	@Override

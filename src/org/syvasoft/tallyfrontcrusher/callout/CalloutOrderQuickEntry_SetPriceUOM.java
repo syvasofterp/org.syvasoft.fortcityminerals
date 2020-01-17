@@ -52,7 +52,7 @@ public class CalloutOrderQuickEntry_SetPriceUOM implements IColumnCallout {
 				isTaxIncluded = priceUOM.isTaxIncluded();
 				
 				mTab.setValue(TF_MOrder.COLUMNNAME_IsRentInclusive, isRentInclusive);
-				mTab.setValue(TF_MOrder.COLUMNNAME_IsTaxIncluded, isTaxIncluded);
+				mTab.setValue(TF_MOrder.COLUMNNAME_IsTaxIncluded1, isTaxIncluded);
 			}
 			else{
 				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Price, BigDecimal.ZERO);
@@ -60,7 +60,7 @@ public class CalloutOrderQuickEntry_SetPriceUOM implements IColumnCallout {
 				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Amt, BigDecimal.ZERO);
 				
 				mTab.setValue(TF_MOrder.COLUMNNAME_IsRentInclusive, false);
-				mTab.setValue(TF_MOrder.COLUMNNAME_IsTaxIncluded, false);
+				mTab.setValue(TF_MOrder.COLUMNNAME_IsTaxIncluded1, false);
 			}
 		}
 		

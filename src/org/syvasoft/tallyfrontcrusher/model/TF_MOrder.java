@@ -812,6 +812,33 @@ public class TF_MOrder extends MOrder {
 		}
 		return false;
 	}
+	
+	/** Column name IsTaxIncluded for client */
+    public static final String COLUMNNAME_IsTaxIncluded1 = "IsTaxIncluded1";
+
+	/** Set Price includes Tax.
+	  * Tax is included in the price 
+	  */
+	public void setIsTaxIncluded1 (boolean IsTaxIncluded1)
+	{
+		set_Value (COLUMNNAME_IsTaxIncluded1, Boolean.valueOf(IsTaxIncluded1));
+	}
+
+	/** Get Price includes Tax.
+	  * Tax is included in the price 
+	  */
+	public boolean isTaxIncluded1()
+	{
+		Object oo = get_Value(COLUMNNAME_IsTaxIncluded1);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
 
 	/** Column name IsRentInclusive */
     public static final String COLUMNNAME_IsRentInclusive = "IsRentInclusive";
@@ -1658,7 +1685,7 @@ public class TF_MOrder extends MOrder {
 		//Vehicle Rent
 		if(isRentBreakup())
 		 if(getTF_RentedVehicle_ID() > 0 && (is_ValueChanged(COLUMNNAME_TF_RentedVehicle_ID) || is_ValueChanged(COLUMNNAME_Rent_Amt)
-				|| getVehicle_C_OrderLine_ID() == 0 || is_ValueChanged(COLUMNNAME_IsTaxIncluded))) {
+				|| getVehicle_C_OrderLine_ID() == 0 || is_ValueChanged(COLUMNNAME_IsTaxIncluded1))) {
 			
 			if(getVehicle_C_OrderLine_ID() > 0) 
 				ordLine = new MOrderLine(getCtx(), getVehicle_C_OrderLine_ID(), get_TrxName());
