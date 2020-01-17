@@ -142,7 +142,6 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		if(tableName.equals(TF_MOrder.Table_Name) && columnName.equals(TF_MOrder.COLUMNNAME_C_BPartner_ID))
 		{
 			list.add(new CalloutOrder_POSCashBP());
-			list.add(new CalloutOrder_CreateTaxInvoice());
 		}
 		//TF_MOrder / C_Invoice - Set Unit Price
 		if((tableName.equals(TF_MOrder.Table_Name) || tableName.equals(TF_MInvoice.Table_Name)) && (columnName.equals(TF_MOrder.COLUMNNAME_Item1_ID)				
@@ -547,11 +546,35 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 				list.add(new CalloutPriceList_BPartner());
 		}
 		
+		if(tableName.equals(MPriceListUOM.Table_Name)) {
+			if(columnName.equals(MPriceListUOM.COLUMNNAME_C_BPartner_ID) ||
+					columnName.equals(TF_MOrder.COLUMNNAME_TF_WeighmentEntry_ID)) {
+				list.add(new CalloutOrder_CreateTaxInvoice());
+			}
+		}
+		
 		if(tableName.equals(TF_MOrder.Table_Name)) {
 			if(columnName.equals(TF_MOrder.COLUMNNAME_C_BPartner_ID) || 
 					columnName.equals(TF_MOrder.COLUMNNAME_Item1_ID) ||
-					columnName.equals(TF_MOrder.COLUMNNAME_IsTaxIncluded)) {
+					columnName.equals(TF_MOrder.COLUMNNAME_IsTaxIncluded) ||
+					columnName.equals(TF_MOrder.COLUMNNAME_TF_Destination_ID) ||
+					columnName.equals(TF_MOrder.COLUMNNAME_TF_RentedVehicle_ID) ||
+					columnName.equals(TF_MOrder.COLUMNNAME_TF_WeighmentEntry_ID)) {
 				list.add(new CalloutOrder_PriceIncludesTax());
+			}
+		}
+		if(tableName.equals(TF_MOrder.Table_Name)) {
+			if(columnName.equals(TF_MOrder.COLUMNNAME_C_BPartner_ID) || 
+					columnName.equals(TF_MOrder.COLUMNNAME_Item1_ID) ||
+					columnName.equals(TF_MOrder.COLUMNNAME_IsRentInclusive) ||
+					columnName.equals(TF_MOrder.COLUMNNAME_IsTaxIncluded) ||
+					columnName.equals(TF_MOrder.COLUMNNAME_Item1_UOM_ID) ||
+					columnName.equals(TF_MOrder.COLUMNNAME_TF_Destination_ID) ||
+					columnName.equals(TF_MOrder.COLUMNNAME_TF_RentedVehicle_ID) || 
+					columnName.equals(TF_MOrder.COLUMNNAME_Distance) ||
+					columnName.equals(TF_MOrder.COLUMNNAME_Rate) || 
+					columnName.equals(TF_MOrder.COLUMNNAME_IsLumpSumRent) ||
+					columnName.equals(TF_MOrder.COLUMNNAME_TF_WeighmentEntry_ID)) {
 				list.add(new CalloutOrder_Item1Tax());
 			}
 		}
