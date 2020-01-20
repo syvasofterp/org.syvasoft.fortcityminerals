@@ -1,9 +1,11 @@
 package org.syvasoft.tallyfrontcrusher.model;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.ResultSet;
 import java.util.Properties;
 
+import org.compiere.model.MInvoice;
 import org.compiere.util.DB;
 
 public class MTRTaxInvoiceLine extends X_TF_TRTaxInvoiceLine {
@@ -22,6 +24,15 @@ public class MTRTaxInvoiceLine extends X_TF_TRTaxInvoiceLine {
 	public MTRTaxInvoiceLine(Properties ctx, ResultSet rs, String trxName) {
 		super(ctx, rs, trxName);
 		// TODO Auto-generated constructor stub
+	}
+	
+	public MTRTaxInvoiceLine (MTRTaxInvoice invoice)
+	{
+		this (invoice.getCtx(), 0, invoice.get_TrxName());
+		if (invoice.get_ID() == 0)
+			throw new IllegalArgumentException("Header not saved");
+		setClientOrg(invoice.getAD_Client_ID(), invoice.getAD_Org_ID());
+		setTF_TRTaxInvoice_ID(invoice.getTF_TRTaxInvoice_ID());
 	}
 
 	@Override
@@ -44,8 +55,24 @@ public class MTRTaxInvoiceLine extends X_TF_TRTaxInvoiceLine {
 		MTRTaxInvoice ti= new MTRTaxInvoice(getCtx(), getTF_TRTaxInvoice_ID(), get_TrxName());
 		ti.setGrandTotal(GrandTotal);
 		RoundOffAmt = ti.getRoundOff();
-		ti.setTotal(GrandTotal.add(RoundOffAmt));
+		
+		if(GrandTotal != null)
+			ti.setTotal(GrandTotal.add(RoundOffAmt));
+		
 		ti.saveEx();
 	}
 
+	public void calcAmounts() {
+		setTaxableAmount(getQty().multiply(getPrice()));		
+		BigDecimal divisor = new BigDecimal(100);		
+		BigDecimal cgstAmt = getCGST_Rate().multiply(getTaxableAmount()).divide(divisor);
+		BigDecimal sgstAmt = getSGST_Rate().multiply(getTaxableAmount()).divide(divisor);		
+		
+		setCGST_Amt(cgstAmt);
+		setSGST_Amt(sgstAmt);
+		
+		BigDecimal total = getTaxableAmount().add(cgstAmt).add(sgstAmt);
+		BigDecimal roundingOff = total.subtract(total.setScale(0, RoundingMode.HALF_UP));
+		setLineTotalAmt(total);		
+	}
 }

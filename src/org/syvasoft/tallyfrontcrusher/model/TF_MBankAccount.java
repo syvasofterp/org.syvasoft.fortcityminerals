@@ -389,4 +389,25 @@ public class TF_MBankAccount extends MBankAccount {
 		}
     	
     }
+    
+    public static int getDefaultBankAccount(Properties ctx,int AD_Org_ID,String trxName)
+    {
+		String Where=" AD_Org_ID=? AND BankAccountType='X'";
+		MBankAccount bankAccount = new Query(ctx, Table_Name, Where, trxName)
+				.setClient_ID()
+				.setOnlyActiveRecords(true)
+				.setParameters(AD_Org_ID)
+				.setOrderBy(COLUMNNAME_IsDefault)
+				.first();
+		
+		if(bankAccount != null)
+		{
+			return bankAccount.getC_BankAccount_ID();
+		}
+		else
+		{
+			throw new AdempiereException("No Cash Account Configured for this Organization!");
+		}
+    	
+    }
 }
