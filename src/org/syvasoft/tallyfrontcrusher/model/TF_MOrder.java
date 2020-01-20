@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.adempiere.exceptions.AdempiereException;
+import org.compiere.apps.form.PaySelect.BankInfo;
 import org.compiere.model.MBPartner;
 import org.compiere.model.MInOut;
 import org.compiere.model.MInOutLine;
@@ -1414,7 +1415,7 @@ public class TF_MOrder extends MOrder {
     /** Column name C_PaymentSalesDiscount_ID */
     public static final String COLUMNNAME_C_PaymentSalesDiscount_ID = "C_PaymentSalesDiscount_ID";
 
-    
+    public static final String COLUMNNAME_TF_TRTaxInvoice_ID = "TF_TRTaxInvoice_ID";
     /** Set Tax Invoice.
 	@param TF_TaxInvoice_ID Tax Invoice	  */
 	public void setTF_TaxInvoice_ID (int TF_TaxInvoice_ID)
@@ -1424,7 +1425,7 @@ public class TF_MOrder extends MOrder {
 		else 
 			set_Value (COLUMNNAME_TF_TaxInvoice_ID, Integer.valueOf(TF_TaxInvoice_ID));
 	}
-	
+		
 	/** Get Tax Invoice.
 		@return Tax Invoice	  */
 	public int getTF_TaxInvoice_ID () 
@@ -1435,6 +1436,25 @@ public class TF_MOrder extends MOrder {
 		return ii.intValue();
 	}
 	
+	/** Set Tax Invoice.
+	@param TF_TRTaxInvoice_ID Tax Invoice	  */
+	public void setTF_TRTaxInvoice_ID(int TF_TRTaxInvoice_ID)
+	{
+		if (TF_TRTaxInvoice_ID < 1) 
+			set_Value (COLUMNNAME_TF_TRTaxInvoice_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_TRTaxInvoice_ID, Integer.valueOf(TF_TRTaxInvoice_ID));
+	}
+	
+	/** Get Tax Invoice.
+	@return Tax Invoice	  */
+	public int getTF_TRTaxInvoice_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_TRTaxInvoice_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
 	/** Column name Rent_Tax_ID */
     public static final String COLUMNNAME_Rent_Tax_ID = "Rent_Tax_ID";
     public org.compiere.model.I_C_Tax getRent_Tax() throws RuntimeException
@@ -1742,7 +1762,10 @@ public class TF_MOrder extends MOrder {
 		createTransporterInvoice();
 		closeWeighmentEntry();
 		closeYardEntry();
-		createTaxInvoice();
+		
+		if(isTaxIncluded1())
+			createTaxInvoice();
+		
 		createCashSalesDiscountPayment();
 		return msg;
 	}
@@ -1836,6 +1859,7 @@ public class TF_MOrder extends MOrder {
 			reverseIssuedPermit();
 			reversePurchasedPermit();
 			voidTaxInvoice();
+			voidTR_TaxInvoice();
 			return super.voidIt();
 	}
 	
@@ -1889,6 +1913,7 @@ public class TF_MOrder extends MOrder {
 			reverseIssuedPermit();
 			reversePurchasedPermit();
 			voidTaxInvoice();
+			voidTR_TaxInvoice();
 			return super.reActivateIt();
 	}
 
@@ -2374,8 +2399,87 @@ public class TF_MOrder extends MOrder {
 		if(!isOnAccount())
 			return;
 		
-		if(getItem1_PermitIssued().doubleValue() <= 0)
-			throw new AdempiereException("Invalid Permit Issued!");
+		/*if(getItem1_PermitIssued().doubleValue() <= 0)
+			throw new AdempiereException("Invalid Permit Issued!");*/
+		
+		MTRTaxInvoice inv = new MTRTaxInvoice(getCtx(),0, get_TrxName());
+		inv.setAD_Org_ID(getAD_Org_ID());
+		inv.setDateAcct(getDateAcct());
+		inv.setM_Warehouse_ID(getM_Warehouse_ID());
+		inv.setC_BPartner_ID(getC_BPartner_ID());
+		inv.setDateSupply(getDateAcct());
+		
+		MWeighmentEntry wEntry = new MWeighmentEntry(getCtx(), getTF_WeighmentEntry_ID(), get_TrxName());
+		TF_MBPartner partner = new TF_MBPartner(getCtx(),getC_BPartner_ID(),get_TrxName());
+		if(wEntry != null && partner.getIsPOSCashBP()) {
+			inv.setPartyName(wEntry.getPartyName());
+		}
+		
+		MDestination dest = new MDestination(getCtx(), getTF_Destination_ID(), get_TrxName());
+		
+		inv.setPlaceOfSupply(dest.getName());
+		
+		inv.setVehicleNo(getVehicleNo());
+		inv.setDocStatus(DOCSTATUS_Completed);
+		inv.setProcessed(true);
+		//inv.calcAmounts();		
+		inv.setC_BankAccount_ID(TF_MBankAccount.getDefaultBankAccount(getCtx(), Env.getAD_Org_ID(getCtx()), null));
+		inv.processIt(DOCACTION_Complete);
+		inv.saveEx();
+
+		MTRTaxInvoiceLine invLine = new MTRTaxInvoiceLine(inv);
+		invLine.setAD_Org_ID(getAD_Org_ID());
+		invLine.setM_Product_ID(getItem1_ID());
+		invLine.setC_UOM_ID(getItem1_UOM_ID());
+		invLine.setQty(getItem1_Qty());
+		
+		
+		invLine.setPrice(getItem1_Price()); // Price in Default UOM such as Tonnage
+
+		MTax tax = new MTax(getCtx(), getItem1_Tax_ID(), get_TrxName());
+		BigDecimal taxRate = tax.getRate();
+		BigDecimal bdTwo = new BigDecimal(2);
+		BigDecimal taxSplit = taxRate.divide(bdTwo, 2, RoundingMode.HALF_EVEN);
+		
+		invLine.setSGST_Rate(taxSplit);
+		invLine.setCGST_Rate(taxSplit);
+		invLine.calcAmounts();
+		invLine.saveEx();
+		
+		MTRTaxInvoiceLine invRentLine = new MTRTaxInvoiceLine(inv);
+		
+		invRentLine.setAD_Org_ID(getAD_Org_ID());
+		
+		MRentedVehicle rentVehicle = new MRentedVehicle(getCtx(), getTF_RentedVehicle_ID(), get_TrxName());
+		int rentProductID = rentVehicle.getM_Product_ID();
+		
+		invRentLine.setM_Product_ID(rentProductID);
+		invRentLine.setC_UOM_ID(getItem1_UOM_ID());
+		invRentLine.setQty(BigDecimal.ONE);
+		
+		BigDecimal rentAmount = new BigDecimal(0);
+		if(getRent_Tax_ID() > 0)
+		{	
+			tax = new MTax(getCtx(), getRent_Tax_ID(), get_TrxName());
+			taxRate = (BigDecimal)tax.getRate();
+			BigDecimal hundred = new BigDecimal("100");
+			
+			rentAmount = getRent_Amt().divide(BigDecimal.ONE.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);
+		}
+		
+		
+		invRentLine.setPrice(rentAmount); // Price in Default UOM such as Tonnage
+
+		MTax vehicleTax = new MTax(getCtx(), getRent_Tax_ID(), get_TrxName());
+		BigDecimal vehicleTaxRate = vehicleTax.getRate();
+		taxSplit = vehicleTaxRate.divide(bdTwo, 2, RoundingMode.HALF_EVEN);
+		
+		invRentLine.setSGST_Rate(taxSplit);
+		invRentLine.setCGST_Rate(taxSplit);
+		invRentLine.calcAmounts();
+		invRentLine.saveEx();
+		
+		setTF_TRTaxInvoice_ID(inv.getTF_TRTaxInvoice_ID());
 		
 		/* MTaxInvoice inv = new MTaxInvoice(getCtx(), 0, get_TrxName());
 		inv.setAD_Org_ID(getAD_Org_ID());
@@ -2420,6 +2524,17 @@ public class TF_MOrder extends MOrder {
 		}
 	}
 
+	public void voidTR_TaxInvoice() {
+		if(getTF_TRTaxInvoice_ID() > 0) {
+			MTRTaxInvoice inv = new MTRTaxInvoice(getCtx(), getTF_TRTaxInvoice_ID(), get_TrxName());
+			inv.reverseIt();
+			inv.setDocStatus(DOCSTATUS_Voided);
+			inv.setProcessed(true);
+			inv.saveEx();
+			setTF_TRTaxInvoice_ID(0);
+		}
+	}
+	
 	/** Set Cash Sales Discount.
 	@param SalesDiscountAmt Cash Sales Discount	  */
 	public void setSalesDiscountAmt (BigDecimal SalesDiscountAmt)

@@ -429,6 +429,23 @@ public class TF_MBPartner extends MBPartner {
 		return bd;
 	}
 
+	/** Column name Cash Customer */
+    public static final String COLUMNNAME_IsPOSCashBP = "IsPOSCashBP";
+    /** Set Cash Customer.
+	@param Cash Customer 
+     */
+	public void setIsPOSCashBP (boolean IsPOSCashBP)
+	{
+		set_Value (COLUMNNAME_IsPOSCashBP, IsPOSCashBP);
+	}
+	
+	/** Get Cash Customer.
+	  */
+	public boolean getIsPOSCashBP () 
+	{
+		return (boolean)get_Value(COLUMNNAME_IsPOSCashBP);
+	}
+	
     
     /** Column name Std_Wage */
     public static final String COLUMNNAME_Std_Wage = "Std_Wage";
