@@ -50,12 +50,12 @@ public class ProcessVoidSubcontractInvoice extends SvrProcess{
 			TF_MInvoice invoice = new TF_MInvoice(getCtx(), crusherEntry.getSubcon_Invoice_ID(), get_TrxName());
 			
 			if(invoice != null) {
-				if(invoice.getDocStatus() == "CO") {
+				if(invoice.isProcessed()) {
 					invoice.reverseCorrectIt();
 					invoice.saveEx();
 				}
 			}
 		}
-		return null;
+		return "Processed Successfully";
 	}
 }
