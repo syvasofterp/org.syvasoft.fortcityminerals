@@ -44,13 +44,11 @@ public class ProcessVoidSubcontractInvoice extends SvrProcess{
 				.setClient_ID().setParameters(AD_Org_ID, DateFrom, DateTo).list();
 		
 		for(MCrusherProduction crusherEntry : crusherEntries) {
-			Trx trx = Trx.get(get_TrxName(), false);
-			Savepoint sp = null;
-			
+						
 			TF_MInvoice invoice = new TF_MInvoice(getCtx(), crusherEntry.getSubcon_Invoice_ID(), get_TrxName());
 			
 			if(invoice != null) {
-				if(invoice.isProcessed()) {
+				if(invoice.getDocStatus().equals(TF_MInvoice.DOCSTATUS_Completed)) {
 					invoice.reverseCorrectIt();
 					invoice.saveEx();
 				}
