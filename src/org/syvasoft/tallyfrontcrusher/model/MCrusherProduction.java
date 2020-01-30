@@ -132,6 +132,9 @@ public class MCrusherProduction extends X_TF_Crusher_Production {
 	}
 	
 	public void createSubcontractInvoice() {
+		if(getC_Project_ID() == 0)
+			return;
+		
 		TF_MProject proj = new TF_MProject(getCtx(), getC_Project_ID(), get_TrxName());
 		MSubcontractType st = new MSubcontractType(getCtx(), proj.getTF_SubcontractType_ID(), get_TrxName());
 		
