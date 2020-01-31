@@ -24,7 +24,8 @@ public class CalloutOrder_PriceIncludesTax implements IColumnCallout {
 	@Override
 	public String start(Properties ctx, int WindowNo, GridTab mTab, GridField mField, Object value, Object oldValue) {		
 		if(value != null){
-			if((boolean)mTab.getValue(TF_MOrder.COLUMNNAME_IsSOTrx) == true) {
+			boolean isSOTrx = Env.getContext(ctx, WindowNo, "IsSOTrx").equals("Y");
+			if(isSOTrx) {
 				int bPartner_ID = 0;
 				int product_ID = 0;
 				int vehicle_ID = 0;
