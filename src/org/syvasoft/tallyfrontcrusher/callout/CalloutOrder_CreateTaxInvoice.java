@@ -19,7 +19,9 @@ import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
 public class CalloutOrder_CreateTaxInvoice implements IColumnCallout{
 	public String start(Properties ctx, int WindowNo, GridTab mTab, GridField mField, Object value, Object oldValue) {
 		if(value != null) {
-			if((boolean)mTab.getValue(TF_MOrder.COLUMNNAME_IsSOTrx) == true) {
+			boolean isSOTrx = Env.getContext(ctx, WindowNo, "IsSOTrx").equals("Y");
+			
+			if(isSOTrx) {
 				if(mField.getColumnName().equals(TF_MOrder.COLUMNNAME_C_BPartner_ID)) {
 					int partner_id = (int)mTab.getValue(TF_MOrder.COLUMNNAME_C_BPartner_ID); 
 					TF_MBPartner partner = new TF_MBPartner(ctx, partner_id, null);

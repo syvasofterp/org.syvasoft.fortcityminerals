@@ -26,10 +26,13 @@ public class CalloutOrder_Item1Tax implements IColumnCallout{
 	@Override
 	public String start(Properties ctx, int WindowNo, GridTab mTab, GridField mField, Object value, Object oldValue) {		
 		if(value != null){
-			BigDecimal unitPrice = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_UnitPrice);
-			boolean isRentBreakup = mTab.getValueAsBoolean(TF_MOrder.COLUMNNAME_IsRentBreakup);
-			boolean isRentInclusive = mTab.getValueAsBoolean(TF_MOrder.COLUMNNAME_IsRentInclusive);
+			boolean isSOTrx = Env.getContext(ctx, WindowNo, "IsSOTrx").equals("Y");
 			
+			if(isSOTrx) {
+				BigDecimal unitPrice = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_UnitPrice);
+				boolean isRentBreakup = mTab.getValueAsBoolean(TF_MOrder.COLUMNNAME_IsRentBreakup);
+				boolean isRentInclusive = mTab.getValueAsBoolean(TF_MOrder.COLUMNNAME_IsRentInclusive);
+				
 			if((boolean)mTab.getValue(TF_MOrder.COLUMNNAME_IsSOTrx) == true) {
 				if(((boolean)mTab.getValue(TF_MOrder.COLUMNNAME_IsTaxIncluded1)) == true) {
 					BigDecimal priceExcludesTax;
@@ -104,7 +107,7 @@ public class CalloutOrder_Item1Tax implements IColumnCallout{
 							mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Amt, price.multiply(qty).divide(BigDecimal.ONE, 2, RoundingMode.HALF_UP));
 					}
 				}
-					
+			}
 			}
 		}
 		return null;
