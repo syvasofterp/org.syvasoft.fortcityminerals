@@ -26,14 +26,14 @@ import org.compiere.util.Env;
 
 /** Generated Model for TF_RMSubcon_Movement
  *  @author iDempiere (generated) 
- *  @version Release 4.1 - $Id$ */
+ *  @version Release 5.1 - $Id$ */
 public class X_TF_RMSubcon_Movement extends PO implements I_TF_RMSubcon_Movement, I_Persistent 
 {
 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20171207L;
+	private static final long serialVersionUID = 20200209L;
 
     /** Standard Constructor */
     public X_TF_RMSubcon_Movement (Properties ctx, int TF_RMSubcon_Movement_ID, String trxName)
@@ -131,12 +131,40 @@ public class X_TF_RMSubcon_Movement extends PO implements I_TF_RMSubcon_Movement
 		return ii.intValue();
 	}
 
+	public org.compiere.model.I_C_Order getC_Order() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Order)MTable.get(getCtx(), org.compiere.model.I_C_Order.Table_Name)
+			.getPO(getC_Order_ID(), get_TrxName());	}
+
+	/** Set Order.
+		@param C_Order_ID 
+		Order
+	  */
+	public void setC_Order_ID (int C_Order_ID)
+	{
+		if (C_Order_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_C_Order_ID, null);
+		else 
+			set_ValueNoCheck (COLUMNNAME_C_Order_ID, Integer.valueOf(C_Order_ID));
+	}
+
+	/** Get Order.
+		@return Order
+	  */
+	public int getC_Order_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_Order_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	public org.compiere.model.I_C_Project getC_Project() throws RuntimeException
     {
 		return (org.compiere.model.I_C_Project)MTable.get(getCtx(), org.compiere.model.I_C_Project.Table_Name)
 			.getPO(getC_Project_ID(), get_TrxName());	}
 
-	/** Set Project.
+	/** Set Subcontract / Project.
 		@param C_Project_ID 
 		Financial Project
 	  */
@@ -148,7 +176,7 @@ public class X_TF_RMSubcon_Movement extends PO implements I_TF_RMSubcon_Movement
 			set_ValueNoCheck (COLUMNNAME_C_Project_ID, Integer.valueOf(C_Project_ID));
 	}
 
-	/** Get Project.
+	/** Get Subcontract / Project.
 		@return Financial Project
 	  */
 	public int getC_Project_ID () 

@@ -87,6 +87,21 @@ public class MSubcontractMaterialMovement extends X_TF_RMSubcon_Movement {
 		mov.saveEx();
 	}
 	
+	public static void createMaterialMovement(String trxName, Timestamp dateAcct,int AD_Org_ID, int C_Order_ID, 
+			int C_BPartner_ID, int M_Product_ID, BigDecimal QtyPayment, int TF_WeighmentEntry_ID) {		
+		
+		MSubcontractMaterialMovement mov = new MSubcontractMaterialMovement(Env.getCtx(), 0, trxName);
+		mov.setAD_Org_ID(AD_Org_ID);
+		mov.setMovementDate(dateAcct);
+		mov.setC_BPartner_ID(C_BPartner_ID);
+		mov.setC_Order_ID(C_Order_ID);
+		mov.setM_Product_ID(M_Product_ID);
+		mov.setQty_Payment(QtyPayment);
+		mov.setTF_WeighmentEntry_ID(TF_WeighmentEntry_ID);
+		mov.setProcessed(true);
+		mov.saveEx();
+	}
+	
 	public static void deleteWeighmentMovement(int TF_WeighmentEntry_ID, String trxName) {
 		String sql = "DELETE FROM TF_RMSubcon_Movement WHERE TF_WeighmentEntry_ID = " + TF_WeighmentEntry_ID;
 		DB.executeUpdate(sql, trxName);
@@ -95,6 +110,10 @@ public class MSubcontractMaterialMovement extends X_TF_RMSubcon_Movement {
 	public static void deleteInvoiceMovement(int C_Invoice_ID, String trxName) {
 		String sql = "DELETE FROM TF_RMSubcon_Movement WHERE C_Invoice_ID = " + C_Invoice_ID;
 		DB.executeUpdate(sql, trxName);
-	}	
+	}
 	
+	public static void deleteSalesEntryMovement(int C_Order_ID, String trxName) {
+		String sql = "DELETE FROM TF_RMSubcon_Movement WHERE C_Order_ID = " + C_Order_ID;
+		DB.executeUpdate(sql, trxName);
+	}
 }

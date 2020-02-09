@@ -283,6 +283,21 @@ public interface I_TF_Boulder_Receipt
 
 	public org.compiere.model.I_GL_Journal getJobwork_VarJournal() throws RuntimeException;
 
+    /** Column name M_Inventory_ID */
+    public static final String COLUMNNAME_M_Inventory_ID = "M_Inventory_ID";
+
+	/** Set Inventory Receipt.
+	  * Parameters for a Physical Inventory
+	  */
+	public void setM_Inventory_ID (int M_Inventory_ID);
+
+	/** Get Inventory Receipt.
+	  * Parameters for a Physical Inventory
+	  */
+	public int getM_Inventory_ID();
+
+	public org.compiere.model.I_M_Inventory getM_Inventory() throws RuntimeException;
+
     /** Column name M_Product_ID */
     public static final String COLUMNNAME_M_Product_ID = "M_Product_ID";
 
@@ -457,10 +472,10 @@ public interface I_TF_Boulder_Receipt
     /** Column name TF_BlueMetal_Type */
     public static final String COLUMNNAME_TF_BlueMetal_Type = "TF_BlueMetal_Type";
 
-	/** Set Blue Metal Type	  */
+	/** Set Production Type	  */
 	public void setTF_BlueMetal_Type (String TF_BlueMetal_Type);
 
-	/** Get Blue Metal Type	  */
+	/** Get Production Type	  */
 	public String getTF_BlueMetal_Type();
 
     /** Column name TF_Boulder_Receipt_ID */

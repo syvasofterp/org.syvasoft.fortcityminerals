@@ -23,7 +23,7 @@ import org.compiere.util.KeyNamePair;
 
 /** Generated Interface for TF_RMSubcon_Movement
  *  @author iDempiere (generated) 
- *  @version Release 4.1
+ *  @version Release 5.1
  */
 @SuppressWarnings("all")
 public interface I_TF_RMSubcon_Movement 
@@ -32,7 +32,7 @@ public interface I_TF_RMSubcon_Movement
     /** TableName=TF_RMSubcon_Movement */
     public static final String Table_Name = "TF_RMSubcon_Movement";
 
-    /** AD_Table_ID=1000219 */
+    /** AD_Table_ID=1000228 */
     public static final int Table_ID = MTable.getTable_ID(Table_Name);
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);
@@ -94,15 +94,30 @@ public interface I_TF_RMSubcon_Movement
 
 	public org.compiere.model.I_C_Invoice getC_Invoice() throws RuntimeException;
 
+    /** Column name C_Order_ID */
+    public static final String COLUMNNAME_C_Order_ID = "C_Order_ID";
+
+	/** Set Order.
+	  * Order
+	  */
+	public void setC_Order_ID (int C_Order_ID);
+
+	/** Get Order.
+	  * Order
+	  */
+	public int getC_Order_ID();
+
+	public org.compiere.model.I_C_Order getC_Order() throws RuntimeException;
+
     /** Column name C_Project_ID */
     public static final String COLUMNNAME_C_Project_ID = "C_Project_ID";
 
-	/** Set Project.
+	/** Set Subcontract / Project.
 	  * Financial Project
 	  */
 	public void setC_Project_ID (int C_Project_ID);
 
-	/** Get Project.
+	/** Get Subcontract / Project.
 	  * Financial Project
 	  */
 	public int getC_Project_ID();

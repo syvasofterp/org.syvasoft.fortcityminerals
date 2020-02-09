@@ -19,8 +19,8 @@ public class CalloutBoulderReceipt_Warehouse implements IColumnCallout {
 		}
 		TF_MProject proj = new Query(ctx, TF_MProject.Table_Name, "M_Warehouse_ID=? AND DocStatus='IP'", null)
 				.setParameters(warehoulse_id).first();
-		if(proj != null)
-			mTab.setValue(MBoulderReceipt.COLUMNNAME_TF_Send_To, MBoulderReceipt.TF_SEND_TO_SubcontractProduction);
+		//if(proj != null)
+		//	mTab.setValue(MBoulderReceipt.COLUMNNAME_TF_Send_To, MBoulderReceipt.TF_SEND_TO_SubcontractProduction);
 		return null;
 	}
 

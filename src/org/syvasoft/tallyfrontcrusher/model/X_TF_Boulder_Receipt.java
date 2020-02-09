@@ -33,7 +33,7 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20190201L;
+	private static final long serialVersionUID = 20200208L;
 
     /** Standard Constructor */
     public X_TF_Boulder_Receipt (Properties ctx, int TF_Boulder_Receipt_ID, String trxName)
@@ -59,7 +59,7 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 			setTF_Boulder_Receipt_ID (0);
 			setTF_Quarry_ID (0);
 			setTF_Send_To (null);
-// P
+// S
         } */
     }
 
@@ -492,6 +492,34 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 		return ii.intValue();
 	}
 
+	public org.compiere.model.I_M_Inventory getM_Inventory() throws RuntimeException
+    {
+		return (org.compiere.model.I_M_Inventory)MTable.get(getCtx(), org.compiere.model.I_M_Inventory.Table_Name)
+			.getPO(getM_Inventory_ID(), get_TrxName());	}
+
+	/** Set Inventory Receipt.
+		@param M_Inventory_ID 
+		Parameters for a Physical Inventory
+	  */
+	public void setM_Inventory_ID (int M_Inventory_ID)
+	{
+		if (M_Inventory_ID < 1) 
+			set_Value (COLUMNNAME_M_Inventory_ID, null);
+		else 
+			set_Value (COLUMNNAME_M_Inventory_ID, Integer.valueOf(M_Inventory_ID));
+	}
+
+	/** Get Inventory Receipt.
+		@return Parameters for a Physical Inventory
+	  */
+	public int getM_Inventory_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_M_Inventory_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	public org.compiere.model.I_M_Product getM_Product() throws RuntimeException
     {
 		return (org.compiere.model.I_M_Product)MTable.get(getCtx(), org.compiere.model.I_M_Product.Table_Name)
@@ -826,24 +854,22 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 
 	/** Regular = R */
 	public static final String TF_BLUEMETAL_TYPE_Regular = "R";
-	/** Mix GSB = G */
-	public static final String TF_BLUEMETAL_TYPE_MixGSB = "G";
-	/** Mix WMM = W */
-	public static final String TF_BLUEMETAL_TYPE_MixWMM = "W";
-	/** Mix GSB + 40MM = G+ */
-	public static final String TF_BLUEMETAL_TYPE_MixGSBPlus40MM = "G+";
-	/** Mix WMM + 40MM = W+ */
-	public static final String TF_BLUEMETAL_TYPE_MixWMMPlus40MM = "W+";
-	/** Set Blue Metal Type.
-		@param TF_BlueMetal_Type Blue Metal Type	  */
+	/** Wetmix = W */
+	public static final String TF_BLUEMETAL_TYPE_Wetmix = "W";
+	/** Regular + Geosand = RG */
+	public static final String TF_BLUEMETAL_TYPE_RegularPlusGeosand = "RG";
+	/** 40 MM only = 40 */
+	public static final String TF_BLUEMETAL_TYPE_40MMOnly = "40";
+	/** Set Production Type.
+		@param TF_BlueMetal_Type Production Type	  */
 	public void setTF_BlueMetal_Type (String TF_BlueMetal_Type)
 	{
 
 		set_Value (COLUMNNAME_TF_BlueMetal_Type, TF_BlueMetal_Type);
 	}
 
-	/** Get Blue Metal Type.
-		@return Blue Metal Type	  */
+	/** Get Production Type.
+		@return Production Type	  */
 	public String getTF_BlueMetal_Type () 
 	{
 		return (String)get_Value(COLUMNNAME_TF_BlueMetal_Type);

@@ -4,6 +4,7 @@ package org.syvasoft.tallyfrontcrusher.model;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
+import java.time.chrono.MinguoChronology;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -12,6 +13,8 @@ import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.MAcctSchema;
 import org.compiere.model.MClient;
 import org.compiere.model.MCostDetail;
+import org.compiere.model.MInventory;
+import org.compiere.model.MInventoryLine;
 import org.compiere.model.MInvoice;
 import org.compiere.model.MInvoiceLine;
 import org.compiere.model.MJournal;
@@ -53,10 +56,13 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 	protected boolean beforeSave(boolean newRecord) {
 				
 		if(newRecord || is_ValueChanged(COLUMNNAME_C_Project_ID)) {
-			TF_MProject proj = new TF_MProject(getCtx(), getC_Project_ID(), get_TrxName());
-			setJobWork_Product_ID(proj.getJobWork_Product_ID());
-			BigDecimal purchasePrice = MJobworkProductPrice.getPrice(getCtx(), getC_Project_ID(), proj.getJobWork_Product_ID(), getDateAcct()) ;
-			setJobwork_StdPrice(purchasePrice);			
+			if(getC_Project_ID() > 0) {
+				TF_MProject proj = new TF_MProject(getCtx(), getC_Project_ID(), get_TrxName());
+				setJobWork_Product_ID(proj.getJobWork_Product_ID());
+				BigDecimal purchasePrice = MJobworkProductPrice.getPrice(getCtx(), getC_Project_ID(), proj.getJobWork_Product_ID(), getDateAcct()) ;
+				setJobwork_StdPrice(purchasePrice);
+			}
+			//setC_UOM_ID(getM_Product().getC_UOM_ID());
 		}
 		
 				
@@ -66,14 +72,20 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 	public void createSubcontractMovement() {
 		if(getTF_RMSubcon_Movement_ID() > 0)
 			return;
-		TF_MProject proj = TF_MProject.getCrusherProductionSubcontractByWarehouse(getM_Warehouse_ID());
-		if(proj != null) {
+		
+		if(getC_Project_ID() > 0) {
+			TF_MProject proj = TF_MProject.getCrusherProductionSubcontractByWarehouse(getM_Warehouse_ID());
 			MSubcontractType st = new MSubcontractType(getCtx(), proj.getTF_SubcontractType_ID(), get_TrxName());
 			if(st.isTrackMaterialMovement()) {
 				int matMov_ID = MSubcontractMaterialMovement.createRawmaterialMovement(get_TrxName(), getDateAcct(), getAD_Org_ID(),
 						proj.getC_Project_ID(), proj.getC_BPartner_ID(), getM_Product_ID(), getTF_WeighmentEntry_ID(), getQtyReceived());
 				setTF_RMSubcon_Movement_ID(matMov_ID);
 			}
+		}
+		else {
+			int matMov_ID = MSubcontractMaterialMovement.createRawmaterialMovement(get_TrxName(), getDateAcct(), getAD_Org_ID(),
+					0, 0, getM_Product_ID(), getTF_WeighmentEntry_ID(), getQtyReceived());
+			setTF_RMSubcon_Movement_ID(matMov_ID);
 		}
 			
 	}
@@ -296,8 +308,11 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 				setProcessed(true);
 				return null;
 			}
-			else {		
-				
+			else if(getC_Project_ID() == 0) {
+				createSubcontractMovement();
+				createInternalUseInventory();
+			}
+			else {
 				//Update Storage for the received Product from the Joborder.
 				if (!MStorageOnHand.add(getCtx(), getM_Warehouse_ID(),
 						defaultLocatorID,
@@ -377,12 +392,13 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 				createSubcontractInvoice();
 				
 				setJobwork_Journal_ID(j.getGL_Journal_ID());			
-				setDocStatus(DOCSTATUS_Completed);
-				setProcessed(true);
+				
 				setM_Transaction_ID(mtrx.getM_Transaction_ID());
 				
 			}
-		
+			
+			setDocStatus(DOCSTATUS_Completed);
+			setProcessed(true);
 			
 			if(TF_SEND_TO_Production.equals(getTF_Send_To())) {
 				m_processMsg = postCrusherProduction();
@@ -411,40 +427,54 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 			TF_MInvoice inv = new TF_MInvoice(getCtx(), getSubcon_Invoice_ID(), get_TrxName());
 			if(inv.getDocStatus().equals(DOCSTATUS_Completed))
 				inv.reverseCorrectIt();
-			inv.saveEx();
+			inv.saveEx();			
+			setSubcon_Invoice_ID(0);						
+		}
+		
+		if(getTF_RMSubcon_Movement_ID()>0) {
 			MSubcontractMaterialMovement mov = new MSubcontractMaterialMovement(getCtx(), getTF_RMSubcon_Movement_ID(), get_TrxName());
 			mov.deleteEx(true);
-			setSubcon_Invoice_ID(0);
-			setTF_RMSubcon_Movement_ID(0);			
+			setTF_RMSubcon_Movement_ID(0);
 		}		
 		
-		MWarehouse warehouse = MWarehouse.get(getCtx(), getM_Warehouse_ID());
-		int defaultLocatorID = warehouse.getDefaultLocator().getM_Locator_ID();
-		String m_processMsg; 
-		//Update Storage for the received Product from the Joborder.
-		if (!MStorageOnHand.add(getCtx(), getM_Warehouse_ID(),
-				defaultLocatorID,
-				getM_Product_ID(),
-				0,
-				getQtyReceived().negate(),getDateAcct(),
-				get_TrxName()))
+		if(getC_Project_ID() == 0) { //Own Product Reverse
+			if(getM_Inventory_ID() > 0) {
+				MInventory inv = new MInventory(getCtx(), getM_Inventory_ID(), get_TrxName());
+				if(!inv.getDocStatus().equals(DOCSTATUS_Reversed)) {
+					inv.reverseCorrectIt();
+					inv.saveEx();
+				}
+				setM_Inventory_ID(0);			
+			}
+		}
+		else  {
+			MWarehouse warehouse = MWarehouse.get(getCtx(), getM_Warehouse_ID());
+			int defaultLocatorID = warehouse.getDefaultLocator().getM_Locator_ID();
+			String m_processMsg; 
+			//Update Storage for the received Product from the Joborder.
+			if (!MStorageOnHand.add(getCtx(), getM_Warehouse_ID(),
+					defaultLocatorID,
+					getM_Product_ID(),
+					0,
+					getQtyReceived().negate(),getDateAcct(),
+					get_TrxName()))
+				{
+					String lastError = CLogger.retrieveErrorString("");
+					m_processMsg = "Cannot correct Inventory OnHand (MA) [" + getM_Product().getValue() + "] - " + lastError;				
+					throw new AdempiereException(m_processMsg);
+				}
+			//Update Transaction History
+			MTransaction mtrx = new MTransaction (getCtx(), getAD_Org_ID(),
+				"J+", defaultLocatorID,
+				getM_Product_ID(), 0,
+				getQtyReceived().negate(), getDateAcct(), get_TrxName());
+			mtrx.set_ValueOfColumn(MBoulderReceipt.COLUMNNAME_TF_Boulder_Receipt_ID, getTF_Boulder_Receipt_ID());
+			if (!mtrx.save())
 			{
-				String lastError = CLogger.retrieveErrorString("");
-				m_processMsg = "Cannot correct Inventory OnHand (MA) [" + getM_Product().getValue() + "] - " + lastError;				
+				m_processMsg = "Could not create Material Transaction (MA) [" + getM_Product().getValue() + "]";			
 				throw new AdempiereException(m_processMsg);
 			}
-		//Update Transaction History
-		MTransaction mtrx = new MTransaction (getCtx(), getAD_Org_ID(),
-			"J+", defaultLocatorID,
-			getM_Product_ID(), 0,
-			getQtyReceived().negate(), getDateAcct(), get_TrxName());
-		mtrx.set_ValueOfColumn(MBoulderReceipt.COLUMNNAME_TF_Boulder_Receipt_ID, getTF_Boulder_Receipt_ID());
-		if (!mtrx.save())
-		{
-			m_processMsg = "Could not create Material Transaction (MA) [" + getM_Product().getValue() + "]";			
-			throw new AdempiereException(m_processMsg);
-		}
-				
+		}		
 		if(getJobwork_Journal_ID()>0) {
 			MJournal j = new MJournal(getCtx(), getJobwork_Journal_ID(), get_TrxName());
 			j.reverseCorrectIt();
@@ -512,6 +542,46 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 		return m_processMsg;
 	}
 		
+	private void createInternalUseInventory() {
+		if(!getM_Product().isStocked())
+			return;
+		//Post Inventory Use Inventory to increase boulder stock with with its standard cost.
+		MWarehouse wh = (MWarehouse) getM_Warehouse();
+		//Inventory Use Header
+		MInventory inv = new MInventory(wh, get_TrxName());
+		inv.setC_DocType_ID(1000026);
+		String prdName = TF_MProduct.get(getCtx(), getM_Product_ID()).getName();
+		String desc = "Issued " + prdName + " to " +  getVehicle().getName();
+		if(getC_Project_ID() > 0) {
+			desc = desc + " for " + getC_Project().getName();
+		}
+		inv.setDescription("Boulder Receipt: " + getDocumentNo());
+		
+		if(getTF_WeighmentEntry_ID() > 0)
+			inv.addDescription(" Ticket No: " + getTF_WeighmentEntry().getDocumentNo());
+		
+		inv.addDescription(getDescription());
+		inv.setMovementDate(getDateAcct());	
+		
+		inv.setDocStatus(DOCSTATUS_Drafted);
+		inv.saveEx();
+		
+		//Inventory Use Line
+		MInventoryLine line = new MInventoryLine(inv, wh.getDefaultLocator().get_ID(), getM_Product_ID(), 0, null, null, getQtyReceived().negate());
+		MGLPostingConfig config = MGLPostingConfig.getMGLPostingConfig(getCtx());
+		line.setC_Charge_ID(config.getOwnMining_Charge_ID());
+		line.setDescription(desc);
+		//line.setCurrentCostPrice(getRate());
+		line.saveEx();
+		
+		//Complete Inventory Use Document
+		inv.processIt(MInventory.ACTION_Complete);
+		inv.saveEx();
+		
+		//Update Inventory Use ID back to Fuel Issue Entry.
+		setM_Inventory_ID(inv.getM_Inventory_ID());	
+	}
+	
 	
 	/***
 	 * This method will be called after DOCACTION_Complete of Subcontractor Invoice 

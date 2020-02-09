@@ -374,6 +374,17 @@ public interface I_TF_GLPosting_Config
 
 	public org.compiere.model.I_C_ElementValue getOpeningBalAcct() throws RuntimeException;
 
+    /** Column name OwnMining_Charge_ID */
+    public static final String COLUMNNAME_OwnMining_Charge_ID = "OwnMining_Charge_ID";
+
+	/** Set Own Boulder Production Charge	  */
+	public void setOwnMining_Charge_ID (int OwnMining_Charge_ID);
+
+	/** Get Own Boulder Production Charge	  */
+	public int getOwnMining_Charge_ID();
+
+	public org.compiere.model.I_C_Charge getOwnMining_Charge() throws RuntimeException;
+
     /** Column name PLAcct_ID */
     public static final String COLUMNNAME_PLAcct_ID = "PLAcct_ID";
 
@@ -454,10 +465,10 @@ public interface I_TF_GLPosting_Config
     /** Column name SalesDiscountAcct_ID */
     public static final String COLUMNNAME_SalesDiscountAcct_ID = "SalesDiscountAcct_ID";
 
-	/** Set Sales Discount	  */
+	/** Set Sales Discount Account	  */
 	public void setSalesDiscountAcct_ID (int SalesDiscountAcct_ID);
 
-	/** Get Sales Discount	  */
+	/** Get Sales Discount Account	  */
 	public int getSalesDiscountAcct_ID();
 
 	public org.compiere.model.I_C_ElementValue getSalesDiscountAcct() throws RuntimeException;
