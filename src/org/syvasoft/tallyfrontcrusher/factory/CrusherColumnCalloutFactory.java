@@ -8,6 +8,7 @@ import org.adempiere.base.IColumnCalloutFactory;
 import org.compiere.model.MJournalLine;
 import org.compiere.model.MPayment;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutBoulderReceipt_JobWork;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutBoulderReceipt_Product;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutBoulderReceipt_Warehouse;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutCrusherKatingEntry_CalcAmount;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutCrusherKatingEntry_SetPrice;
@@ -260,7 +261,8 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 			}
 			if(columnName.equals(MBoulderReceipt.COLUMNNAME_M_Warehouse_ID))
 				list.add(new CalloutBoulderReceipt_Warehouse());
-					
+			if(columnName.equals(MBoulderReceipt.COLUMNNAME_M_Product_ID))
+				list.add(new CalloutBoulderReceipt_Product());
 		}
 			
 		

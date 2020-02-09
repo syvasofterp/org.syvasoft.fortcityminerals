@@ -30,7 +30,7 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20181219L;
+	private static final long serialVersionUID = 20200208L;
 
     /** Standard Constructor */
     public X_TF_GLPosting_Config (Properties ctx, int TF_GLPosting_Config_ID, String trxName)
@@ -672,6 +672,31 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 		return ii.intValue();
 	}
 
+	public org.compiere.model.I_C_Charge getOwnMining_Charge() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Charge)MTable.get(getCtx(), org.compiere.model.I_C_Charge.Table_Name)
+			.getPO(getOwnMining_Charge_ID(), get_TrxName());	}
+
+	/** Set Own Boulder Production Charge.
+		@param OwnMining_Charge_ID Own Boulder Production Charge	  */
+	public void setOwnMining_Charge_ID (int OwnMining_Charge_ID)
+	{
+		if (OwnMining_Charge_ID < 1) 
+			set_Value (COLUMNNAME_OwnMining_Charge_ID, null);
+		else 
+			set_Value (COLUMNNAME_OwnMining_Charge_ID, Integer.valueOf(OwnMining_Charge_ID));
+	}
+
+	/** Get Own Boulder Production Charge.
+		@return Own Boulder Production Charge	  */
+	public int getOwnMining_Charge_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_OwnMining_Charge_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	public org.compiere.model.I_C_ElementValue getPLAcct() throws RuntimeException
     {
 		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
@@ -840,8 +865,8 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
 			.getPO(getSalesDiscountAcct_ID(), get_TrxName());	}
 
-	/** Set Sales Discount.
-		@param SalesDiscountAcct_ID Sales Discount	  */
+	/** Set Sales Discount Account.
+		@param SalesDiscountAcct_ID Sales Discount Account	  */
 	public void setSalesDiscountAcct_ID (int SalesDiscountAcct_ID)
 	{
 		if (SalesDiscountAcct_ID < 1) 
@@ -850,8 +875,8 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 			set_Value (COLUMNNAME_SalesDiscountAcct_ID, Integer.valueOf(SalesDiscountAcct_ID));
 	}
 
-	/** Get Sales Discount.
-		@return Sales Discount	  */
+	/** Get Sales Discount Account.
+		@return Sales Discount Account	  */
 	public int getSalesDiscountAcct_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_SalesDiscountAcct_ID);

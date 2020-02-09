@@ -35,9 +35,9 @@ public class CalloutBoulderReceipt_JobWork implements IColumnCallout {
 			warehouse_id = jobwork.getM_Warehouse_ID();
 		}
 		
-		mTab.setValue(MBoulderReceipt.COLUMNNAME_Subcontractor_ID, C_BPartner_ID);
+		mTab.setValue(MBoulderReceipt.COLUMNNAME_Subcontractor_ID, C_BPartner_ID == 0 ? null: C_BPartner_ID);
 		mTab.setValue(MBoulderReceipt.COLUMNNAME_Jobwork_StdPrice, stdPrice);
-		mTab.setValue(MBoulderReceipt.COLUMNNAME_JobWork_Product_ID, jobwork_id);
+		mTab.setValue(MBoulderReceipt.COLUMNNAME_JobWork_Product_ID, jobwork_id==0? null: jobwork_id);
 		mTab.setValue(MBoulderReceipt.COLUMNNAME_C_UOM_ID, c_uom_id);
 		mTab.setValue(MBoulderReceipt.COLUMNNAME_TF_Quarry_ID, tf_quarry_id);
 		mTab.setValue(MBoulderReceipt.COLUMNNAME_M_Warehouse_ID, warehouse_id);

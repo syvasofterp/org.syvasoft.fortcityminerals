@@ -17,6 +17,7 @@ import org.compiere.model.MInvoiceLine;
 import org.compiere.model.MOrder;
 import org.compiere.model.MOrderLine;
 import org.compiere.model.MPriceList;
+import org.compiere.model.MProduct;
 import org.compiere.model.MProductPrice;
 import org.compiere.model.MProductPricing;
 import org.compiere.model.MResource;
@@ -2132,8 +2133,19 @@ public class TF_MOrder extends MOrder {
 	
 	
 	public void createSubcontractPurchaseEntry() {
-		if(getC_Project_ID() == 0 || !isSOTrx())
+		if(!isSOTrx()) {		
 			return;
+		}
+		else if(getC_Project_ID() == 0 && isSOTrx()) {
+			//Boulder based approach - tracking issued qty
+			int Boulder_ID = MSysConfig.getIntValue("BOULDER_ID", 1000099, getAD_Client_ID(), getAD_Org_ID());
+			MProduct rm = MProduct.get(getCtx(), Boulder_ID);
+			if(getItem1().getC_UOM_ID() == rm.getC_UOM_ID()) {
+				MSubcontractMaterialMovement.createMaterialMovement(get_TrxName(), getDateAcct(), getAD_Org_ID(), getC_Order_ID(), 
+						getC_BPartner_ID(), getItem1_ID(), getItem1_Qty(), getTF_WeighmentEntry_ID());
+			}
+			return;
+		}
 				
 		TF_MProject proj = new TF_MProject(getCtx(), getC_Project_ID(), get_TrxName());
 		if(!TF_MProject.SUBCONTRACTTYPE_CrusherProduction.equals(proj.getSubcontractType()) &&
@@ -2293,6 +2305,7 @@ public class TF_MOrder extends MOrder {
 	}
 	
 	public void reverseSubcontractPurchaseEntry() {
+		MSubcontractMaterialMovement.deleteSalesEntryMovement(getC_Order_ID(), get_TrxName());
 		MSubcontractMaterialMovement.deleteWeighmentMovement(getTF_WeighmentEntry_ID(), get_TrxName());
 		if(getSubcon_Invoice_ID() > 0) {			
 			TF_MInvoice inv = new TF_MInvoice(getCtx(), getSubcon_Invoice_ID(), get_TrxName());

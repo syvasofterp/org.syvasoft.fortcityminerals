@@ -74,7 +74,7 @@ DELETE FROM TF_Quarry_Rent;
 DELETE FROM TF_Fuel_Issue;
 
 UPDATE tf_TripSheet SET tf_jobwork_issuedresource_id =NULL;
-
+UPDATE TF_Crusher_Production SET TF_WeighmentEntry_id = NULL, Subcon_Invoice_ID = NULL, Subcon2_Invoice_ID =NULL;
 
 --SubContract Tables
 DELETE FROM TF_Jobwork_Expense;
@@ -112,6 +112,7 @@ DELETE FROM tf_weighmententry WHERE ad_client_id=1000000;
 
 
 -- End Crusher Tables.
+
 
 
 --delete from ChuBoe_Replenish;
@@ -191,6 +192,8 @@ delete from fact_acct_summary WHERE ad_client_id=1000000;;
 delete from gl_journalbatch WHERE ad_client_id=1000000;;
 delete from gl_journalline WHERE ad_client_id=1000000;; 
 delete from gl_journal WHERE ad_client_id=1000000;; 
+
+UPDATE M_Product SET CostAdj_Inventory_ID = NULL, M_Inventory_ID = NULL;
 
 --delete from m_storage WHERE ad_client_id=1000000;;  -- use this for ADempiere
 delete from m_storageonhand WHERE ad_client_id=1000000;;
