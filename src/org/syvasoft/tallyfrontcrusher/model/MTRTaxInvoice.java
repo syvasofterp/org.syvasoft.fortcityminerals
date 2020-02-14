@@ -53,14 +53,7 @@ public class MTRTaxInvoice extends X_TF_TRTaxInvoice {
 	
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
-		if(newRecord && getTF_SubOrg_ID() > 0) {			
-			MSubOrg sorg = new MSubOrg(getCtx(), getTF_SubOrg_ID(), get_TrxName());
-			if(sorg.getTF_SalesTaxInvoiceSequence_ID() > 0) {				
-				MSequence seq = new MSequence(getCtx(), sorg.getTF_SalesTaxInvoiceSequence_ID(), get_TrxName());
-				String documentNo = MSequence.getDocumentNoFromSeq(seq, get_TrxName(), this);
-				setDocumentNo(documentNo);
-			}
-		}
+		
 		return super.beforeSave(newRecord);
 	}
 	

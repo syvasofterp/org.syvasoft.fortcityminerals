@@ -32,7 +32,7 @@ public interface I_TF_TRTaxInvoice
     /** TableName=TF_TRTaxInvoice */
     public static final String Table_Name = "TF_TRTaxInvoice";
 
-    /** AD_Table_ID=1000292 */
+    /** AD_Table_ID=1000296 */
     public static final int Table_ID = MTable.getTable_ID(Table_Name);
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);
@@ -104,6 +104,21 @@ public interface I_TF_TRTaxInvoice
 	public int getC_BPartnerShipTo_ID();
 
 	public org.compiere.model.I_C_BPartner getC_BPartnerShipTo() throws RuntimeException;
+
+    /** Column name C_DocType_ID */
+    public static final String COLUMNNAME_C_DocType_ID = "C_DocType_ID";
+
+	/** Set Document Type.
+	  * Document type or rules
+	  */
+	public void setC_DocType_ID (int C_DocType_ID);
+
+	/** Get Document Type.
+	  * Document type or rules
+	  */
+	public int getC_DocType_ID();
+
+	public org.compiere.model.I_C_DocType getC_DocType() throws RuntimeException;
 
     /** Column name C_Invoice_ID */
     public static final String COLUMNNAME_C_Invoice_ID = "C_Invoice_ID";
@@ -227,6 +242,33 @@ public interface I_TF_TRTaxInvoice
 
 	/** Get Driver Name	  */
 	public String getDriverName();
+
+    /** Column name DspFrom_Address */
+    public static final String COLUMNNAME_DspFrom_Address = "DspFrom_Address";
+
+	/** Set Dispatch From Address	  */
+	public void setDspFrom_Address (String DspFrom_Address);
+
+	/** Get Dispatch From Address	  */
+	public String getDspFrom_Address();
+
+    /** Column name DspFrom_Name */
+    public static final String COLUMNNAME_DspFrom_Name = "DspFrom_Name";
+
+	/** Set Dispatch From	  */
+	public void setDspFrom_Name (String DspFrom_Name);
+
+	/** Get Dispatch From	  */
+	public String getDspFrom_Name();
+
+    /** Column name DspFrom_Place */
+    public static final String COLUMNNAME_DspFrom_Place = "DspFrom_Place";
+
+	/** Set Dispatch From Place	  */
+	public void setDspFrom_Place (String DspFrom_Place);
+
+	/** Get Dispatch From Place	  */
+	public String getDspFrom_Place();
 
     /** Column name eWayBillNo */
     public static final String COLUMNNAME_eWayBillNo = "eWayBillNo";
@@ -367,16 +409,16 @@ public interface I_TF_TRTaxInvoice
 	/** Get Round Off	  */
 	public BigDecimal getRoundOff();
 
-    /** Column name TF_SubOrg_ID */
-    public static final String COLUMNNAME_TF_SubOrg_ID = "TF_SubOrg_ID";
+    /** Column name TF_Generate_Taxinvoice_ID */
+    public static final String COLUMNNAME_TF_Generate_Taxinvoice_ID = "TF_Generate_Taxinvoice_ID";
 
-	/** Set Sub Organization	  */
-	public void setTF_SubOrg_ID (int TF_SubOrg_ID);
+	/** Set Generate Tax Invoice	  */
+	public void setTF_Generate_TaxInvoice_ID (int TF_Generate_Taxinvoice_ID);
 
-	/** Get Sub Organization	  */
-	public int getTF_SubOrg_ID();
+	/** Get Generate Tax Invoice	  */
+	public int getTF_Generate_TaxInvoice_ID();
 
-	public I_TF_SubOrg getTF_SubOrg() throws RuntimeException;
+	public I_TF_Generate_TaxInvoice getTF_Generate_Taxinvoice() throws RuntimeException;
 
     /** Column name TF_TRTaxInvoice_ID */
     public static final String COLUMNNAME_TF_TRTaxInvoice_ID = "TF_TRTaxInvoice_ID";

@@ -1483,6 +1483,40 @@ public class TF_MOrder extends MOrder {
 		return ii.intValue();
 	}
 	
+	/** Column name PartyName */
+    public static final String COLUMNNAME_PartyName = "PartyName";
+	/** Get Party Name.
+	@return Party Name	  */
+	public String getPartyName () 
+	{
+		return (String)get_Value(COLUMNNAME_PartyName);
+	}
+		/** Set Party Name.
+		@param PartyName Party Name	  */
+	public void setPartyName (String PartyName)
+	{
+		set_Value (COLUMNNAME_PartyName, PartyName);
+	}
+	
+	/** Column name Phone */
+    public static final String COLUMNNAME_Phone = "Phone";
+	/** Set Phone.
+	@param Phone 
+	Identifies a telephone number
+  */
+	public void setPhone (String Phone)
+	{
+		set_Value (COLUMNNAME_Phone, Phone);
+	}
+	
+	/** Get Phone.
+		@return Identifies a telephone number
+	  */
+	public String getPhone () 
+	{
+		return (String)get_Value(COLUMNNAME_Phone);
+	}
+		
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
 		success = super.afterSave(newRecord, success);
@@ -2493,37 +2527,6 @@ public class TF_MOrder extends MOrder {
 		invRentLine.saveEx();
 		
 		setTF_TRTaxInvoice_ID(inv.getTF_TRTaxInvoice_ID());
-		
-		/* MTaxInvoice inv = new MTaxInvoice(getCtx(), 0, get_TrxName());
-		inv.setAD_Org_ID(getAD_Org_ID());
-		inv.setDateAcct(getDateAcct());
-		inv.setC_BPartner_ID(getC_BPartner_ID());
-		inv.setM_Product_ID(getItem1_ID());
-		inv.setC_UOM_ID(getItem1_UOM_ID());
-		inv.setQty(getItem1_Qty());
-		inv.setPrice(getItem1_UnitPrice());
-		BigDecimal taxRate = new BigDecimal(2.5); 
-		inv.setCGST_Rate(taxRate);
-		inv.setSGST_Rate(taxRate);
-		inv.setIGST_Rate(BigDecimal.ZERO);
-		inv.setRoundingOff(BigDecimal.ZERO);
-		inv.setMDPNo(getMDPNo());
-		inv.setQtyPermitDeducted(getItem1_PermitIssued());
-		inv.setVehicleNo(getVehicleNo());
-		inv.setDescription(getDescription());
-		inv.setDestination("test");
-		inv.saveEx();
-		inv.calcAmounts();
-		if(getTF_Destination_ID() > 0) {
-			MDestination dest = new MDestination(getCtx(), getTF_Destination_ID(), get_TrxName());
-			inv.setDestination(dest.getName());
-		}
-		inv.saveEx();
-		inv.processIt(DOCACTION_Complete);
-		inv.saveEx();
-		
-		setTF_TaxInvoice_ID(inv.getTF_TaxInvoice_ID());*/
-		
 	}
 	
 	public void voidTaxInvoice() {
