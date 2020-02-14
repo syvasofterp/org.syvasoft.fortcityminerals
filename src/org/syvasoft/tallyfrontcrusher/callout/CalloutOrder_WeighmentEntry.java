@@ -138,10 +138,14 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 			mTab.setValue(TF_MOrder.COLUMNNAME_VehicleNo, weighment.getVehicleNo());
 			
 			String description = "";
-			if(weighment.getPartyName() != null) 
-				description = "Party Name : " + weighment.getPartyName();				
-			if(weighment.getPhone() != null)
+			if(weighment.getPartyName() != null) { 
+				mTab.setValue(TF_MOrder.COLUMNNAME_PartyName, weighment.getPartyName());
+				description = "Party Name : " + weighment.getPartyName();
+			}
+			if(weighment.getPhone() != null) {
+				mTab.setValue(TF_MOrder.COLUMNNAME_Phone, weighment.getPhone());
 				description = description + ", Phone: " + weighment.getPhone();
+			}
 			
 			mTab.setValue(TF_MOrder.COLUMNNAME_Description, description);
 	

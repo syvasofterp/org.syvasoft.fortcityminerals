@@ -33,7 +33,7 @@ public class X_TF_TRTaxInvoice extends PO implements I_TF_TRTaxInvoice, I_Persis
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20190709L;
+	private static final long serialVersionUID = 20200214L;
 
     /** Standard Constructor */
     public X_TF_TRTaxInvoice (Properties ctx, int TF_TRTaxInvoice_ID, String trxName)
@@ -52,7 +52,6 @@ public class X_TF_TRTaxInvoice extends PO implements I_TF_TRTaxInvoice, I_Persis
 // Y
 			setProcessed (false);
 			setTF_TRTaxInvoice_ID (0);
-			setVehicleNo (null);
         } */
     }
 
@@ -160,6 +159,34 @@ public class X_TF_TRTaxInvoice extends PO implements I_TF_TRTaxInvoice, I_Persis
 	public int getC_BPartnerShipTo_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_C_BPartnerShipTo_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_DocType getC_DocType() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_DocType)MTable.get(getCtx(), org.compiere.model.I_C_DocType.Table_Name)
+			.getPO(getC_DocType_ID(), get_TrxName());	}
+
+	/** Set Document Type.
+		@param C_DocType_ID 
+		Document type or rules
+	  */
+	public void setC_DocType_ID (int C_DocType_ID)
+	{
+		if (C_DocType_ID < 0) 
+			set_Value (COLUMNNAME_C_DocType_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_DocType_ID, Integer.valueOf(C_DocType_ID));
+	}
+
+	/** Get Document Type.
+		@return Document type or rules
+	  */
+	public int getC_DocType_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_DocType_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
@@ -351,6 +378,48 @@ public class X_TF_TRTaxInvoice extends PO implements I_TF_TRTaxInvoice, I_Persis
 	public String getDriverName () 
 	{
 		return (String)get_Value(COLUMNNAME_DriverName);
+	}
+
+	/** Set Dispatch From Address.
+		@param DspFrom_Address Dispatch From Address	  */
+	public void setDspFrom_Address (String DspFrom_Address)
+	{
+		set_Value (COLUMNNAME_DspFrom_Address, DspFrom_Address);
+	}
+
+	/** Get Dispatch From Address.
+		@return Dispatch From Address	  */
+	public String getDspFrom_Address () 
+	{
+		return (String)get_Value(COLUMNNAME_DspFrom_Address);
+	}
+
+	/** Set Dispatch From.
+		@param DspFrom_Name Dispatch From	  */
+	public void setDspFrom_Name (String DspFrom_Name)
+	{
+		set_Value (COLUMNNAME_DspFrom_Name, DspFrom_Name);
+	}
+
+	/** Get Dispatch From.
+		@return Dispatch From	  */
+	public String getDspFrom_Name () 
+	{
+		return (String)get_Value(COLUMNNAME_DspFrom_Name);
+	}
+
+	/** Set Dispatch From Place.
+		@param DspFrom_Place Dispatch From Place	  */
+	public void setDspFrom_Place (String DspFrom_Place)
+	{
+		set_Value (COLUMNNAME_DspFrom_Place, DspFrom_Place);
+	}
+
+	/** Get Dispatch From Place.
+		@return Dispatch From Place	  */
+	public String getDspFrom_Place () 
+	{
+		return (String)get_Value(COLUMNNAME_DspFrom_Place);
 	}
 
 	/** Set eWay Bill No.
@@ -585,26 +654,26 @@ public class X_TF_TRTaxInvoice extends PO implements I_TF_TRTaxInvoice, I_Persis
 		return bd;
 	}
 
-	public I_TF_SubOrg getTF_SubOrg() throws RuntimeException
+	public I_TF_Generate_TaxInvoice getTF_Generate_Taxinvoice() throws RuntimeException
     {
-		return (I_TF_SubOrg)MTable.get(getCtx(), I_TF_SubOrg.Table_Name)
-			.getPO(getTF_SubOrg_ID(), get_TrxName());	}
+		return (I_TF_Generate_TaxInvoice)MTable.get(getCtx(), I_TF_Generate_TaxInvoice.Table_Name)
+			.getPO(getTF_Generate_TaxInvoice_ID(), get_TrxName());	}
 
-	/** Set Sub Organization.
-		@param TF_SubOrg_ID Sub Organization	  */
-	public void setTF_SubOrg_ID (int TF_SubOrg_ID)
+	/** Set Generate Tax Invoice.
+		@param TF_Generate_Taxinvoice_ID Generate Tax Invoice	  */
+	public void setTF_Generate_TaxInvoice_ID (int TF_Generate_Taxinvoice_ID)
 	{
-		if (TF_SubOrg_ID < 1) 
-			set_Value (COLUMNNAME_TF_SubOrg_ID, null);
+		if (TF_Generate_Taxinvoice_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_TF_Generate_Taxinvoice_ID, null);
 		else 
-			set_Value (COLUMNNAME_TF_SubOrg_ID, Integer.valueOf(TF_SubOrg_ID));
+			set_ValueNoCheck (COLUMNNAME_TF_Generate_Taxinvoice_ID, Integer.valueOf(TF_Generate_Taxinvoice_ID));
 	}
 
-	/** Get Sub Organization.
-		@return Sub Organization	  */
-	public int getTF_SubOrg_ID () 
+	/** Get Generate Tax Invoice.
+		@return Generate Tax Invoice	  */
+	public int getTF_Generate_TaxInvoice_ID () 
 	{
-		Integer ii = (Integer)get_Value(COLUMNNAME_TF_SubOrg_ID);
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Generate_Taxinvoice_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
@@ -690,4 +759,5 @@ public class X_TF_TRTaxInvoice extends PO implements I_TF_TRTaxInvoice, I_Persis
 	{
 		return (String)get_Value(COLUMNNAME_VehicleNo);
 	}
+
 }

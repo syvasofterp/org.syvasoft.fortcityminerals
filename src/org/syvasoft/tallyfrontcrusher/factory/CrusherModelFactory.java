@@ -217,6 +217,14 @@ public class CrusherModelFactory implements IModelFactory {
 			return MCounterTransactionSetup.class;
 		else if(MCounterTransProductSetup.Table_Name.equals(tableName))			
 			return MCounterTransProductSetup.class;
+		else if(MGenerateTaxInvoice.Table_Name.equals(tableName))			
+			return MGenerateTaxInvoice.class;
+		else if(MGenerateTaxInvoiceLine.Table_Name.equals(tableName))			
+			return MGenerateTaxInvoiceLine.class;
+		else if(MCustomerType.Table_Name.equals(tableName))			
+			return MCustomerType.class;
+		else if(MTaxInvoiceCycle.Table_Name.equals(tableName))			
+			return MTaxInvoiceCycle.class;
 		return null;
 	}
 
@@ -427,6 +435,14 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MCounterTransactionSetup(ctx, Record_ID, trxName);
 		else if(MCounterTransProductSetup.Table_Name.equals(tableName))			
 			return new MCounterTransProductSetup(ctx, Record_ID, trxName);
+		else if(MGenerateTaxInvoice.Table_Name.equals(tableName))			
+			return new MGenerateTaxInvoice(ctx, Record_ID, trxName);
+		else if(MGenerateTaxInvoiceLine.Table_Name.equals(tableName))			
+			return new MGenerateTaxInvoiceLine(ctx, Record_ID, trxName);
+		else if(MCustomerType.Table_Name.equals(tableName))			
+			return new MCustomerType(ctx, Record_ID, trxName);
+		else if(MTaxInvoiceCycle.Table_Name.equals(tableName))			
+			return new MTaxInvoiceCycle(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -639,6 +655,14 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MCounterTransactionSetup(ctx, rs, trxName);
 		else if(MCounterTransProductSetup.Table_Name.equals(tableName))			
 			return new MCounterTransProductSetup(ctx, rs, trxName);
+		else if(MGenerateTaxInvoice.Table_Name.equals(tableName))
+			return new MGenerateTaxInvoice(ctx, rs, trxName);
+		else if(MGenerateTaxInvoiceLine.Table_Name.equals(tableName))
+			return new MGenerateTaxInvoiceLine(ctx, rs, trxName);
+		else if(MCustomerType.Table_Name.equals(tableName))			
+			return new MCustomerType(ctx, rs, trxName);
+		else if(MTaxInvoiceCycle.Table_Name.equals(tableName))			
+			return new MTaxInvoiceCycle(ctx, rs, trxName);
 		return null;
 	}
 

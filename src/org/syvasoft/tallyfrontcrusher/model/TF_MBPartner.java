@@ -552,6 +552,58 @@ public class TF_MBPartner extends MBPartner {
 		return false;
 	}
 	
+	/** Column name TF_CustomerType_ID */
+    public static final String COLUMNNAME_TF_CustomerType_ID = "TF_CustomerType_ID";
+    /** Set Customer Type.
+	@param TF_CustomerType_ID Customer Type	  */
+	public void setTF_CustomerType_ID (int TF_CustomerType_ID)
+	{
+		if (TF_CustomerType_ID < 1) 
+			set_Value (COLUMNNAME_TF_CustomerType_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_CustomerType_ID, Integer.valueOf(TF_CustomerType_ID));
+	}
+
+	/** Column name TF_TaxInvoiceCycle_ID */
+	public static final String COLUMNNAME_TF_TaxInvoiceCycle_ID = "TF_TaxInvoiceCycle_ID";
+	/** Get Customer Type.
+	@return Customer Type	  */
+	public int getTF_CustomerType_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_CustomerType_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Set Tax Invoice Cycle.
+		@param TF_TaxInvoiceCycle_ID Tax Invoice Cycle	  */
+	public void setTF_TaxInvoiceCycle_ID (int TF_TaxInvoiceCycle_ID)
+	{
+		if (TF_TaxInvoiceCycle_ID < 1) 
+			set_Value (COLUMNNAME_TF_TaxInvoiceCycle_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_TaxInvoiceCycle_ID, Integer.valueOf(TF_TaxInvoiceCycle_ID));
+	}
+	
+	/** Get Tax Invoice Cycle.
+		@return Tax Invoice Cycle	  */
+	public int getTF_TaxInvoiceCycle_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_TaxInvoiceCycle_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+	
+	@Override
+	protected boolean beforeSave(boolean newRecord) {
+		if(IsRequiredTaxInvoicePerLoad()) {
+			setTF_TaxInvoiceCycle_ID(0);
+		}
+		return super.beforeSave(newRecord);
+	}
+	
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
 		boolean ok = super.afterSave(newRecord, success);

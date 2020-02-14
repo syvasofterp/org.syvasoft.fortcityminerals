@@ -439,6 +439,7 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		@return Party Name	  */
 	public String getPartyName () 
 	{
+		
 		return (String)get_Value(COLUMNNAME_PartyName);
 	}
 
