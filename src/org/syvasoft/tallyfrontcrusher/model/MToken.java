@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.util.Properties;
 
 import org.adempiere.exceptions.AdempiereException;
+import org.compiere.acct.Doc_BankStatement;
+import org.compiere.process.DocAction;
 
 public class MToken extends X_TF_Token {
 	
@@ -19,7 +21,8 @@ public class MToken extends X_TF_Token {
 		// TODO Auto-generated constructor stub
 	}
 	public void processIt(String docAction) {
-		
+		if(docAction.equals(DocAction.ACTION_Complete))
+			setProcessed(true);
 	}
 	public void reverseIt() {
 		//setDocStatus(DOCSTATUS_InProgress);
