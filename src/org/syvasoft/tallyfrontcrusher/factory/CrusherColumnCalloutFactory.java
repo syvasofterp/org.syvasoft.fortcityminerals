@@ -74,6 +74,7 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutTRTaxInvoiceLine_CalcAmount
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTRTaxInvoice_CalTotalAmt;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTaxInvoice_CalcAmount;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTaxInvoice_Product;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutToken_SetUOM;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetFuelExpensed;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetJobwork;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetOpeningEntries;
@@ -591,6 +592,11 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		if(tableName.equals(MOrder.Table_Name)) {
 			if(columnName.equals(TF_MOrder.COLUMNNAME_TF_Token_ID))
 				list.add(new CalloutOrder_TokenNo());
+		}
+		
+		if(tableName.equals(MToken.Table_Name)) {
+			if(columnName.equals(MToken.COLUMNNAME_M_Product_ID))
+				list.add(new CalloutToken_SetUOM());
 		}
 
 		return list != null ? list.toArray(new IColumnCallout[0]) : new IColumnCallout[0];
