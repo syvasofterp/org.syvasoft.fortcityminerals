@@ -265,6 +265,10 @@ delete from c_projectline where c_project_id not in (select c_project_id from c_
 --delete from ChuBoe_Replenish_Storage;
 --delete from ChuBoe_Replenish_Run;
 
+DELETE FROM tf_trtaxinvoiceLINE;
+DELETE FROM tf_trtaxinvoice;
+
+
 DELETE FROM M_Cost WHERE ad_client_id=1000000 ;
 --DELETE FROM m_bp_price WHERE ad_client_id=1000000 ;
 

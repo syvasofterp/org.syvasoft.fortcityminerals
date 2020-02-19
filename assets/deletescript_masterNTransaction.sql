@@ -286,7 +286,7 @@ delete from c_project where c_project_id not in (select c_project_id from c_acct
 --delete from ChuBoe_Replenish_Pressure;
 --delete from ChuBoe_Replenish_Storage;
 --delete from ChuBoe_Replenish_Run;
-
+DELETE FROM tf_pricelistuom;
 DELETE FROM M_Cost WHERE ad_client_id=1000000 ;
 --DELETE FROM m_bp_price WHERE ad_client_id=1000000 ;
 
@@ -301,7 +301,7 @@ delete from c_invoiceline WHERE ad_client_id=1000000;
 --DELETE FROM M_Product WHERE ad_client_id=1000000 AND m_product_id>1000032 ;;
 --SELECT * FROM M_Product where ad_client_id=1000000 AND m_product_id>1000032 ;;
 
-
+DELETE FROM tf_countertrans;
 
 
 DELETE FROM AD_ARCHIVE WHERE ad_client_id=1000000;;
@@ -371,7 +371,7 @@ DELETE FROM tf_tyremovement;
 DELeTE FROM c_uom_conversion WHERE ad_client_id = 1000000;
 DELETE FROM TF_TYRELIFE;
 DELETE FROM TF_TYRE;
-UPDATE c_validcombination SET C_PROJECT_ID = NULL  WHERE ad_client_id = 1000000;
+UPDATE c_validcombination SET C_PROJECT_ID = NULL, M_Product_ID=NULL  WHERE ad_client_id = 1000000;
 DELETE FROM C_project WHERE C_PROJECT_ID != (1000000) AND ad_client_id = 1000000;
 DELETE FROM tf_crusherproduction_config WHERE ad_client_id = 1000000;
 UPDATE c_project SET JOBWORK_product_id = null where ad_client_id = 1000000;
@@ -416,7 +416,7 @@ UPDATE C_ElementValue SET DefaultOrg_ID = 0 WHERE AD_Client_ID = 1000000 ;
 DELETE FROM tf_coaopeningbalance WHERE AD_Client_ID = 1000000 ;
 DELETE FROM C_Charge_TRL  WHERE AD_Client_ID = 1000000 ;
 UPDATE tf_glposting_config SET FuelExpense_Charge_ID = NULL, ItemIssue_Charge_ID=NULL WHERE AD_Client_ID = 1000000 ;
-DELETE FROM C_Charge WHERE AD_Client_ID = 1000000 AND C_CHarge_ID NOT IN (1000008, 1000041);
+DELETE FROM C_Charge WHERE AD_Client_ID = 1000000 AND C_CHarge_ID NOT IN (1000008, 1000041, 1000015 );
 DELETE FROM ad_preference WHERE AD_Client_ID = 1000000  AND AD_Org_ID!=1000000;
 
 --DELETE FROM AD_Role_OrgAccess WHERE AD_Client_ID = 1000000  AND AD_Org_ID NOT IN (0,)1000000);
@@ -437,7 +437,7 @@ DELETE FROM tf_quarry_rent_config;
 DELETE FROM tf_quarry;
 UPDATE C_validcombination SET user1_id = null WHERE AD_Client_ID = 1000000;
 
-SELECT * FROM C_ElementValue WHERE C_Element_ID=1000001 
+--SELECT * FROM C_ElementValue WHERE C_Element_ID=1000001 
 
 DELETE FROM tf_lumpsumrent_config WHERE AD_Client_ID = 1000000;
 
@@ -456,7 +456,7 @@ DELETE FROM tf_vehicletype;
 
 DELETE FROM AD_Org WHERE AD_Client_ID = 1000000 AND AD_Org_ID NOT IN (0, 1000000);
 
-DELETE FROM ad_changelog WHERE AD_Session_ID IN (SELECT AD_Session_ID FROM AD_Session WHERE AD_Role_ID in ( 1000026, 1000027, 1000028 ))
+DELETE FROM ad_changelog WHERE AD_Session_ID IN (SELECT AD_Session_ID FROM AD_Session WHERE AD_Role_ID in ( 1000026, 1000027, 1000028 ));
 
 DELETE FROM AD_Session WHERE AD_Role_ID in ( 1000026, 1000027, 1000028 );
 
