@@ -18,7 +18,14 @@ public class MToken extends X_TF_Token {
 		super(ctx, TF_Destination_ID, trxName);
 		// TODO Auto-generated constructor stub
 	}
-	
+	public void processIt(String docAction) {
+		
+	}
+	public void reverseIt() {
+		//setDocStatus(DOCSTATUS_InProgress);
+		setProcessed(false);		
+
+	}
 	public void close() {
 		if(isProcessed())
 			throw new AdempiereException("Token No is already closed!");
