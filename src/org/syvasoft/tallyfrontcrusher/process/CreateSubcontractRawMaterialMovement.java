@@ -25,7 +25,7 @@ public class CreateSubcontractRawMaterialMovement extends SvrProcess {
 		
 		//Quarry Production to Crusher Production Raw Material movements		
 		//MSubcontractMaterialMovement.createRawmaterialMovementsFromWeighment(get_TrxName());
-		String whereClause = "C_Project_ID IS NOT NULL AND Status='CO' AND Processed='N' AND TareWeightTime IS NOT NULL AND GrossWeightTime IS NOT NULL";
+		String whereClause = "WeighmentEntryType = '4SR' AND C_Project_ID IS NOT NULL AND Status='CO' AND Processed='N' AND TareWeightTime IS NOT NULL AND GrossWeightTime IS NOT NULL";
 		List<MWeighmentEntry> wEntries = new Query(Env.getCtx(), MWeighmentEntry.Table_Name, whereClause, get_TrxName())
 				.list();
 		
