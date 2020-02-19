@@ -505,6 +505,28 @@ public class TF_MOrder extends MOrder {
 			 return 0;
 		return ii.intValue();
 	}
+	
+	/** Column name TF_Token_ID */
+    public static final String COLUMNNAME_TF_Token_ID = "TF_Token_ID";
+    /** Set Token No.
+	@param TF_Token_ID Weighment Entry	  */
+	public void setTF_Token_ID (int TF_Token_ID)
+	{
+		if (TF_Token_ID < 1) 
+			set_Value (COLUMNNAME_TF_Token_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_Token_ID, Integer.valueOf(TF_Token_ID));
+	}
+	
+	/** Get Token No.
+		@return Token No	  */
+	public int getTF_Token_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Token_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
     
 	 /** Column name TF_DriverTips_Pay_ID */
     public static final String COLUMNNAME_TF_DriverTips_Pay_ID = "TF_DriverTips_Pay_ID";
@@ -1796,6 +1818,7 @@ public class TF_MOrder extends MOrder {
 		issuePermit();
 		createTransporterInvoice();
 		closeWeighmentEntry();
+		closeTokenNo();
 		closeYardEntry();
 		
 		if(isTaxIncluded1())
@@ -1889,6 +1912,7 @@ public class TF_MOrder extends MOrder {
 			MJobworkItemIssue.ReverseFromPO(this);
 			reverseTransporterInvoice();
 			reverseWeighmentEntry();
+			reverseTokenNo();
 			reverseYardEntry();
 			reverseSubcontractPurchaseEntry();
 			reverseIssuedPermit();
@@ -1943,6 +1967,7 @@ public class TF_MOrder extends MOrder {
 			MJobworkItemIssue.ReverseFromPO(this);
 			reverseTransporterInvoice();
 			reverseWeighmentEntry();
+			reverseTokenNo();
 			reverseYardEntry();
 			reverseSubcontractPurchaseEntry();
 			reverseIssuedPermit();
@@ -2078,11 +2103,29 @@ public class TF_MOrder extends MOrder {
 		}
 	}
 	
+	public void closeTokenNo()
+	{
+		if(getTF_Token_ID() > 0) {
+			MToken token = new MToken(getCtx(), getTF_Token_ID(), get_TrxName());
+			token.close();
+			token.saveEx();
+		}
+	}
+	
 	public void reverseWeighmentEntry() {
 		if(getTF_WeighmentEntry_ID() > 0) {
 			MWeighmentEntry weighment = new MWeighmentEntry(getCtx(), getTF_WeighmentEntry_ID(), get_TrxName());
 			weighment.reverse();
 			weighment.saveEx();
+		}
+	}
+	
+	public void reverseTokenNo()
+	{
+		if(getTF_Token_ID() > 0) {
+			MToken token = new MToken(getCtx(), getTF_Token_ID(), get_TrxName());
+			token.reverse();
+			token.saveEx();
 		}
 	}
 	
