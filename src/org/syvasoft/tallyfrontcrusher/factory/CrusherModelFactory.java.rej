@@ -1,0 +1,34 @@
+--- CrusherModelFactory.java
++++ CrusherModelFactory.java
+@@ -233,7 +233,8 @@
+ 			return MTyreRequestLine.class;
+ 		else if (MBPartnerType.Table_Name.equals(tableName))
+ 			return MBPartnerType.class;
+-
++		else if (MToken.Table_Name.equals(tableName))
++			return MToken.class;
+ 		return null;
+ 	}
+ 
+@@ -460,7 +461,9 @@
+ 			return new MTyreRequestLine(ctx, Record_ID, trxName);
+ 		else if (MBPartnerType.Table_Name.equals(tableName))
+ 			return new MBPartnerType(ctx, Record_ID, trxName);
+-
++		else if (MToken.Table_Name.equals(tableName))
++			return new MToken(ctx, Record_ID, trxName);
++		
+ 		return null;
+ 	}
+ 
+@@ -689,7 +692,9 @@
+ 			return new MTyreRequestLine(ctx, rs, trxName);
+ 		else if (MBPartnerType.Table_Name.equals(tableName))
+ 			return new MBPartnerType(ctx, rs, trxName);
+-
++		else if (MToken.Table_Name.equals(tableName))
++			return new MToken(ctx, rs, trxName);
++		
+ 		return null;
+ 	}
+ 
