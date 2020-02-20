@@ -100,6 +100,7 @@ import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalary;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryIssue;
 import org.syvasoft.tallyfrontcrusher.model.MFuelIssue;
 import org.syvasoft.tallyfrontcrusher.model.MGenerateTaxInvoice;
+import org.syvasoft.tallyfrontcrusher.model.MGenerateTaxInvoiceLine;
 import org.syvasoft.tallyfrontcrusher.model.MInterOrgCashTransfer;
 import org.syvasoft.tallyfrontcrusher.model.MInvestmentReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkResourceRentEntry;
@@ -536,7 +537,7 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 			
 		}
 		
-		if(tableName.equals(MTRTaxInvoiceLine.Table_Name)) {
+		if(tableName.equals(MTRTaxInvoiceLine.Table_Name) || tableName.equals(MGenerateTaxInvoiceLine.Table_Name)) {
 			if(columnName.equals(MTRTaxInvoiceLine.COLUMNNAME_Qty) ||
 					columnName.equals(MTRTaxInvoiceLine.COLUMNNAME_Price) ||
 					columnName.equals(MTRTaxInvoiceLine.COLUMNNAME_SGST_Rate) ||
