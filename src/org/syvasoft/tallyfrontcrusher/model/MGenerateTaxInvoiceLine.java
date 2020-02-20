@@ -46,23 +46,29 @@ public class MGenerateTaxInvoiceLine extends X_TF_Generate_TaxInvoiceLine{
 		ti.setGrandTotal(GrandTotal);
 		RoundOffAmt = ti.getRoundOff();
 		
-		if(GrandTotal != null)
+		if(GrandTotal != null) {
+			//Auto Round off to Rupees
+			if(RoundOffAmt.doubleValue() == 0) {
+				RoundOffAmt = GrandTotal.setScale(0, RoundingMode.HALF_EVEN).subtract(GrandTotal);
+				ti.setRoundOff(RoundOffAmt);
+			}
 			ti.setTotal(GrandTotal.add(RoundOffAmt));
+		}
 		ti.saveEx();
 	}
 	
 	public void calcAmounts() {
 		setTaxableAmount(getQty().multiply(getPrice()));		
 		BigDecimal divisor = new BigDecimal(100);		
-		BigDecimal cgstAmt = getCGST_Rate().multiply(getTaxableAmount()).divide(divisor);
-		BigDecimal sgstAmt = getSGST_Rate().multiply(getTaxableAmount()).divide(divisor);		
+		BigDecimal cgstAmt = getCGST_Rate().multiply(getTaxableAmount()).divide(divisor, 2, RoundingMode.HALF_UP);
+		BigDecimal sgstAmt = getSGST_Rate().multiply(getTaxableAmount()).divide(divisor, 2, RoundingMode.HALF_UP);		
 		
 		setCGST_Amt(cgstAmt);
 		setSGST_Amt(sgstAmt);
 		
 		BigDecimal total = getTaxableAmount().add(cgstAmt).add(sgstAmt);
 		BigDecimal roundingOff = total.subtract(total.setScale(0, RoundingMode.HALF_UP));
-		setLineTotalAmt(total);		
+		setLineTotalAmt(total);
 	}
 	
 	@Override

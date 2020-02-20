@@ -1,11 +1,13 @@
 package org.syvasoft.tallyfrontcrusher.model;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.Properties;
 import org.adempiere.exceptions.AdempiereException;
+import org.compiere.model.MTax;
 import org.compiere.model.Query;
 import org.compiere.process.DocAction;
 import org.compiere.util.DB;
@@ -46,6 +48,8 @@ public class MGenerateTaxInvoice extends X_TF_Generate_TaxInvoice{
 			}
 		}
 		
+		TF_MBPartner bp = new TF_MBPartner(getCtx(), getC_BPartner_ID(), get_TrxName());
+		MCustomerType custType = new MCustomerType(getCtx(), bp.getTF_CustomerType_ID(), get_TrxName());
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try
@@ -59,7 +63,9 @@ public class MGenerateTaxInvoice extends X_TF_Generate_TaxInvoice{
 						+ "	INNER JOIN c_tax c ON c.c_tax_id = il.c_tax_id " 
 						+ "	INNER JOIN m_product m ON m.m_product_id = il.m_product_id " 
 						+ "	WHERE " 
-						+ "	i.AD_Client_ID = 1000000  AND i.Processed='Y' AND o.IsTaxIncluded1 = 'Y' AND i.DocStatus IN ('CO','CL') " 
+						//+ "	i.AD_Client_ID = 1000000  AND i.Processed='Y' AND o.IsTaxIncluded1 = 'Y' AND i.DocStatus IN ('CO','CL') "
+						// For Namakkal bluemetals, default amount includes tax, but tax amount will be known after generating sales tax invoice
+						+ "	i.AD_Client_ID = 1000000  AND i.Processed='Y' AND i.DocStatus IN ('CO','CL') " 
 						+ "	AND TF_TRTaxInvoice_ID IS NULL AND o.OnAccount = 'N' AND I.AD_Org_ID =  ? AND i.IsSOTrx = 'Y'" 
 						+ "	AND i.C_BPartner_id = ? AND i.DateAcct >= ? AND i.DateAcct <= ? ORDER BY 1";
 			
@@ -81,22 +87,35 @@ public class MGenerateTaxInvoice extends X_TF_Generate_TaxInvoice{
 				invoiceLine.setC_Order_ID(rs.getInt("C_Order_ID"));
 				invoiceLine.setC_Invoice_ID(rs.getInt("C_Invoice_ID"));
 				invoiceLine.setM_Product_ID(rs.getInt("M_Product_id"));
-				invoiceLine.setC_UOM_ID(rs.getInt("C_Uom_id"));
-				invoiceLine.setQty(rs.getBigDecimal("QtyEntered"));
-				invoiceLine.setPrice(rs.getBigDecimal("PriceEntered"));
-				invoiceLine.setTaxableAmount(rs.getBigDecimal("LineNetAmt"));
-				invoiceLine.setSGST_Rate(rs.getBigDecimal("SGSTRate"));
-				invoiceLine.setCGST_Rate(rs.getBigDecimal("CGSTRate"));
-				invoiceLine.setIGST_Rate(rs.getBigDecimal("IGSTRate"));
-				invoiceLine.setSGST_Amt(rs.getBigDecimal("SGSTAmt"));
-				invoiceLine.setCGST_Amt(rs.getBigDecimal("CGSTAmt"));
-				invoiceLine.setIGST_Amt(rs.getBigDecimal("IGSTAmt"));
+				invoiceLine.setC_UOM_ID(rs.getInt("C_Uom_id"));				
+				
+				//Set Qty based on Customer Type Billing Qty Ratio
+				BigDecimal qty = rs.getBigDecimal("QtyEntered");
+				if(custType.getBillingQtyRatio().doubleValue() > 0)
+					qty = rs.getBigDecimal("QtyEntered").multiply(custType.getBillingQtyRatio());
+				invoiceLine.setQty(qty);
+				
+				//Set Price based on Customer Type Billing Price Ratio
+				BigDecimal price = rs.getBigDecimal("PriceEntered");
+				if(custType.getBillingPriceRatio().doubleValue() > 0)
+					price = rs.getBigDecimal("PriceEntered").multiply(custType.getBillingPriceRatio());
+								
+				//Exclude Tax amount from Price
+				TF_MProduct prod = new TF_MProduct(getCtx(), rs.getInt("M_Product_id"), get_TrxName());
+				MTax tax = new MTax(getCtx(), prod.getTax_ID(true), get_TrxName());				
+				BigDecimal taxRate = tax.getRate();
+				BigDecimal hundred = new BigDecimal("100");				
+				BigDecimal priceExcludesTax = price.divide(BigDecimal.ONE
+						.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);				
+				invoiceLine.setPrice(priceExcludesTax);
+				invoiceLine.setTaxableAmount(priceExcludesTax.multiply(invoiceLine.getQty()));
+								
+				BigDecimal SGST_Rate = taxRate.divide(new BigDecimal(2), 2, RoundingMode.HALF_EVEN);				
+				invoiceLine.setSGST_Rate(SGST_Rate);
+				invoiceLine.setCGST_Rate(SGST_Rate);
+				invoiceLine.setIGST_Rate(BigDecimal.ZERO);
+				invoiceLine.setIGST_Amt(BigDecimal.ZERO);
 				invoiceLine.setTF_Destination_ID(rs.getInt("tf_destination_id"));
-				
-				BigDecimal totalAmount = rs.getBigDecimal("LineNetAmt").add(rs.getBigDecimal("SGSTAmt"))
-						.add(rs.getBigDecimal("CGSTAmt")).add(rs.getBigDecimal("IGSTAmt"));
-				
-				invoiceLine.setLineTotalAmt(totalAmount);
 				invoiceLine.calcAmounts();
 				invoiceLine.saveEx();
 				lineNo = lineNo + 10;
@@ -134,6 +153,7 @@ public class MGenerateTaxInvoice extends X_TF_Generate_TaxInvoice{
 			
 		
 		try {
+			
 			taxInvoice=new MTRTaxInvoice(getCtx(), 0, get_TrxName());								
 			taxInvoice.setAD_Org_ID(getAD_Org_ID());
 			taxInvoice.setDateAcct(getDateAcct());
@@ -188,8 +208,10 @@ public class MGenerateTaxInvoice extends X_TF_Generate_TaxInvoice{
 				invoiceLine.setTF_TRTaxInvoice_ID(taxInvoice.getTF_TRTaxInvoice_ID());
 				invoiceLine.setM_Product_ID(rs.getInt("M_Product_id"));
 				invoiceLine.setC_UOM_ID(rs.getInt("C_Uom_id"));
-				invoiceLine.setQty(rs.getBigDecimal("QtyEntered"));
-				invoiceLine.setPrice(rs.getBigDecimal("PriceEntered"));
+				BigDecimal qty = rs.getBigDecimal("QtyEntered");
+				BigDecimal price = rs.getBigDecimal("PriceEntered");
+				invoiceLine.setQty(qty);
+				invoiceLine.setPrice(price);
 				invoiceLine.setTaxableAmount(rs.getBigDecimal("LineNetAmt"));
 				invoiceLine.setSGST_Rate(rs.getBigDecimal("sgst_rate"));
 				invoiceLine.setCGST_Rate(rs.getBigDecimal("cgst_rate"));

@@ -52,7 +52,9 @@ public class CalloutOrderQuickEntry_SetPriceUOM implements IColumnCallout {
 				isTaxIncluded = priceUOM.isTaxIncluded();
 				
 				mTab.setValue(TF_MOrder.COLUMNNAME_IsRentInclusive, isRentInclusive);
-				mTab.setValue(TF_MOrder.COLUMNNAME_IsTaxIncluded1, isTaxIncluded);
+				//mTab.setValue(TF_MOrder.COLUMNNAME_IsTaxIncluded1, isTaxIncluded);
+				//For Namakkal bluemetals, default amount includes tax, but tax amount will be known after generating sales tax invoice
+				mTab.setValue(TF_MOrder.COLUMNNAME_IsTaxIncluded1, false);
 			}
 			else{
 				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Price, BigDecimal.ZERO);

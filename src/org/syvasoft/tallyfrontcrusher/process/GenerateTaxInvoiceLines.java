@@ -1,5 +1,6 @@
 package org.syvasoft.tallyfrontcrusher.process;
 
+import java.math.BigDecimal;
 import java.util.logging.Level;
 
 import org.compiere.process.ProcessInfoParameter;
@@ -27,7 +28,9 @@ public class GenerateTaxInvoiceLines extends SvrProcess {
 	protected String doIt() throws Exception {
 		if(taxInvoice.isProcessed())
 			return "Already Processed";
-		taxInvoice.createInvoiceLines(recreate);
+		taxInvoice.setRoundOff(BigDecimal.ZERO);		
+		taxInvoice.saveEx();
+		taxInvoice.createInvoiceLines(recreate);		
 		taxInvoice.saveEx();
 		return null;
 	}

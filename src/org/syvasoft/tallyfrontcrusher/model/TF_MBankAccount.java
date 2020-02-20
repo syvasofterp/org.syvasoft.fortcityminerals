@@ -406,7 +406,7 @@ public class TF_MBankAccount extends MBankAccount {
 		}
 		else
 		{
-			throw new AdempiereException("No Cash Account Configured for this Organization!");
+			throw new AdempiereException("No Bank Account Configured for this Organization!");
 		}
     	
     }
