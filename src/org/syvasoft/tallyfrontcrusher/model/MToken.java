@@ -30,14 +30,12 @@ public class MToken extends X_TF_Token {
 
 	}
 	public void close() {
-		if(isProcessed())
+		if(getStatus().equals(STATUS_Closed))
 			throw new AdempiereException("Token No is already closed!");
-		setStatus(STATUS_Closed);
-		setProcessed(true);		
+		setStatus(STATUS_Closed);		
 	}
 	public void reverse() {
-		setStatus(STATUS_Open);
-		setProcessed(false);
+		setStatus(STATUS_Open);		
 	}
 	
 }

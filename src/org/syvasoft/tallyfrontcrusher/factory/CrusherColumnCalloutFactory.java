@@ -556,7 +556,8 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		
 		if(tableName.equals(MPriceListUOM.Table_Name)) {
 			if(columnName.equals(MPriceListUOM.COLUMNNAME_C_BPartner_ID) ||
-					columnName.equals(TF_MOrder.COLUMNNAME_TF_WeighmentEntry_ID)) {
+					columnName.equals(TF_MOrder.COLUMNNAME_TF_WeighmentEntry_ID) ||
+					columnName.equals(TF_MOrder.COLUMNNAME_TF_Token_ID) ) {
 				list.add(new CalloutOrder_CreateTaxInvoice());
 			}
 		}
@@ -567,7 +568,8 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 					columnName.equals(TF_MOrder.COLUMNNAME_IsTaxIncluded1) ||
 					columnName.equals(TF_MOrder.COLUMNNAME_TF_Destination_ID) ||
 					columnName.equals(TF_MOrder.COLUMNNAME_TF_RentedVehicle_ID) ||
-					columnName.equals(TF_MOrder.COLUMNNAME_TF_WeighmentEntry_ID)) {
+					columnName.equals(TF_MOrder.COLUMNNAME_TF_WeighmentEntry_ID) ||
+					columnName.equals(TF_MOrder.COLUMNNAME_TF_Token_ID)) {
 				list.add(new CalloutOrder_PriceIncludesTax());
 			}
 		}
@@ -585,15 +587,19 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 					columnName.equals(TF_MOrder.COLUMNNAME_Rate) || 
 					columnName.equals(TF_MOrder.COLUMNNAME_IsLumpSumRent) ||
 					columnName.equals(TF_MOrder.COLUMNNAME_TF_WeighmentEntry_ID) ||
-					columnName.equals(TF_MOrder.COLUMNNAME_TF_WeighmentEntry_ID) ||
+					columnName.equals(TF_MOrder.COLUMNNAME_TF_Token_ID) ||
 					columnName.equals(TF_MOrder.COLUMNNAME_Rent_Amt)) {
 				list.add(new CalloutOrder_Item1Tax());
 			}
 		}
 		
 		if(tableName.equals(MOrder.Table_Name)) {
-			if(columnName.equals(TF_MOrder.COLUMNNAME_TF_Token_ID))
+			if(columnName.equals(TF_MOrder.COLUMNNAME_TF_Token_ID)) {
 				list.add(new CalloutOrder_TokenNo());
+				list.add(new CalloutOrder_SOUnitPriceRent());
+				list.add(new CalloutOrder_VehicleRent());
+				list.add(new CalloutOrder_VehicleType());
+			}
 		}
 		
 		if(tableName.equals(MToken.Table_Name)) {

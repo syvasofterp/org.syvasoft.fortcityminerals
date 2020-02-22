@@ -10,6 +10,7 @@ import org.syvasoft.tallyfrontcrusher.model.MLumpSumRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MRentedVehicle;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleType;
+import org.syvasoft.tallyfrontcrusher.model.TF_MBPartner;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
 
 public class CalloutOrder_RentedVehicle implements IColumnCallout {
@@ -30,7 +31,9 @@ public class CalloutOrder_RentedVehicle implements IColumnCallout {
 			MRentedVehicle rv = new MRentedVehicle(ctx, vehicle_id, null);
 			int TF_VehicleType_ID = (int) rv.get_ValueAsInt("TF_VehicleType_ID");
 			mTab.setValue(TF_MOrder.COLUMNNAME_VehicleNo, rv.getVehicleNo());
-			mTab.setValue(TF_MOrder.COLUMNNAME_IsRentBreakup, true);
+			int C_BPartner_ID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_C_BPartner_ID);
+			TF_MBPartner bp = new TF_MBPartner(ctx, C_BPartner_ID, null);			
+			mTab.setValue(TF_MOrder.COLUMNNAME_IsRentBreakup, bp.isRentBreakup());
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_VehicleType_ID, TF_VehicleType_ID);
 		}		
 		

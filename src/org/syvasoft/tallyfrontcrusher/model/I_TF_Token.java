@@ -32,7 +32,7 @@ public interface I_TF_Token
     /** TableName=TF_Token */
     public static final String Table_Name = "TF_Token";
 
-    /** AD_Table_ID=1000301 */
+    /** AD_Table_ID=1000302 */
     public static final int Table_ID = MTable.getTable_ID(Table_Name);
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);
@@ -63,6 +63,21 @@ public interface I_TF_Token
 	  * Organizational entity within client
 	  */
 	public int getAD_Org_ID();
+
+    /** Column name C_BPartner_ID */
+    public static final String COLUMNNAME_C_BPartner_ID = "C_BPartner_ID";
+
+	/** Set Business Partner .
+	  * Identifies a Business Partner
+	  */
+	public void setC_BPartner_ID (int C_BPartner_ID);
+
+	/** Get Business Partner .
+	  * Identifies a Business Partner
+	  */
+	public int getC_BPartner_ID();
+
+	public org.compiere.model.I_C_BPartner getC_BPartner() throws RuntimeException;
 
     /** Column name C_UOM_ID */
     public static final String COLUMNNAME_C_UOM_ID = "C_UOM_ID";
@@ -108,6 +123,19 @@ public interface I_TF_Token
 	  */
 	public Timestamp getDateAcct();
 
+    /** Column name DocStatus */
+    public static final String COLUMNNAME_DocStatus = "DocStatus";
+
+	/** Set Document Status.
+	  * The current status of the document
+	  */
+	public void setDocStatus (String DocStatus);
+
+	/** Get Document Status.
+	  * The current status of the document
+	  */
+	public String getDocStatus();
+
     /** Column name DocumentNo */
     public static final String COLUMNNAME_DocumentNo = "DocumentNo";
 
@@ -120,6 +148,15 @@ public interface I_TF_Token
 	  * Document sequence number of the document
 	  */
 	public String getDocumentNo();
+
+    /** Column name DriverName */
+    public static final String COLUMNNAME_DriverName = "DriverName";
+
+	/** Set Driver Name	  */
+	public void setDriverName (String DriverName);
+
+	/** Get Driver Name	  */
+	public String getDriverName();
 
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";
@@ -158,6 +195,24 @@ public interface I_TF_Token
 	/** Get Net Weight (Unit)	  */
 	public BigDecimal getNetWeightUnit();
 
+    /** Column name PartyName */
+    public static final String COLUMNNAME_PartyName = "PartyName";
+
+	/** Set Party Name	  */
+	public void setPartyName (String PartyName);
+
+	/** Get Party Name	  */
+	public String getPartyName();
+
+    /** Column name Print_Token */
+    public static final String COLUMNNAME_Print_Token = "Print_Token";
+
+	/** Set Print_Token	  */
+	public void setPrint_Token (String Print_Token);
+
+	/** Get Print_Token	  */
+	public String getPrint_Token();
+
     /** Column name Processed */
     public static final String COLUMNNAME_Processed = "Processed";
 
@@ -170,6 +225,15 @@ public interface I_TF_Token
 	  * The document has been processed
 	  */
 	public boolean isProcessed();
+
+    /** Column name Processing */
+    public static final String COLUMNNAME_Processing = "Processing";
+
+	/** Set Process Now	  */
+	public void setProcessing (boolean Processing);
+
+	/** Get Process Now	  */
+	public boolean isProcessing();
 
     /** Column name Status */
     public static final String COLUMNNAME_Status = "Status";
@@ -237,18 +301,4 @@ public interface I_TF_Token
 
 	/** Get Vehicle No	  */
 	public String getVehicleNo();
-	
-	 /** Column name C_BPartner_ID */
-    public static final String COLUMNNAME_C_BPartner_ID = "C_BPartner_ID";
-
-	/** Set Business Partner .
-	  * Identifies a Business Partner
-	  */
-	public void setC_BPartner_ID (int C_BPartner_ID);
-
-	/** Get Business Partner .
-	  * Identifies a Business Partner
-	  */
-	public int getC_BPartner_ID();
-
 }
