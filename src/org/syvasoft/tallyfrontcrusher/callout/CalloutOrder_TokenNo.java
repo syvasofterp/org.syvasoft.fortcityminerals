@@ -34,6 +34,7 @@ public class CalloutOrder_TokenNo implements IColumnCallout {
 			int token_id = (int) mTab.getValue(TF_MOrder.COLUMNNAME_TF_Token_ID);
 			MToken token = new MToken(ctx, token_id , null);
 			mTab.setValue(TF_MOrder.COLUMNNAME_DateAcct, token.getDateAcct());
+			mTab.setValue(TF_MOrder.COLUMNNAME_PartyName, token.getPartyName());
 			
 			int bPartner_id = token.getC_BPartner_ID();
 			mTab.setValue(TF_MOrder.COLUMNNAME_C_BPartner_ID, bPartner_id);

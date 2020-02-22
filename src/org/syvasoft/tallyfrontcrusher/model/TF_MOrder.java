@@ -1821,8 +1821,8 @@ public class TF_MOrder extends MOrder {
 		closeTokenNo();
 		closeYardEntry();
 		
-		if(isTaxIncluded1())
-			createTaxInvoice();
+		
+		createTaxInvoice();
 		
 		createCashSalesDiscountPayment();
 		return msg;
@@ -2496,12 +2496,14 @@ public class TF_MOrder extends MOrder {
 		inv.setAD_Org_ID(getAD_Org_ID());
 		inv.setDateAcct(getDateAcct());
 		inv.setM_Warehouse_ID(getM_Warehouse_ID());
+		inv.setPartyName(getPartyName());
+		inv.setPostTaxToCustomer(true);
 		inv.setC_BPartner_ID(getC_BPartner_ID());
 		inv.setDateSupply(getDateAcct());
 		
 		MWeighmentEntry wEntry = new MWeighmentEntry(getCtx(), getTF_WeighmentEntry_ID(), get_TrxName());
 		TF_MBPartner partner = new TF_MBPartner(getCtx(),getC_BPartner_ID(),get_TrxName());
-		if(wEntry != null && partner.getIsPOSCashBP()) {
+		if(wEntry != null && partner.getIsPOSCashBP() && getPartyName() == null) {
 			inv.setPartyName(wEntry.getPartyName());
 		}
 		
@@ -2509,67 +2511,63 @@ public class TF_MOrder extends MOrder {
 		
 		inv.setPlaceOfSupply(dest.getName());
 		
-		inv.setVehicleNo(getVehicleNo());
-		inv.setDocStatus(DOCSTATUS_Completed);
-		inv.setProcessed(true);
+		inv.setVehicleNo(getVehicleNo());		
 		//inv.calcAmounts();		
 		inv.setC_BankAccount_ID(TF_MBankAccount.getDefaultBankAccount(getCtx(), Env.getAD_Org_ID(getCtx()), null));
-		inv.processIt(DOCACTION_Complete);
 		inv.saveEx();
 
 		MTRTaxInvoiceLine invLine = new MTRTaxInvoiceLine(inv);
 		invLine.setAD_Org_ID(getAD_Org_ID());
 		invLine.setM_Product_ID(getItem1_ID());
 		invLine.setC_UOM_ID(getItem1_UOM_ID());
-		invLine.setQty(getItem1_Qty());
 		
+		TF_MBPartner bp = new TF_MBPartner(getCtx(), getC_BPartner_ID(), get_TrxName());
+		MCustomerType custType = new MCustomerType(getCtx(), bp.getTF_CustomerType_ID(), get_TrxName());
 		
-		invLine.setPrice(getItem1_Price()); // Price in Default UOM such as Tonnage
-
-		MTax tax = new MTax(getCtx(), getItem1_Tax_ID(), get_TrxName());
+		//Set Qty based on Customer Type Billing Qty Ratio
+		BigDecimal qty = getItem1_Qty();
+		if(custType.getBillingQtyRatio().doubleValue() > 0)
+			qty = qty.multiply(custType.getBillingQtyRatio());
+		invLine.setQty(qty);
+		
+		//Set Price based on Customer Type Billing Price Ratio
+		BigDecimal price = getItem1_Price();		
+		if(isRentBreakup())
+		{
+			if(isRentInclusive()) {
+				price = getItem1_UnitPrice();
+			}
+			else {
+				price = getItem1_UnitPrice().add(getItem1_UnitRent());
+			}
+		}
+		if(custType.getBillingPriceRatio().doubleValue() > 0)
+			price = price.multiply(custType.getBillingPriceRatio());
+						
+		//Exclude Tax amount from Price
+		TF_MProduct prod = new TF_MProduct(getCtx(), getItem1_ID(), get_TrxName());
+		MTax tax = new MTax(getCtx(), prod.getTax_ID(true), get_TrxName());				
 		BigDecimal taxRate = tax.getRate();
-		BigDecimal bdTwo = new BigDecimal(2);
-		BigDecimal taxSplit = taxRate.divide(bdTwo, 2, RoundingMode.HALF_EVEN);
+		BigDecimal hundred = new BigDecimal("100");				
+		BigDecimal priceExcludesTax = price.divide(BigDecimal.ONE
+				.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);				
+		invLine.setPrice(priceExcludesTax);
+		invLine.setTaxableAmount(priceExcludesTax.multiply(invLine.getQty()));
+						
+		BigDecimal SGST_Rate = taxRate.divide(new BigDecimal(2), 2, RoundingMode.HALF_EVEN);				
+		invLine.setSGST_Rate(SGST_Rate);
+		invLine.setCGST_Rate(SGST_Rate);
+		invLine.setIGST_Rate(BigDecimal.ZERO);
+		invLine.setIGST_Amt(BigDecimal.ZERO);
 		
-		invLine.setSGST_Rate(taxSplit);
-		invLine.setCGST_Rate(taxSplit);
 		invLine.calcAmounts();
 		invLine.saveEx();
 		
-		MTRTaxInvoiceLine invRentLine = new MTRTaxInvoiceLine(inv);
-		
-		invRentLine.setAD_Org_ID(getAD_Org_ID());
-		
-		MRentedVehicle rentVehicle = new MRentedVehicle(getCtx(), getTF_RentedVehicle_ID(), get_TrxName());
-		int rentProductID = rentVehicle.getM_Product_ID();
-		
-		invRentLine.setM_Product_ID(rentProductID);
-		invRentLine.setC_UOM_ID(getItem1_UOM_ID());
-		invRentLine.setQty(BigDecimal.ONE);
-		
-		BigDecimal rentAmount = new BigDecimal(0);
-		if(getRent_Tax_ID() > 0)
-		{	
-			tax = new MTax(getCtx(), getRent_Tax_ID(), get_TrxName());
-			taxRate = (BigDecimal)tax.getRate();
-			BigDecimal hundred = new BigDecimal("100");
-			
-			rentAmount = getRent_Amt().divide(BigDecimal.ONE.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);
-		}
-		
-		
-		invRentLine.setPrice(rentAmount); // Price in Default UOM such as Tonnage
-
-		MTax vehicleTax = new MTax(getCtx(), getRent_Tax_ID(), get_TrxName());
-		BigDecimal vehicleTaxRate = vehicleTax.getRate();
-		taxSplit = vehicleTaxRate.divide(bdTwo, 2, RoundingMode.HALF_EVEN);
-		
-		invRentLine.setSGST_Rate(taxSplit);
-		invRentLine.setCGST_Rate(taxSplit);
-		invRentLine.calcAmounts();
-		invRentLine.saveEx();
+		//No Rent Included
 		
 		setTF_TRTaxInvoice_ID(inv.getTF_TRTaxInvoice_ID());
+		inv.processIt(DOCACTION_Complete);
+		inv.saveEx();
 	}
 	
 	public void voidTaxInvoice() {
