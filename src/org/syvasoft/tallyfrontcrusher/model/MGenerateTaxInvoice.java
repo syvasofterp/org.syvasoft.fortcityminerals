@@ -104,7 +104,8 @@ public class MGenerateTaxInvoice extends X_TF_Generate_TaxInvoice{
 				BigDecimal price = rs.getBigDecimal("PriceEntered");
 				if(custType.getBillingPriceRatio().doubleValue() > 0)
 					price = rs.getBigDecimal("PriceEntered").multiply(custType.getBillingPriceRatio());
-								
+							
+				//Price always includes tax
 				//Exclude Tax amount from Price
 				TF_MProduct prod = new TF_MProduct(getCtx(), rs.getInt("M_Product_id"), get_TrxName());
 				MTax tax = new MTax(getCtx(), prod.getTax_ID(true), get_TrxName());				
