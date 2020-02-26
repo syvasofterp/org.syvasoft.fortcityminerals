@@ -47,11 +47,9 @@ public class MGenerateTaxInvoiceLine extends X_TF_Generate_TaxInvoiceLine{
 		RoundOffAmt = ti.getRoundOff();
 		
 		if(GrandTotal != null) {
-			//Auto Round off to Rupees
-			if(RoundOffAmt.doubleValue() == 0) {
-				RoundOffAmt = GrandTotal.setScale(0, RoundingMode.HALF_EVEN).subtract(GrandTotal);
-				ti.setRoundOff(RoundOffAmt);
-			}
+			//Auto Round off to Rupees			
+			RoundOffAmt = GrandTotal.setScale(0, RoundingMode.HALF_UP).subtract(GrandTotal);
+			ti.setRoundOff(RoundOffAmt);			
 			ti.setTotal(GrandTotal.add(RoundOffAmt));
 		}
 		ti.saveEx();
@@ -66,8 +64,7 @@ public class MGenerateTaxInvoiceLine extends X_TF_Generate_TaxInvoiceLine{
 		setCGST_Amt(cgstAmt);
 		setSGST_Amt(sgstAmt);
 		
-		BigDecimal total = getTaxableAmount().add(cgstAmt).add(sgstAmt);
-		BigDecimal roundingOff = total.subtract(total.setScale(0, RoundingMode.HALF_UP));
+		BigDecimal total = getTaxableAmount().add(cgstAmt).add(sgstAmt).setScale(2, RoundingMode.HALF_UP);				
 		setLineTotalAmt(total);
 	}
 	

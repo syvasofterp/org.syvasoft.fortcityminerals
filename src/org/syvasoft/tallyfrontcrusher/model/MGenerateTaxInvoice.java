@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.util.List;
 import java.util.Properties;
 import org.adempiere.exceptions.AdempiereException;
+import org.compiere.model.MSysConfig;
 import org.compiere.model.MTax;
 import org.compiere.model.Query;
 import org.compiere.process.DocAction;
@@ -31,7 +32,7 @@ public class MGenerateTaxInvoice extends X_TF_Generate_TaxInvoice{
 	
 	
 	
-	public void createInvoiceLines(boolean reCreate) {
+	public void createInvoiceLines(boolean reCreate, boolean ignoreVehicleRent) {
 		
 		if(!reCreate && get_ValueAsBoolean(COLUMNNAME_IsCreated))
 			throw new AdempiereException("Invoice Lines are already generated!");
@@ -76,7 +77,7 @@ public class MGenerateTaxInvoice extends X_TF_Generate_TaxInvoice{
 			pstmt.setTimestamp(4, getDateTo());
 			
 			rs = pstmt.executeQuery();
-			
+			int ProductCategory_ID = MSysConfig.getIntValue("VEHICLE_PRODCUCT_CATEGORY_ID", 1000055);
 			int lineNo = 10;
 			while(rs.next()) {
 				MGenerateTaxInvoiceLine invoiceLine = new MGenerateTaxInvoiceLine(getCtx(), 0, get_TrxName());
@@ -88,6 +89,10 @@ public class MGenerateTaxInvoice extends X_TF_Generate_TaxInvoice{
 				invoiceLine.setC_Invoice_ID(rs.getInt("C_Invoice_ID"));
 				invoiceLine.setM_Product_ID(rs.getInt("M_Product_id"));
 				invoiceLine.setC_UOM_ID(rs.getInt("C_Uom_id"));				
+				
+				//Ignoring Vehicle Rent
+				if(invoiceLine.getM_Product().getM_Product_Category_ID() == ProductCategory_ID && ignoreVehicleRent)
+					continue;
 				
 				//Set Qty based on Customer Type Billing Qty Ratio
 				BigDecimal qty = rs.getBigDecimal("QtyEntered");
