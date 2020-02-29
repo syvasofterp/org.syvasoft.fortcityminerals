@@ -225,6 +225,9 @@ public class CrusherModelFactory implements IModelFactory {
 			return MCustomerType.class;
 		else if(MTaxInvoiceCycle.Table_Name.equals(tableName))			
 			return MTaxInvoiceCycle.class;
+		else if(MDiscountRequest.Table_Name.equals(tableName))			
+			return MDiscountRequest.class;
+
 		return null;
 	}
 
@@ -443,6 +446,9 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MCustomerType(ctx, Record_ID, trxName);
 		else if(MTaxInvoiceCycle.Table_Name.equals(tableName))			
 			return new MTaxInvoiceCycle(ctx, Record_ID, trxName);
+		else if(MDiscountRequest.Table_Name.equals(tableName))			
+			return new MDiscountRequest(ctx, Record_ID, trxName);
+
 		return null;
 	}
 
@@ -663,6 +669,9 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MCustomerType(ctx, rs, trxName);
 		else if(MTaxInvoiceCycle.Table_Name.equals(tableName))			
 			return new MTaxInvoiceCycle(ctx, rs, trxName);
+		else if(MDiscountRequest.Table_Name.equals(tableName))			
+			return new MDiscountRequest(ctx, rs, trxName);
+
 		return null;
 	}
 
