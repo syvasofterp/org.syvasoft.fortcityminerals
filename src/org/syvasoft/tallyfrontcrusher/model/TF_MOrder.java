@@ -1538,6 +1538,58 @@ public class TF_MOrder extends MOrder {
 	{
 		return (String)get_Value(COLUMNNAME_Phone);
 	}
+	
+	 /** Column name DiscntStatus */
+    public static final String COLUMNNAME_DiscntStatus = "DiscntStatus";
+    
+	/** Requested = RQ */
+	public static final String DISCNTSTATUS_Requested = "RQ";
+	/** Approved = AP */
+	public static final String DISCNTSTATUS_Approved = "AP";
+	/** Closed = CL */
+	public static final String DISCNTSTATUS_Closed = "CL";
+	/** Voided = VO */
+	public static final String DISCNTSTATUS_Voided = "VO";
+	/** Set Discount Status.
+		@param DiscntStatus Discount Status	  */
+	public void setDiscntStatus (String DiscntStatus)
+	{
+
+		set_Value (COLUMNNAME_DiscntStatus, DiscntStatus);
+	}
+
+	/** Get Discount Status.
+		@return Discount Status	  */
+	public String getDiscntStatus () 
+	{
+		return (String)get_Value(COLUMNNAME_DiscntStatus);
+	}
+
+
+    /** Column name TF_DiscountRequest_ID */
+    public static final String COLUMNNAME_TF_DiscountRequest_ID = "TF_DiscountRequest_ID";
+
+	/** Set Discount Request.
+	@param TF_DiscountRequest_ID Discount Request	  */
+	public void setTF_DiscountRequest_ID (int TF_DiscountRequest_ID)
+	{
+		if (TF_DiscountRequest_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_TF_DiscountRequest_ID, null);
+		else 
+			set_ValueNoCheck (COLUMNNAME_TF_DiscountRequest_ID, Integer.valueOf(TF_DiscountRequest_ID));
+	}
+	
+	/** Get Discount Request.
+		@return Discount Request	  */
+	public int getTF_DiscountRequest_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_DiscountRequest_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+    
 		
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
@@ -1811,6 +1863,12 @@ public class TF_MOrder extends MOrder {
 	public String completeIt() {
 		if(getTF_RentedVehicle_ID() > 0 && getRent_Amt().doubleValue() <= 0)
 			throw new AdempiereException("Please specify Rent Amount!");
+		
+		MPriceListUOM priceUOM = MPriceListUOM.getPriceListUOM(getCtx(), getItem1_ID(), getItem1_UOM_ID(), getC_BPartner_ID(), true, getDateAcct());
+		BigDecimal price=getItem1_UnitPrice();
+		if(price.compareTo(priceUOM.getPriceMin())<0 && getPaymentRule().equals(PAYMENTRULE_Cash)) {
+			throw new AdempiereException("You cannot complete sales entry product price less than min price. Please create discount request");
+		}
 		
 		createSubcontractPurchaseEntry();
 		String msg = super.completeIt();
