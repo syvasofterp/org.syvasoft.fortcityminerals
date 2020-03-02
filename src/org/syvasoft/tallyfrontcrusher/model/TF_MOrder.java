@@ -1867,7 +1867,24 @@ public class TF_MOrder extends MOrder {
 		MPriceListUOM priceUOM = MPriceListUOM.getPriceListUOM(getCtx(), getItem1_ID(), getItem1_UOM_ID(), getC_BPartner_ID(), true, getDateAcct());
 		BigDecimal price=getItem1_UnitPrice();
 		if(price.compareTo(priceUOM.getPriceMin())<0 && getPaymentRule().equals(PAYMENTRULE_Cash)) {
-			throw new AdempiereException("You cannot complete sales entry product price less than min price. Please create discount request");
+			if(getTF_DiscountRequest_ID() == 0) {
+				throw new AdempiereException("You cannot complete sales entry product price less than min price. Please create discount request");
+			}
+			else {
+				MDiscountRequest dr = new MDiscountRequest(getCtx(), getTF_DiscountRequest_ID(), get_TrxName());
+				if(dr.getDiscntStatus().equals(MDiscountRequest.DISCNTSTATUS_Approved)) {
+					if(dr.getApprovedPrice().doubleValue() > getItem1_UnitPrice().doubleValue()) {
+						throw new AdempiereException("Please enter Approved Discounted Price to complete the order!");
+					}
+					else {
+						dr.closeIt();
+						dr.saveEx();
+					}
+				}
+				else {
+					throw new AdempiereException("Your discount request is waiting for approval!");
+				}
+			}
 		}
 		
 		createSubcontractPurchaseEntry();
@@ -1966,6 +1983,11 @@ public class TF_MOrder extends MOrder {
 				payment.saveEx();
 			}
 
+			if(getTF_DiscountRequest_ID() > 0) {
+				MDiscountRequest dr = new MDiscountRequest(getCtx(), getTF_DiscountRequest_ID(), get_TrxName());
+				dr.voidIt();
+				dr.saveEx();
+			}
 			
 			MJobworkItemIssue.ReverseFromPO(this);
 			reverseTransporterInvoice();
