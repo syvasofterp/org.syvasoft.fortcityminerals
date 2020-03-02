@@ -6,12 +6,13 @@ import org.adempiere.exceptions.AdempiereException;
 import org.compiere.process.ProcessInfoParameter;
 import org.compiere.process.SvrProcess;
 import org.syvasoft.tallyfrontcrusher.model.MDiscountRequest;
+import org.syvasoft.tallyfrontcrusher.model.MPriceListUOM;
 import org.syvasoft.tallyfrontcrusher.model.TF_MBPartner;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
 
 public class ProcessDiscountRequest extends SvrProcess {
 	private int C_Order_ID=0;
-	private BigDecimal ReqPrice=BigDecimal.ZERO;
+	
 	@Override
 	protected void prepare() {
 		// TODO Auto-generated method stub
@@ -20,9 +21,7 @@ public class ProcessDiscountRequest extends SvrProcess {
 		{						
 			String name = para[i].getParameterName();
 			if(name.equals("C_Order_ID"))
-				C_Order_ID =  para[i].getParameterAsInt();
-			else if(name.equals("ReqPrice"))
-				ReqPrice= para[i].getParameterAsBigDecimal();
+				C_Order_ID =  para[i].getParameterAsInt();	
 		}
 
 	}
@@ -37,20 +36,25 @@ public class ProcessDiscountRequest extends SvrProcess {
 			return "Invalid Sales Order";
 		
 		if(ord.getPaymentRule().equals(TF_MOrder.PAYMENTRULE_OnCredit)) {
-			throw new AdempiereException("You cannot create price discount request for Credit customers");
+			throw new AdempiereException("You cannot create price discount request for Credit Sales!");
 		}
 
 		String bpName="";
-		TF_MBPartner bp;
-		if(ord.getC_BPartner_ID()>0) {
+		TF_MBPartner bp;		
+		if (ord.getPartyName() != null) {
+			bpName=ord.getPartyName();
+		}
+		else {
 			bp=new TF_MBPartner(getCtx(), ord.getC_BPartner_ID(), get_TrxName());
 			bpName=bp.getName();
 		}
-		else {
-			bpName=ord.getPartyName();
+			
+		MPriceListUOM priceUOM = MPriceListUOM.getPriceListUOM(getCtx(), ord.getItem1_ID(), ord.getItem1_UOM_ID(), 
+				ord.getC_BPartner_ID(), true, ord.getDateAcct());
+		BigDecimal price=ord.getItem1_UnitPrice();
+		if(price.compareTo(priceUOM.getPriceMin())> 0 && ord.getPaymentRule().equals(TF_MOrder.PAYMENTRULE_Cash)) {
+			throw new AdempiereException("Invalid Discount Request!");
 		}
-			
-			
 		
 		MDiscountRequest dr=new MDiscountRequest(getCtx(), 0, get_TrxName());
 		dr.setAD_Org_ID(ord.getAD_Org_ID());
@@ -63,12 +67,16 @@ public class ProcessDiscountRequest extends SvrProcess {
 		dr.setM_Product_ID(ord.getItem1_ID());
 		dr.setQty(ord.getItem1_Qty());
 		dr.setIsRentInclusive(ord.isRentInclusive());
-		dr.setStdPrice(ord.getItem1_Price());
-		dr.setReqPrice(ReqPrice);
+		dr.setStdPrice(priceUOM.getPrice());
+		dr.setReqPrice(price);
+		dr.setApprovedPrice(price);
 		dr.setDiscntStatus(MDiscountRequest.DISCNTSTATUS_Requested);
 		dr.saveEx();
 
-		return null;
+		ord.setTF_DiscountRequest_ID(dr.getTF_DiscountRequest_ID());
+		ord.saveEx();
+		
+		return "Discount Request created successfully";
 	}
 
 }

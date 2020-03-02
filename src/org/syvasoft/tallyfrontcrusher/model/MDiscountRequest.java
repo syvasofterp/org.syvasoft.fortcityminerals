@@ -21,5 +21,14 @@ public class MDiscountRequest extends X_TF_DiscountRequest {
 		// TODO Auto-generated constructor stub
 	}
 
+	public void closeIt() {
+		setProcessed(true);
+		setDiscntStatus(DISCNTSTATUS_Closed);
+	}
+	
+	public void voidIt() {
+		setProcessed(true);
+		setDiscntStatus(DISCNTSTATUS_Voided);
+	}
 	
 }

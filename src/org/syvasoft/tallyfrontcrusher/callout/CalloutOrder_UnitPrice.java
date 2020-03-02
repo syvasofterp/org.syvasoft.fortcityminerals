@@ -21,7 +21,7 @@ public class CalloutOrder_UnitPrice implements IColumnCallout {
 	public String start(Properties ctx, int WindowNo, GridTab mTab, GridField mField, Object value, Object oldValue) {
 		// TODO Auto-generated method stub
 		BigDecimal price = BigDecimal.ZERO;		
-		
+		mTab.setValue("RequireDiscRequest", false);
 		if(mTab.getValue(TF_MOrder.COLUMNNAME_Item1_ID)!=null && value != null
 				&& mTab.getValue(TF_MOrder.COLUMNNAME_C_BPartner_ID) != null
 				&& mTab.getValue(TF_MOrder.COLUMNNAME_DateAcct) != null
@@ -34,15 +34,18 @@ public class CalloutOrder_UnitPrice implements IColumnCallout {
 			int bPartner_ID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_C_BPartner_ID);
 			Timestamp dateAcct = (Timestamp) mTab.getValue(TF_MOrder.COLUMNNAME_DateAcct);
 			int product_ID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_ID);
-			int priceList_ID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_M_PriceList_ID);
+			int TF_DiscountRequest_ID = 0;
+			if(mTab.getValue(TF_MOrder.COLUMNNAME_TF_DiscountRequest_ID) != null)
+				TF_DiscountRequest_ID  = (int) mTab.getValue(TF_MOrder.COLUMNNAME_TF_DiscountRequest_ID);
 			boolean isSOTrx = Env.getContext(ctx, WindowNo, "IsSOTrx").equals("Y");
 			BigDecimal qty = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_Qty);
 			int C_UOM_ID=(int) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_UOM_ID);
 			
 			MPriceListUOM priceUOM = MPriceListUOM.getPriceListUOM(ctx, product_ID, C_UOM_ID, bPartner_ID, isSOTrx, dateAcct);
 			//MProductPricing pp = TF_MOrder.getProductPricing(product_ID, priceList_ID, bPartner_ID, qty, dateAcct, isSOTrx);
-			if(price.compareTo(priceUOM.getPriceMin())<0){
-				throw new AdempiereException("You cannot create sales order less than minimum price. Please create Discount Request");
+			if(price.compareTo(priceUOM.getPriceMin())<0 && TF_DiscountRequest_ID == 0){
+				mTab.setValue("RequireDiscRequest", true);
+				return "You cannot create sales order less than minimum price. Please create Discount Request";
 			}
 	   }
 	return null;
