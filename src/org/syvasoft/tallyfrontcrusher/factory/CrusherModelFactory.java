@@ -227,7 +227,12 @@ public class CrusherModelFactory implements IModelFactory {
 			return MTaxInvoiceCycle.class;
 		else if(MDiscountRequest.Table_Name.equals(tableName))			
 			return MDiscountRequest.class;
-
+		else if(TF_MailText.Table_Name.equals(tableName))			
+			return TF_MailText.class;
+		else if(MEmailAlertSetup.Table_Name.equals(tableName))			
+			return MEmailAlertSetup.class;
+		else if(MEmailAlertSetupCC.Table_Name.equals(tableName))			
+			return MEmailAlertSetupCC.class;
 		return null;
 	}
 
@@ -448,7 +453,12 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MTaxInvoiceCycle(ctx, Record_ID, trxName);
 		else if(MDiscountRequest.Table_Name.equals(tableName))			
 			return new MDiscountRequest(ctx, Record_ID, trxName);
-
+		else if(TF_MailText.Table_Name.equals(tableName))			
+			return new TF_MailText(ctx, Record_ID, trxName);
+		else if(MEmailAlertSetup.Table_Name.equals(tableName))			
+			return new MEmailAlertSetup(ctx, Record_ID, trxName);
+		else if(MEmailAlertSetupCC.Table_Name.equals(tableName))			
+			return new MEmailAlertSetupCC(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -671,7 +681,12 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MTaxInvoiceCycle(ctx, rs, trxName);
 		else if(MDiscountRequest.Table_Name.equals(tableName))			
 			return new MDiscountRequest(ctx, rs, trxName);
-
+		else if(TF_MailText.Table_Name.equals(tableName))			
+			return new TF_MailText(ctx, rs, trxName);
+		else if(MEmailAlertSetup.Table_Name.equals(tableName))			
+			return new MEmailAlertSetup(ctx, rs, trxName);
+		else if(MEmailAlertSetupCC.Table_Name.equals(tableName))			
+			return new MEmailAlertSetupCC(ctx, rs, trxName);
 		return null;
 	}
 
