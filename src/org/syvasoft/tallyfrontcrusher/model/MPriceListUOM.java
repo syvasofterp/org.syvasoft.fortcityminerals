@@ -33,6 +33,15 @@ public class MPriceListUOM extends X_TF_PriceListUOM {
 		return super.beforeSave(newRecord);
 	}
 	
+	@Override
+	public BigDecimal getPriceMin() {
+		BigDecimal minPrice = super.getPriceMin(); 
+		if(minPrice.doubleValue() > 0)
+			return minPrice;
+		else
+			return getPrice();
+	}
+	
 	public void validateUniqueness(boolean newRecord) {
 		String sql = "SELECT COUNT(*) FROM TF_PriceListUOM WHERE M_Product_ID = ? AND "
 				+ " C_UOM_ID = ? AND IsSOTrx = ? AND COALESCE(C_BPartner_ID,0) = ? AND ValidFrom = ?" ;
