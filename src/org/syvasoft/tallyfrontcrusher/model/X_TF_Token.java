@@ -33,7 +33,7 @@ public class X_TF_Token extends PO implements I_TF_Token, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20200222L;
+	private static final long serialVersionUID = 20200303L;
 
     /** Standard Constructor */
     public X_TF_Token (Properties ctx, int TF_Token_ID, String trxName)
@@ -374,6 +374,31 @@ public class X_TF_Token extends PO implements I_TF_Token, I_Persistent
 	public String getStatus () 
 	{
 		return (String)get_Value(COLUMNNAME_Status);
+	}
+
+	public I_TF_Destination getTF_Destination() throws RuntimeException
+    {
+		return (I_TF_Destination)MTable.get(getCtx(), I_TF_Destination.Table_Name)
+			.getPO(getTF_Destination_ID(), get_TrxName());	}
+
+	/** Set Destination.
+		@param TF_Destination_ID Destination	  */
+	public void setTF_Destination_ID (int TF_Destination_ID)
+	{
+		if (TF_Destination_ID < 1) 
+			set_Value (COLUMNNAME_TF_Destination_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_Destination_ID, Integer.valueOf(TF_Destination_ID));
+	}
+
+	/** Get Destination.
+		@return Destination	  */
+	public int getTF_Destination_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Destination_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	public I_TF_RentedVehicle getTF_RentedVehicle() throws RuntimeException

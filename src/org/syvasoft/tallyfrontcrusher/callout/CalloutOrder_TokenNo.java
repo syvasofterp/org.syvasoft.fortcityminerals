@@ -110,7 +110,7 @@ public class CalloutOrder_TokenNo implements IColumnCallout {
 				mTab.setValue(TF_MOrder.COLUMNNAME_TF_RentedVehicle_ID, null);
 			
 			
-			
+			mTab.setValue(TF_MOrder.COLUMNNAME_TF_Destination_ID, token.getTF_Destination_ID());
 			mTab.setValue(TF_MOrder.COLUMNNAME_VehicleNo, token.getVehicleNo());
 			
 		}

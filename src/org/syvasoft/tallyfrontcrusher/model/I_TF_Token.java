@@ -248,6 +248,17 @@ public interface I_TF_Token
 	  */
 	public String getStatus();
 
+    /** Column name TF_Destination_ID */
+    public static final String COLUMNNAME_TF_Destination_ID = "TF_Destination_ID";
+
+	/** Set Destination	  */
+	public void setTF_Destination_ID (int TF_Destination_ID);
+
+	/** Get Destination	  */
+	public int getTF_Destination_ID();
+
+	public I_TF_Destination getTF_Destination() throws RuntimeException;
+
     /** Column name TF_RentedVehicle_ID */
     public static final String COLUMNNAME_TF_RentedVehicle_ID = "TF_RentedVehicle_ID";
 
