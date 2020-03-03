@@ -40,6 +40,16 @@ public class MDiscountRequest extends X_TF_DiscountRequest {
 	}
 	
 	@Override
+	protected boolean beforeSave(boolean newRecord) {
+		if(newRecord) {
+			if(getPartyName() == null) {
+				setPartyName(getC_BPartner().getName());
+			}
+		}
+		return super.beforeSave(newRecord);
+	}
+	
+	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {
 		try {
 			if(DISCNTSTATUS_Requested.equals(getDiscntStatus()) && newRecord) {
