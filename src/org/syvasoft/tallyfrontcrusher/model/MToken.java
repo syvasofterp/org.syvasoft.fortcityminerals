@@ -20,6 +20,15 @@ public class MToken extends X_TF_Token {
 		super(ctx, TF_Destination_ID, trxName);
 		// TODO Auto-generated constructor stub
 	}
+	@Override
+	protected boolean beforeSave(boolean newRecord) {
+		if(newRecord) {
+			String documentNo = MDaySequence.getNextSequence(getCtx(), getAD_Org_ID(), 
+					getDateAcct(), "TOKEN", "00", get_TrxName());
+			setDocumentNo(documentNo);
+		}
+		return super.beforeSave(newRecord);
+	}
 	public void processIt(String docAction) {
 		if(docAction.equals(DocAction.ACTION_Complete))
 			setProcessed(true);
