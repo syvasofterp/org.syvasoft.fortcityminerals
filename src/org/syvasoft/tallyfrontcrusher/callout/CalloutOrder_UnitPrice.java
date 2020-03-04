@@ -27,8 +27,7 @@ public class CalloutOrder_UnitPrice implements IColumnCallout {
 				&& mTab.getValue(TF_MOrder.COLUMNNAME_DateAcct) != null
 				&& mTab.getValue(TF_MOrder.COLUMNNAME_M_PriceList_ID) != null
 				&& mTab.getValue(TF_MOrder.COLUMNNAME_Item1_UnitPrice) != null
-				&& mTab.getValue(TF_MOrder.COLUMNNAME_Item1_UOM_ID) != null
-				&& mTab.getValue(TF_MOrder.COLUMNNAME_PaymentRule).equals(TF_MOrder.PAYMENTRULE_Cash)) {
+				&& mTab.getValue(TF_MOrder.COLUMNNAME_Item1_UOM_ID) != null) {
 		
 			price=(BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_UnitPrice);
 			int bPartner_ID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_C_BPartner_ID);
