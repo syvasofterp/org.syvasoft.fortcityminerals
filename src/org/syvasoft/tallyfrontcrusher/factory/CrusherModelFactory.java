@@ -233,6 +233,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return MEmailAlertSetup.class;
 		else if(MEmailAlertSetupCC.Table_Name.equals(tableName))			
 			return MEmailAlertSetupCC.class;
+		else if(MDaySequence.Table_Name.equals(tableName))			
+			return MDaySequence.class;
+		else if(MToken.Table_Name.equals(tableName))			
+			return MToken.class;
 		return null;
 	}
 
@@ -459,6 +463,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MEmailAlertSetup(ctx, Record_ID, trxName);
 		else if(MEmailAlertSetupCC.Table_Name.equals(tableName))			
 			return new MEmailAlertSetupCC(ctx, Record_ID, trxName);
+		else if(MDaySequence.Table_Name.equals(tableName))			
+			return new MDaySequence(ctx, Record_ID, trxName);
+		else if(MToken.Table_Name.equals(tableName))			
+			return new MToken(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -687,6 +695,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MEmailAlertSetup(ctx, rs, trxName);
 		else if(MEmailAlertSetupCC.Table_Name.equals(tableName))			
 			return new MEmailAlertSetupCC(ctx, rs, trxName);
+		else if(MDaySequence.Table_Name.equals(tableName))			
+			return new MDaySequence(ctx, rs, trxName);
+		else if(MToken.Table_Name.equals(tableName))			
+			return new MToken(ctx, rs, trxName);
 		return null;
 	}
 
