@@ -48,6 +48,10 @@ public class ProcessDiscountRequest extends SvrProcess {
 		MPriceListUOM priceUOM = MPriceListUOM.getPriceListUOM(getCtx(), ord.getItem1_ID(), ord.getItem1_UOM_ID(), 
 				ord.getC_BPartner_ID(), true, ord.getDateAcct());
 		BigDecimal price=ord.getItem1_UnitPrice();
+		if(priceUOM == null) {
+			throw new AdempiereException("Please define Sales Price for " + ord.getItem1().getName());
+		}
+		
 		if(price.doubleValue() >= priceUOM.getPriceMin().doubleValue()) {
 			throw new AdempiereException("Invalid Discount Request!");
 		}
