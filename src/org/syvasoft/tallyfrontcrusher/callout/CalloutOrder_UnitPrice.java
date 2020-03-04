@@ -41,8 +41,8 @@ public class CalloutOrder_UnitPrice implements IColumnCallout {
 			int C_UOM_ID=(int) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_UOM_ID);
 			
 			MPriceListUOM priceUOM = MPriceListUOM.getPriceListUOM(ctx, product_ID, C_UOM_ID, bPartner_ID, isSOTrx, dateAcct);
-			//MProductPricing pp = TF_MOrder.getProductPricing(product_ID, priceList_ID, bPartner_ID, qty, dateAcct, isSOTrx);
-			if(price.compareTo(priceUOM.getPriceMin())<0 && TF_DiscountRequest_ID == 0){
+			//MProductPricing pp = TF_MOrder.getProductPricing(product_ID, priceList_ID, bPartner_ID, qty, dateAcct, isSOTrx);			
+			if(priceUOM == null ||  price.compareTo(priceUOM.getPriceMin())<0 && TF_DiscountRequest_ID == 0){
 				mTab.setValue("RequireDiscRequest", true);
 				return "You cannot create sales order less than minimum price. Please create Discount Request";
 			}
