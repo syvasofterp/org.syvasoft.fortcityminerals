@@ -1866,7 +1866,7 @@ public class TF_MOrder extends MOrder {
 		
 		MPriceListUOM priceUOM = MPriceListUOM.getPriceListUOM(getCtx(), getItem1_ID(), getItem1_UOM_ID(), getC_BPartner_ID(), true, getDateAcct());
 		BigDecimal price=getItem1_UnitPrice();
-		if(price.compareTo(priceUOM.getPriceMin())<0 && getPaymentRule().equals(PAYMENTRULE_Cash)) {
+		if(price.compareTo(priceUOM.getPriceMin())<0 ) {
 			if(getTF_DiscountRequest_ID() == 0) {
 				throw new AdempiereException("You cannot complete sales entry product price less than min price. Please create discount request");
 			}

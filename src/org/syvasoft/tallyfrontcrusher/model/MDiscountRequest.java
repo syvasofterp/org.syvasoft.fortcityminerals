@@ -122,7 +122,7 @@ public class MDiscountRequest extends X_TF_DiscountRequest {
 		MUser user = MUser.get(getCtx(), getCreatedBy()); 
 		TF_MailText mailText = new TF_MailText(getCtx(), alertType.getR_MailText_ID(), get_TrxName());
 		mailText.setRecipientName(user.getName());
-		mailText.setUser(getCreatedBy());
+		mailText.setUser(getUpdatedBy());
 		mailText.setBPartner(getC_BPartner_ID());
 		mailText.setPO(this);
 		

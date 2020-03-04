@@ -34,11 +34,7 @@ public class ProcessDiscountRequest extends SvrProcess {
 		TF_MOrder ord=new TF_MOrder(getCtx(), C_Order_ID, get_TrxName());
 		if(ord.equals(null))
 			return "Invalid Sales Order";
-		
-		if(ord.getPaymentRule().equals(TF_MOrder.PAYMENTRULE_OnCredit)) {
-			throw new AdempiereException("You cannot create price discount request for Credit Sales!");
-		}
-
+				
 		String bpName="";
 		TF_MBPartner bp;		
 		if (ord.getPartyName() != null) {
@@ -52,7 +48,7 @@ public class ProcessDiscountRequest extends SvrProcess {
 		MPriceListUOM priceUOM = MPriceListUOM.getPriceListUOM(getCtx(), ord.getItem1_ID(), ord.getItem1_UOM_ID(), 
 				ord.getC_BPartner_ID(), true, ord.getDateAcct());
 		BigDecimal price=ord.getItem1_UnitPrice();
-		if(price.compareTo(priceUOM.getPriceMin())> 0 && ord.getPaymentRule().equals(TF_MOrder.PAYMENTRULE_Cash)) {
+		if(price.doubleValue() >= priceUOM.getPriceMin().doubleValue()) {
 			throw new AdempiereException("Invalid Discount Request!");
 		}
 		
