@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.adempiere.exceptions.AdempiereException;
+import org.compiere.model.MDocType;
 import org.compiere.model.MInvoiceLine;
 import org.compiere.model.MPriceList;
 import org.compiere.model.MSequence;
@@ -53,7 +54,15 @@ public class MTRTaxInvoice extends X_TF_TRTaxInvoice {
 	
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
-		
+		if(newRecord) {
+			MDocType[] dts = MDocType.getOfDocBaseType(getCtx(), "TIN");
+			for(MDocType dt : dts) {
+				if(dt.isSOTrx() && isSOTrx()) 
+					setC_DocType_ID(dt.getC_DocType_ID());
+				else if(!dt.isSOTrx() && !isSOTrx())
+					setC_DocType_ID(dt.getC_DocType_ID());
+			}
+		}
 		return super.beforeSave(newRecord);
 	}
 	
