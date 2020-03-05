@@ -33,7 +33,7 @@ public class X_TF_TRTaxInvoice extends PO implements I_TF_TRTaxInvoice, I_Persis
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20200214L;
+	private static final long serialVersionUID = 20200305L;
 
     /** Standard Constructor */
     public X_TF_TRTaxInvoice (Properties ctx, int TF_TRTaxInvoice_ID, String trxName)
@@ -50,6 +50,8 @@ public class X_TF_TRTaxInvoice extends PO implements I_TF_TRTaxInvoice, I_Persis
 // N
 			setIsSOTrx (true);
 // Y
+			setPostGSTAsExpense (false);
+// N
 			setProcessed (false);
 			setTF_TRTaxInvoice_ID (0);
         } */
@@ -62,7 +64,7 @@ public class X_TF_TRTaxInvoice extends PO implements I_TF_TRTaxInvoice, I_Persis
     }
 
     /** AccessLevel
-      * @return 3 - Client - Org 
+      * @return 1 - Org 
       */
     protected int get_AccessLevel()
     {
@@ -436,6 +438,34 @@ public class X_TF_TRTaxInvoice extends PO implements I_TF_TRTaxInvoice, I_Persis
 		return (String)get_Value(COLUMNNAME_eWayBillNo);
 	}
 
+	public org.compiere.model.I_GL_Journal getGL_Journal() throws RuntimeException
+    {
+		return (org.compiere.model.I_GL_Journal)MTable.get(getCtx(), org.compiere.model.I_GL_Journal.Table_Name)
+			.getPO(getGL_Journal_ID(), get_TrxName());	}
+
+	/** Set Journal.
+		@param GL_Journal_ID 
+		General Ledger Journal
+	  */
+	public void setGL_Journal_ID (int GL_Journal_ID)
+	{
+		if (GL_Journal_ID < 1) 
+			set_Value (COLUMNNAME_GL_Journal_ID, null);
+		else 
+			set_Value (COLUMNNAME_GL_Journal_ID, Integer.valueOf(GL_Journal_ID));
+	}
+
+	/** Get Journal.
+		@return General Ledger Journal
+	  */
+	public int getGL_Journal_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_GL_Journal_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	/** Set Grand Total.
 		@param GrandTotal 
 		Total amount of document
@@ -557,6 +587,27 @@ public class X_TF_TRTaxInvoice extends PO implements I_TF_TRTaxInvoice, I_Persis
 		return (String)get_Value(COLUMNNAME_PlaceOfSupply);
 	}
 
+	/** Set Post GST as Expenses.
+		@param PostGSTAsExpense Post GST as Expenses	  */
+	public void setPostGSTAsExpense (boolean PostGSTAsExpense)
+	{
+		set_Value (COLUMNNAME_PostGSTAsExpense, Boolean.valueOf(PostGSTAsExpense));
+	}
+
+	/** Get Post GST as Expenses.
+		@return Post GST as Expenses	  */
+	public boolean isPostGSTAsExpense () 
+	{
+		Object oo = get_Value(COLUMNNAME_PostGSTAsExpense);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
 	/** Set Post GST to Customer.
 		@param PostTaxToCustomer Post GST to Customer	  */
 	public void setPostTaxToCustomer (boolean PostTaxToCustomer)
@@ -657,11 +708,11 @@ public class X_TF_TRTaxInvoice extends PO implements I_TF_TRTaxInvoice, I_Persis
 	public I_TF_Generate_TaxInvoice getTF_Generate_Taxinvoice() throws RuntimeException
     {
 		return (I_TF_Generate_TaxInvoice)MTable.get(getCtx(), I_TF_Generate_TaxInvoice.Table_Name)
-			.getPO(getTF_Generate_TaxInvoice_ID(), get_TrxName());	}
+			.getPO(getTF_Generate_Taxinvoice_ID(), get_TrxName());	}
 
 	/** Set Generate Tax Invoice.
 		@param TF_Generate_Taxinvoice_ID Generate Tax Invoice	  */
-	public void setTF_Generate_TaxInvoice_ID (int TF_Generate_Taxinvoice_ID)
+	public void setTF_Generate_Taxinvoice_ID (int TF_Generate_Taxinvoice_ID)
 	{
 		if (TF_Generate_Taxinvoice_ID < 1) 
 			set_ValueNoCheck (COLUMNNAME_TF_Generate_Taxinvoice_ID, null);
@@ -671,7 +722,7 @@ public class X_TF_TRTaxInvoice extends PO implements I_TF_TRTaxInvoice, I_Persis
 
 	/** Get Generate Tax Invoice.
 		@return Generate Tax Invoice	  */
-	public int getTF_Generate_TaxInvoice_ID () 
+	public int getTF_Generate_Taxinvoice_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Generate_Taxinvoice_ID);
 		if (ii == null)
@@ -759,5 +810,4 @@ public class X_TF_TRTaxInvoice extends PO implements I_TF_TRTaxInvoice, I_Persis
 	{
 		return (String)get_Value(COLUMNNAME_VehicleNo);
 	}
-
 }

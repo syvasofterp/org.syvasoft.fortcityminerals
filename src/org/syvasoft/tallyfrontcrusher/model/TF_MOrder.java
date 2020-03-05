@@ -2577,7 +2577,8 @@ public class TF_MOrder extends MOrder {
 		inv.setDateAcct(getDateAcct());
 		inv.setM_Warehouse_ID(getM_Warehouse_ID());
 		inv.setPartyName(getPartyName());
-		inv.setPostTaxToCustomer(true);
+		inv.setPostTaxToCustomer(false);
+		inv.setPostGSTAsExpense(true);
 		inv.setC_BPartner_ID(getC_BPartner_ID());
 		inv.setDateSupply(getDateAcct());
 		

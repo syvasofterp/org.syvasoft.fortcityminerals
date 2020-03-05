@@ -146,6 +146,17 @@ public interface I_TF_GLPosting_Config
 
 	public org.compiere.model.I_C_BankAccount getC_BankAccount() throws RuntimeException;
 
+    /** Column name C_ElementGSTPayable_ID */
+    public static final String COLUMNNAME_C_ElementGSTPayable_ID = "C_ElementGSTPayable_ID";
+
+	/** Set GST Payable	  */
+	public void setC_ElementGSTPayable_ID (int C_ElementGSTPayable_ID);
+
+	/** Get GST Payable	  */
+	public int getC_ElementGSTPayable_ID();
+
+	public org.compiere.model.I_C_ElementValue getC_ElementGSTPayable() throws RuntimeException;
+
     /** Column name C_ElementValueCGST_ID */
     public static final String COLUMNNAME_C_ElementValueCGST_ID = "C_ElementValueCGST_ID";
 

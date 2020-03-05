@@ -37,9 +37,9 @@ public interface I_TF_TRTaxInvoice
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);
 
-    /** AccessLevel = 3 - Client - Org 
+    /** AccessLevel = 1 - Org 
      */
-    BigDecimal accessLevel = BigDecimal.valueOf(3);
+    BigDecimal accessLevel = BigDecimal.valueOf(1);
 
     /** Load Meta Data */
 
@@ -279,6 +279,21 @@ public interface I_TF_TRTaxInvoice
 	/** Get eWay Bill No	  */
 	public String geteWayBillNo();
 
+    /** Column name GL_Journal_ID */
+    public static final String COLUMNNAME_GL_Journal_ID = "GL_Journal_ID";
+
+	/** Set Journal.
+	  * General Ledger Journal
+	  */
+	public void setGL_Journal_ID (int GL_Journal_ID);
+
+	/** Get Journal.
+	  * General Ledger Journal
+	  */
+	public int getGL_Journal_ID();
+
+	public org.compiere.model.I_GL_Journal getGL_Journal() throws RuntimeException;
+
     /** Column name GrandTotal */
     public static final String COLUMNNAME_GrandTotal = "GrandTotal";
 
@@ -360,6 +375,15 @@ public interface I_TF_TRTaxInvoice
 	/** Get Place of Supply	  */
 	public String getPlaceOfSupply();
 
+    /** Column name PostGSTAsExpense */
+    public static final String COLUMNNAME_PostGSTAsExpense = "PostGSTAsExpense";
+
+	/** Set Post GST as Expenses	  */
+	public void setPostGSTAsExpense (boolean PostGSTAsExpense);
+
+	/** Get Post GST as Expenses	  */
+	public boolean isPostGSTAsExpense();
+
     /** Column name PostTaxToCustomer */
     public static final String COLUMNNAME_PostTaxToCustomer = "PostTaxToCustomer";
 
@@ -413,10 +437,10 @@ public interface I_TF_TRTaxInvoice
     public static final String COLUMNNAME_TF_Generate_Taxinvoice_ID = "TF_Generate_Taxinvoice_ID";
 
 	/** Set Generate Tax Invoice	  */
-	public void setTF_Generate_TaxInvoice_ID (int TF_Generate_Taxinvoice_ID);
+	public void setTF_Generate_Taxinvoice_ID (int TF_Generate_Taxinvoice_ID);
 
 	/** Get Generate Tax Invoice	  */
-	public int getTF_Generate_TaxInvoice_ID();
+	public int getTF_Generate_Taxinvoice_ID();
 
 	public I_TF_Generate_TaxInvoice getTF_Generate_Taxinvoice() throws RuntimeException;
 

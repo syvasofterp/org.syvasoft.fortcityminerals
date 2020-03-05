@@ -166,9 +166,10 @@ public class MGenerateTaxInvoice extends X_TF_Generate_TaxInvoice{
 			taxInvoice.setC_BPartner_ID(getC_BPartner_ID());
 			taxInvoice.setDateSupply(getDateAcct());
 			taxInvoice.setPlaceOfSupply(bp.getCity());
-			taxInvoice.setPostTaxToCustomer(true);
+			taxInvoice.setPostGSTAsExpense(true);
+			taxInvoice.setPostTaxToCustomer(false);
 			taxInvoice.setC_BankAccount_ID(TF_MBankAccount.getDefaultBankAccount(getCtx(), Env.getAD_Org_ID(getCtx()), null));
-			taxInvoice.setTF_Generate_TaxInvoice_ID(getTF_Generate_Taxinvoice_ID());
+			taxInvoice.setTF_Generate_Taxinvoice_ID(getTF_Generate_Taxinvoice_ID());			
 			taxInvoice.setIsSOTrx(true);
 			taxInvoice.setRoundOff(getRoundOff());
 			taxInvoice.saveEx();
