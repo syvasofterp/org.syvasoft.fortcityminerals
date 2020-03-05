@@ -30,7 +30,7 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20200208L;
+	private static final long serialVersionUID = 20200305L;
 
     /** Standard Constructor */
     public X_TF_GLPosting_Config (Properties ctx, int TF_GLPosting_Config_ID, String trxName)
@@ -233,6 +233,31 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	public int getC_BankAccount_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_C_BankAccount_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_ElementValue getC_ElementGSTPayable() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getC_ElementGSTPayable_ID(), get_TrxName());	}
+
+	/** Set GST Payable.
+		@param C_ElementGSTPayable_ID GST Payable	  */
+	public void setC_ElementGSTPayable_ID (int C_ElementGSTPayable_ID)
+	{
+		if (C_ElementGSTPayable_ID < 1) 
+			set_Value (COLUMNNAME_C_ElementGSTPayable_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_ElementGSTPayable_ID, Integer.valueOf(C_ElementGSTPayable_ID));
+	}
+
+	/** Get GST Payable.
+		@return GST Payable	  */
+	public int getC_ElementGSTPayable_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_ElementGSTPayable_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
