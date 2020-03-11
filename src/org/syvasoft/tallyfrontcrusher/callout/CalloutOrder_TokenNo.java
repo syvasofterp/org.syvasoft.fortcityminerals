@@ -93,25 +93,26 @@ public class CalloutOrder_TokenNo implements IColumnCallout {
 				price = pp.getPriceList();
 			
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Qty, qty);
-			
+			mTab.setValue(TF_MOrder.COLUMNNAME_TF_Destination_ID, token.getTF_Destination_ID());
 			MRentedVehicle rv;
 			if(token.getTF_RentedVehicle_ID() > 0) {
 				
 				rv = new MRentedVehicle(ctx,token.getTF_RentedVehicle_ID(),null);
-				if(rv.isTransporter() || rv.isOwnVehicle())
+				if(rv.isTransporter() || rv.isOwnVehicle()) {					
 					mTab.setValue(TF_MOrder.COLUMNNAME_TF_RentedVehicle_ID, token.getTF_RentedVehicle_ID());
+					mTab.setValue(TF_MOrder.COLUMNNAME_VehicleNo, token.getTF_RentedVehicle().getVehicleNo());
+				}
 				else {
 					mTab.setValue(TF_MOrder.COLUMNNAME_VehicleNo, token.getVehicleNo());
 					mTab.setValue(TF_MOrder.COLUMNNAME_TF_RentedVehicle_ID, null);
 				}
 					
 			}
-			else
+			else {
 				mTab.setValue(TF_MOrder.COLUMNNAME_TF_RentedVehicle_ID, null);
+				mTab.setValue(TF_MOrder.COLUMNNAME_VehicleNo, token.getVehicleNo());
+			}
 			
-			
-			mTab.setValue(TF_MOrder.COLUMNNAME_TF_Destination_ID, token.getTF_Destination_ID());
-			mTab.setValue(TF_MOrder.COLUMNNAME_VehicleNo, token.getVehicleNo());
 			
 		}
 		return null;
