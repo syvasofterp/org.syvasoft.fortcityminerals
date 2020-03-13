@@ -75,6 +75,11 @@ DELETE FROM TF_Fuel_Issue;
 
 UPDATE tf_TripSheet SET tf_jobwork_issuedresource_id =NULL;
 
+UPDATE TF_TRTaxInvoice SET C_Invoice_ID = null;
+UPDATE TF_Generate_TaxInvoiceLine SET C_Invoice_ID = null, C_Order_ID =null;
+UPDATE C_Order SET tf_discountrequest_ID = null;
+
+DELETE FROM tf_discountrequest;
 
 --SubContract Tables
 DELETE FROM TF_Jobwork_Expense;
@@ -317,6 +322,9 @@ DELETE FROM ad_pinstance WHERE ad_user_id=1000275 OR AD_CLIENT_ID= 1000000 ;
 DELETE FROM ad_note WHERE AD_CLIENT_ID= 1000000;
 DELETE FROM m_pricelist_trl WHERE AD_CLIENT_ID= 1000000;
 DELETE FROM m_pricelist_version_trl WHERE AD_CLIENT_ID= 1000000;
+
+DELETE FROM ad_preference WHERE ad_user_Id = 1000344
+
 DELETE FROM AD_USER WHERE AD_CLIENT_ID= 1000000 AND AD_USER_ID NOT IN (1000004, 1000019, 1000005, 1000008, 1000279);
 DELETE FROM tf_jobwork_assignedemployee;
 UPDATE C_ValidCombination SET C_BPartner_ID = NULL WHERE ad_client_id=1000000;;
@@ -333,6 +341,11 @@ DELETE FROM tf_yardentry;
 DELETE FROM tf_orgcashtransfer_configx;
 DELETE FROM M_Product_PO WHERE ad_client_id=1000000;
 DELETE FROM gl_distribution WHERE ad_client_id=1000000;
+DELETE FROM tf_trtaxinvoiceLINE;
+DELETE FROM tf_trtaxinvoice;
+DELETE FROM tf_generate_taxinvoiceLINE;
+DELETE FROM tf_generate_taxinvoice;
+delete FROM TF_Token ;
 DELETE FROM c_bPARTNER WHERE ad_client_id=1000000 AND C_BPARTNER_ID NOT IN (1000010,1000005, 1000007, 1000006, 1000020, 1000034);
 
 
@@ -453,7 +466,7 @@ DELETE FROM tf_labour_wage_config;
 DELETE FROM tf_vehicle_rent_config;
 DELETE FROM tf_yardload_config;
 DELETE FROM tf_vehicletype;
-
+DELETE FROM tf_countertransline;
 DELETE FROM AD_Org WHERE AD_Client_ID = 1000000 AND AD_Org_ID NOT IN (0, 1000000);
 
 DELETE FROM ad_changelog WHERE AD_Session_ID IN (SELECT AD_Session_ID FROM AD_Session WHERE AD_Role_ID in ( 1000026, 1000027, 1000028 ));
