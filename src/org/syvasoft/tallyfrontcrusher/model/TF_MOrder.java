@@ -1863,30 +1863,35 @@ public class TF_MOrder extends MOrder {
 	public String completeIt() {
 		if(getTF_RentedVehicle_ID() > 0 && getRent_Amt().doubleValue() <= 0)
 			throw new AdempiereException("Please specify Rent Amount!");
-		
-		MPriceListUOM priceUOM = MPriceListUOM.getPriceListUOM(getCtx(), getItem1_ID(), getItem1_UOM_ID(), getC_BPartner_ID(), true, getDateAcct());
-		BigDecimal price=getItem1_UnitPrice();
-		if(price.compareTo(priceUOM.getPriceMin())<0 ) {
-			if(getTF_DiscountRequest_ID() == 0) {
-				throw new AdempiereException("You cannot complete sales entry product price less than min price. Please create discount request");
-			}
-			else {
-				MDiscountRequest dr = new MDiscountRequest(getCtx(), getTF_DiscountRequest_ID(), get_TrxName());
-				if(dr.getDiscntStatus().equals(MDiscountRequest.DISCNTSTATUS_Approved)) {
-					if(dr.getApprovedPrice().doubleValue() > getItem1_UnitPrice().doubleValue()) {
-						throw new AdempiereException("Please enter Approved Discounted Price to complete the order!");
-					}
-					else {
-						dr.closeIt();
-						dr.saveEx();
-					}
+		if(isSOTrx()) {
+			MPriceListUOM priceUOM = MPriceListUOM.getPriceListUOM(getCtx(), getItem1_ID(), getItem1_UOM_ID(), getC_BPartner_ID(), true, getDateAcct());
+			BigDecimal price=getItem1_UnitPrice();
+			BigDecimal priceMin = BigDecimal.ZERO;
+			if(priceUOM != null)
+				priceMin = priceUOM.getPriceMin();
+			else 
+				throw new AdempiereException("Please define Price in the Sales Price List by UOM!");
+			if(price.compareTo(priceMin)<0 ) {
+				if(getTF_DiscountRequest_ID() == 0) {
+					throw new AdempiereException("You cannot complete sales entry product price less than min price. Please create discount request");
 				}
 				else {
-					throw new AdempiereException("Your discount request is waiting for approval!");
+					MDiscountRequest dr = new MDiscountRequest(getCtx(), getTF_DiscountRequest_ID(), get_TrxName());
+					if(dr.getDiscntStatus().equals(MDiscountRequest.DISCNTSTATUS_Approved)) {
+						if(dr.getApprovedPrice().doubleValue() > getItem1_UnitPrice().doubleValue()) {
+							throw new AdempiereException("Please enter Approved Discounted Price to complete the order!");
+						}
+						else {
+							dr.closeIt();
+							dr.saveEx();
+						}
+					}
+					else {
+						throw new AdempiereException("Your discount request is waiting for approval!");
+					}
 				}
 			}
 		}
-		
 		createSubcontractPurchaseEntry();
 		String msg = super.completeIt();
 		purchasePermit();
@@ -2566,7 +2571,7 @@ public class TF_MOrder extends MOrder {
 	}
 	
 	public void createTaxInvoice() {
-		if(!isOnAccount())
+		if(!isOnAccount() || getTF_TRTaxInvoice_ID() > 0 || !isSOTrx())
 			return;
 		
 		/*if(getItem1_PermitIssued().doubleValue() <= 0)
@@ -2605,11 +2610,6 @@ public class TF_MOrder extends MOrder {
 		TF_MBPartner bp = new TF_MBPartner(getCtx(), getC_BPartner_ID(), get_TrxName());
 		MCustomerType custType = new MCustomerType(getCtx(), bp.getTF_CustomerType_ID(), get_TrxName());
 		
-		//Set Qty based on Customer Type Billing Qty Ratio
-		BigDecimal qty = getItem1_Qty();
-		if(custType.getBillingQtyRatio().doubleValue() > 0)
-			qty = qty.multiply(custType.getBillingQtyRatio());
-		invLine.setQty(qty);
 		
 		//Set Price based on Customer Type Billing Price Ratio
 		BigDecimal price = getItem1_Price();		
@@ -2624,7 +2624,18 @@ public class TF_MOrder extends MOrder {
 		}
 		if(custType.getBillingPriceRatio().doubleValue() > 0)
 			price = price.multiply(custType.getBillingPriceRatio());
-						
+		
+		//Set Qty based on Customer Type Billing Qty Ratio
+		// When BillingQtyRation is ZERO then Based on the amount BillingQty has to be calcualted. 
+		BigDecimal qty = getItem1_Qty();
+		if(custType.getBillingQtyRatio().doubleValue() > 0)
+			qty = qty.multiply(custType.getBillingQtyRatio());
+		else {
+			qty = getGrandTotal().divide(price, 2, RoundingMode.HALF_EVEN);
+		}
+		invLine.setQty(qty);
+		
+		
 		//Exclude Tax amount from Price
 		TF_MProduct prod = new TF_MProduct(getCtx(), getItem1_ID(), get_TrxName());
 		MTax tax = new MTax(getCtx(), prod.getTax_ID(true), get_TrxName());				
