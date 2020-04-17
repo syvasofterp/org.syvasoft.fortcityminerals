@@ -94,17 +94,21 @@ public class MGenerateTaxInvoice extends X_TF_Generate_TaxInvoice{
 				if(invoiceLine.getM_Product().getM_Product_Category_ID() == ProductCategory_ID && ignoreVehicleRent)
 					continue;
 				
-				//Set Qty based on Customer Type Billing Qty Ratio
-				BigDecimal qty = rs.getBigDecimal("QtyEntered");
-				if(custType.getBillingQtyRatio().doubleValue() > 0)
-					qty = rs.getBigDecimal("QtyEntered").multiply(custType.getBillingQtyRatio());
-				invoiceLine.setQty(qty);
-				
+							
 				//Set Price based on Customer Type Billing Price Ratio
 				BigDecimal price = rs.getBigDecimal("PriceEntered");
 				if(custType.getBillingPriceRatio().doubleValue() > 0)
 					price = rs.getBigDecimal("PriceEntered").multiply(custType.getBillingPriceRatio());
-							
+				
+				//Set Qty based on Customer Type Billing Qty Ratio
+				// When BillingQtyRation is ZERO then Based on the amount BillingQty has to be calcualted. 
+				BigDecimal qty = rs.getBigDecimal("QtyEntered");
+				if(custType.getBillingQtyRatio().doubleValue() > 0)
+					qty = rs.getBigDecimal("QtyEntered").multiply(custType.getBillingQtyRatio());
+				else if(custType.getBillingQtyRatio().doubleValue() == 0)
+					qty =  rs.getBigDecimal("LineNetAmount").divide(price, 2, RoundingMode.HALF_EVEN);
+				invoiceLine.setQty(qty);
+				
 				//Price always includes tax
 				//Exclude Tax amount from Price
 				TF_MProduct prod = new TF_MProduct(getCtx(), rs.getInt("M_Product_id"), get_TrxName());

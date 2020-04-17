@@ -1,40 +1,11 @@
 package org.syvasoft.tallyfrontcrusher.process;
 
-import java.math.BigDecimal;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Savepoint;
-import java.util.List;
-import java.util.logging.Level;
-
-import org.adempiere.exceptions.AdempiereException;
-import org.compiere.model.MOrg;
-import org.compiere.model.MPriceList;
-import org.compiere.model.MSysConfig;
 import org.compiere.model.Query;
 import org.compiere.process.DocAction;
-import org.compiere.process.DocumentEngine;
 import org.compiere.process.ProcessInfoParameter;
 import org.compiere.process.SvrProcess;
-import org.compiere.util.DB;
-import org.compiere.util.Env;
-import org.compiere.util.Trx;
-import org.compiere.util.Util;
-import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
-import org.syvasoft.tallyfrontcrusher.model.MDestination;
 import org.syvasoft.tallyfrontcrusher.model.MGenerateTaxInvoice;
-import org.syvasoft.tallyfrontcrusher.model.MLumpSumRentConfig;
-import org.syvasoft.tallyfrontcrusher.model.MPriceListUOM;
-import org.syvasoft.tallyfrontcrusher.model.MRentedVehicle;
 import org.syvasoft.tallyfrontcrusher.model.MTRTaxInvoice;
-import org.syvasoft.tallyfrontcrusher.model.MTRTaxInvoiceLine;
-import org.syvasoft.tallyfrontcrusher.model.MWeighmentEntry;
-import org.syvasoft.tallyfrontcrusher.model.TF_MBPartner;
-import org.syvasoft.tallyfrontcrusher.model.TF_MBankAccount;
-import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
-import org.syvasoft.tallyfrontcrusher.model.TF_MOrderLine;
-import org.syvasoft.tallyfrontcrusher.model.TF_MProduct;
-import org.syvasoft.tallyfrontcrusher.model.MGenerateTaxInvoice;
 
 public class CreateTaxInvoice extends SvrProcess {
 	private String docAction="CO";
