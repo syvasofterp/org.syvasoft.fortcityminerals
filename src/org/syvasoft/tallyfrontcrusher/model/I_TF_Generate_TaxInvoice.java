@@ -32,7 +32,7 @@ public interface I_TF_Generate_TaxInvoice
     /** TableName=TF_Generate_TaxInvoice */
     public static final String Table_Name = "TF_Generate_TaxInvoice";
 
-    /** AD_Table_ID=1000298 */
+    /** AD_Table_ID=1000300 */
     public static final int Table_ID = MTable.getTable_ID(Table_Name);
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);
@@ -278,6 +278,19 @@ public interface I_TF_Generate_TaxInvoice
 
 	/** Get Total	  */
 	public BigDecimal getTotal();
+
+    /** Column name TotalInvAmt */
+    public static final String COLUMNNAME_TotalInvAmt = "TotalInvAmt";
+
+	/** Set Total Invoice Amount.
+	  * Cumulative total lifetime invoice amount
+	  */
+	public void setTotalInvAmt (BigDecimal TotalInvAmt);
+
+	/** Get Total Invoice Amount.
+	  * Cumulative total lifetime invoice amount
+	  */
+	public BigDecimal getTotalInvAmt();
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";
