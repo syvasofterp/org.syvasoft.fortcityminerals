@@ -29,9 +29,158 @@ public class MGenerateTaxInvoice extends X_TF_Generate_TaxInvoice{
 		super(ctx, rs, trxName);
 		// TODO Auto-generated constructor stub
 	}
+	//*** Create a sales invoice for the specified invoice amount,
+	// price and qty will be calculated dynamically to match the total amount. 
+	// The list of materials should be selected based on sales history.
+	public void createInvoiceLinesForInvoiceAmount(boolean reCreate, boolean ignoreVehicleRent) {
+		if(!reCreate && get_ValueAsBoolean(COLUMNNAME_IsCreated))
+			throw new AdempiereException("Invoice Lines are already generated!");
+		
+		//Delete existing lines.
+		if(reCreate) {
+			List<MGenerateTaxInvoiceLine> lines = new Query(getCtx(), MGenerateTaxInvoiceLine.Table_Name,
+					COLUMNNAME_TF_Generate_Taxinvoice_ID + " = ? " , get_TrxName())
+					.setClient_ID()
+					.setParameters(getTF_Generate_Taxinvoice_ID())
+					.list();
+			for(MGenerateTaxInvoiceLine line : lines) {
+				line.deleteEx(true);
+			}
+		}
+		
+		TF_MBPartner bp = new TF_MBPartner(getCtx(), getC_BPartner_ID(), get_TrxName());
+		MCustomerType custType = new MCustomerType(getCtx(), bp.getTF_CustomerType_ID(), get_TrxName());
+		BigDecimal actualSalesAmount = getActualSalesAmount();
+		if(actualSalesAmount.doubleValue() < getTotalInvAmt().doubleValue()) {
+			if(!MSysConfig.getBooleanValue("ENABLE_OVERBILLING", true))
+				throw new AdempiereException("Actual Sales Amount: " + actualSalesAmount.doubleValue() +
+						" which is less than Total Invoice Amount, so Over billing is not allowed!");
+		}
+		
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;		
+		try
+		{			
+			String sqlInvoiceLines = "SELECT\r\n" + 
+					"	il.M_Product_ID, il.C_UOM_ID, \r\n" + 
+					"	MAX(p.Name) Product, MAX(u.Name) UOM, SUM(il.QtyEntered) QtyEntered, \r\n" + 
+					"	SUM(il.PriceEntered) PriceEntered, SUM(il.LineNetAmt) LineNetAmt\r\n" + 
+					"FROM\r\n" + 
+					"	C_Invoice i INNER JOIN C_InvoiceLine il\r\n" + 
+					"	 ON i.C_Invoice_ID = il.C_Invoice_ID\r\n" + 
+					"	INNER JOIN C_DocType d \r\n" + 
+					"	 ON i.C_DocType_ID=d.C_DocType_ID\r\n" + 
+					"	INNER JOIN M_Product p\r\n" + 
+					"	 ON il.M_Product_ID = p.M_Product_ID\r\n" + 
+					"	INNER JOIN C_UOM u\r\n" + 
+					"	 ON il.C_UOM_ID = u.C_UOM_ID\r\n" + 
+					"	 \r\n" + 
+					"WHERE\r\n" + 
+					"	i.AD_Client_ID = 1000000  AND i.Processed='Y'  AND i.DocStatus IN ('CO','CL')\r\n" + 
+					"	AND p.M_Product_Category_ID = 1000056\r\n" + 
+					"	AND I.AD_Org_ID =  ? AND d.DocBaseType= 'ARI'\r\n" + 
+					"	AND i.C_BPartner_id =?  \r\n" + 
+					"	AND i.DateAcct >= ? AND i.DateAcct <= ?\r\n" + 
+					"GROUP BY\r\n" + 
+					"	il.M_Product_ID, il.C_UOM_ID";
+		
+		pstmt = DB.prepareStatement(sqlInvoiceLines, get_TrxName());
+		pstmt.setInt(1, getAD_Org_ID());
+		pstmt.setInt(2, getC_BPartner_ID());
+		pstmt.setTimestamp(3,getDateFrom());
+		pstmt.setTimestamp(4, getDateTo());
+		
+		rs = pstmt.executeQuery();
+		//int ProductCategory_ID = MSysConfig.getIntValue("VEHICLE_PRODCUCT_CATEGORY_ID", 1000055);
+		int lineNo = 10;
+		while(rs.next()) {
+			MGenerateTaxInvoiceLine invoiceLine = new MGenerateTaxInvoiceLine(getCtx(), 0, get_TrxName());
+			
+			invoiceLine.setClientOrg(getAD_Client_ID(), getAD_Org_ID());
+			invoiceLine.setTF_Generate_Taxinvoice_ID(getTF_Generate_Taxinvoice_ID());
+			invoiceLine.setLine(lineNo);
+			
+			int M_Product_ID =  rs.getInt("M_Product_id");
+			int C_UOM_ID = rs.getInt("C_Uom_id");
+			invoiceLine.setM_Product_ID(M_Product_ID);
+			invoiceLine.setC_UOM_ID(C_UOM_ID);		
+			
+			BigDecimal productSalesAmt = rs.getBigDecimal("LineNetAmt");
+			BigDecimal salesRatio = productSalesAmt.divide(actualSalesAmount,3,RoundingMode.HALF_EVEN);
+			BigDecimal productInvAmt = getTotalInvAmt().multiply(salesRatio);			
+			
+			//Set Price based on Customer Type Billing Price Ratio
+			BigDecimal price = MPriceListUOM.getPrice(getCtx(), M_Product_ID, C_UOM_ID, getC_BPartner_ID(), true, getDateAcct());
+			if(custType.getBillingPriceRatio().doubleValue() > 0)
+				price = price.multiply(custType.getBillingPriceRatio());
+			
+			//Set Qty based on Customer Type Billing Qty Ratio
+			// When BillingQtyRation is ZERO then Based on the amount BillingQty has to be calcualted.
+			BigDecimal qty =  productInvAmt.divide(price, 2, RoundingMode.HALF_EVEN);
+			invoiceLine.setQty(qty);
+			
+			//Price always includes tax
+			//Exclude Tax amount from Price
+			TF_MProduct prod = new TF_MProduct(getCtx(), rs.getInt("M_Product_id"), get_TrxName());
+			MTax tax = new MTax(getCtx(), prod.getTax_ID(true), get_TrxName());				
+			BigDecimal taxRate = tax.getRate();
+			BigDecimal hundred = new BigDecimal("100");				
+			BigDecimal priceExcludesTax = price.divide(BigDecimal.ONE
+					.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);		
+					
+			invoiceLine.setPrice(priceExcludesTax);
+			invoiceLine.setTaxableAmount(priceExcludesTax.multiply(invoiceLine.getQty()));
+							
+			BigDecimal SGST_Rate = taxRate.divide(new BigDecimal(2), 2, RoundingMode.HALF_EVEN);				
+			invoiceLine.setSGST_Rate(SGST_Rate);
+			invoiceLine.setCGST_Rate(SGST_Rate);
+			invoiceLine.setIGST_Rate(BigDecimal.ZERO);
+			invoiceLine.setIGST_Amt(BigDecimal.ZERO);
+			//invoiceLine.setTF_Destination_ID(rs.getInt("tf_destination_id"));
+			invoiceLine.calcAmounts();
+			invoiceLine.saveEx();
+			lineNo = lineNo + 10;
+		}
+		DB.close(rs, pstmt);
+		if(lineNo > 10)
+			setIsCreated("Y");
+		}
+		catch(Exception e)
+		{
+			throw new AdempiereException(e.getMessage(), e);
+		}
+		finally
+		{
+			DB.close(rs, pstmt);
+		}
+	}
 	
-	
-	
+	public BigDecimal getActualSalesAmount() {
+		String sqlInvoiceLines = "SELECT\r\n" +				 
+				"	SUM(il.LineNetAmt) LineNetAmt\r\n" + 
+				"FROM\r\n" + 
+				"	C_Invoice i INNER JOIN C_InvoiceLine il\r\n" + 
+				"	 ON i.C_Invoice_ID = il.C_Invoice_ID\r\n" + 
+				"	INNER JOIN C_DocType d \r\n" + 
+				"	 ON i.C_DocType_ID=d.C_DocType_ID\r\n" + 
+				"	INNER JOIN M_Product p\r\n" + 
+				"	 ON il.M_Product_ID = p.M_Product_ID\r\n" + 
+				"	INNER JOIN C_UOM u\r\n" + 
+				"	 ON il.C_UOM_ID = u.C_UOM_ID\r\n" + 
+				"	 \r\n" + 
+				"WHERE\r\n" + 
+				"	i.AD_Client_ID = 1000000  AND i.Processed='Y'  AND i.DocStatus IN ('CO','CL')\r\n " + 
+				"	AND p.M_Product_Category_ID = 1000056\r\n" + 
+				"	AND I.AD_Org_ID =  ? AND d.DocBaseType= 'ARI'\r\n" + 
+				"	AND i.C_BPartner_id =?  \r\n" + 
+				"	AND i.DateAcct >= ? AND i.DateAcct <= ?\r\n"; 
+		BigDecimal actualSalesAmount = DB.getSQLValueBD(get_TrxName(), sqlInvoiceLines, 
+				getAD_Org_ID(), getC_BPartner_ID(), getDateFrom(), getDateTo());
+		if(actualSalesAmount == null)
+			actualSalesAmount = BigDecimal.ZERO;
+		return actualSalesAmount;
+	}
+	//Create Invoice Lines for the actual sold amount
 	public void createInvoiceLines(boolean reCreate, boolean ignoreVehicleRent) {
 		
 		if(!reCreate && get_ValueAsBoolean(COLUMNNAME_IsCreated))
@@ -60,7 +209,7 @@ public class MGenerateTaxInvoice extends X_TF_Generate_TaxInvoice{
 						+ "il.PriceEntered PriceEntered, il.LineNetAmt LineNetAmt, c.Rate / 2 SGSTRate,c.Rate / 2 CGSTRate,0 IGSTRate," 
 						+ "il.LineNetAmt * (c.rate / 2)/100 SGSTAmt,il.LineNetAmt * (c.rate / 2)/100 CGSTAmt,0 IGSTAmt,o.tf_destination_id" 
 						+ "	FROM C_Invoice i INNER JOIN C_InvoiceLine il ON i.C_Invoice_ID = il.C_Invoice_ID" 
-						+ "	INNER JOIN c_order o ON o.c_order_id = i.c_order_id " 
+						+ "	LEFT JOIN c_order o ON o.c_order_id = i.c_order_id " 
 						+ "	INNER JOIN c_tax c ON c.c_tax_id = il.c_tax_id " 
 						+ "	INNER JOIN m_product m ON m.m_product_id = il.m_product_id " 
 						+ "	WHERE " 
@@ -106,7 +255,7 @@ public class MGenerateTaxInvoice extends X_TF_Generate_TaxInvoice{
 				if(custType.getBillingQtyRatio().doubleValue() > 0)
 					qty = rs.getBigDecimal("QtyEntered").multiply(custType.getBillingQtyRatio());
 				else if(custType.getBillingQtyRatio().doubleValue() == 0)
-					qty =  rs.getBigDecimal("LineNetAmount").divide(price, 2, RoundingMode.HALF_EVEN);
+					qty =  rs.getBigDecimal("LineNetAmt").divide(price, 2, RoundingMode.HALF_EVEN);
 				invoiceLine.setQty(qty);
 				
 				//Price always includes tax

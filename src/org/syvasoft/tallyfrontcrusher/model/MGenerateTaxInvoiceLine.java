@@ -2,15 +2,10 @@ package org.syvasoft.tallyfrontcrusher.model;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.List;
 import java.util.Properties;
-
-import org.adempiere.exceptions.AdempiereException;
-import org.compiere.model.Query;
-import org.compiere.process.DocAction;
 import org.compiere.util.DB;
+
 
 public class MGenerateTaxInvoiceLine extends X_TF_Generate_TaxInvoiceLine{
 
@@ -56,7 +51,7 @@ public class MGenerateTaxInvoiceLine extends X_TF_Generate_TaxInvoiceLine{
 	}
 	
 	public void calcAmounts() {
-		setTaxableAmount(getQty().multiply(getPrice()));		
+		setTaxableAmount(getQty().multiply(getPrice()).setScale(2, RoundingMode.HALF_UP));		
 		BigDecimal divisor = new BigDecimal(100);		
 		BigDecimal cgstAmt = getCGST_Rate().multiply(getTaxableAmount()).divide(divisor, 2, RoundingMode.HALF_UP);
 		BigDecimal sgstAmt = getSGST_Rate().multiply(getTaxableAmount()).divide(divisor, 2, RoundingMode.HALF_UP);		

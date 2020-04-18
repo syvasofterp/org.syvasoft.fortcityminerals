@@ -11,6 +11,7 @@ import org.syvasoft.tallyfrontcrusher.model.MYardEntryApprove;
 public class GenerateTaxInvoiceLines extends SvrProcess {
 	private boolean recreate = false;
 	private boolean ignoreVehicleRent = false;
+	private BigDecimal invAmount = BigDecimal.ZERO;
 	MGenerateTaxInvoice taxInvoice = null;
 	
 	protected void prepare() {
@@ -21,6 +22,8 @@ public class GenerateTaxInvoiceLines extends SvrProcess {
 				recreate = "Y".equals(para.getParameter());
 			else if("IgnoreRent".equals(name))
 				ignoreVehicleRent = "Y".equals(para.getParameter());
+			else if("TotalInvAmt".equals(name) ) 
+				invAmount = para.getParameterAsBigDecimal();
 			else
 				log.log(Level.SEVERE, "Unknown Parameter: " + name);
 		}
@@ -31,9 +34,13 @@ public class GenerateTaxInvoiceLines extends SvrProcess {
 	protected String doIt() throws Exception {
 		if(taxInvoice.isProcessed())
 			return "Already Processed";
-		taxInvoice.setRoundOff(BigDecimal.ZERO);		
-		taxInvoice.saveEx();
-		taxInvoice.createInvoiceLines(recreate, ignoreVehicleRent);		
+		taxInvoice.setRoundOff(BigDecimal.ZERO);
+		taxInvoice.setTotalInvAmt(invAmount);
+		taxInvoice.saveEx();		
+		if(taxInvoice.getTotalInvAmt().doubleValue() == 0)
+			taxInvoice.createInvoiceLines(recreate, ignoreVehicleRent);
+		else
+			taxInvoice.createInvoiceLinesForInvoiceAmount(recreate, ignoreVehicleRent);
 		taxInvoice.saveEx();
 		return null;
 	}

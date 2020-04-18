@@ -33,7 +33,7 @@ public class X_TF_Generate_TaxInvoice extends PO implements I_TF_Generate_TaxInv
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20200213L;
+	private static final long serialVersionUID = 20200418L;
 
     /** Standard Constructor */
     public X_TF_Generate_TaxInvoice (Properties ctx, int TF_Generate_TaxInvoice_ID, String trxName)
@@ -50,6 +50,8 @@ public class X_TF_Generate_TaxInvoice extends PO implements I_TF_Generate_TaxInv
 // N
 			setProcessed (false);
 			setTF_Generate_Taxinvoice_ID (0);
+			setTotalInvAmt (Env.ZERO);
+// 0
         } */
     }
 
@@ -410,6 +412,26 @@ public class X_TF_Generate_TaxInvoice extends PO implements I_TF_Generate_TaxInv
 	public BigDecimal getTotal () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Total);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set Total Invoice Amount.
+		@param TotalInvAmt 
+		Cumulative total lifetime invoice amount
+	  */
+	public void setTotalInvAmt (BigDecimal TotalInvAmt)
+	{
+		set_Value (COLUMNNAME_TotalInvAmt, TotalInvAmt);
+	}
+
+	/** Get Total Invoice Amount.
+		@return Cumulative total lifetime invoice amount
+	  */
+	public BigDecimal getTotalInvAmt () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_TotalInvAmt);
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
