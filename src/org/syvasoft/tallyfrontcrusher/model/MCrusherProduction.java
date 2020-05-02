@@ -11,6 +11,7 @@ import org.compiere.model.MInvoiceLine;
 import org.compiere.model.MPriceList;
 import org.compiere.model.MProduction;
 import org.compiere.model.MProductionLine;
+import org.compiere.model.MWarehouse;
 import org.compiere.model.Query;
 import org.compiere.process.DocAction;
 import org.compiere.util.Env;
@@ -54,7 +55,10 @@ public class MCrusherProduction extends X_TF_Crusher_Production {
 			if(proj != null) {
 				setC_Project_ID(proj.getC_Project_ID());
 			}
+			MWarehouse wh = MWarehouse.get(getCtx(), getM_Warehouse_ID());
+			setM_Locator_ID(wh.getDefaultLocator().get_ID());
 		}
+		
 		return super.beforeSave(newRecord);
 	}
 	
