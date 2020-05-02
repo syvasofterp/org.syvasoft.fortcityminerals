@@ -1944,6 +1944,9 @@ public class TF_MOrder extends MOrder {
 			setItem1_PermitIssued(getItem1_PermitIssued().setScale(1, RoundingMode.HALF_EVEN));
 		}
 		
+		if(newRecord) {
+			setDateAcct(getDateOrdered());
+		}
 		return super.beforeSave(newRecord);
 	}
 
