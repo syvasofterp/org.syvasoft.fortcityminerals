@@ -319,9 +319,6 @@ DELETE FROM TF_Employee_Salary_Issue;
 DELETE FROM TF_Vehicle_Rental_Contract;
 DELETE FROM TF_Shareholder;
 DELETE FROM TF_InvestmentStructure;
-DELETE FROM TF_Token;
-DELETE FROM  TF_Generate_TaxInvoiceLine WHERE ad_client_id=1000000;
-DELETE FROM TF_Generate_TaxInvoice WHERE ad_client_id=1000000;
 
 
 -- Master ----
@@ -407,8 +404,6 @@ UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000239 ;
 --  DocumentNo_TF_Jobwork_ItemIssue -- DocumentNo_TF_Jobwork_ItemIssue
 UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000413 ;
 
--- DocumentNo TF_Token
-UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000557;
 
 --  DocumentNo_TF_Jobwork_Expense_Entry -- DocumentNo_TF_Jobwork_Expense_Entry
 UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000416 ;
@@ -417,6 +412,7 @@ DELETE FROM TF_Jobwork_Expense_Entry;
 --  DocumentNo_TF_ItemReceipt_OtherSrc -- TF_ItemReceipt_OtherSrc
 UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000419 ;
 DELETE FROM TF_ItemReceipt_OtherSrc;
+
 
 -- Need to reset Document Seq No for Internal Use Inventory, Physical Inventory and etc...
 --  Physical Inventory -
@@ -427,4 +423,3 @@ UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000326;
 
 
 DELETE FROM AD_Sequence_No WHERE ad_client_id=1000000;
-DELETE FROM TF_DaySeq;
