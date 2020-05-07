@@ -218,6 +218,7 @@ delete from fact_acct WHERE ad_client_id=1000000;;
 delete from fact_acct_summary WHERE ad_client_id=1000000;;
 delete from gl_journalbatch WHERE ad_client_id=1000000;;
 delete from gl_journalline WHERE ad_client_id=1000000;; 
+UPDATE adempiere.TF_TRTaxInvoice SET gl_journal_id=null WHERE ad_client_id=1000000;
 delete from gl_journal WHERE ad_client_id=1000000;; 
 
 --delete from m_storage WHERE ad_client_id=1000000;;  -- use this for ADempiere
@@ -226,6 +227,9 @@ delete from m_storagereservation WHERE ad_client_id=1000000;;
 delete from m_transaction WHERE ad_client_id=1000000;;
 delete from m_packageline WHERE ad_client_id=1000000;;
 delete from m_package WHERE ad_client_id=1000000;;
+UPDATE adempiere.C_InvoiceLine SET m_inoutline_id=NULL where ad_client_id=1000000;
+DELETE FROM adempiere.m_matchinv where ad_client_id=1000000;
+DELETE FROM adempiere.m_matchpo where ad_client_id=1000000;
 delete from m_inoutline WHERE ad_client_id=1000000;; 
 delete from m_inout WHERE ad_client_id=1000000;;
 delete from m_inoutconfirm WHERE ad_client_id=1000000;; 
