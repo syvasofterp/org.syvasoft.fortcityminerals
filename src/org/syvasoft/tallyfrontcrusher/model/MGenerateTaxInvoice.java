@@ -49,7 +49,7 @@ public class MGenerateTaxInvoice extends X_TF_Generate_TaxInvoice{
 		}
 		
 		TF_MBPartner bp = new TF_MBPartner(getCtx(), getC_BPartner_ID(), get_TrxName());
-		MCustomerType custType = new MCustomerType(getCtx(), bp.getTF_CustomerType_ID(), get_TrxName());
+		//MCustomerType custType = new MCustomerType(getCtx(), bp.getTF_CustomerType_ID(), get_TrxName());
 		BigDecimal actualSalesAmount = getActualSalesAmount();
 		if(actualSalesAmount.doubleValue() < getTotalInvAmt().doubleValue()) {
 			if(!MSysConfig.getBooleanValue("ENABLE_OVERBILLING", true))
@@ -109,10 +109,12 @@ public class MGenerateTaxInvoice extends X_TF_Generate_TaxInvoice{
 			BigDecimal salesRatio = productSalesAmt.divide(actualSalesAmount,3,RoundingMode.HALF_EVEN);
 			BigDecimal productInvAmt = getTotalInvAmt().multiply(salesRatio);			
 			
+			TF_MProduct prod = new TF_MProduct(getCtx(), rs.getInt("M_Product_id"), get_TrxName());
+			BigDecimal price = prod.getBillPrice();
 			//Set Price based on Customer Type Billing Price Ratio
-			BigDecimal price = MPriceListUOM.getPrice(getCtx(), M_Product_ID, C_UOM_ID, getC_BPartner_ID(), true, getDateAcct());
-			if(custType.getBillingPriceRatio().doubleValue() > 0)
-				price = price.multiply(custType.getBillingPriceRatio());
+			//BigDecimal price = MPriceListUOM.getPrice(getCtx(), M_Product_ID, C_UOM_ID, getC_BPartner_ID(), true, getDateAcct());
+			//if(custType.getBillingPriceRatio().doubleValue() > 0)
+			//price = price.multiply(custType.getBillingPriceRatio());
 			
 			//Set Qty based on Customer Type Billing Qty Ratio
 			// When BillingQtyRation is ZERO then Based on the amount BillingQty has to be calcualted.
@@ -121,15 +123,15 @@ public class MGenerateTaxInvoice extends X_TF_Generate_TaxInvoice{
 			
 			//Price always includes tax
 			//Exclude Tax amount from Price
-			TF_MProduct prod = new TF_MProduct(getCtx(), rs.getInt("M_Product_id"), get_TrxName());
+			
 			MTax tax = new MTax(getCtx(), prod.getTax_ID(true), get_TrxName());				
 			BigDecimal taxRate = tax.getRate();
 			BigDecimal hundred = new BigDecimal("100");				
-			BigDecimal priceExcludesTax = price.divide(BigDecimal.ONE
-					.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);		
+			//BigDecimal priceExcludesTax = price.divide(BigDecimal.ONE
+			//		.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);		
 					
-			invoiceLine.setPrice(priceExcludesTax);
-			invoiceLine.setTaxableAmount(priceExcludesTax.multiply(invoiceLine.getQty()));
+			invoiceLine.setPrice(prod.getBillPrice());
+			invoiceLine.setTaxableAmount(prod.getBillPrice().multiply(invoiceLine.getQty()));
 							
 			BigDecimal SGST_Rate = taxRate.divide(new BigDecimal(2), 2, RoundingMode.HALF_EVEN);				
 			invoiceLine.setSGST_Rate(SGST_Rate);
@@ -243,31 +245,35 @@ public class MGenerateTaxInvoice extends X_TF_Generate_TaxInvoice{
 				if(invoiceLine.getM_Product().getM_Product_Category_ID() == ProductCategory_ID && ignoreVehicleRent)
 					continue;
 				
-							
-				//Set Price based on Customer Type Billing Price Ratio
-				BigDecimal price = rs.getBigDecimal("PriceEntered");
-				if(custType.getBillingPriceRatio().doubleValue() > 0)
-					price = rs.getBigDecimal("PriceEntered").multiply(custType.getBillingPriceRatio());
 				
+				TF_MProduct prod = new TF_MProduct(getCtx(), rs.getInt("M_Product_id"), get_TrxName());
+				//Set Price based on Customer Type Billing Price Ratio
+				//BigDecimal price = rs.getBigDecimal("PriceEntered");
+				//if(custType.getBillingPriceRatio().doubleValue() > 0)
+				//	price = rs.getBigDecimal("PriceEntered").multiply(custType.getBillingPriceRatio());
+				BigDecimal price = prod.getBillPrice();
 				//Set Qty based on Customer Type Billing Qty Ratio
 				// When BillingQtyRation is ZERO then Based on the amount BillingQty has to be calcualted. 
 				BigDecimal qty = rs.getBigDecimal("QtyEntered");
+				/*
 				if(custType.getBillingQtyRatio().doubleValue() > 0)
 					qty = rs.getBigDecimal("QtyEntered").multiply(custType.getBillingQtyRatio());
 				else if(custType.getBillingQtyRatio().doubleValue() == 0)
-					qty =  rs.getBigDecimal("LineNetAmt").divide(price, 2, RoundingMode.HALF_EVEN);
+				*/
+				qty =  rs.getBigDecimal("LineNetAmt").divide(price, 2, RoundingMode.HALF_EVEN);
+				
 				invoiceLine.setQty(qty);
 				
 				//Price always includes tax
 				//Exclude Tax amount from Price
-				TF_MProduct prod = new TF_MProduct(getCtx(), rs.getInt("M_Product_id"), get_TrxName());
+				
 				MTax tax = new MTax(getCtx(), prod.getTax_ID(true), get_TrxName());				
 				BigDecimal taxRate = tax.getRate();
 				BigDecimal hundred = new BigDecimal("100");				
-				BigDecimal priceExcludesTax = price.divide(BigDecimal.ONE
-						.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);				
-				invoiceLine.setPrice(priceExcludesTax);
-				invoiceLine.setTaxableAmount(priceExcludesTax.multiply(invoiceLine.getQty()));
+				//BigDecimal priceExcludesTax = price.divide(BigDecimal.ONE
+				//		.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);				
+				invoiceLine.setPrice(prod.getBillPrice());
+				invoiceLine.setTaxableAmount(prod.getBillPrice().multiply(invoiceLine.getQty()));
 								
 				BigDecimal SGST_Rate = taxRate.divide(new BigDecimal(2), 2, RoundingMode.HALF_EVEN);				
 				invoiceLine.setSGST_Rate(SGST_Rate);
