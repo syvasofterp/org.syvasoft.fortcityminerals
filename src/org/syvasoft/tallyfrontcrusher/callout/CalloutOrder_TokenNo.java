@@ -98,12 +98,13 @@ public class CalloutOrder_TokenNo implements IColumnCallout {
 			if(token.getTF_RentedVehicle_ID() > 0) {
 				
 				rv = new MRentedVehicle(ctx,token.getTF_RentedVehicle_ID(),null);
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_VehicleType_ID, rv.getTF_VehicleType_ID());
 				if(rv.isTransporter() || rv.isOwnVehicle()) {					
 					mTab.setValue(TF_MOrder.COLUMNNAME_TF_RentedVehicle_ID, token.getTF_RentedVehicle_ID());
 					mTab.setValue(TF_MOrder.COLUMNNAME_VehicleNo, token.getTF_RentedVehicle().getVehicleNo());
 				}
-				else {
-					mTab.setValue(TF_MOrder.COLUMNNAME_VehicleNo, token.getVehicleNo());
+				else {					
+					mTab.setValue(TF_MOrder.COLUMNNAME_VehicleNo, token.getTF_RentedVehicle().getVehicleNo());					
 					mTab.setValue(TF_MOrder.COLUMNNAME_TF_RentedVehicle_ID, null);
 				}
 					
