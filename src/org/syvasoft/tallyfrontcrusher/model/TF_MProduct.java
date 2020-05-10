@@ -99,6 +99,26 @@ public class TF_MProduct extends MProduct {
 			 return Env.ZERO;
 		return bd;
 	}
+	
+	/** Column name BillPrice */
+    public static final String COLUMNNAME_BillPrice = "BillPrice";
+    
+    /** Set Bill Price.
+	@param BillPrice Bill Price	  */
+	public void setBillPrice (BigDecimal BillPrice)
+	{
+		set_Value (COLUMNNAME_BillPrice, BillPrice);
+	}
+	
+	/** Get Bill Price.
+		@return Bill Price	  */
+	public BigDecimal getBillPrice () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_BillPrice);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
 
     /** Column name ValueNumber */
     public static final String COLUMNNAME_ValueNumber = "ValueNumber";

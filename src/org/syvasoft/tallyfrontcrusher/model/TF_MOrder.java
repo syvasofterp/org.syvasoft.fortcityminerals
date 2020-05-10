@@ -2611,11 +2611,14 @@ public class TF_MOrder extends MOrder {
 		invLine.setC_UOM_ID(getItem1_UOM_ID());
 		
 		TF_MBPartner bp = new TF_MBPartner(getCtx(), getC_BPartner_ID(), get_TrxName());
-		MCustomerType custType = new MCustomerType(getCtx(), bp.getTF_CustomerType_ID(), get_TrxName());
+		//MCustomerType custType = new MCustomerType(getCtx(), bp.getTF_CustomerType_ID(), get_TrxName());
+		TF_MProduct prod=new TF_MProduct(getCtx(), getItem1_ID(), get_TrxName());
 		
 		
 		//Set Price based on Customer Type Billing Price Ratio
-		BigDecimal price = getItem1_Price();		
+		//BigDecimal price = getItem1_Price();		
+		BigDecimal price = prod.getBillPrice();
+		/*
 		if(isRentBreakup())
 		{
 			if(isRentInclusive()) {
@@ -2625,29 +2628,31 @@ public class TF_MOrder extends MOrder {
 				price = getItem1_UnitPrice().add(getItem1_UnitRent());
 			}
 		}
+		
 		if(custType.getBillingPriceRatio().doubleValue() > 0)
 			price = price.multiply(custType.getBillingPriceRatio());
+		*/
 		
 		//Set Qty based on Customer Type Billing Qty Ratio
 		// When BillingQtyRation is ZERO then Based on the amount BillingQty has to be calcualted. 
 		BigDecimal qty = getItem1_Qty();
-		if(custType.getBillingQtyRatio().doubleValue() > 0)
-			qty = qty.multiply(custType.getBillingQtyRatio());
-		else {
+		//if(custType.getBillingQtyRatio().doubleValue() > 0)
+		//	qty = qty.multiply(custType.getBillingQtyRatio());
+		//else {
 			qty = getGrandTotal().divide(price, 2, RoundingMode.HALF_EVEN);
-		}
+		//}
 		invLine.setQty(qty);
 		
 		
 		//Exclude Tax amount from Price
-		TF_MProduct prod = new TF_MProduct(getCtx(), getItem1_ID(), get_TrxName());
+		//TF_MProduct prod = new TF_MProduct(getCtx(), getItem1_ID(), get_TrxName());
 		MTax tax = new MTax(getCtx(), prod.getTax_ID(true), get_TrxName());				
 		BigDecimal taxRate = tax.getRate();
 		BigDecimal hundred = new BigDecimal("100");				
-		BigDecimal priceExcludesTax = price.divide(BigDecimal.ONE
-				.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);				
-		invLine.setPrice(priceExcludesTax);
-		invLine.setTaxableAmount(priceExcludesTax.multiply(invLine.getQty()));
+		//BigDecimal priceExcludesTax = price.divide(BigDecimal.ONE
+		//		.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);				
+		invLine.setPrice(prod.getBillPrice());
+		invLine.setTaxableAmount(prod.getBillPrice().multiply(invLine.getQty()));
 						
 		BigDecimal SGST_Rate = taxRate.divide(new BigDecimal(2), 2, RoundingMode.HALF_EVEN);				
 		invLine.setSGST_Rate(SGST_Rate);
