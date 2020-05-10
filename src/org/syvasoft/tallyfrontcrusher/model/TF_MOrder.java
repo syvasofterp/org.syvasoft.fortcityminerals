@@ -2618,6 +2618,8 @@ public class TF_MOrder extends MOrder {
 		//Set Price based on Customer Type Billing Price Ratio
 		//BigDecimal price = getItem1_Price();		
 		BigDecimal price = prod.getBillPrice();
+		if(price == null || price.doubleValue() == 0)
+			throw new AdempiereException("Please set Bill Price for " + prod.getName());
 		/*
 		if(isRentBreakup())
 		{

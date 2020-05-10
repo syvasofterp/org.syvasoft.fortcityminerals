@@ -111,6 +111,11 @@ public class MGenerateTaxInvoice extends X_TF_Generate_TaxInvoice{
 			
 			TF_MProduct prod = new TF_MProduct(getCtx(), rs.getInt("M_Product_id"), get_TrxName());
 			BigDecimal price = prod.getBillPrice();
+			if(price == null || price.doubleValue() == 0) {
+				DB.close(rs, pstmt);
+				throw new AdempiereException("Please set Bill Price for " + prod.getName());
+			}
+			
 			//Set Price based on Customer Type Billing Price Ratio
 			//BigDecimal price = MPriceListUOM.getPrice(getCtx(), M_Product_ID, C_UOM_ID, getC_BPartner_ID(), true, getDateAcct());
 			//if(custType.getBillingPriceRatio().doubleValue() > 0)
@@ -247,11 +252,16 @@ public class MGenerateTaxInvoice extends X_TF_Generate_TaxInvoice{
 				
 				
 				TF_MProduct prod = new TF_MProduct(getCtx(), rs.getInt("M_Product_id"), get_TrxName());
+				BigDecimal price = prod.getBillPrice();
+				if(price == null || price.doubleValue() == 0) {
+					DB.close(rs, pstmt);
+					throw new AdempiereException("Please set Bill Price for " + prod.getName());
+				}
 				//Set Price based on Customer Type Billing Price Ratio
 				//BigDecimal price = rs.getBigDecimal("PriceEntered");
 				//if(custType.getBillingPriceRatio().doubleValue() > 0)
 				//	price = rs.getBigDecimal("PriceEntered").multiply(custType.getBillingPriceRatio());
-				BigDecimal price = prod.getBillPrice();
+				
 				//Set Qty based on Customer Type Billing Qty Ratio
 				// When BillingQtyRation is ZERO then Based on the amount BillingQty has to be calcualted. 
 				BigDecimal qty = rs.getBigDecimal("QtyEntered");
