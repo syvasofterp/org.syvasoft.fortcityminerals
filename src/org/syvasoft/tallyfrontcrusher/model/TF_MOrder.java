@@ -2641,7 +2641,7 @@ public class TF_MOrder extends MOrder {
 		//if(custType.getBillingQtyRatio().doubleValue() > 0)
 		//	qty = qty.multiply(custType.getBillingQtyRatio());
 		//else {
-			qty = getGrandTotal().divide(price, 2, RoundingMode.HALF_EVEN);
+			//qty = getGrandTotal().divide(price, 2, RoundingMode.HALF_EVEN);
 		//}
 		invLine.setQty(qty);
 		
@@ -2651,10 +2651,10 @@ public class TF_MOrder extends MOrder {
 		MTax tax = new MTax(getCtx(), prod.getTax_ID(true), get_TrxName());				
 		BigDecimal taxRate = tax.getRate();
 		BigDecimal hundred = new BigDecimal("100");				
-		//BigDecimal priceExcludesTax = price.divide(BigDecimal.ONE
-		//		.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);				
-		invLine.setPrice(prod.getBillPrice());
-		invLine.setTaxableAmount(prod.getBillPrice().multiply(invLine.getQty()));
+		BigDecimal priceExcludesTax = price.divide(BigDecimal.ONE
+				.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);				
+		invLine.setPrice(priceExcludesTax);
+		invLine.setTaxableAmount(priceExcludesTax.multiply(invLine.getQty()));
 						
 		BigDecimal SGST_Rate = taxRate.divide(new BigDecimal(2), 2, RoundingMode.HALF_EVEN);				
 		invLine.setSGST_Rate(SGST_Rate);

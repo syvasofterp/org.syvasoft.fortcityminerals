@@ -132,11 +132,11 @@ public class MGenerateTaxInvoice extends X_TF_Generate_TaxInvoice{
 			MTax tax = new MTax(getCtx(), prod.getTax_ID(true), get_TrxName());				
 			BigDecimal taxRate = tax.getRate();
 			BigDecimal hundred = new BigDecimal("100");				
-			//BigDecimal priceExcludesTax = price.divide(BigDecimal.ONE
-			//		.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);		
+			BigDecimal priceExcludesTax = price.divide(BigDecimal.ONE
+					.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);		
 					
-			invoiceLine.setPrice(prod.getBillPrice());
-			invoiceLine.setTaxableAmount(prod.getBillPrice().multiply(invoiceLine.getQty()));
+			invoiceLine.setPrice(priceExcludesTax);
+			invoiceLine.setTaxableAmount(priceExcludesTax.multiply(invoiceLine.getQty()));
 							
 			BigDecimal SGST_Rate = taxRate.divide(new BigDecimal(2), 2, RoundingMode.HALF_EVEN);				
 			invoiceLine.setSGST_Rate(SGST_Rate);
@@ -280,10 +280,10 @@ public class MGenerateTaxInvoice extends X_TF_Generate_TaxInvoice{
 				MTax tax = new MTax(getCtx(), prod.getTax_ID(true), get_TrxName());				
 				BigDecimal taxRate = tax.getRate();
 				BigDecimal hundred = new BigDecimal("100");				
-				//BigDecimal priceExcludesTax = price.divide(BigDecimal.ONE
-				//		.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);				
-				invoiceLine.setPrice(prod.getBillPrice());
-				invoiceLine.setTaxableAmount(prod.getBillPrice().multiply(invoiceLine.getQty()));
+				BigDecimal priceExcludesTax = price.divide(BigDecimal.ONE
+						.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);				
+				invoiceLine.setPrice(priceExcludesTax);
+				invoiceLine.setTaxableAmount(priceExcludesTax.multiply(invoiceLine.getQty()));
 								
 				BigDecimal SGST_Rate = taxRate.divide(new BigDecimal(2), 2, RoundingMode.HALF_EVEN);				
 				invoiceLine.setSGST_Rate(SGST_Rate);
