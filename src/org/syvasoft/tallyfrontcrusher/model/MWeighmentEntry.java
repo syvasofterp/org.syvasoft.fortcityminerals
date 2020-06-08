@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 import java.util.Properties;
 
 import org.adempiere.exceptions.AdempiereException;
+import org.compiere.model.MOrgInfo;
 import org.compiere.model.MSysConfig;
 import org.compiere.model.Query;
 import org.compiere.util.DB;
@@ -27,7 +28,7 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 	}
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
-		boolean ok = super.beforeSave(newRecord);
+		
 		
 		if(getTF_RentedVehicle_ID() > 0 && (getVehicleNo() == null || getVehicleNo().length() == 0))
 				setVehicleNo(getTF_RentedVehicle().getVehicleNo());
@@ -54,6 +55,45 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 				rv.saveEx();
 			}
 					
+		}
+		
+		//csv import support
+		if(newRecord) {
+			
+			//Set weighment entry type by product
+			if(getWeighmentEntryType() == null) {
+				if(!getM_Product().isSold()) {
+					setWeighmentEntryType(WEIGHMENTENTRYTYPE_OwnProductionReceipt);
+					setTF_Quarry_ID(1000006);
+					setTF_Send_To(TF_SEND_TO_Stock);
+				}
+				else if(getM_Product().isSold()) {
+					setWeighmentEntryType(WEIGHMENTENTRYTYPE_Sales);
+				}
+			}
+			//set Rented Vehicle ID
+			String whereClause = "AD_Org_ID IN (0,?) AND REPLACE(UPPER(VehicleNo),' ','') = ?";
+			MRentedVehicle rv = new Query(getCtx(), MRentedVehicle.Table_Name, whereClause, get_TrxName())
+					.setClient_ID()
+					.setParameters(getAD_Org_ID(), getVehicleNo().toUpperCase().replace(" ", ""))
+					.first();
+			if(rv != null)
+				setTF_RentedVehicle_ID(rv.getTF_RentedVehicle_ID());
+			
+			//set Payment Rule by BP
+			if(getC_BPartner_ID() > 0) {
+				TF_MBPartner bp = new TF_MBPartner(getCtx(), getC_BPartner_ID(), get_TrxName());
+				if(bp.getIsPOSCashBP()) 
+					setPaymentRule(PAYMENTRULE_Cash);
+				else
+					setPaymentRule(PAYMENTRULE_OnCredit);
+			}
+			//set deafult warehouse
+			MOrgInfo oInfo = MOrgInfo.get(getCtx(), getAD_Org_ID(), get_TrxName());
+			setM_Warehouse_ID(oInfo.getM_Warehouse_ID());
+			
+			if(getNetWeightUnit() == null || getNetWeightUnit().doubleValue() == 0)
+				setNetWeightUnit(getNetWeight());
 		}
 		
 		//	if(getTF_RentedVehicle_ID()>0	&& is_ValueChanged(COLUMNNAME_TareWeight)) {
@@ -104,6 +144,7 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 			
 		}
 		*/
+		boolean ok = super.beforeSave(newRecord);
 		return ok;
 	}
 	
