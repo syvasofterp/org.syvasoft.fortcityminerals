@@ -107,7 +107,7 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 			setC_UOM_ID(prod.getC_UOM_ID());
 		}
 		setM_Product_ID(entry.getM_Product_ID());		
-		setQtyReceived( new BigDecimal(entry.getNetWeight().doubleValue()/1000));
+		setQtyReceived( new BigDecimal(entry.getNetWeight().doubleValue()));
 		
 		setM_Warehouse_ID(entry.getM_Warehouse_ID());
 		setDescription(entry.getDescription());
