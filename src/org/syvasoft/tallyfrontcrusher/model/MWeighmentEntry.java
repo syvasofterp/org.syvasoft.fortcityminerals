@@ -162,7 +162,8 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 	public BigDecimal getCFTMultiplyRate() {
 		if(getNetWeightUnit() == null)
 			return null;
-		
+		if(getNetWeight().doubleValue() == getNetWeightUnit().doubleValue())
+			return BigDecimal.ONE;
 		return getNetWeightUnit().divide(getNetWeight()
 					.divide(new BigDecimal(1000), 2, RoundingMode.HALF_EVEN)
 					, 2, RoundingMode.HALF_EVEN);
