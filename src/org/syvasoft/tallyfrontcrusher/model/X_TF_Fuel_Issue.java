@@ -33,7 +33,7 @@ public class X_TF_Fuel_Issue extends PO implements I_TF_Fuel_Issue, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20181220L;
+	private static final long serialVersionUID = 20200612L;
 
     /** Standard Constructor */
     public X_TF_Fuel_Issue (Properties ctx, int TF_Fuel_Issue_ID, String trxName)
@@ -540,6 +540,31 @@ public class X_TF_Fuel_Issue extends PO implements I_TF_Fuel_Issue, I_Persistent
 	public int getM_Warehouse_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_M_Warehouse_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public I_PM_Machinery getPM_Machinery() throws RuntimeException
+    {
+		return (I_PM_Machinery)MTable.get(getCtx(), I_PM_Machinery.Table_Name)
+			.getPO(getPM_Machinery_ID(), get_TrxName());	}
+
+	/** Set Machinery.
+		@param PM_Machinery_ID Machinery	  */
+	public void setPM_Machinery_ID (int PM_Machinery_ID)
+	{
+		if (PM_Machinery_ID < 1) 
+			set_Value (COLUMNNAME_PM_Machinery_ID, null);
+		else 
+			set_Value (COLUMNNAME_PM_Machinery_ID, Integer.valueOf(PM_Machinery_ID));
+	}
+
+	/** Get Machinery.
+		@return Machinery	  */
+	public int getPM_Machinery_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_PM_Machinery_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();

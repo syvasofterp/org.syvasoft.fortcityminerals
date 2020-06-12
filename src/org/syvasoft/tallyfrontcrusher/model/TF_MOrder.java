@@ -1625,7 +1625,7 @@ public class TF_MOrder extends MOrder {
 		BigDecimal multiplyRate =  MUOMConversion.getProductRateTo(getCtx(), product_ID, C_UOM_ID);
 		
 		MWeighmentEntry wEntry = new MWeighmentEntry(getCtx(), getTF_WeighmentEntry_ID(), get_TrxName());
-		if(getTF_WeighmentEntry_ID() > 0 && wEntry.getCFTMultiplyRate() != null)
+		if(getTF_WeighmentEntry_ID() > 0 && wEntry.getCFTMultiplyRate() != null && multiplyRate.doubleValue() != 1)
 			multiplyRate = wEntry.getCFTMultiplyRate();
 		
 		if(multiplyRate != null) {						

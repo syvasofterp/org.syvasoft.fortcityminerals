@@ -339,6 +339,17 @@ public interface I_TF_Fuel_Issue
 
 	public org.compiere.model.I_M_Warehouse getM_Warehouse() throws RuntimeException;
 
+    /** Column name PM_Machinery_ID */
+    public static final String COLUMNNAME_PM_Machinery_ID = "PM_Machinery_ID";
+
+	/** Set Machinery	  */
+	public void setPM_Machinery_ID (int PM_Machinery_ID);
+
+	/** Get Machinery	  */
+	public int getPM_Machinery_ID();
+
+	public I_PM_Machinery getPM_Machinery() throws RuntimeException;
+
     /** Column name Processed */
     public static final String COLUMNNAME_Processed = "Processed";
 
