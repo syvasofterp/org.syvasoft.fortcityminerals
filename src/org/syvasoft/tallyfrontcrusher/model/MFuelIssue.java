@@ -126,11 +126,15 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 		inv.setC_DocType_ID(1000026);
 		String prdName = TF_MProduct.get(getCtx(), getM_Product_ID()).getName();
 		String desc = "Issued " + prdName + " to " +  getVehicle().getName();
+		if(getPM_Machinery_ID() > 0) {
+			desc = "Issued " + prdName + " to " +  getPM_Machinery().getMachineryNo();
+		}
+			
 		if(getC_Project_ID() > 0) {
 			desc = desc + " for " + getC_Project().getName();
 		}
 		inv.setDescription(getDocumentNo());
-		inv.addDescription(getDescription());
+		//inv.addDescription(getDescription());
 		inv.setMovementDate(getDateAcct());
 		inv.setUser1_ID(getC_ElementValue_ID());
 		inv.setC_Project_ID(getC_Project_ID());

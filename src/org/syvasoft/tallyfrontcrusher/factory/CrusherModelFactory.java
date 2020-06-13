@@ -237,6 +237,22 @@ public class CrusherModelFactory implements IModelFactory {
 			return MDaySequence.class;
 		else if(MToken.Table_Name.equals(tableName))			
 			return MToken.class;
+		else if(MMachineryType.Table_Name.equals(tableName))			
+			return MMachineryType.class;
+		else if(MMachinery.Table_Name.equals(tableName))			
+			return MMachinery.class;		
+		else if(MPMPeriod.Table_Name.equals(tableName))			
+			return MPMPeriod.class;
+		else if(MPMSchedule.Table_Name.equals(tableName))			
+			return MPMSchedule.class;
+		else if(MPMJob.Table_Name.equals(tableName))			
+			return MPMJob.class;
+		else if(MMeter.Table_Name.equals(tableName))			
+			return MMeter.class;
+		else if(MMeterLog.Table_Name.equals(tableName))			
+			return MMeterLog.class;
+		else if(MMachineryStatement.Table_Name.equals(tableName))			
+			return MMachineryStatement.class;
 		return null;
 	}
 
@@ -467,6 +483,22 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MDaySequence(ctx, Record_ID, trxName);
 		else if(MToken.Table_Name.equals(tableName))			
 			return new MToken(ctx, Record_ID, trxName);
+		else if(MMachineryType.Table_Name.equals(tableName))			
+			return new MMachineryType(ctx, Record_ID, trxName);
+		else if(MMachinery.Table_Name.equals(tableName))			
+			return new MMachinery(ctx, Record_ID, trxName);		
+		else if(MPMPeriod.Table_Name.equals(tableName))			
+			return new MPMPeriod(ctx, Record_ID, trxName);
+		else if(MPMSchedule.Table_Name.equals(tableName))			
+			return new MPMSchedule(ctx, Record_ID, trxName);
+		else if(MPMJob.Table_Name.equals(tableName))			
+			return new MPMJob(ctx, Record_ID, trxName);
+		else if(MMeter.Table_Name.equals(tableName))			
+			return new MMeter(ctx, Record_ID, trxName);
+		else if(MMeterLog.Table_Name.equals(tableName))			
+			return new MMeterLog(ctx, Record_ID, trxName);
+		else if(MMachineryStatement.Table_Name.equals(tableName))			
+			return new MMachineryStatement(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -699,6 +731,22 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MDaySequence(ctx, rs, trxName);
 		else if(MToken.Table_Name.equals(tableName))			
 			return new MToken(ctx, rs, trxName);
+		else if(MMachineryType.Table_Name.equals(tableName))			
+			return new MMachineryType(ctx, rs, trxName);
+		else if(MMachinery.Table_Name.equals(tableName))			
+			return new MMachinery(ctx, rs, trxName);		
+		else if(MPMPeriod.Table_Name.equals(tableName))			
+			return new MPMPeriod(ctx, rs, trxName);
+		else if(MPMSchedule.Table_Name.equals(tableName))			
+			return new MPMSchedule(ctx, rs, trxName);
+		else if(MPMJob.Table_Name.equals(tableName))			
+			return new MPMJob(ctx, rs, trxName);
+		else if(MMeter.Table_Name.equals(tableName))			
+			return new MMeter(ctx, rs, trxName);
+		else if(MMeterLog.Table_Name.equals(tableName))			
+			return new MMeterLog(ctx, rs, trxName);
+		else if(MMachineryStatement.Table_Name.equals(tableName))			
+			return new MMachineryStatement(ctx, rs, trxName);
 		return null;
 	}
 
