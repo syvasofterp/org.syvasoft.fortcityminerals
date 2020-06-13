@@ -103,6 +103,15 @@ public interface I_TF_RentedVehicle
 	/** Get Capacity (CFT)	  */
 	public BigDecimal getCapacity_CFT();
 
+    /** Column name Capacity_Unit */
+    public static final String COLUMNNAME_Capacity_Unit = "Capacity_Unit";
+
+	/** Set Capacity (Unit)	  */
+	public void setCapacity_Unit (BigDecimal Capacity_Unit);
+
+	/** Get Capacity (Unit)	  */
+	public BigDecimal getCapacity_Unit();
+
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
 
@@ -210,6 +219,17 @@ public interface I_TF_RentedVehicle
 
 	/** Get Old Tareweight	  */
 	public BigDecimal getOldTareweight();
+
+    /** Column name PM_MachineryType_ID */
+    public static final String COLUMNNAME_PM_MachineryType_ID = "PM_MachineryType_ID";
+
+	/** Set Machinery Type	  */
+	public void setPM_MachineryType_ID (int PM_MachineryType_ID);
+
+	/** Get Machinery Type	  */
+	public int getPM_MachineryType_ID();
+
+	public I_PM_MachineryType getPM_MachineryType() throws RuntimeException;
 
     /** Column name RequireRentConfig */
     public static final String COLUMNNAME_RequireRentConfig = "RequireRentConfig";

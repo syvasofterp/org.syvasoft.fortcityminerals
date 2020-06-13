@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.compiere.model.MProduct;
+import org.compiere.model.MSysConfig;
 import org.compiere.model.Query;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
@@ -86,6 +87,19 @@ public class MRentedVehicle extends X_TF_RentedVehicle {
 				rentConfig.saveEx();
 			}
 			
+		}
+		
+		String IsMachineMaint=MSysConfig.getValue("MACHINERY_MAINT", "Y");
+		if(IsMachineMaint.equals("Y") && isOwnVehicle() && getPM_MachineryType_ID() > 0) {			
+			int PM_Machinery_ID = MMachinery.getPM_Machinery_ID(getCtx(), prod.getM_Product_ID(), get_TrxName());
+			MMachinery machine=new MMachinery(getCtx(), PM_Machinery_ID, get_TrxName());
+			machine.setAD_Org_ID(getAD_Org_ID());
+			machine.setMachineryNo(getVehicleNo());
+			machine.setPM_MachineryType_ID(getPM_MachineryType_ID());
+			machine.setTF_VehicleType_ID(getTF_VehicleType_ID());
+			machine.setTF_RentedVehicle_ID(getTF_RentedVehicle_ID());
+			machine.setM_Product_ID(getM_Product_ID());
+			machine.saveEx();
 		}
 		
 		return ok;

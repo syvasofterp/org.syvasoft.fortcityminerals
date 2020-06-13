@@ -34,7 +34,7 @@ public class X_TF_RentedVehicle extends PO implements I_TF_RentedVehicle, I_Pers
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20191108L;
+	private static final long serialVersionUID = 20200612L;
 
     /** Standard Constructor */
     public X_TF_RentedVehicle (Properties ctx, int TF_RentedVehicle_ID, String trxName)
@@ -44,6 +44,8 @@ public class X_TF_RentedVehicle extends PO implements I_TF_RentedVehicle, I_Pers
         {
 			setC_UOM_ID (0);
 			setCapacity_CFT (Env.ZERO);
+// 0
+			setCapacity_Unit (Env.ZERO);
 // 0
 			setIsOwnVehicle (false);
 // N
@@ -149,6 +151,23 @@ public class X_TF_RentedVehicle extends PO implements I_TF_RentedVehicle, I_Pers
 	public BigDecimal getCapacity_CFT () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Capacity_CFT);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set Capacity (Unit).
+		@param Capacity_Unit Capacity (Unit)	  */
+	public void setCapacity_Unit (BigDecimal Capacity_Unit)
+	{
+		set_Value (COLUMNNAME_Capacity_Unit, Capacity_Unit);
+	}
+
+	/** Get Capacity (Unit).
+		@return Capacity (Unit)	  */
+	public BigDecimal getCapacity_Unit () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Capacity_Unit);
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
@@ -298,6 +317,31 @@ public class X_TF_RentedVehicle extends PO implements I_TF_RentedVehicle, I_Pers
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
+	}
+
+	public I_PM_MachineryType getPM_MachineryType() throws RuntimeException
+    {
+		return (I_PM_MachineryType)MTable.get(getCtx(), I_PM_MachineryType.Table_Name)
+			.getPO(getPM_MachineryType_ID(), get_TrxName());	}
+
+	/** Set Machinery Type.
+		@param PM_MachineryType_ID Machinery Type	  */
+	public void setPM_MachineryType_ID (int PM_MachineryType_ID)
+	{
+		if (PM_MachineryType_ID < 1) 
+			set_Value (COLUMNNAME_PM_MachineryType_ID, null);
+		else 
+			set_Value (COLUMNNAME_PM_MachineryType_ID, Integer.valueOf(PM_MachineryType_ID));
+	}
+
+	/** Get Machinery Type.
+		@return Machinery Type	  */
+	public int getPM_MachineryType_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_PM_MachineryType_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	/** Set Rent Configuration.
