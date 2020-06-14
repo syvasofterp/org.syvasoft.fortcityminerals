@@ -34,7 +34,7 @@ public class X_C_Payment extends PO implements I_C_Payment, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20181216L;
+	private static final long serialVersionUID = 20200614L;
 
     /** Standard Constructor */
     public X_C_Payment (Properties ctx, int C_Payment_ID, String trxName)
@@ -1987,6 +1987,26 @@ public class X_C_Payment extends PO implements I_C_Payment, I_Persistent
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
+	}
+
+	/** Set Machinery.
+		@param PM_Machinery_ID Machinery	  */
+	public void setPM_Machinery_ID (int PM_Machinery_ID)
+	{
+		if (PM_Machinery_ID < 1) 
+			set_Value (COLUMNNAME_PM_Machinery_ID, null);
+		else 
+			set_Value (COLUMNNAME_PM_Machinery_ID, Integer.valueOf(PM_Machinery_ID));
+	}
+
+	/** Get Machinery.
+		@return Machinery	  */
+	public int getPM_Machinery_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_PM_Machinery_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	/** Set PO Number.

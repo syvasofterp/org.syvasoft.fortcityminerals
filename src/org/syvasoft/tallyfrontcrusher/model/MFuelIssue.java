@@ -114,8 +114,27 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 			else if(ISSUETYPE_OwnExpense.equals(getIssueType())) {
 				createInternalUseInventory(docAction);
 			}
-						
+	
+			if(getPM_Machinery_ID()>0) {
+				createMachineryStatement();
+			}
+			
 		}
+	}
+	
+	private void createMachineryStatement() {
+		MMachineryStatement mStatement=new MMachineryStatement(getCtx(), 0, get_TrxName());
+		mStatement.setAD_Org_ID(getAD_Org_ID());
+		mStatement.setDateAcct(getDateAcct());
+		mStatement.setPM_Machinery_ID(getPM_Machinery_ID());
+		mStatement.setM_Product_ID(getM_Product_ID());
+		mStatement.setQty(getQty());
+		mStatement.setRate(getRate());
+		mStatement.setC_UOM_ID(getC_UOM_ID());
+		mStatement.setExpense(getAmt());
+		mStatement.setDescription(getDescription());
+		mStatement.setTF_Fuel_Issue_ID(getTF_Fuel_Issue_ID());
+		mStatement.saveEx();
 	}
 	
 	private void createInternalUseInventory(String docAction) {
@@ -277,6 +296,7 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 	}
 	
 	public void reverseIt() {
+		String whereClause="";
 		if(getDebitNote_Invoice_ID() > 0) {			
 			TF_MInvoice inv = new TF_MInvoice(getCtx(), getDebitNote_Invoice_ID(), get_TrxName());
 			if(inv.getDocStatus().equals(DOCSTATUS_Completed))
@@ -297,6 +317,16 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 				inv.saveEx();
 			}
 			setM_Inventory_ID(0);			
+		}
+		if(getPM_Machinery_ID()>0) {
+			whereClause="TF_Fuel_Issue_ID=?";
+			MMachineryStatement mStatement=new Query(getCtx(), MMachineryStatement.Table_Name, whereClause, get_TrxName())
+							.setClient_ID()
+							.setParameters(getTF_Fuel_Issue_ID())
+							.first();
+			if(mStatement!=null) {
+				mStatement.delete(true);
+			}
 		}
 		setQty(BigDecimal.ZERO);			
 		setProcessed(false);

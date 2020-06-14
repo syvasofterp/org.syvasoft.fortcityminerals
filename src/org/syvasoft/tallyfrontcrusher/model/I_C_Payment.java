@@ -1147,6 +1147,15 @@ public interface I_C_Payment
 	  */
 	public BigDecimal getPayAmt();
 
+    /** Column name PM_Machinery_ID */
+    public static final String COLUMNNAME_PM_Machinery_ID = "PM_Machinery_ID";
+
+	/** Set Machinery	  */
+	public void setPM_Machinery_ID (int PM_Machinery_ID);
+
+	/** Get Machinery	  */
+	public int getPM_Machinery_ID();
+
     /** Column name PONum */
     public static final String COLUMNNAME_PONum = "PONum";
 
