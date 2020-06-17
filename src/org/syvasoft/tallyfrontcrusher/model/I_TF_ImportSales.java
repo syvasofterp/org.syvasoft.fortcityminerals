@@ -183,6 +183,19 @@ public interface I_TF_ImportSales
 	  */
 	public int getCreatedBy();
 
+    /** Column name DateAcct */
+    public static final String COLUMNNAME_DateAcct = "DateAcct";
+
+	/** Set Account Date.
+	  * Accounting Date
+	  */
+	public void setDateAcct (Timestamp DateAcct);
+
+	/** Get Account Date.
+	  * Accounting Date
+	  */
+	public Timestamp getDateAcct();
+
     /** Column name DB */
     public static final String COLUMNNAME_DB = "DB";
 
