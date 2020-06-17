@@ -19,6 +19,7 @@ package org.syvasoft.tallyfrontcrusher.model;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.Properties;
 import org.compiere.model.*;
 import org.compiere.util.Env;
@@ -32,7 +33,7 @@ public class X_TF_ImportSales extends PO implements I_TF_ImportSales, I_Persiste
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20200616L;
+	private static final long serialVersionUID = 20200617L;
 
     /** Standard Constructor */
     public X_TF_ImportSales (Properties ctx, int TF_ImportSales_ID, String trxName)
@@ -254,6 +255,23 @@ public class X_TF_ImportSales extends PO implements I_TF_ImportSales, I_Persiste
 	public String getCashMemoNo () 
 	{
 		return (String)get_Value(COLUMNNAME_CashMemoNo);
+	}
+
+	/** Set Account Date.
+		@param DateAcct 
+		Accounting Date
+	  */
+	public void setDateAcct (Timestamp DateAcct)
+	{
+		set_ValueNoCheck (COLUMNNAME_DateAcct, DateAcct);
+	}
+
+	/** Get Account Date.
+		@return Accounting Date
+	  */
+	public Timestamp getDateAcct () 
+	{
+		return (Timestamp)get_Value(COLUMNNAME_DateAcct);
 	}
 
 	/** Set DB.
