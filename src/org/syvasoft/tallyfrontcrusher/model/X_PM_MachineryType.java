@@ -30,7 +30,7 @@ public class X_PM_MachineryType extends PO implements I_PM_MachineryType, I_Pers
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20200612L;
+	private static final long serialVersionUID = 20200618L;
 
     /** Standard Constructor */
     public X_PM_MachineryType (Properties ctx, int PM_MachineryType_ID, String trxName)
@@ -38,7 +38,6 @@ public class X_PM_MachineryType extends PO implements I_PM_MachineryType, I_Pers
       super (ctx, PM_MachineryType_ID, trxName);
       /** if (PM_MachineryType_ID == 0)
         {
-			setDescription (null);
 			setName (null);
 			setPM_MachineryType_ID (0);
         } */
@@ -72,6 +71,34 @@ public class X_PM_MachineryType extends PO implements I_PM_MachineryType, I_Pers
       return sb.toString();
     }
 
+	public org.compiere.model.I_C_UOM getC_UOM() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_UOM)MTable.get(getCtx(), org.compiere.model.I_C_UOM.Table_Name)
+			.getPO(getC_UOM_ID(), get_TrxName());	}
+
+	/** Set UOM.
+		@param C_UOM_ID 
+		Unit of Measure
+	  */
+	public void setC_UOM_ID (int C_UOM_ID)
+	{
+		if (C_UOM_ID < 1) 
+			set_Value (COLUMNNAME_C_UOM_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_UOM_ID, Integer.valueOf(C_UOM_ID));
+	}
+
+	/** Get UOM.
+		@return Unit of Measure
+	  */
+	public int getC_UOM_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_UOM_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	/** Set Description.
 		@param Description 
 		Optional short description of the record
@@ -87,6 +114,34 @@ public class X_PM_MachineryType extends PO implements I_PM_MachineryType, I_Pers
 	public String getDescription () 
 	{
 		return (String)get_Value(COLUMNNAME_Description);
+	}
+
+	public org.compiere.model.I_M_Product_Category getM_Product_Category() throws RuntimeException
+    {
+		return (org.compiere.model.I_M_Product_Category)MTable.get(getCtx(), org.compiere.model.I_M_Product_Category.Table_Name)
+			.getPO(getM_Product_Category_ID(), get_TrxName());	}
+
+	/** Set Product Category.
+		@param M_Product_Category_ID 
+		Category of a Product
+	  */
+	public void setM_Product_Category_ID (int M_Product_Category_ID)
+	{
+		if (M_Product_Category_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_M_Product_Category_ID, null);
+		else 
+			set_ValueNoCheck (COLUMNNAME_M_Product_Category_ID, Integer.valueOf(M_Product_Category_ID));
+	}
+
+	/** Get Product Category.
+		@return Category of a Product
+	  */
+	public int getM_Product_Category_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_M_Product_Category_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	/** Set Name.
@@ -138,5 +193,37 @@ public class X_PM_MachineryType extends PO implements I_PM_MachineryType, I_Pers
 	public String getPM_MachineryType_UU () 
 	{
 		return (String)get_Value(COLUMNNAME_PM_MachineryType_UU);
+	}
+
+	/** ProductType AD_Reference_ID=270 */
+	public static final int PRODUCTTYPE_AD_Reference_ID=270;
+	/** Item = I */
+	public static final String PRODUCTTYPE_Item = "I";
+	/** Service = S */
+	public static final String PRODUCTTYPE_Service = "S";
+	/** Resource = R */
+	public static final String PRODUCTTYPE_Resource = "R";
+	/** Expense type = E */
+	public static final String PRODUCTTYPE_ExpenseType = "E";
+	/** Online = O */
+	public static final String PRODUCTTYPE_Online = "O";
+	/** Asset = A */
+	public static final String PRODUCTTYPE_Asset = "A";
+	/** Set Product Type.
+		@param ProductType 
+		Type of product
+	  */
+	public void setProductType (String ProductType)
+	{
+
+		set_ValueNoCheck (COLUMNNAME_ProductType, ProductType);
+	}
+
+	/** Get Product Type.
+		@return Type of product
+	  */
+	public String getProductType () 
+	{
+		return (String)get_Value(COLUMNNAME_ProductType);
 	}
 }

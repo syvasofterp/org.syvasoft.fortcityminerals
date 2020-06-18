@@ -80,6 +80,7 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetFuelExpensed;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetJobwork;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetOpeningEntries;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetRunningMeter;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutTripsheet_Vehicle;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetRentalContract;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTyreAssignment;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTyreAssignment_CalcRunningMeter;
@@ -190,6 +191,10 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		//TF_TripSheet - Set Subcontract / Jobwork 
 		if(tableName.equals(MTripSheet.Table_Name) && columnName.equals(MTripSheet.COLUMNNAME_Vehicle_ID))
 			list.add(new CalloutTripSheetJobwork());
+		
+		if(tableName.equals(MTripSheet.Table_Name) && columnName.equals(MTripSheet.COLUMNNAME_PM_Machinery_ID))
+			list.add(new CalloutTripsheet_Vehicle());
+		
 		
 		//C_Payment - Cash Type
 		//if(tableName.equals(MPayment.Table_Name) && (columnName.equals("CashType")))
