@@ -136,6 +136,15 @@ public interface I_PM_MachineryType
 
 	public org.compiere.model.I_M_Product_Category getM_Product_Category() throws RuntimeException;
 
+    /** Column name MileageType */
+    public static final String COLUMNNAME_MileageType = "MileageType";
+
+	/** Set Mileage Type	  */
+	public void setMileageType (String MileageType);
+
+	/** Get Mileage Type	  */
+	public String getMileageType();
+
     /** Column name Name */
     public static final String COLUMNNAME_Name = "Name";
 

@@ -38,6 +38,8 @@ public class X_PM_MachineryType extends PO implements I_PM_MachineryType, I_Pers
       super (ctx, PM_MachineryType_ID, trxName);
       /** if (PM_MachineryType_ID == 0)
         {
+			setMileageType (null);
+// K
 			setName (null);
 			setPM_MachineryType_ID (0);
         } */
@@ -128,9 +130,9 @@ public class X_PM_MachineryType extends PO implements I_PM_MachineryType, I_Pers
 	public void setM_Product_Category_ID (int M_Product_Category_ID)
 	{
 		if (M_Product_Category_ID < 1) 
-			set_ValueNoCheck (COLUMNNAME_M_Product_Category_ID, null);
+			set_Value (COLUMNNAME_M_Product_Category_ID, null);
 		else 
-			set_ValueNoCheck (COLUMNNAME_M_Product_Category_ID, Integer.valueOf(M_Product_Category_ID));
+			set_Value (COLUMNNAME_M_Product_Category_ID, Integer.valueOf(M_Product_Category_ID));
 	}
 
 	/** Get Product Category.
@@ -142,6 +144,25 @@ public class X_PM_MachineryType extends PO implements I_PM_MachineryType, I_Pers
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
+	}
+
+	/** Km/litre = K */
+	public static final String MILEAGETYPE_KmLitre = "K";
+	/** litre/hr = H */
+	public static final String MILEAGETYPE_LitreHr = "H";
+	/** Set Mileage Type.
+		@param MileageType Mileage Type	  */
+	public void setMileageType (String MileageType)
+	{
+
+		set_Value (COLUMNNAME_MileageType, MileageType);
+	}
+
+	/** Get Mileage Type.
+		@return Mileage Type	  */
+	public String getMileageType () 
+	{
+		return (String)get_Value(COLUMNNAME_MileageType);
 	}
 
 	/** Set Name.
@@ -216,7 +237,7 @@ public class X_PM_MachineryType extends PO implements I_PM_MachineryType, I_Pers
 	public void setProductType (String ProductType)
 	{
 
-		set_ValueNoCheck (COLUMNNAME_ProductType, ProductType);
+		set_Value (COLUMNNAME_ProductType, ProductType);
 	}
 
 	/** Get Product Type.
