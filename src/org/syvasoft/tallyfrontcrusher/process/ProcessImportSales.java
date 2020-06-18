@@ -12,6 +12,7 @@ import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.MOrgInfo;
 import org.compiere.model.MPriceList;
 import org.compiere.model.MSysConfig;
+import org.compiere.model.MTax;
 import org.compiere.model.Query;
 import org.compiere.process.DocAction;
 import org.compiere.process.DocumentEngine;
@@ -34,7 +35,9 @@ public class ProcessImportSales extends SvrProcess {
 
 	private int				m_AD_Org_ID = 0;
 	/**	Delete old Imported				*/
-	private boolean			m_deleteOldImported = false;
+	private boolean	m_deleteOldImported = false;
+	private int c_DocType_ID=0;
+	private int c_DocTypeTarget_ID=0;
 
 	@Override
 	protected void prepare() {
@@ -47,6 +50,10 @@ public class ProcessImportSales extends SvrProcess {
 				m_AD_Org_ID = ((BigDecimal)para[i].getParameter()).intValue();
 			else if (name.equals("DeleteOldImported"))
 				m_deleteOldImported = "Y".equals(para[i].getParameter());			
+			else if (name.equals("C_DocTypeTarget_ID"))
+				c_DocTypeTarget_ID =((BigDecimal) para[i].getParameter()).intValue();			
+			else if (name.equals("C_DocType_ID"))
+				c_DocType_ID = ((BigDecimal) para[i].getParameter()).intValue();			
 			else
 				log.log(Level.SEVERE, "Unknown Parameter: " + name);
 		}
@@ -61,6 +68,13 @@ public class ProcessImportSales extends SvrProcess {
 		StringBuilder orgCheck = new StringBuilder(" AND AD_Org_ID=").append(m_AD_Org_ID);
 
 		//	****	Prepare	****
+		sql = new StringBuilder ("UPDATE TF_ImportSales i")
+				.append(" SET Imported='N',ImportMessage=''")
+				.append(" WHERE Imported IN ('E','N')")
+				.append(orgCheck);
+
+		no = DB.executeUpdate(sql.toString(), get_TrxName());
+		if (log.isLoggable(Level.FINE)) log.fine("Refreshed Import Logs=" + no);
 
 		//	Delete Old Imported
 		if (m_deleteOldImported)
@@ -74,7 +88,7 @@ public class ProcessImportSales extends SvrProcess {
 		//Set C_BPartner_ID
 		sql = new StringBuilder ("UPDATE TF_ImportSales i ")
 				  .append("SET C_BPartner_ID = (SELECT bp.C_BPartner_ID FROM C_BPartner bp")
-				  .append(" WHERE TRIM(LOWER(i.PartyName))= TRIM(LOWER(bp.Name)) AND bp.AD_Client_ID = i.AD_Client_ID ) ")
+				  .append(" WHERE REPLACE(LOWER(i.PartyName),' ','')= REPLACE(LOWER(bp.Name),' ','') AND bp.AD_Client_ID = i.AD_Client_ID ) ")
 				  .append("WHERE i.C_BPartner_ID IS NULL AND i.PartyName IS NOT NULL")
 				  .append(" AND Imported<>'Y'").append (orgCheck);
 		no = DB.executeUpdate(sql.toString(), get_TrxName());
@@ -83,7 +97,7 @@ public class ProcessImportSales extends SvrProcess {
 		//Set M_Product_ID
 		sql = new StringBuilder ("UPDATE TF_ImportSales i ")
 				  .append("SET M_Product_ID=(SELECT MAX(p.M_Product_ID) FROM M_Product p")
-				  .append(" WHERE TRIM(LOWER(i.Material)) = TRIM(LOWER(p.Value)) AND i.AD_Client_ID=p.AD_Client_ID) ")
+				  .append(" WHERE REPLACE(LOWER(i.Material),' ','') = REPLACE(LOWER(p.Name),' ','') AND i.AD_Client_ID=p.AD_Client_ID) ")
 				  .append("WHERE Material IS NOT NULL")
 				  .append(" AND Imported<>'Y'").append (orgCheck);
 		no = DB.executeUpdate(sql.toString(), get_TrxName());
@@ -92,7 +106,7 @@ public class ProcessImportSales extends SvrProcess {
 		//Set TF_RentedVehicle_ID
 		sql = new StringBuilder ("UPDATE TF_ImportSales i ")
 				  .append("SET TF_RentedVehicle_ID=(SELECT MAX(rv.TF_RentedVehicle_ID) FROM TF_RentedVehicle rv")
-				  .append(" WHERE TRIM(LOWER(i.vno)) = TRIM(LOWER(rv.VehicleNo)) AND i.AD_Client_ID=rv.AD_Client_ID) ")
+				  .append(" WHERE REPLACE(LOWER(i.vno),' ','') = REPLACE(LOWER(rv.VehicleNo),' ','') AND i.AD_Client_ID=rv.AD_Client_ID) ")
 				  .append("WHERE vno IS NOT NULL")
 				  .append(" AND Imported<>'Y'").append (orgCheck);
 		no = DB.executeUpdate(sql.toString(), get_TrxName());
@@ -101,7 +115,7 @@ public class ProcessImportSales extends SvrProcess {
 		//Set TF_WeighmentEntry_ID
 		sql = new StringBuilder ("UPDATE TF_ImportSales i ")
 				  .append("SET TF_WeighmentEntry_ID=(SELECT MAX(w.TF_WeighmentEntry_ID) FROM TF_WeighmentEntry w")
-				  .append(" WHERE TRIM(LOWER(i.weighmentno)) = TRIM(LOWER(w.DocumentNo)) AND i.AD_Client_ID=w.AD_Client_ID) ")
+				  .append(" WHERE REPLACE(LOWER(i.weighmentno),' ','') = REPLACE(LOWER(w.DocumentNo),' ','') AND i.AD_Client_ID=w.AD_Client_ID) ")
 				  .append("WHERE weighmentno IS NOT NULL")
 				  .append(" AND Imported<>'Y'").append (orgCheck);
 		no = DB.executeUpdate(sql.toString(), get_TrxName());
@@ -173,7 +187,7 @@ public class ProcessImportSales extends SvrProcess {
 		
 		//Create Customer
 		sql = new StringBuilder ("SELECT * FROM TF_ImportSales ")
-				  .append("WHERE Imported='N' AND C_BPartner_ID IS NULL ").append (orgCheck);
+				  .append("WHERE coalesce(Imported,'N')='N' AND C_BPartner_ID IS NULL ").append (orgCheck);
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try
@@ -251,29 +265,25 @@ public class ProcessImportSales extends SvrProcess {
 			{
 				MImportSales imp = new MImportSales(getCtx(), rs, get_TrxName());
 			    MWeighmentEntry wEntry=new MWeighmentEntry(getCtx(), imp.getTF_WeighmentEntry_ID(), get_TrxName());
-			    TF_MOrg org=new TF_MOrg(getCtx(), imp.getAD_Org_ID(), get_TrxName());
-			    MOrgInfo oInfo=new MOrgInfo(org);
-			    
 				MRentedVehicle rv=new MRentedVehicle(getCtx(), imp.getTF_RentedVehicle_ID(), get_TrxName());
-			    
 			    TF_MOrder ord = new TF_MOrder(getCtx(), 0, get_TrxName());
 				ord.setAD_Org_ID(imp.getAD_Org_ID());
-				ord.setC_DocTypeTarget_ID(1000057);
-				ord.setC_DocType_ID(1000057);
-				ord.setM_Warehouse_ID(oInfo.getM_Warehouse_ID());
-				ord.setDateAcct(imp.getCreated());
-				ord.setDateOrdered(imp.getCreated());
+				ord.setC_DocTypeTarget_ID(c_DocTypeTarget_ID);
+				ord.setC_DocType_ID(c_DocType_ID);
+				ord.setM_Warehouse_ID(wEntry.getM_Warehouse_ID());
+				ord.setDateAcct(imp.getDateAcct());
+				ord.setDateOrdered(imp.getDateAcct());
 				int C_BParner_ID = imp.getC_BPartner_ID();
 				if(C_BParner_ID == 0)
 					C_BParner_ID = 1000020;		
 				TF_MBPartner bp = new TF_MBPartner(getCtx(), C_BParner_ID, get_TrxName());
 				ord.setBPartner(bp);
-				ord.setDescription("");
+				ord.setDescription(wEntry.getDescription());
 				if(ord.getDescription() != null)
 					ord.addDescription("Customer Name : " + imp.getPartyName());
 				else
 					ord.setDescription("Customer Name : " + imp.getPartyName());
-				ord.setPaymentRule("C");		
+				ord.setPaymentRule(wEntry.getPaymentRule());		
 				//Price List
 				int m_M_PriceList_ID = Env.getContextAsInt(getCtx(), "#M_PriceList_ID");
 				if(bp.getM_PriceList_ID() > 0)
@@ -282,9 +292,9 @@ public class ProcessImportSales extends SvrProcess {
 				ord.setC_Currency_ID(MPriceList.get(getCtx(), m_M_PriceList_ID, get_TrxName()).getC_Currency_ID());
 				ord.setIsSOTrx(true);
 				ord.setTF_WeighmentEntry_ID(imp.getTF_WeighmentEntry_ID());	
-				ord.setTF_Destination_ID(100000);
+				ord.setTF_Destination_ID(wEntry.getTF_Destination_ID());
 				ord.setVehicleNo(imp.getVNo());
-				ord.setTF_RentedVehicle_ID(imp.getTF_RentedVehicle_ID());
+				//ord.setTF_RentedVehicle_ID(imp.getTF_RentedVehicle_ID());
 				ord.setItem1_BucketQty(null);
 				
 				
@@ -300,7 +310,18 @@ public class ProcessImportSales extends SvrProcess {
 				int tonnage_uom_id = MSysConfig.getIntValue("TONNAGE_UOM", 1000069, Env.getAD_Client_ID(getCtx()));
 				int uom_id = imp.getM_Product().getC_UOM_ID();
 				ord.setItem1_UOM_ID(ord.getItem1().getC_UOM_ID());
-				ord.setItem1_Tax_ID(1000000);
+				String whereClause="Rate=? AND IsSummary='Y'";
+				MTax tax=new Query(getCtx() ,MTax.Table_Name, whereClause, get_TrxName()) 
+						.setClient_ID()
+						.setParameters(imp.getTax())
+						.first();
+				
+				if(tax!=null) {
+					ord.setItem1_Tax_ID(tax.getC_Tax_ID());
+				}
+				else {
+					throw new AdempiereException("Invalid Tax Rate");
+				}
 				BigDecimal qty = imp.getQty();
 				if(uom_id == tonnage_uom_id)
 					qty = qty.divide(new BigDecimal(1000));
@@ -321,6 +342,7 @@ public class ProcessImportSales extends SvrProcess {
 				ord.setDocStatus(TF_MOrder.DOCSTATUS_Completed);
 				ord.saveEx();
 
+				imp.setC_Order_ID(ord.get_ID());
 				imp.setImported("Y");
 				imp.saveEx();
 
