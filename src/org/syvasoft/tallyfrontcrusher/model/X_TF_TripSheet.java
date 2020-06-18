@@ -26,14 +26,14 @@ import org.compiere.util.Env;
 
 /** Generated Model for TF_TripSheet
  *  @author iDempiere (generated) 
- *  @version Release 3.1 - $Id$ */
+ *  @version Release 5.1 - $Id$ */
 public class X_TF_TripSheet extends PO implements I_TF_TripSheet, I_Persistent 
 {
 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170807L;
+	private static final long serialVersionUID = 20200618L;
 
     /** Standard Constructor */
     public X_TF_TripSheet (Properties ctx, int TF_TripSheet_ID, String trxName)
@@ -81,7 +81,7 @@ public class X_TF_TripSheet extends PO implements I_TF_TripSheet, I_Persistent
 		return (org.compiere.model.I_C_BPartner)MTable.get(getCtx(), org.compiere.model.I_C_BPartner.Table_Name)
 			.getPO(getC_BPartner_ID(), get_TrxName());	}
 
-	/** Set Operator / Driver.
+	/** Set Business Partner .
 		@param C_BPartner_ID 
 		Identifies a Business Partner
 	  */
@@ -93,7 +93,7 @@ public class X_TF_TripSheet extends PO implements I_TF_TripSheet, I_Persistent
 			set_Value (COLUMNNAME_C_BPartner_ID, Integer.valueOf(C_BPartner_ID));
 	}
 
-	/** Get Operator / Driver.
+	/** Get Business Partner .
 		@return Identifies a Business Partner
 	  */
 	public int getC_BPartner_ID () 
@@ -109,7 +109,7 @@ public class X_TF_TripSheet extends PO implements I_TF_TripSheet, I_Persistent
 		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
 			.getPO(getC_ElementValue_ID(), get_TrxName());	}
 
-	/** Set Profit Center.
+	/** Set Account Element.
 		@param C_ElementValue_ID 
 		Account Element
 	  */
@@ -121,7 +121,7 @@ public class X_TF_TripSheet extends PO implements I_TF_TripSheet, I_Persistent
 			set_Value (COLUMNNAME_C_ElementValue_ID, Integer.valueOf(C_ElementValue_ID));
 	}
 
-	/** Get Profit Center.
+	/** Get Account Element.
 		@return Account Element
 	  */
 	public int getC_ElementValue_ID () 
@@ -137,9 +137,9 @@ public class X_TF_TripSheet extends PO implements I_TF_TripSheet, I_Persistent
 		return (org.compiere.model.I_C_Project)MTable.get(getCtx(), org.compiere.model.I_C_Project.Table_Name)
 			.getPO(getC_Project_ID(), get_TrxName());	}
 
-	/** Set Subcontract / Job Work.
+	/** Set Subcontract / Project.
 		@param C_Project_ID 
-		Subcontract / Job Work
+		Financial Project
 	  */
 	public void setC_Project_ID (int C_Project_ID)
 	{
@@ -149,8 +149,8 @@ public class X_TF_TripSheet extends PO implements I_TF_TripSheet, I_Persistent
 			set_Value (COLUMNNAME_C_Project_ID, Integer.valueOf(C_Project_ID));
 	}
 
-	/** Get Subcontract / Job Work.
-		@return Subcontract / Job Work
+	/** Get Subcontract / Project.
+		@return Financial Project
 	  */
 	public int getC_Project_ID () 
 	{
@@ -225,15 +225,18 @@ public class X_TF_TripSheet extends PO implements I_TF_TripSheet, I_Persistent
 		return (Timestamp)get_Value(COLUMNNAME_DateReport);
 	}
 
-	/** Set Start Date.
-		@param DateStart Start Date	  */
+	/** Set Date Start.
+		@param DateStart 
+		Date Start for this Order
+	  */
 	public void setDateStart (Timestamp DateStart)
 	{
 		set_Value (COLUMNNAME_DateStart, DateStart);
 	}
 
-	/** Get Start Date.
-		@return Start Date	  */
+	/** Get Date Start.
+		@return Date Start for this Order
+	  */
 	public Timestamp getDateStart () 
 	{
 		return (Timestamp)get_Value(COLUMNNAME_DateStart);
@@ -406,6 +409,31 @@ public class X_TF_TripSheet extends PO implements I_TF_TripSheet, I_Persistent
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
+	}
+
+	public I_PM_Machinery getPM_Machinery() throws RuntimeException
+    {
+		return (I_PM_Machinery)MTable.get(getCtx(), I_PM_Machinery.Table_Name)
+			.getPO(getPM_Machinery_ID(), get_TrxName());	}
+
+	/** Set Machinery.
+		@param PM_Machinery_ID Machinery	  */
+	public void setPM_Machinery_ID (int PM_Machinery_ID)
+	{
+		if (PM_Machinery_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_PM_Machinery_ID, null);
+		else 
+			set_ValueNoCheck (COLUMNNAME_PM_Machinery_ID, Integer.valueOf(PM_Machinery_ID));
+	}
+
+	/** Get Machinery.
+		@return Machinery	  */
+	public int getPM_Machinery_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_PM_Machinery_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	/** Set Post Labour Wage.

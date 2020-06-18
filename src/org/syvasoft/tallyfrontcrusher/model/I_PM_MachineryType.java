@@ -64,6 +64,21 @@ public interface I_PM_MachineryType
 	  */
 	public int getAD_Org_ID();
 
+    /** Column name C_UOM_ID */
+    public static final String COLUMNNAME_C_UOM_ID = "C_UOM_ID";
+
+	/** Set UOM.
+	  * Unit of Measure
+	  */
+	public void setC_UOM_ID (int C_UOM_ID);
+
+	/** Get UOM.
+	  * Unit of Measure
+	  */
+	public int getC_UOM_ID();
+
+	public org.compiere.model.I_C_UOM getC_UOM() throws RuntimeException;
+
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
 
@@ -106,6 +121,21 @@ public interface I_PM_MachineryType
 	  */
 	public boolean isActive();
 
+    /** Column name M_Product_Category_ID */
+    public static final String COLUMNNAME_M_Product_Category_ID = "M_Product_Category_ID";
+
+	/** Set Product Category.
+	  * Category of a Product
+	  */
+	public void setM_Product_Category_ID (int M_Product_Category_ID);
+
+	/** Get Product Category.
+	  * Category of a Product
+	  */
+	public int getM_Product_Category_ID();
+
+	public org.compiere.model.I_M_Product_Category getM_Product_Category() throws RuntimeException;
+
     /** Column name Name */
     public static final String COLUMNNAME_Name = "Name";
 
@@ -136,6 +166,19 @@ public interface I_PM_MachineryType
 
 	/** Get PM_MachineryType_UU	  */
 	public String getPM_MachineryType_UU();
+
+    /** Column name ProductType */
+    public static final String COLUMNNAME_ProductType = "ProductType";
+
+	/** Set Product Type.
+	  * Type of product
+	  */
+	public void setProductType (String ProductType);
+
+	/** Get Product Type.
+	  * Type of product
+	  */
+	public String getProductType();
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";

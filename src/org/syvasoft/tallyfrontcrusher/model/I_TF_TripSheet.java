@@ -23,7 +23,7 @@ import org.compiere.util.KeyNamePair;
 
 /** Generated Interface for TF_TripSheet
  *  @author iDempiere (generated) 
- *  @version Release 3.1
+ *  @version Release 5.1
  */
 @SuppressWarnings("all")
 public interface I_TF_TripSheet 
@@ -67,12 +67,12 @@ public interface I_TF_TripSheet
     /** Column name C_BPartner_ID */
     public static final String COLUMNNAME_C_BPartner_ID = "C_BPartner_ID";
 
-	/** Set Operator / Driver.
+	/** Set Business Partner .
 	  * Identifies a Business Partner
 	  */
 	public void setC_BPartner_ID (int C_BPartner_ID);
 
-	/** Get Operator / Driver.
+	/** Get Business Partner .
 	  * Identifies a Business Partner
 	  */
 	public int getC_BPartner_ID();
@@ -82,12 +82,12 @@ public interface I_TF_TripSheet
     /** Column name C_ElementValue_ID */
     public static final String COLUMNNAME_C_ElementValue_ID = "C_ElementValue_ID";
 
-	/** Set Profit Center.
+	/** Set Account Element.
 	  * Account Element
 	  */
 	public void setC_ElementValue_ID (int C_ElementValue_ID);
 
-	/** Get Profit Center.
+	/** Get Account Element.
 	  * Account Element
 	  */
 	public int getC_ElementValue_ID();
@@ -97,13 +97,13 @@ public interface I_TF_TripSheet
     /** Column name C_Project_ID */
     public static final String COLUMNNAME_C_Project_ID = "C_Project_ID";
 
-	/** Set Subcontract / Job Work.
-	  * Subcontract / Job Work
+	/** Set Subcontract / Project.
+	  * Financial Project
 	  */
 	public void setC_Project_ID (int C_Project_ID);
 
-	/** Get Subcontract / Job Work.
-	  * Subcontract / Job Work
+	/** Get Subcontract / Project.
+	  * Financial Project
 	  */
 	public int getC_Project_ID();
 
@@ -168,10 +168,14 @@ public interface I_TF_TripSheet
     /** Column name DateStart */
     public static final String COLUMNNAME_DateStart = "DateStart";
 
-	/** Set Start Date	  */
+	/** Set Date Start.
+	  * Date Start for this Order
+	  */
 	public void setDateStart (Timestamp DateStart);
 
-	/** Get Start Date	  */
+	/** Get Date Start.
+	  * Date Start for this Order
+	  */
 	public Timestamp getDateStart();
 
     /** Column name Description */
@@ -270,6 +274,17 @@ public interface I_TF_TripSheet
 
 	/** Get Opening Meter	  */
 	public BigDecimal getOpening_Meter();
+
+    /** Column name PM_Machinery_ID */
+    public static final String COLUMNNAME_PM_Machinery_ID = "PM_Machinery_ID";
+
+	/** Set Machinery	  */
+	public void setPM_Machinery_ID (int PM_Machinery_ID);
+
+	/** Get Machinery	  */
+	public int getPM_Machinery_ID();
+
+	public I_PM_Machinery getPM_Machinery() throws RuntimeException;
 
     /** Column name PostLabourWage */
     public static final String COLUMNNAME_PostLabourWage = "PostLabourWage";
