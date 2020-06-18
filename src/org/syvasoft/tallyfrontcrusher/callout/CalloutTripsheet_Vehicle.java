@@ -21,7 +21,8 @@ public class CalloutTripsheet_Vehicle implements IColumnCallout {
 			PM_Machinery_ID = (int) mTab.getValue(MFuelIssue.COLUMNNAME_PM_Machinery_ID);
 		
 		if(PM_Machinery_ID > 0) {
-			Vehicle_ID = MMachinery.getPM_Product_ID(ctx, PM_Machinery_ID, null);
+			MMachinery m = new MMachinery(ctx, PM_Machinery_ID, null);
+			Vehicle_ID = m.getM_Product_ID();
 		}
 		mTab.setValue(MFuelIssue.COLUMNNAME_Vehicle_ID, Vehicle_ID > 0 ? Vehicle_ID : null);
 		
