@@ -10,6 +10,7 @@ import org.compiere.model.GridField;
 import org.compiere.model.GridTab;
 import org.compiere.model.MProductPrice;
 import org.compiere.model.MProductPricing;
+import org.compiere.model.MSysConfig;
 import org.compiere.util.Env;
 import org.syvasoft.tallyfrontcrusher.model.MPriceListUOM;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
@@ -39,12 +40,13 @@ public class CalloutOrder_UnitPrice implements IColumnCallout {
 			boolean isSOTrx = Env.getContext(ctx, WindowNo, "IsSOTrx").equals("Y");
 			BigDecimal qty = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_Qty);
 			int C_UOM_ID=(int) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_UOM_ID);
-			
-			MPriceListUOM priceUOM = MPriceListUOM.getPriceListUOM(ctx, product_ID, C_UOM_ID, bPartner_ID, isSOTrx, dateAcct);
-			//MProductPricing pp = TF_MOrder.getProductPricing(product_ID, priceList_ID, bPartner_ID, qty, dateAcct, isSOTrx);			
-			if(priceUOM == null ||  price.compareTo(priceUOM.getPriceMin())<0 && TF_DiscountRequest_ID == 0){
-				mTab.setValue("RequireDiscRequest", true);
-				return "You cannot create sales order less than minimum price. Please create Discount Request";
+			if(MSysConfig.getBooleanValue("DISCOUNT_REQUEST_ENABLED", false)) {
+				MPriceListUOM priceUOM = MPriceListUOM.getPriceListUOM(ctx, product_ID, C_UOM_ID, bPartner_ID, isSOTrx, dateAcct);
+				//MProductPricing pp = TF_MOrder.getProductPricing(product_ID, priceList_ID, bPartner_ID, qty, dateAcct, isSOTrx);			
+				if(priceUOM == null ||  price.compareTo(priceUOM.getPriceMin())<0 && TF_DiscountRequest_ID == 0){
+					mTab.setValue("RequireDiscRequest", true);
+					return "You cannot create sales order less than minimum price. Please create Discount Request";
+				}
 			}
 	   }
 	return null;

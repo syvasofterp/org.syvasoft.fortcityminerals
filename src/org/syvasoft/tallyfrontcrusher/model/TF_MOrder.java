@@ -1863,7 +1863,7 @@ public class TF_MOrder extends MOrder {
 	public String completeIt() {
 		if(getTF_RentedVehicle_ID() > 0 && getRent_Amt().doubleValue() <= 0)
 			throw new AdempiereException("Please specify Rent Amount!");
-		if(isSOTrx()) {
+		if(isSOTrx() && MSysConfig.getBooleanValue("DISCOUNT_REQUEST_ENABLED", false)) {
 			MPriceListUOM priceUOM = MPriceListUOM.getPriceListUOM(getCtx(), getItem1_ID(), getItem1_UOM_ID(), getC_BPartner_ID(), true, getDateAcct());
 			BigDecimal price=getItem1_UnitPrice();
 			BigDecimal priceMin = BigDecimal.ZERO;
