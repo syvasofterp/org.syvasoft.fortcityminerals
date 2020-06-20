@@ -33,7 +33,7 @@ public class X_TF_ImportSales extends PO implements I_TF_ImportSales, I_Persiste
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20200617L;
+	private static final long serialVersionUID = 20200620L;
 
     /** Standard Constructor */
     public X_TF_ImportSales (Properties ctx, int TF_ImportSales_ID, String trxName)
@@ -44,6 +44,8 @@ public class X_TF_ImportSales extends PO implements I_TF_ImportSales, I_Persiste
 			setMaterial (null);
 			setPartyName (null);
 			setPrice (Env.ZERO);
+			setProcessed (false);
+// N
 			setQty (Env.ZERO);
 			setSNo (0);
 			setTF_ImportSales_ID (0);
@@ -171,9 +173,9 @@ public class X_TF_ImportSales extends PO implements I_TF_ImportSales, I_Persiste
 	public void setC_BPartner_ID (int C_BPartner_ID)
 	{
 		if (C_BPartner_ID < 1) 
-			set_ValueNoCheck (COLUMNNAME_C_BPartner_ID, null);
+			set_Value (COLUMNNAME_C_BPartner_ID, null);
 		else 
-			set_ValueNoCheck (COLUMNNAME_C_BPartner_ID, Integer.valueOf(C_BPartner_ID));
+			set_Value (COLUMNNAME_C_BPartner_ID, Integer.valueOf(C_BPartner_ID));
 	}
 
 	/** Get Business Partner .
@@ -227,9 +229,9 @@ public class X_TF_ImportSales extends PO implements I_TF_ImportSales, I_Persiste
 	public void setC_Tax_ID (int C_Tax_ID)
 	{
 		if (C_Tax_ID < 1) 
-			set_ValueNoCheck (COLUMNNAME_C_Tax_ID, null);
+			set_Value (COLUMNNAME_C_Tax_ID, null);
 		else 
-			set_ValueNoCheck (COLUMNNAME_C_Tax_ID, Integer.valueOf(C_Tax_ID));
+			set_Value (COLUMNNAME_C_Tax_ID, Integer.valueOf(C_Tax_ID));
 	}
 
 	/** Get Tax.
@@ -463,6 +465,30 @@ public class X_TF_ImportSales extends PO implements I_TF_ImportSales, I_Persiste
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
+	}
+
+	/** Set Processed.
+		@param Processed 
+		The document has been processed
+	  */
+	public void setProcessed (boolean Processed)
+	{
+		set_Value (COLUMNNAME_Processed, Boolean.valueOf(Processed));
+	}
+
+	/** Get Processed.
+		@return The document has been processed
+	  */
+	public boolean isProcessed () 
+	{
+		Object oo = get_Value(COLUMNNAME_Processed);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
 	}
 
 	/** Set Process Now.

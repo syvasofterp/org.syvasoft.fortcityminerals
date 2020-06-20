@@ -32,7 +32,7 @@ public interface I_TF_ImportSales
     /** TableName=TF_ImportSales */
     public static final String Table_Name = "TF_ImportSales";
 
-    /** AD_Table_ID=1000316 */
+    /** AD_Table_ID=1000315 */
     public static final int Table_ID = MTable.getTable_ID(Table_Name);
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);
@@ -326,6 +326,19 @@ public interface I_TF_ImportSales
 	  * Price
 	  */
 	public BigDecimal getPrice();
+
+    /** Column name Processed */
+    public static final String COLUMNNAME_Processed = "Processed";
+
+	/** Set Processed.
+	  * The document has been processed
+	  */
+	public void setProcessed (boolean Processed);
+
+	/** Get Processed.
+	  * The document has been processed
+	  */
+	public boolean isProcessed();
 
     /** Column name Processing */
     public static final String COLUMNNAME_Processing = "Processing";
