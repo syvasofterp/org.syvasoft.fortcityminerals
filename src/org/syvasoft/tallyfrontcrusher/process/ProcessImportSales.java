@@ -122,39 +122,23 @@ public class ProcessImportSales extends SvrProcess {
 		if (log.isLoggable(Level.FINE)) log.fine("Set Weighment from Value=" + no);
 
 		
+		sql = new StringBuilder ("UPDATE TF_ImportSales i ")
+				  .append("SET Imported='E', ImportMessage= COALESCE(ImportMessage,'') || 'ERR=Invalid Party Name, ' ")
+				  .append("WHERE C_BPartner_ID IS NULL ")
+				  .append(" AND Imported<>'Y'").append (orgCheck);
+		no = DB.executeUpdate(sql.toString(), get_TrxName());
+		if (no != 0)
+			log.warning ("Invalid Party Name=" + no);
+		
 		/*
-		//Set VG_UOM
-		sql = new StringBuilder ("UPDATE TF_ImportSales i ")
-				  .append("SET VG_UOM =(SELECT p.VG_UOM FROM M_Product p")
-				  .append(" WHERE i.M_Product_ID = p.M_Product_ID AND i.AD_Client_ID=p.AD_Client_ID) ")
-				  .append("WHERE i.M_Product_ID IS NOT NULL")
-				  .append(" AND I_IsImported<>'Y'").append (orgCheck);
-		no = DB.executeUpdate(sql.toString(), get_TrxName());
-		if (log.isLoggable(Level.FINE)) log.fine("Set Product from Value=" + no);
-
-		//Set Std Weight
-		sql = new StringBuilder ("UPDATE TF_ImportSales i ")
-				  .append("SET StdWeight =(SELECT p.StdWeight FROM M_Product p")
-				  .append(" WHERE i.M_Product_ID = p.M_Product_ID AND i.AD_Client_ID=p.AD_Client_ID AND p.StdWeight > 0 ) ")
-				  .append("WHERE i.M_Product_ID IS NOT NULL")
-				  .append(" AND I_IsImported<>'Y'").append (orgCheck);
-		no = DB.executeUpdate(sql.toString(), get_TrxName());
-		if (log.isLoggable(Level.FINE)) log.fine("Set Standard Weight from Value=" + no);
-		//Set Movement Qty In Kgs
-		sql = new StringBuilder ("UPDATE TF_ImportSales i ")
-				  .append("SET MovementQtyInKgs = MovementQtyInNos * StdWeight ")
-				  .append("WHERE i.M_Product_ID IS NOT NULL AND i.StdWeight > 0 AND i.MovementQtyInNos > 0 ")
-				  .append(" AND I_IsImported<>'Y'").append (orgCheck);
-		no = DB.executeUpdate(sql.toString(), get_TrxName());
-		if (log.isLoggable(Level.FINE)) log.fine("Set Standard Weight from Value=" + no);
-		*/
 		sql = new StringBuilder ("UPDATE TF_ImportSales i ")
 				  .append("SET Imported='E', ImportMessage= COALESCE(ImportMessage,'') || 'ERR=Invalid Rented Vehicle, ' ")
 				  .append("WHERE TF_RentedVehicle_ID IS NULL ")
 				  .append(" AND Imported<>'Y'").append (orgCheck);
 		no = DB.executeUpdate(sql.toString(), get_TrxName());
 		if (no != 0)
-			log.warning ("Invalid Rented Vehicle =" + no);
+			log.warning ("Invalid Vehicle =" + no);
+		*/
 		
 		sql = new StringBuilder ("UPDATE TF_ImportSales i ")
 				  .append("SET Imported='E', ImportMessage= COALESCE(ImportMessage,'') || 'ERR=Invalid Product Code, ' ")
@@ -190,6 +174,7 @@ public class ProcessImportSales extends SvrProcess {
 				  .append("WHERE coalesce(Imported,'N')='N' AND C_BPartner_ID IS NULL ").append (orgCheck);
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
+		/*
 		try
 		{
 			pstmt = DB.prepareStatement (sql.toString(), get_TrxName());
@@ -208,10 +193,10 @@ public class ProcessImportSales extends SvrProcess {
 						if(imp.getPartyName() == null || imp.getPartyName().length() ==0)
 							imp.setPartyName(imp.getPartyName());
 						
-						/*
-						 * if(imp.getCity() == null || imp.getCity().length() ==0)
-						 		imp.setCity("Chennai");
-						*/	
+						
+						 //if(imp.getCity() == null || imp.getCity().length() ==0)
+						 //		imp.setCity("Chennai");
+						
 						
 						TF_MBPartner bp = new TF_MBPartner(getCtx(), 0, get_TrxName());
 						bp.setAD_Org_ID(imp.getAD_Org_ID());
@@ -244,9 +229,10 @@ public class ProcessImportSales extends SvrProcess {
 			rs = null;
 			pstmt = null;
 		}		
+		*/
 		
-		
-		//Create Sales Entry		
+		//Create Sales Entry	
+		int i = 0;		
 		sql = new StringBuilder ("SELECT * FROM TF_ImportSales ")
 				  .append("WHERE Imported='N' AND C_BPartner_ID IS NOT NULL AND C_Order_ID IS NULL").append (orgCheck);
 		pstmt = null;
@@ -300,31 +286,31 @@ public class ProcessImportSales extends SvrProcess {
 				
 				//Item
 				ord.setItem1_IsPermitSales(false);
-				ord.setItem1_VehicleType_ID(rv.getTF_VehicleType_ID());
-				if(wEntry.isHasBalance())
-					ord.setItem1_SandType(TF_MOrder.ITEM1_SANDTYPE_PermitSand);
-				else
-					ord.setItem1_SandType(TF_MOrder.ITEM1_SANDTYPE_WithoutPermit);
+				if(rv.getTF_RentedVehicle_ID() > 0)
+					ord.setItem1_VehicleType_ID(rv.getTF_VehicleType_ID());
+								
 				ord.setItem1_ID(imp.getM_Product_ID());
-				
-				int tonnage_uom_id = MSysConfig.getIntValue("TONNAGE_UOM", 1000069, Env.getAD_Client_ID(getCtx()));
-				int uom_id = imp.getM_Product().getC_UOM_ID();
+								
 				ord.setItem1_UOM_ID(ord.getItem1().getC_UOM_ID());
-				String whereClause="Rate=? AND IsSummary='Y'";
+				String whereClause="Rate=? AND IsSummary='Y' AND (Rate=0 OR IsInterState=?)";
 				MTax tax=new Query(getCtx() ,MTax.Table_Name, whereClause, get_TrxName()) 
 						.setClient_ID()
-						.setParameters(imp.getTax())
+						.setParameters(imp.getTax(), bp.get_ValueAsBoolean("IsInterState")?"Y":"N")
 						.first();
 				
 				if(tax!=null) {
 					ord.setItem1_Tax_ID(tax.getC_Tax_ID());
 				}
 				else {
-					throw new AdempiereException("Invalid Tax Rate");
+					if(imp.getImportMessage() != null)
+						imp.setImportMessage(imp.getImportMessage() + " | Invalid Tax Rate!");
+					else
+						imp.setImportMessage("Invalid Tax Rate!");
+					imp.setImported("E");
+					imp.saveEx();
+					continue;
 				}
-				BigDecimal qty = imp.getQty();
-				if(uom_id == tonnage_uom_id)
-					qty = qty.divide(new BigDecimal(1000));
+				BigDecimal qty = imp.getQty();				
 				ord.setItem1_TotalLoad(BigDecimal.ONE);
 				ord.setItem1_PermitIssued(qty); 
 				ord.setMDPNo("");
@@ -343,13 +329,16 @@ public class ProcessImportSales extends SvrProcess {
 				ord.saveEx();
 
 				imp.setC_Order_ID(ord.get_ID());
+				imp.setImportMessage(null);
 				imp.setImported("Y");
+				imp.setProcessed(true);
 				imp.saveEx();
 
 				String error = DocumentEngine.postImmediate(Env.getCtx(), ord.getAD_Client_ID(), ord.get_Table_ID(), ord.get_ID(), true, ord.get_TrxName());				
 				if (! Util.isEmpty(error)) {
 						throw new AdempiereException(error);
 				}
+				i++;
 			}
 		}
 		catch (SQLException e)
@@ -368,7 +357,7 @@ public class ProcessImportSales extends SvrProcess {
 		String whereClause = "C_Order_ID IN (SELECT C_Order_ID FROM TF_ImportSales ) AND DocStatus = 'DR' "; 
 		List<TF_MOrder> sales = new Query(getCtx(), TF_MOrder.Table_Name, whereClause, get_TrxName())
 				.setClient_ID().list();
-		int i = 0;		
+		
 
 		for(TF_MOrder entry : sales) {
 	
