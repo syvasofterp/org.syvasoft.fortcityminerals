@@ -23,7 +23,7 @@ import org.compiere.util.KeyNamePair;
 
 /** Generated Interface for TF_Employee_Salary
  *  @author iDempiere (generated) 
- *  @version Release 4.1
+ *  @version Release 5.1
  */
 @SuppressWarnings("all")
 public interface I_TF_Employee_Salary 
@@ -112,12 +112,12 @@ public interface I_TF_Employee_Salary
     /** Column name C_Project_ID */
     public static final String COLUMNNAME_C_Project_ID = "C_Project_ID";
 
-	/** Set Project.
+	/** Set Subcontract / Project.
 	  * Financial Project
 	  */
 	public void setC_Project_ID (int C_Project_ID);
 
-	/** Get Project.
+	/** Get Subcontract / Project.
 	  * Financial Project
 	  */
 	public int getC_Project_ID();
@@ -232,6 +232,15 @@ public interface I_TF_Employee_Salary
 	public int getGL_Journal_ID();
 
 	public org.compiere.model.I_GL_Journal getGL_Journal() throws RuntimeException;
+
+    /** Column name Incentive */
+    public static final String COLUMNNAME_Incentive = "Incentive";
+
+	/** Set Incentive / OT	  */
+	public void setIncentive (BigDecimal Incentive);
+
+	/** Get Incentive / OT	  */
+	public BigDecimal getIncentive();
 
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";

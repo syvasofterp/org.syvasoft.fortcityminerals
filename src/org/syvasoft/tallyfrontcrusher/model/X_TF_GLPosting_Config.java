@@ -30,7 +30,7 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20200305L;
+	private static final long serialVersionUID = 20200621L;
 
     /** Standard Constructor */
     public X_TF_GLPosting_Config (Properties ctx, int TF_GLPosting_Config_ID, String trxName)
@@ -464,6 +464,31 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 	public int getFuelExpense_Charge_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_FuelExpense_Charge_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_ElementValue getIncentiveAcct() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
+			.getPO(getIncentiveAcct_ID(), get_TrxName());	}
+
+	/** Set Incentive.
+		@param IncentiveAcct_ID Incentive	  */
+	public void setIncentiveAcct_ID (int IncentiveAcct_ID)
+	{
+		if (IncentiveAcct_ID < 1) 
+			set_Value (COLUMNNAME_IncentiveAcct_ID, null);
+		else 
+			set_Value (COLUMNNAME_IncentiveAcct_ID, Integer.valueOf(IncentiveAcct_ID));
+	}
+
+	/** Get Incentive.
+		@return Incentive	  */
+	public int getIncentiveAcct_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_IncentiveAcct_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
