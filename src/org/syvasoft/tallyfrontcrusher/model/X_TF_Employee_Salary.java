@@ -26,14 +26,14 @@ import org.compiere.util.Env;
 
 /** Generated Model for TF_Employee_Salary
  *  @author iDempiere (generated) 
- *  @version Release 4.1 - $Id$ */
+ *  @version Release 5.1 - $Id$ */
 public class X_TF_Employee_Salary extends PO implements I_TF_Employee_Salary, I_Persistent 
 {
 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180119L;
+	private static final long serialVersionUID = 20200621L;
 
     /** Standard Constructor */
     public X_TF_Employee_Salary (Properties ctx, int TF_Employee_Salary_ID, String trxName)
@@ -43,6 +43,8 @@ public class X_TF_Employee_Salary extends PO implements I_TF_Employee_Salary, I_
         {
 			setC_BPartner_ID (0);
 			setDateAcct (new Timestamp( System.currentTimeMillis() ));
+			setIncentive (Env.ZERO);
+// 0
 			setIsCalculated (true);
 // Y
 			setProcessed (false);
@@ -168,7 +170,7 @@ public class X_TF_Employee_Salary extends PO implements I_TF_Employee_Salary, I_
 		return (org.compiere.model.I_C_Project)MTable.get(getCtx(), org.compiere.model.I_C_Project.Table_Name)
 			.getPO(getC_Project_ID(), get_TrxName());	}
 
-	/** Set Project.
+	/** Set Subcontract / Project.
 		@param C_Project_ID 
 		Financial Project
 	  */
@@ -180,7 +182,7 @@ public class X_TF_Employee_Salary extends PO implements I_TF_Employee_Salary, I_
 			set_Value (COLUMNNAME_C_Project_ID, Integer.valueOf(C_Project_ID));
 	}
 
-	/** Get Project.
+	/** Get Subcontract / Project.
 		@return Financial Project
 	  */
 	public int getC_Project_ID () 
@@ -352,6 +354,23 @@ public class X_TF_Employee_Salary extends PO implements I_TF_Employee_Salary, I_
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
+	}
+
+	/** Set Incentive / OT.
+		@param Incentive Incentive / OT	  */
+	public void setIncentive (BigDecimal Incentive)
+	{
+		set_Value (COLUMNNAME_Incentive, Incentive);
+	}
+
+	/** Get Incentive / OT.
+		@return Incentive / OT	  */
+	public BigDecimal getIncentive () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Incentive);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
 	}
 
 	/** Set Calculated.

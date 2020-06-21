@@ -77,27 +77,48 @@ public class MEmployeeSalary extends X_TF_Employee_Salary {
 			j.setC_ConversionType_ID(114);
 			j.saveEx();
 			
+			int line = 0;
+			MJournalLine jl = null;
 			//Salaries Expense Dr
-			MJournalLine jl = new MJournalLine(j);
-			jl.setLine(10);			
-			jl.setAccount_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getSalariesExpenseAcct());
-			jl.setC_BPartner_ID(getC_BPartner_ID());
-			jl.setC_Project_ID(getC_Project_ID());
-			jl.setUser1_ID(getC_ElementValue_ID()); // Quarry Profit Center
-			jl.setAmtSourceDr(getSalary_Amt());
-			jl.setAmtAcctDr(getSalary_Amt());
-			jl.setIsGenerated(true);
-			jl.saveEx();
+			if(getSalary_Amt().doubleValue() != 0) {
+				jl = new MJournalLine(j);
+				line = line + 10;
+				jl.setLine(line);			
+				jl.setAccount_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getSalariesExpenseAcct());
+				jl.setC_BPartner_ID(getC_BPartner_ID());
+				jl.setC_Project_ID(getC_Project_ID());
+				jl.setUser1_ID(getC_ElementValue_ID()); // Quarry Profit Center
+				jl.setAmtSourceDr(getSalary_Amt());
+				jl.setAmtAcctDr(getSalary_Amt());
+				jl.setIsGenerated(true);
+				jl.saveEx();
+			}
+			
+			//Incentive Expense Dr
+			if(getIncentive().doubleValue() != 0) {
+				jl = new MJournalLine(j);
+				line = line + 10;
+				jl.setLine(line);			
+				jl.setAccount_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getIncentiveAcct_ID());
+				jl.setC_BPartner_ID(getC_BPartner_ID());
+				jl.setC_Project_ID(getC_Project_ID());
+				jl.setUser1_ID(getC_ElementValue_ID()); // Quarry Profit Center
+				jl.setAmtSourceDr(getIncentive());
+				jl.setAmtAcctDr(getIncentive());
+				jl.setIsGenerated(true);
+				jl.saveEx();
+			}
 			
 			//Salary Payable Cr.
 			jl = new MJournalLine(j);
-			jl.setLine(20);			
+			line = line + 10;
+			jl.setLine(line);			
 			jl.setAccount_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getSalaryPayable_Acct());
 			jl.setC_BPartner_ID(getC_BPartner_ID());
 			jl.setC_Project_ID(getC_Project_ID());
 			jl.setUser1_ID(getC_ElementValue_ID()); // Quarry Profit Center
-			jl.setAmtSourceCr(getSalary_Amt());
-			jl.setAmtAcctCr(getSalary_Amt());
+			jl.setAmtSourceCr(getSalary_Amt().add(getIncentive()));
+			jl.setAmtAcctCr(getSalary_Amt().add(getIncentive()));
 			jl.setIsGenerated(true);
 			jl.saveEx();
 			

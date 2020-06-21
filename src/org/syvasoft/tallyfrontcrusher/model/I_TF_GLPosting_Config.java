@@ -269,6 +269,17 @@ public interface I_TF_GLPosting_Config
 
 	public org.compiere.model.I_C_Charge getFuelExpense_Charge() throws RuntimeException;
 
+    /** Column name IncentiveAcct_ID */
+    public static final String COLUMNNAME_IncentiveAcct_ID = "IncentiveAcct_ID";
+
+	/** Set Incentive	  */
+	public void setIncentiveAcct_ID (int IncentiveAcct_ID);
+
+	/** Get Incentive	  */
+	public int getIncentiveAcct_ID();
+
+	public org.compiere.model.I_C_ElementValue getIncentiveAcct() throws RuntimeException;
+
     /** Column name InterBankInTransit_ID */
     public static final String COLUMNNAME_InterBankInTransit_ID = "InterBankInTransit_ID";
 
