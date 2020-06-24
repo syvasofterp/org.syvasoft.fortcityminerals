@@ -286,6 +286,17 @@ public interface I_TF_TripSheet
 
 	public I_PM_Machinery getPM_Machinery() throws RuntimeException;
 
+    /** Column name PM_Meter_Log_ID */
+    public static final String COLUMNNAME_PM_Meter_Log_ID = "PM_Meter_Log_ID";
+
+	/** Set Machinery Meter Log	  */
+	public void setPM_Meter_Log_ID (int PM_Meter_Log_ID);
+
+	/** Get Machinery Meter Log	  */
+	public int getPM_Meter_Log_ID();
+
+	public I_PM_Meter_Log getPM_Meter_Log() throws RuntimeException;
+
     /** Column name PostLabourWage */
     public static final String COLUMNNAME_PostLabourWage = "PostLabourWage";
 
@@ -334,6 +345,15 @@ public interface I_TF_TripSheet
 
 	/** Get Running Meter	  */
 	public BigDecimal getRunning_Meter();
+
+    /** Column name Shift */
+    public static final String COLUMNNAME_Shift = "Shift";
+
+	/** Set Shift	  */
+	public void setShift (String Shift);
+
+	/** Get Shift	  */
+	public String getShift();
 
     /** Column name Subcon_Invoice_ID */
     public static final String COLUMNNAME_Subcon_Invoice_ID = "Subcon_Invoice_ID";
