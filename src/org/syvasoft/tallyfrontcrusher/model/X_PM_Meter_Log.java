@@ -33,7 +33,7 @@ public class X_PM_Meter_Log extends PO implements I_PM_Meter_Log, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20200612L;
+	private static final long serialVersionUID = 20200623L;
 
     /** Standard Constructor */
     public X_PM_Meter_Log (Properties ctx, int PM_Meter_Log_ID, String trxName)
@@ -48,6 +48,8 @@ public class X_PM_Meter_Log extends PO implements I_PM_Meter_Log, I_Persistent
 			setOpening_Meter (Env.ZERO);
 			setPM_Machinery_ID (0);
 			setPM_Meter_Log_ID (0);
+			setProcessed (false);
+// N
 			setRunning_Meter (Env.ZERO);
         } */
     }
@@ -218,6 +220,30 @@ public class X_PM_Meter_Log extends PO implements I_PM_Meter_Log, I_Persistent
 		return (String)get_Value(COLUMNNAME_PM_Meter_Log_UU);
 	}
 
+	/** Set Processed.
+		@param Processed 
+		The document has been processed
+	  */
+	public void setProcessed (boolean Processed)
+	{
+		set_Value (COLUMNNAME_Processed, Boolean.valueOf(Processed));
+	}
+
+	/** Get Processed.
+		@return The document has been processed
+	  */
+	public boolean isProcessed () 
+	{
+		Object oo = get_Value(COLUMNNAME_Processed);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
 	/** Set Running Meter.
 		@param Running_Meter Running Meter	  */
 	public void setRunning_Meter (BigDecimal Running_Meter)
@@ -233,5 +259,51 @@ public class X_PM_Meter_Log extends PO implements I_PM_Meter_Log, I_Persistent
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
+	}
+
+	/** Day = D */
+	public static final String SHIFT_Day = "D";
+	/** Night = N */
+	public static final String SHIFT_Night = "N";
+	/** All Day = A */
+	public static final String SHIFT_AllDay = "A";
+	/** Set Shift.
+		@param Shift Shift	  */
+	public void setShift (String Shift)
+	{
+
+		set_Value (COLUMNNAME_Shift, Shift);
+	}
+
+	/** Get Shift.
+		@return Shift	  */
+	public String getShift () 
+	{
+		return (String)get_Value(COLUMNNAME_Shift);
+	}
+
+	public I_TF_TripSheet getTF_TripSheet() throws RuntimeException
+    {
+		return (I_TF_TripSheet)MTable.get(getCtx(), I_TF_TripSheet.Table_Name)
+			.getPO(getTF_TripSheet_ID(), get_TrxName());	}
+
+	/** Set Trip Sheet.
+		@param TF_TripSheet_ID Trip Sheet	  */
+	public void setTF_TripSheet_ID (int TF_TripSheet_ID)
+	{
+		if (TF_TripSheet_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_TF_TripSheet_ID, null);
+		else 
+			set_ValueNoCheck (COLUMNNAME_TF_TripSheet_ID, Integer.valueOf(TF_TripSheet_ID));
+	}
+
+	/** Get Trip Sheet.
+		@return Trip Sheet	  */
+	public int getTF_TripSheet_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_TripSheet_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 }

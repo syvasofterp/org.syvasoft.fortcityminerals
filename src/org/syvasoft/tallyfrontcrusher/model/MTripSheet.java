@@ -128,6 +128,31 @@ public class MTripSheet extends X_TF_TripSheet {
 				issueDiesel();
 			}
 			
+			//Post readings into Machinery Meter Log
+			if(getPM_Machinery_ID() > 0) {
+				MMachineryType mt = (MMachineryType) getPM_Machinery().getPM_MachineryType();
+				int defaultMeterType_ID = 0;
+				if(mt.getMileageType().equals(MMachineryType.MILEAGETYPE_KmLitre))
+					defaultMeterType_ID = MSysConfig.getIntValue("KILOMETER_UOM_ID", 1000071);
+				else if(mt.getMileageType().equals(MMachineryType.MILEAGETYPE_LitreHr))
+					defaultMeterType_ID = MSysConfig.getIntValue("HOUR_UOM_ID", 101);
+				else
+					defaultMeterType_ID = mt.getC_UOM_ID();
+				
+				MMeterLog mLog = new MMeterLog(getCtx(), 0, get_TrxName());
+				mLog.setAD_Org_ID(getAD_Org_ID());
+				mLog.setDateReport(getDateReport());
+				mLog.setShift(getShift());
+				mLog.setPM_Machinery_ID(getPM_Machinery_ID());
+				mLog.setOpening_Meter(getOpening_Meter());
+				mLog.setClosing_Meter(getClosing_Meter());
+				mLog.setRunning_Meter(getRunning_Meter());
+				mLog.setTF_TripSheet_ID(getTF_TripSheet_ID());
+				mLog.setC_UOM_ID(defaultMeterType_ID);
+				mLog.setProcessed(true);
+				mLog.saveEx();
+			}
+			
 			if(getTotal_Wage().doubleValue() != 0 && getC_BPartner_ID() > 0){
 				// Create Wage Entry
 				MLabourWage wage = new MLabourWage(getCtx(), 0, get_TrxName());
@@ -180,6 +205,8 @@ public class MTripSheet extends X_TF_TripSheet {
 				issue.deleteEx(true,get_TrxName());
 			}
 		}
+		
+		MMeterLog.deleteTripSheetMeterLog(getCtx(), getTF_TripSheet_ID(), get_TrxName());
 		
 		setProcessed(false);
 		setDocStatus(DOCSTATUS_Drafted);

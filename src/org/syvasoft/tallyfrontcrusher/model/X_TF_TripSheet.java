@@ -33,7 +33,7 @@ public class X_TF_TripSheet extends PO implements I_TF_TripSheet, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20200618L;
+	private static final long serialVersionUID = 20200623L;
 
     /** Standard Constructor */
     public X_TF_TripSheet (Properties ctx, int TF_TripSheet_ID, String trxName)
@@ -436,6 +436,31 @@ public class X_TF_TripSheet extends PO implements I_TF_TripSheet, I_Persistent
 		return ii.intValue();
 	}
 
+	public I_PM_Meter_Log getPM_Meter_Log() throws RuntimeException
+    {
+		return (I_PM_Meter_Log)MTable.get(getCtx(), I_PM_Meter_Log.Table_Name)
+			.getPO(getPM_Meter_Log_ID(), get_TrxName());	}
+
+	/** Set Machinery Meter Log.
+		@param PM_Meter_Log_ID Machinery Meter Log	  */
+	public void setPM_Meter_Log_ID (int PM_Meter_Log_ID)
+	{
+		if (PM_Meter_Log_ID < 1) 
+			set_Value (COLUMNNAME_PM_Meter_Log_ID, null);
+		else 
+			set_Value (COLUMNNAME_PM_Meter_Log_ID, Integer.valueOf(PM_Meter_Log_ID));
+	}
+
+	/** Get Machinery Meter Log.
+		@return Machinery Meter Log	  */
+	public int getPM_Meter_Log_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_PM_Meter_Log_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	/** Set Post Labour Wage.
 		@param PostLabourWage Post Labour Wage	  */
 	public void setPostLabourWage (String PostLabourWage)
@@ -527,6 +552,27 @@ public class X_TF_TripSheet extends PO implements I_TF_TripSheet, I_Persistent
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
+	}
+
+	/** Day = D */
+	public static final String SHIFT_Day = "D";
+	/** Night = N */
+	public static final String SHIFT_Night = "N";
+	/** All Day = A */
+	public static final String SHIFT_AllDay = "A";
+	/** Set Shift.
+		@param Shift Shift	  */
+	public void setShift (String Shift)
+	{
+
+		set_Value (COLUMNNAME_Shift, Shift);
+	}
+
+	/** Get Shift.
+		@return Shift	  */
+	public String getShift () 
+	{
+		return (String)get_Value(COLUMNNAME_Shift);
 	}
 
 	public org.compiere.model.I_C_Invoice getSubcon_Invoice() throws RuntimeException

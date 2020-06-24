@@ -32,7 +32,7 @@ public interface I_PM_Meter_Log
     /** TableName=PM_Meter_Log */
     public static final String Table_Name = "PM_Meter_Log";
 
-    /** AD_Table_ID=1000310 */
+    /** AD_Table_ID=1000307 */
     public static final int Table_ID = MTable.getTable_ID(Table_Name);
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);
@@ -168,6 +168,19 @@ public interface I_PM_Meter_Log
 	/** Get PM_Meter_Log_UU	  */
 	public String getPM_Meter_Log_UU();
 
+    /** Column name Processed */
+    public static final String COLUMNNAME_Processed = "Processed";
+
+	/** Set Processed.
+	  * The document has been processed
+	  */
+	public void setProcessed (boolean Processed);
+
+	/** Get Processed.
+	  * The document has been processed
+	  */
+	public boolean isProcessed();
+
     /** Column name Running_Meter */
     public static final String COLUMNNAME_Running_Meter = "Running_Meter";
 
@@ -176,6 +189,26 @@ public interface I_PM_Meter_Log
 
 	/** Get Running Meter	  */
 	public BigDecimal getRunning_Meter();
+
+    /** Column name Shift */
+    public static final String COLUMNNAME_Shift = "Shift";
+
+	/** Set Shift	  */
+	public void setShift (String Shift);
+
+	/** Get Shift	  */
+	public String getShift();
+
+    /** Column name TF_TripSheet_ID */
+    public static final String COLUMNNAME_TF_TripSheet_ID = "TF_TripSheet_ID";
+
+	/** Set Trip Sheet	  */
+	public void setTF_TripSheet_ID (int TF_TripSheet_ID);
+
+	/** Get Trip Sheet	  */
+	public int getTF_TripSheet_ID();
+
+	public I_TF_TripSheet getTF_TripSheet() throws RuntimeException;
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";
