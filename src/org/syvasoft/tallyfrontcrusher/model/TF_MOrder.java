@@ -1589,7 +1589,79 @@ public class TF_MOrder extends MOrder {
 		return ii.intValue();
 	}
 
-    
+    /** Column name TF_BlueMetal_Type */
+    public static final String COLUMNNAME_TF_BlueMetal_Type = "TF_BlueMetal_Type";
+
+	/** Regular = R */
+	public static final String TF_BLUEMETAL_TYPE_Regular = "R";
+	/** Wetmix = W */
+	public static final String TF_BLUEMETAL_TYPE_Wetmix = "W";
+	/** Regular + Geosand = RG */
+	public static final String TF_BLUEMETAL_TYPE_RegularPlusGeosand = "RG";
+	/** 40 MM only = 40 */
+	public static final String TF_BLUEMETAL_TYPE_40MMOnly = "40";
+	/** Set Production Type.
+		@param TF_BlueMetal_Type Production Type	  */
+	public void setTF_BlueMetal_Type (String TF_BlueMetal_Type)
+	{
+
+		set_Value (COLUMNNAME_TF_BlueMetal_Type, TF_BlueMetal_Type);
+	}
+
+	/** Get Production Type.
+		@return Production Type	  */
+	public String getTF_BlueMetal_Type () 
+	{
+		return (String)get_Value(COLUMNNAME_TF_BlueMetal_Type);
+	}
+
+    /** Column name TF_ProductionPlant_ID */
+    public static final String COLUMNNAME_TF_ProductionPlant_ID = "TF_ProductionPlant_ID";
+
+	/** Set TF_ProductionPlant.
+	@param TF_ProductionPlant_ID TF_ProductionPlant	  */
+	public void setTF_ProductionPlant_ID (int TF_ProductionPlant_ID)
+	{
+		if (TF_ProductionPlant_ID < 1) 
+			set_Value (COLUMNNAME_TF_ProductionPlant_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_ProductionPlant_ID, Integer.valueOf(TF_ProductionPlant_ID));
+	}
+	
+	/** Get TF_ProductionPlant.
+		@return TF_ProductionPlant	  */
+	public int getTF_ProductionPlant_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_ProductionPlant_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+    /** Column name TF_Send_To */
+    public static final String COLUMNNAME_TF_Send_To = "TF_Send_To";
+
+	/** Production = P */
+	public static final String TF_SEND_TO_Production = "P";
+	/** Stock = S */
+	public static final String TF_SEND_TO_Stock = "S";
+	/** Subcontract Production = T */
+	public static final String TF_SEND_TO_SubcontractProduction = "T";
+	/** Set Send To.
+		@param TF_Send_To Send To	  */
+	public void setTF_Send_To (String TF_Send_To)
+	{
+
+		set_Value (COLUMNNAME_TF_Send_To, TF_Send_To);
+	}
+
+	/** Get Send To.
+		@return Send To	  */
+	public String getTF_Send_To () 
+	{
+		return (String)get_Value(COLUMNNAME_TF_Send_To);
+	}
+
 		
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		

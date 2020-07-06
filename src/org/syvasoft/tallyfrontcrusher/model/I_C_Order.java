@@ -123,6 +123,15 @@ public interface I_C_Order
 	/** Get AmountTendered	  */
 	public BigDecimal getAmountTendered();
 
+    /** Column name ApprovedPrice */
+    public static final String COLUMNNAME_ApprovedPrice = "ApprovedPrice";
+
+	/** Set Approved Price	  */
+	public void setApprovedPrice (BigDecimal ApprovedPrice);
+
+	/** Get Approved Price	  */
+	public BigDecimal getApprovedPrice();
+
     /** Column name BarcodeScanner_POS */
     public static final String COLUMNNAME_BarcodeScanner_POS = "BarcodeScanner_POS";
 
@@ -494,6 +503,24 @@ public interface I_C_Order
 	  * User who created this records
 	  */
 	public int getCreatedBy();
+
+    /** Column name CreateDiscountRequest */
+    public static final String COLUMNNAME_CreateDiscountRequest = "CreateDiscountRequest";
+
+	/** Set Create Discount Request	  */
+	public void setCreateDiscountRequest (String CreateDiscountRequest);
+
+	/** Get Create Discount Request	  */
+	public String getCreateDiscountRequest();
+
+    /** Column name CreateTaxInvoice */
+    public static final String COLUMNNAME_CreateTaxInvoice = "CreateTaxInvoice";
+
+	/** Set Create Tax Invoice	  */
+	public void setCreateTaxInvoice (String CreateTaxInvoice);
+
+	/** Get Create Tax Invoice	  */
+	public String getCreateTaxInvoice();
 
     /** Column name DateAcct */
     public static final String COLUMNNAME_DateAcct = "DateAcct";
@@ -1705,6 +1732,15 @@ public interface I_C_Order
 	  */
 	public BigDecimal getRentPayable();
 
+    /** Column name RequireDiscRequest */
+    public static final String COLUMNNAME_RequireDiscRequest = "RequireDiscRequest";
+
+	/** Set Require Discount Request	  */
+	public void setRequireDiscRequest (boolean RequireDiscRequest);
+
+	/** Get Require Discount Request	  */
+	public boolean isRequireDiscRequest();
+
     /** Column name Sales_Return */
     public static final String COLUMNNAME_Sales_Return = "Sales_Return";
 
@@ -1782,6 +1818,15 @@ public interface I_C_Order
 
 	public org.compiere.model.I_M_InOut getSubcon_Receipt() throws RuntimeException;
 
+    /** Column name TF_BlueMetal_Type */
+    public static final String COLUMNNAME_TF_BlueMetal_Type = "TF_BlueMetal_Type";
+
+	/** Set Production Type	  */
+	public void setTF_BlueMetal_Type (String TF_BlueMetal_Type);
+
+	/** Get Production Type	  */
+	public String getTF_BlueMetal_Type();
+
     /** Column name TF_Destination_ID */
     public static final String COLUMNNAME_TF_Destination_ID = "TF_Destination_ID";
 
@@ -1811,6 +1856,15 @@ public interface I_C_Order
 
 	public org.compiere.model.I_C_Payment getTF_DriverTips_Pay() throws RuntimeException;
 
+    /** Column name TF_ProductionPlant_ID */
+    public static final String COLUMNNAME_TF_ProductionPlant_ID = "TF_ProductionPlant_ID";
+
+	/** Set TF_ProductionPlant	  */
+	public void setTF_ProductionPlant_ID (int TF_ProductionPlant_ID);
+
+	/** Get TF_ProductionPlant	  */
+	public int getTF_ProductionPlant_ID();
+
     /** Column name TF_RentedVehicle_ID */
     public static final String COLUMNNAME_TF_RentedVehicle_ID = "TF_RentedVehicle_ID";
 
@@ -1819,6 +1873,15 @@ public interface I_C_Order
 
 	/** Get Rented Vehicle	  */
 	public int getTF_RentedVehicle_ID();
+
+    /** Column name TF_Send_To */
+    public static final String COLUMNNAME_TF_Send_To = "TF_Send_To";
+
+	/** Set Send To	  */
+	public void setTF_Send_To (String TF_Send_To);
+
+	/** Get Send To	  */
+	public String getTF_Send_To();
 
     /** Column name TF_TaxInvoice_ID */
     public static final String COLUMNNAME_TF_TaxInvoice_ID = "TF_TaxInvoice_ID";

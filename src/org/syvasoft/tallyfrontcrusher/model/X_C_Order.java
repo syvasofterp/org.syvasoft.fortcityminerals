@@ -34,7 +34,7 @@ public class X_C_Order extends PO implements I_C_Order, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20200228L;
+	private static final long serialVersionUID = 20200706L;
 
     /** Standard Constructor */
     public X_C_Order (Properties ctx, int C_Order_ID, String trxName)
@@ -62,6 +62,7 @@ public class X_C_Order extends PO implements I_C_Order, I_Persistent
 			setDeliveryViaRule (null);
 // P
 			setDocAction (null);
+// CO
 			setDocStatus (null);
 // DR
 			setDocumentNo (null);
@@ -101,6 +102,8 @@ public class X_C_Order extends PO implements I_C_Order, I_Persistent
 			setPriorityRule (null);
 // 5
 			setProcessed (false);
+			setRequireDiscRequest (false);
+// N
 			setSalesRep_ID (0);
 			setSendEMail (false);
 			setTotalLines (Env.ZERO);
@@ -234,6 +237,22 @@ public class X_C_Order extends PO implements I_C_Order, I_Persistent
 	public BigDecimal getAmountTendered () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_AmountTendered);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set Approved Price.
+		@param ApprovedPrice Approved Price	  */
+	public void setApprovedPrice (BigDecimal ApprovedPrice)
+	{
+		throw new IllegalArgumentException ("ApprovedPrice is virtual column");	}
+
+	/** Get Approved Price.
+		@return Approved Price	  */
+	public BigDecimal getApprovedPrice () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_ApprovedPrice);
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
@@ -903,6 +922,34 @@ public class X_C_Order extends PO implements I_C_Order, I_Persistent
 		return (String)get_Value(COLUMNNAME_CopyFrom);
 	}
 
+	/** Set Create Discount Request.
+		@param CreateDiscountRequest Create Discount Request	  */
+	public void setCreateDiscountRequest (String CreateDiscountRequest)
+	{
+		set_Value (COLUMNNAME_CreateDiscountRequest, CreateDiscountRequest);
+	}
+
+	/** Get Create Discount Request.
+		@return Create Discount Request	  */
+	public String getCreateDiscountRequest () 
+	{
+		return (String)get_Value(COLUMNNAME_CreateDiscountRequest);
+	}
+
+	/** Set Create Tax Invoice.
+		@param CreateTaxInvoice Create Tax Invoice	  */
+	public void setCreateTaxInvoice (String CreateTaxInvoice)
+	{
+		set_Value (COLUMNNAME_CreateTaxInvoice, CreateTaxInvoice);
+	}
+
+	/** Get Create Tax Invoice.
+		@return Create Tax Invoice	  */
+	public String getCreateTaxInvoice () 
+	{
+		return (String)get_Value(COLUMNNAME_CreateTaxInvoice);
+	}
+
 	/** Set Account Date.
 		@param DateAcct 
 		Accounting Date
@@ -1089,8 +1136,7 @@ public class X_C_Order extends PO implements I_C_Order, I_Persistent
 	public void setDiscntStatus (String DiscntStatus)
 	{
 
-		set_Value (COLUMNNAME_DiscntStatus, DiscntStatus);
-	}
+		throw new IllegalArgumentException ("DiscntStatus is virtual column");	}
 
 	/** Get Discount Status.
 		@return Discount Status	  */
@@ -3219,6 +3265,27 @@ public class X_C_Order extends PO implements I_C_Order, I_Persistent
 		return bd;
 	}
 
+	/** Set Require Discount Request.
+		@param RequireDiscRequest Require Discount Request	  */
+	public void setRequireDiscRequest (boolean RequireDiscRequest)
+	{
+		set_Value (COLUMNNAME_RequireDiscRequest, Boolean.valueOf(RequireDiscRequest));
+	}
+
+	/** Get Require Discount Request.
+		@return Require Discount Request	  */
+	public boolean isRequireDiscRequest () 
+	{
+		Object oo = get_Value(COLUMNNAME_RequireDiscRequest);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
 	/** Set Sales Return.
 		@param Sales_Return Sales Return	  */
 	public void setSales_Return (boolean Sales_Return)
@@ -3373,6 +3440,29 @@ public class X_C_Order extends PO implements I_C_Order, I_Persistent
 		return ii.intValue();
 	}
 
+	/** Regular = R */
+	public static final String TF_BLUEMETAL_TYPE_Regular = "R";
+	/** Wetmix = W */
+	public static final String TF_BLUEMETAL_TYPE_Wetmix = "W";
+	/** Regular + Geosand = RG */
+	public static final String TF_BLUEMETAL_TYPE_RegularPlusGeosand = "RG";
+	/** 40 MM only = 40 */
+	public static final String TF_BLUEMETAL_TYPE_40MMOnly = "40";
+	/** Set Production Type.
+		@param TF_BlueMetal_Type Production Type	  */
+	public void setTF_BlueMetal_Type (String TF_BlueMetal_Type)
+	{
+
+		set_Value (COLUMNNAME_TF_BlueMetal_Type, TF_BlueMetal_Type);
+	}
+
+	/** Get Production Type.
+		@return Production Type	  */
+	public String getTF_BlueMetal_Type () 
+	{
+		return (String)get_Value(COLUMNNAME_TF_BlueMetal_Type);
+	}
+
 	/** Set Destination.
 		@param TF_Destination_ID Destination	  */
 	public void setTF_Destination_ID (int TF_Destination_ID)
@@ -3438,6 +3528,26 @@ public class X_C_Order extends PO implements I_C_Order, I_Persistent
 		return ii.intValue();
 	}
 
+	/** Set TF_ProductionPlant.
+		@param TF_ProductionPlant_ID TF_ProductionPlant	  */
+	public void setTF_ProductionPlant_ID (int TF_ProductionPlant_ID)
+	{
+		if (TF_ProductionPlant_ID < 1) 
+			set_Value (COLUMNNAME_TF_ProductionPlant_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_ProductionPlant_ID, Integer.valueOf(TF_ProductionPlant_ID));
+	}
+
+	/** Get TF_ProductionPlant.
+		@return TF_ProductionPlant	  */
+	public int getTF_ProductionPlant_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_ProductionPlant_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	/** Set Rented Vehicle.
 		@param TF_RentedVehicle_ID Rented Vehicle	  */
 	public void setTF_RentedVehicle_ID (int TF_RentedVehicle_ID)
@@ -3456,6 +3566,27 @@ public class X_C_Order extends PO implements I_C_Order, I_Persistent
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
+	}
+
+	/** Production = P */
+	public static final String TF_SEND_TO_Production = "P";
+	/** Stock = S */
+	public static final String TF_SEND_TO_Stock = "S";
+	/** Subcontract Production = T */
+	public static final String TF_SEND_TO_SubcontractProduction = "T";
+	/** Set Send To.
+		@param TF_Send_To Send To	  */
+	public void setTF_Send_To (String TF_Send_To)
+	{
+
+		set_Value (COLUMNNAME_TF_Send_To, TF_Send_To);
+	}
+
+	/** Get Send To.
+		@return Send To	  */
+	public String getTF_Send_To () 
+	{
+		return (String)get_Value(COLUMNNAME_TF_Send_To);
 	}
 
 	/** Set Tax Invoice.
