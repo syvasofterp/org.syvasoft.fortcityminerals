@@ -34,7 +34,7 @@ public class X_C_Order extends PO implements I_C_Order, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20200706L;
+	private static final long serialVersionUID = 20200707L;
 
     /** Standard Constructor */
     public X_C_Order (Properties ctx, int C_Order_ID, String trxName)
@@ -3461,6 +3461,26 @@ public class X_C_Order extends PO implements I_C_Order, I_Persistent
 	public String getTF_BlueMetal_Type () 
 	{
 		return (String)get_Value(COLUMNNAME_TF_BlueMetal_Type);
+	}
+
+	/** Set Crusher Production.
+		@param TF_Crusher_Production_ID Crusher Production	  */
+	public void setTF_Crusher_Production_ID (int TF_Crusher_Production_ID)
+	{
+		if (TF_Crusher_Production_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_TF_Crusher_Production_ID, null);
+		else 
+			set_ValueNoCheck (COLUMNNAME_TF_Crusher_Production_ID, Integer.valueOf(TF_Crusher_Production_ID));
+	}
+
+	/** Get Crusher Production.
+		@return Crusher Production	  */
+	public int getTF_Crusher_Production_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Crusher_Production_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	/** Set Destination.

@@ -1662,6 +1662,28 @@ public class TF_MOrder extends MOrder {
 		return (String)get_Value(COLUMNNAME_TF_Send_To);
 	}
 
+    /** Column name TF_Crusher_Production_ID */
+    public static final String COLUMNNAME_TF_Crusher_Production_ID = "TF_Crusher_Production_ID";
+	/** Set Crusher Production.
+	@param TF_Crusher_Production_ID Crusher Production	  */
+	public void setTF_Crusher_Production_ID (int TF_Crusher_Production_ID)
+	{
+		if (TF_Crusher_Production_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_TF_Crusher_Production_ID, null);
+		else 
+			set_ValueNoCheck (COLUMNNAME_TF_Crusher_Production_ID, Integer.valueOf(TF_Crusher_Production_ID));
+	}
+	
+	/** Get Crusher Production.
+		@return Crusher Production	  */
+	public int getTF_Crusher_Production_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Crusher_Production_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 		
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
@@ -1965,6 +1987,10 @@ public class TF_MOrder extends MOrder {
 			}
 		}
 		createSubcontractPurchaseEntry();
+		int BoulderID = MSysConfig.getIntValue("BOULDER_ID", 1000233, getAD_Client_ID(), getAD_Org_ID());
+		if(!isSOTrx() && getItem1_ID()==BoulderID && TF_SEND_TO_Production.equals(getTF_Send_To()))
+			postCrusherProduction();
+		
 		String msg = super.completeIt();
 		purchasePermit();
 		issuePermit();
@@ -1972,6 +1998,7 @@ public class TF_MOrder extends MOrder {
 		closeWeighmentEntry();
 		closeTokenNo();
 		closeYardEntry();
+		
 		
 		
 		createTaxInvoice();
@@ -2077,6 +2104,7 @@ public class TF_MOrder extends MOrder {
 			reverseSubcontractPurchaseEntry();
 			reverseIssuedPermit();
 			reversePurchasedPermit();
+			reverseCrusherProduction();
 			voidTaxInvoice();
 			voidTR_TaxInvoice();
 			return super.voidIt();
@@ -2132,6 +2160,7 @@ public class TF_MOrder extends MOrder {
 			reverseSubcontractPurchaseEntry();
 			reverseIssuedPermit();
 			reversePurchasedPermit();
+			reverseCrusherProduction();
 			voidTaxInvoice();
 			voidTR_TaxInvoice();
 			return super.reActivateIt();
@@ -2311,6 +2340,14 @@ public class TF_MOrder extends MOrder {
 		}
 	}
 	
+	public void reverseCrusherProduction() {
+		if(getTF_Crusher_Production_ID() > 0) {
+			MCrusherProduction crProd = new MCrusherProduction(getCtx(), getTF_Crusher_Production_ID(), get_TrxName());
+			crProd.reverseIt();
+			crProd.saveEx();
+			setTF_Crusher_Production_ID(0);
+		}		
+	}
 	public static MProductPricing getProductPricing(int M_Product_ID, int M_PriceList_ID, int C_BPartner_ID, 
 			BigDecimal Qty,	Timestamp priceDate, boolean isSOTrx) {
 		//Get Unit Price from Latest Price List.
@@ -2368,6 +2405,41 @@ public class TF_MOrder extends MOrder {
 		return prodPrice;
 	}
 	
+	
+	public String postCrusherProduction() {
+		String m_processMsg = null;
+		
+		//Create Crusher Production
+		MCrusherProduction cProd = new MCrusherProduction(getCtx(), 0, get_TrxName());
+		cProd.setAD_Org_ID(getAD_Org_ID());
+		cProd.setTF_ProductionPlant_ID(getTF_ProductionPlant_ID());		
+		cProd.setTF_BlueMetal_Type(getTF_BlueMetal_Type());
+		cProd.setTF_WeighmentEntry_ID(getTF_WeighmentEntry_ID());
+		cProd.setMovementDate(getDateAcct());
+		cProd.setC_UOM_ID(getItem1_UOM_ID());		
+		cProd.setM_Warehouse_ID(getM_Warehouse_ID());
+		MWarehouse wh = MWarehouse.get(getCtx(), getM_Warehouse_ID());
+		cProd.setM_Locator_ID(wh.getDefaultLocator().get_ID());
+		cProd.setRM_Product_ID(getItem1_ID());
+		cProd.setQtyUsed(getItem1_Qty());
+		cProd.setDescription("Created from Purchase Quick Entry : " + getDocumentNo());
+		cProd.setDocStatus(DOCSTATUS_Drafted);
+		cProd.setDocAction(DOCACTION_Prepare);
+		cProd.saveEx();
+		
+		//Update Crusher Production Reference to Boulder Receipt
+		setTF_Crusher_Production_ID(cProd.getTF_Crusher_Production_ID());
+		
+		cProd.createProduction(true);
+		cProd.saveEx();		
+		//End Create
+		
+		//Post Crusher Production
+		m_processMsg = cProd.processIt(DOCACTION_Complete);
+		if(m_processMsg == null)			
+			cProd.saveEx();
+		return m_processMsg;
+	}
 	
 	public void createSubcontractPurchaseEntry() {
 		if(!isSOTrx()) {		

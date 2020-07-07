@@ -189,7 +189,9 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 				*/
 			}
 			
-			if(!isSOTrx) {
+			int BoulderID = MSysConfig.getIntValue("BOULDER_ID", 1000233, weighment.getAD_Client_ID(), weighment.getAD_Org_ID());
+
+			if(!isSOTrx && weighment.getM_Product_ID()==BoulderID) {
 				mTab.setValue(TF_MOrder.COLUMNNAME_TF_Send_To, weighment.getTF_Send_To());
 				mTab.setValue(TF_MOrder.COLUMNNAME_TF_BlueMetal_Type, weighment.getTF_BlueMetal_Type());
 				mTab.setValue(TF_MOrder.COLUMNNAME_TF_ProductionPlant_ID, weighment.getTF_ProductionPlant_ID());

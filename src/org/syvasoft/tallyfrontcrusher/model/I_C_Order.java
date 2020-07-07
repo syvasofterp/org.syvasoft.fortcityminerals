@@ -1827,6 +1827,15 @@ public interface I_C_Order
 	/** Get Production Type	  */
 	public String getTF_BlueMetal_Type();
 
+    /** Column name TF_Crusher_Production_ID */
+    public static final String COLUMNNAME_TF_Crusher_Production_ID = "TF_Crusher_Production_ID";
+
+	/** Set Crusher Production	  */
+	public void setTF_Crusher_Production_ID (int TF_Crusher_Production_ID);
+
+	/** Get Crusher Production	  */
+	public int getTF_Crusher_Production_ID();
+
     /** Column name TF_Destination_ID */
     public static final String COLUMNNAME_TF_Destination_ID = "TF_Destination_ID";
 
