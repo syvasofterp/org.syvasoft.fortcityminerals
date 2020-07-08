@@ -1,6 +1,7 @@
 package org.syvasoft.tallyfrontcrusher.model;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -444,7 +445,7 @@ public class TF_MInvoice extends MInvoice {
 			proj.updateQtyBilled();
 			proj.saveEx();
 		}
-		createCounterInvoice();
+		createCounterInvoice();		
 		return msg;
 	}
 
@@ -473,7 +474,7 @@ public class TF_MInvoice extends MInvoice {
 					proj.saveEx();
 				}
 			}
-		}	
+		}
 		
 		return ok;
 	}
@@ -690,4 +691,5 @@ public class TF_MInvoice extends MInvoice {
 		setRef_Invoice_ID(invoice.getC_Invoice_ID());
 		
 	}
+	
 }

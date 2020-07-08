@@ -1995,6 +1995,7 @@ public class TF_MOrder extends MOrder {
 		purchasePermit();
 		issuePermit();
 		createTransporterInvoice();
+		createAdditionalInvoice();
 		closeWeighmentEntry();
 		closeTokenNo();
 		closeYardEntry();
@@ -2010,7 +2011,7 @@ public class TF_MOrder extends MOrder {
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
 		MRentedVehicle rv = new MRentedVehicle(getCtx(), getTF_RentedVehicle_ID(), get_TrxName());		
-		if(getTF_RentedVehicle_ID()>0 && getRent_Amt().doubleValue()==0) {
+		if(getTF_RentedVehicle_ID()>0 && getRent_Amt().doubleValue()==0 && isSOTrx()) {
 			if((rv.isOwnVehicle() && isSOTrx()) || rv.isTransporter())
 				throw new AdempiereUserError("Invalid Rent Amount");
 		}
@@ -2107,6 +2108,7 @@ public class TF_MOrder extends MOrder {
 			reverseCrusherProduction();
 			voidTaxInvoice();
 			voidTR_TaxInvoice();
+			reverseAdditionalTransactions();
 			return super.voidIt();
 	}
 	
@@ -2935,6 +2937,112 @@ public class TF_MOrder extends MOrder {
 		mOrder.set_ValueOfColumn(TF_MOrder.COLUMNNAME_C_PaymentSalesDiscount_ID, payment.getC_Payment_ID());
 		mOrder.saveEx();
 		
+	}
+	
+	public void createAdditionalInvoice() {
+		String whereClause = "C_Order_ID = ? AND DocStatus='CO'";
+		TF_MInvoice srcInv = new Query(getCtx(), TF_MInvoice.Table_Name, whereClause, get_TrxName())
+			.setClient_ID()
+			.setParameters(getC_Order_ID())
+			.first();
+		if(srcInv == null)
+			return;
+		String weighmentNo = null;
+		if(srcInv.getC_Order_ID() > 0) {
+			TF_MOrder ord = new TF_MOrder(srcInv.getCtx(), srcInv.getC_Order_ID(), srcInv.get_TrxName());
+			if(ord.getTF_WeighmentEntry_ID() > 0) {
+				MWeighmentEntry wEntry = new MWeighmentEntry(srcInv.getCtx(), ord.getTF_WeighmentEntry_ID(), srcInv.get_TrxName());
+				weighmentNo = wEntry.getDocumentNo();
+			}
+		}
+		for (MInvoiceLine srcLine : srcInv.getLines()) {
+			
+			List<MAdditionalTransactionSetup> ctransSetups = MAdditionalTransactionSetup.getAdditionalTransaction
+					(srcInv.getCtx(), srcInv.getAD_Org_ID(), srcInv.getC_DocTypeTarget_ID(), srcInv.getC_BPartner_ID(), srcLine.getM_Product_ID());
+			for(MAdditionalTransactionSetup ctransSetup : ctransSetups) {
+				
+				TF_MBPartner bp = new TF_MBPartner(srcInv.getCtx(), ctransSetup.getTo_Bpartner_ID(), srcInv.get_TrxName());
+				
+				//Invoice Header
+				TF_MInvoice invoice = new TF_MInvoice(srcInv.getCtx(), 0, srcInv.get_TrxName());
+				invoice.setClientOrg(srcInv.getAD_Client_ID(), ctransSetup.getTo_Org_ID());
+				invoice.setC_DocTypeTarget_ID(ctransSetup.getTo_Doctype_ID());	// Counter Doc
+				invoice.setIsSOTrx(ctransSetup.getTo_Doctype().isSOTrx());
+				invoice.setDateInvoiced(srcInv.getDateInvoiced());
+				invoice.setDateAcct(srcInv.getDateAcct());
+				//
+				invoice.setSalesRep_ID(Env.getAD_User_ID(srcInv.getCtx()));		
+				//
+				
+				invoice.setBPartner(bp);				
+				invoice.setVehicleNo(srcInv.getVehicleNo());
+				if(weighmentNo != null)
+					invoice.setDescription("Ticket No: " + weighmentNo);
+				else
+					invoice.addDescription("Ref Invoice: " + srcInv.getDocumentNo());
+				if(srcInv.getDescription() != null)
+					invoice.addDescription(srcInv.getDescription());
+				
+				//Price List
+				int m_M_PriceList_ID = Env.getContextAsInt(srcInv.getCtx(), "#M_PriceList_ID");
+				
+				if(!srcInv.isSOTrx() && bp.getM_PriceList_ID() > 0)
+					m_M_PriceList_ID = bp.getM_PriceList_ID();
+				else if(srcInv.isSOTrx() && bp.getPO_PriceList_ID() > 0)
+					m_M_PriceList_ID = bp.getPO_PriceList_ID();
+				
+				invoice.setM_PriceList_ID(m_M_PriceList_ID);
+				invoice.setC_Currency_ID(MPriceList.get(srcInv.getCtx(), m_M_PriceList_ID, srcInv.get_TrxName()).getC_Currency_ID());
+				
+				//Financial Dimension - Profit Center		
+				//invoice.setC_Project_ID(counterProj.getC_Project_ID());
+				invoice.setRef_Invoice_ID(srcInv.getC_Invoice_ID());
+				invoice.saveEx();
+				
+				//Create Invoice Line
+				MInvoiceLine invLine = new MInvoiceLine(invoice);				
+				invLine.setM_Product_ID(ctransSetup.getTo_Product_ID(), true);
+				invLine.setQty(srcLine.getQtyInvoiced().multiply(ctransSetup.getToQtyRatio().setScale(2, RoundingMode.HALF_EVEN)));
+				invLine.setC_UOM_ID(ctransSetup.getToUom_ID() > 0 ? ctransSetup.getToUom_ID() : srcLine.getC_UOM_ID());
+				BigDecimal price = ctransSetup.getToUnitPriceRatio().multiply(srcLine.getPriceEntered()).setScale(2, RoundingMode.HALF_EVEN);
+				if(ctransSetup.getToUnitPrice().doubleValue() > 0) {
+					price = ctransSetup.getToUnitPrice();
+				}
+				invLine.setPriceActual(price);
+				invLine.setPriceList(price);
+				invLine.setPriceLimit(price);
+				invLine.setPriceEntered(price);				
+				invLine.setC_Tax_ID(srcLine.getC_Tax_ID());
+				invLine.setDescription(srcLine.getDescription());				
+				invLine.saveEx();				
+				
+				//Invoice DocAction
+				if (!invoice.processIt(DocAction.ACTION_Complete))
+					throw new AdempiereException("Failed when processing document - " + invoice.getProcessMsg());
+				invoice.saveEx();
+								
+			}
+		}
+	}
+	private void reverseAdditionalTransactions() {
+		String whereClause = "C_Order_ID = ? AND DocStatus='RE'";
+		TF_MInvoice srcInv = new Query(getCtx(), TF_MInvoice.Table_Name, whereClause, get_TrxName())
+			.setClient_ID()
+			.setParameters(getC_Order_ID())
+			.first();
+		if(srcInv == null)
+			return;
+		String whereClause2 = "Ref_Invoice_ID = ? AND DocStatus = 'CO'";
+		List<TF_MInvoice> refInvoices = new Query(srcInv.getCtx(), TF_MInvoice.Table_Name, whereClause2, srcInv.get_TrxName())
+				.setClient_ID()
+				.setParameters(srcInv.getC_Invoice_ID())
+				.list();
+		for(TF_MInvoice inv : refInvoices) {			
+			if(inv.getDocStatus().equals(TF_MInvoice.DOCSTATUS_Completed)) {
+				inv.reverseCorrectIt();
+				inv.saveEx();
+			}
+		}
 	}
 
 }
