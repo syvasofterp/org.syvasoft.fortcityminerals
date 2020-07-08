@@ -56,7 +56,7 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 			}
 					
 		}
-		
+		/*
 		//csv import support
 		if(newRecord) {
 			
@@ -95,7 +95,7 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 			if(getNetWeightUnit() == null || getNetWeightUnit().doubleValue() == 0)
 				setNetWeightUnit(getNetWeight());
 		}
-		
+		*/
 		//	if(getTF_RentedVehicle_ID()>0	&& is_ValueChanged(COLUMNNAME_TareWeight)) {
 			//Timestamp tareWeightTime = new Timestamp(System.currentTimeMillis());
 			//setTareWeightTime(tareWeightTime);
