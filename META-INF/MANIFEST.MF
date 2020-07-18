@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Manihamsa
-Bundle-SymbolicName: org.syvsoft.manihamsa;singleton:=true
+Bundle-Name: Aswath Blue Metals
+Bundle-SymbolicName: org.syvsoft.aswathbm;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.adempiere.base;bundle-version="4.1.0",

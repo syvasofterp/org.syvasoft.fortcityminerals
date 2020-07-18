@@ -1987,9 +1987,8 @@ public class TF_MOrder extends MOrder {
 			}
 		}
 		createSubcontractPurchaseEntry();
-		int BoulderID = MSysConfig.getIntValue("BOULDER_ID", 1000233, getAD_Client_ID(), getAD_Org_ID());
-		if(!isSOTrx() && getItem1_ID()==BoulderID && TF_SEND_TO_Production.equals(getTF_Send_To()))
-			postCrusherProduction();
+		createRawMaterialReceipt();		
+		postCrusherProduction();
 		
 		String msg = super.completeIt();
 		purchasePermit();
@@ -2407,8 +2406,21 @@ public class TF_MOrder extends MOrder {
 		return prodPrice;
 	}
 	
+	public void createRawMaterialReceipt() {
+		if(isSOTrx())
+			return;
+		int BoulderID = MSysConfig.getIntValue("BOULDER_ID", 1000233, getAD_Client_ID(), getAD_Org_ID());
+		if(BoulderID == getItem1_ID()) {
+			MSubcontractMaterialMovement.createRawmaterialMovement(get_TrxName(), getDateAcct(), getAD_Org_ID(),				
+					0, 0, getItem1_ID(), getTF_WeighmentEntry_ID(), getItem1_Qty());
+		}
+	}
 	
 	public String postCrusherProduction() {
+		int BoulderID = MSysConfig.getIntValue("BOULDER_ID", 1000233, getAD_Client_ID(), getAD_Org_ID());
+		if(isSOTrx() || !(getItem1_ID()==BoulderID && TF_SEND_TO_Production.equals(getTF_Send_To())))
+			return null;
+			
 		String m_processMsg = null;
 		
 		//Create Crusher Production
