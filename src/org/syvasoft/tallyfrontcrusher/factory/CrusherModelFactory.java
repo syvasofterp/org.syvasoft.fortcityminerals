@@ -255,6 +255,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return MMachineryStatement.class;
 		else if(MAdditionalTransactionSetup.Table_Name.equals(tableName))			
 			return MAdditionalTransactionSetup.class;
+		else if(MBoulderMovement.Table_Name.equals(tableName))			
+			return MBoulderMovement.class;
 		return null;
 	}
 
@@ -503,6 +505,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MMachineryStatement(ctx, Record_ID, trxName);
 		else if(MAdditionalTransactionSetup.Table_Name.equals(tableName))			
 			return new MAdditionalTransactionSetup(ctx, Record_ID, trxName);
+		else if(MBoulderMovement.Table_Name.equals(tableName))			
+			return new MBoulderMovement(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -753,6 +757,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MMachineryStatement(ctx, rs, trxName);
 		else if(MAdditionalTransactionSetup.Table_Name.equals(tableName))			
 			return new MAdditionalTransactionSetup(ctx, rs, trxName);
+		else if(MBoulderMovement.Table_Name.equals(tableName))			
+			return new MBoulderMovement(ctx, rs, trxName);
 		return null;
 	}
 

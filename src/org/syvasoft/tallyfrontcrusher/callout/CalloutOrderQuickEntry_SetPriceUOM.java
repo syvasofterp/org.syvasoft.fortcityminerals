@@ -9,10 +9,9 @@ import org.adempiere.base.IColumnCallout;
 import org.compiere.model.GridField;
 import org.compiere.model.GridTab;
 import org.compiere.model.MProduct;
-import org.compiere.model.MProductPricing;
 import org.compiere.util.Env;
 import org.syvasoft.tallyfrontcrusher.model.MPriceListUOM;
-import org.syvasoft.tallyfrontcrusher.model.TF_MBPartner;
+
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
 
 public class CalloutOrderQuickEntry_SetPriceUOM implements IColumnCallout {
@@ -51,10 +50,17 @@ public class CalloutOrderQuickEntry_SetPriceUOM implements IColumnCallout {
 				isRentInclusive = priceUOM.isRentInclusive();
 				isTaxIncluded = priceUOM.isTaxIncluded();
 				
-				mTab.setValue(TF_MOrder.COLUMNNAME_IsRentInclusive, isRentInclusive);
 				//mTab.setValue(TF_MOrder.COLUMNNAME_IsTaxIncluded1, isTaxIncluded);
 				//For Namakkal bluemetals, default amount includes tax, but tax amount will be known after generating sales tax invoice
 				mTab.setValue(TF_MOrder.COLUMNNAME_IsTaxIncluded1, false);
+								
+				if(!isSOTrx) {
+					mTab.setValue(TF_MOrder.COLUMNNAME_CreateTransporterInvoice, isRentInclusive);
+					mTab.setValue(TF_MOrder.COLUMNNAME_IsRentInclusive, false);
+				}
+				else {
+					mTab.setValue(TF_MOrder.COLUMNNAME_IsRentInclusive, isRentInclusive);
+				}
 			}
 			else{
 				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Price, BigDecimal.ZERO);

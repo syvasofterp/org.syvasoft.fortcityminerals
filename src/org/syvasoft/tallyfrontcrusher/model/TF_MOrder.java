@@ -1683,7 +1683,28 @@ public class TF_MOrder extends MOrder {
 			 return 0;
 		return ii.intValue();
 	}
-
+	/** Column name CreateTransportInvoice */
+    public static final String COLUMNNAME_CreateTransporterInvoice = "CreateTransporterInvoice";
+    /** Set Create Transport Invoice.
+	@param CreateTransportInvoice Create Transport Invoice	  */
+	public void setCreateTransporterInvoice (boolean CreateTransportInvoice)
+	{
+		set_Value (COLUMNNAME_CreateTransporterInvoice, Boolean.valueOf(CreateTransportInvoice));
+	}
+	
+	/** Get Create Transport Invoice.
+		@return Create Transport Invoice	  */
+	public boolean isCreateTransportInvoice () 
+	{
+		Object oo = get_Value(COLUMNNAME_CreateTransporterInvoice);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
 		
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
@@ -1955,8 +1976,12 @@ public class TF_MOrder extends MOrder {
 	
 	@Override
 	public String completeIt() {
-		if(getTF_RentedVehicle_ID() > 0 && getRent_Amt().doubleValue() <= 0)
+		if(getTF_RentedVehicle_ID() > 0 && getRent_Amt().doubleValue() <= 0 && isSOTrx())
 			throw new AdempiereException("Please specify Rent Amount!");
+		
+		if(getTF_RentedVehicle_ID() > 0 && getRent_Amt().doubleValue() <= 0 && !isSOTrx() && isCreateTransportInvoice())
+			throw new AdempiereException("Please specify Rent Amount!");
+		
 		if(isSOTrx() && MSysConfig.getBooleanValue("DISCOUNT_REQUEST_ENABLED", false)) {
 			MPriceListUOM priceUOM = MPriceListUOM.getPriceListUOM(getCtx(), getItem1_ID(), getItem1_UOM_ID(), getC_BPartner_ID(), true, getDateAcct());
 			BigDecimal price=getItem1_UnitPrice();
@@ -1987,7 +2012,7 @@ public class TF_MOrder extends MOrder {
 			}
 		}
 		createSubcontractPurchaseEntry();
-		createRawMaterialReceipt();		
+			
 		postCrusherProduction();
 		
 		String msg = super.completeIt();
@@ -2029,19 +2054,6 @@ public class TF_MOrder extends MOrder {
 		
 		TF_MOrg org = new TF_MOrg(getCtx(), getAD_Org_ID(), get_TrxName());
 		setOrgType(org.getOrgType());
-		
-		if(getOrgType().equals(ORGTYPE_SandBlockBucket) && isSOTrx()) {
-			if(getItem1_BucketQty().doubleValue()<=0)
-				throw new AdempiereException("Line 1: Bucket qty is Mandatory");
-			if(isItem1_IsPermitSales() && getItem1_PermitIssued().doubleValue()<=0.5)
-				throw new AdempiereException("Permit Issued Should be greater than or equal to 0.5");
-			if(getItem1_ID() > 0 && getItem1_TotalLoad().doubleValue() <= 0)
-				throw new AdempiereException("Total Load is mandatory");
-			
-			setItem1_Amt(getItem1_Amt().setScale(0, RoundingMode.HALF_EVEN));
-			setItem2_Amt(getItem2_Amt().setScale(0, RoundingMode.HALF_EVEN));
-			setItem1_PermitIssued(getItem1_PermitIssued().setScale(1, RoundingMode.HALF_EVEN));
-		}
 		
 		if(newRecord) {
 			setDateAcct(getDateOrdered());
@@ -2177,6 +2189,9 @@ public class TF_MOrder extends MOrder {
 		//	throw new AdempiereException("Please Select Rented Vehicle or Reset Rent (Amount) to ZERO!");
 		//if(getTF_RentedVehicle_ID() > 0 && getRent_Amt().doubleValue() ==0)
 		//	throw new AdempiereException("Rent (Amount) should be greater ZERO!");
+		
+		if(!isSOTrx() && !isCreateTransportInvoice())
+			return;
 		
 		MRentedVehicle vehicle = new MRentedVehicle(getCtx(), getTF_RentedVehicle_ID(), get_TrxName());
 		MBPartner bp = new MBPartner(getCtx(), vehicle.getC_BPartner_ID(), get_TrxName());
@@ -2412,16 +2427,24 @@ public class TF_MOrder extends MOrder {
 		int BoulderID = MSysConfig.getIntValue("BOULDER_ID", 1000233, getAD_Client_ID(), getAD_Org_ID());
 		if(BoulderID == getItem1_ID()) {
 			MSubcontractMaterialMovement.createRawmaterialMovement(get_TrxName(), getDateAcct(), getAD_Org_ID(),				
-					0, 0, getItem1_ID(), getTF_WeighmentEntry_ID(), getItem1_Qty());
+					0, 0, getItem1_ID(), getTF_WeighmentEntry_ID(), getC_Order_ID(), getItem1_Qty());
 		}
 	}
 	
 	public String postCrusherProduction() {
 		int BoulderID = MSysConfig.getIntValue("BOULDER_ID", 1000233, getAD_Client_ID(), getAD_Org_ID());
-		if(isSOTrx() || !(getItem1_ID()==BoulderID && TF_SEND_TO_Production.equals(getTF_Send_To())))
+		if(isSOTrx() || !(getItem1_ID()==BoulderID && TF_SEND_TO_Production.equals(getTF_Send_To()))) {
+			MBoulderMovement.createBoulderReceipt(get_TrxName(), getDateAcct(), getAD_Org_ID(), getItem1_ID(), 
+					getItem1_Qty(), getTF_WeighmentEntry_ID());
 			return null;
-			
+		}
+		
+		createRawMaterialReceipt();	
+		
 		String m_processMsg = null;
+		
+		if(MSysConfig.getValue("AGGREGATE_STOCK_APPROACH","B", getAD_Client_ID(), getAD_Org_ID()).equals("B") )
+			return null;
 		
 		//Create Crusher Production
 		MCrusherProduction cProd = new MCrusherProduction(getCtx(), 0, get_TrxName());
@@ -2630,6 +2653,7 @@ public class TF_MOrder extends MOrder {
 	public void reverseSubcontractPurchaseEntry() {
 		MSubcontractMaterialMovement.deleteSalesEntryMovement(getC_Order_ID(), get_TrxName());
 		MSubcontractMaterialMovement.deleteWeighmentMovement(getTF_WeighmentEntry_ID(), get_TrxName());
+		MBoulderMovement.deleteBoulderMovement(getTF_WeighmentEntry_ID(), get_TrxName());
 		if(getSubcon_Invoice_ID() > 0) {			
 			TF_MInvoice inv = new TF_MInvoice(getCtx(), getSubcon_Invoice_ID(), get_TrxName());
 			if(inv.getDocStatus().equals(DOCSTATUS_Completed)) {

@@ -24,6 +24,7 @@ import org.compiere.model.MPriceList;
 import org.compiere.model.MPriceListVersion;
 import org.compiere.model.MProductPricing;
 import org.compiere.model.MStorageOnHand;
+import org.compiere.model.MSysConfig;
 import org.compiere.model.MTransaction;
 import org.compiere.model.MWarehouse;
 import org.compiere.model.Query;
@@ -73,19 +74,24 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 		if(getTF_RMSubcon_Movement_ID() > 0)
 			return;
 		
-		if(getC_Project_ID() > 0) {
+		if(getC_Project_ID() > 0 && TF_SEND_TO_Production.equals(getTF_Send_To())) {
 			TF_MProject proj = TF_MProject.getCrusherProductionSubcontractByWarehouse(getM_Warehouse_ID());
 			MSubcontractType st = new MSubcontractType(getCtx(), proj.getTF_SubcontractType_ID(), get_TrxName());
-			if(st.isTrackMaterialMovement()) {
+			if(st.isTrackMaterialMovement() ) {
 				int matMov_ID = MSubcontractMaterialMovement.createRawmaterialMovement(get_TrxName(), getDateAcct(), getAD_Org_ID(),
 						proj.getC_Project_ID(), proj.getC_BPartner_ID(), getM_Product_ID(), getTF_WeighmentEntry_ID(), getQtyReceived());
 				setTF_RMSubcon_Movement_ID(matMov_ID);
 			}
 		}
-		else {
+		else if(TF_SEND_TO_Production.equals(getTF_Send_To())) {
+			
 			int matMov_ID = MSubcontractMaterialMovement.createRawmaterialMovement(get_TrxName(), getDateAcct(), getAD_Org_ID(),
-					0, 0, getM_Product_ID(), getTF_WeighmentEntry_ID(), getQtyReceived());
+					0, 0, getM_Product_ID(), getTF_WeighmentEntry_ID(), getQtyReceived());			
 			setTF_RMSubcon_Movement_ID(matMov_ID);
+		}
+		else if(getTF_WeighmentEntry_ID() > 0){
+			MBoulderMovement.createBoulderReceipt(get_TrxName(), getDateReceipt(), getAD_Org_ID(), getM_Product_ID(), getQtyReceived(),
+					getTF_WeighmentEntry_ID());
 		}
 			
 	}
@@ -402,7 +408,7 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 			
 			if(TF_SEND_TO_Production.equals(getTF_Send_To())) {
 				m_processMsg = postCrusherProduction();
-			}
+			}			
 			
 			return m_processMsg;
 				
@@ -509,6 +515,10 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 		
 	
 	public String postCrusherProduction() {
+		
+		if(MSysConfig.getValue("AGGREGATE_STOCK_APPROACH","B", getAD_Client_ID(), getAD_Org_ID()).equals("B") )
+			return null;
+		
 		String m_processMsg = null;
 		//Create Crusher Production
 		MCrusherProduction cProd = new MCrusherProduction(getCtx(), 0, get_TrxName());
