@@ -23,7 +23,7 @@ import org.compiere.util.KeyNamePair;
 
 /** Generated Interface for TF_CrusherKatingEntry
  *  @author iDempiere (generated) 
- *  @version Release 4.1
+ *  @version Release 5.1
  */
 @SuppressWarnings("all")
 public interface I_TF_CrusherKatingEntry 
@@ -32,7 +32,7 @@ public interface I_TF_CrusherKatingEntry
     /** TableName=TF_CrusherKatingEntry */
     public static final String Table_Name = "TF_CrusherKatingEntry";
 
-    /** AD_Table_ID=1000256 */
+    /** AD_Table_ID=1000269 */
     public static final int Table_ID = MTable.getTable_ID(Table_Name);
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);
@@ -272,6 +272,26 @@ public interface I_TF_CrusherKatingEntry
 	/** Get Process Now	  */
 	public boolean isProcessing();
 
+    /** Column name TF_BlueMetal_Type */
+    public static final String COLUMNNAME_TF_BlueMetal_Type = "TF_BlueMetal_Type";
+
+	/** Set Production Type	  */
+	public void setTF_BlueMetal_Type (String TF_BlueMetal_Type);
+
+	/** Get Production Type	  */
+	public String getTF_BlueMetal_Type();
+
+    /** Column name TF_Crusher_Production_ID */
+    public static final String COLUMNNAME_TF_Crusher_Production_ID = "TF_Crusher_Production_ID";
+
+	/** Set Crusher Production	  */
+	public void setTF_Crusher_Production_ID (int TF_Crusher_Production_ID);
+
+	/** Get Crusher Production	  */
+	public int getTF_Crusher_Production_ID();
+
+	public I_TF_Crusher_Production getTF_Crusher_Production() throws RuntimeException;
+
     /** Column name TF_CrusherKatingEntry_ID */
     public static final String COLUMNNAME_TF_CrusherKatingEntry_ID = "TF_CrusherKatingEntry_ID";
 
@@ -290,6 +310,17 @@ public interface I_TF_CrusherKatingEntry
 	/** Get TF_CrusherKatingEntry_UU	  */
 	public String getTF_CrusherKatingEntry_UU();
 
+    /** Column name TF_ProductionPlant_ID */
+    public static final String COLUMNNAME_TF_ProductionPlant_ID = "TF_ProductionPlant_ID";
+
+	/** Set Production Plant	  */
+	public void setTF_ProductionPlant_ID (int TF_ProductionPlant_ID);
+
+	/** Get Production Plant	  */
+	public int getTF_ProductionPlant_ID();
+
+	public I_TF_ProductionPlant getTF_ProductionPlant() throws RuntimeException;
+
     /** Column name TF_RentedVehicle_ID */
     public static final String COLUMNNAME_TF_RentedVehicle_ID = "TF_RentedVehicle_ID";
 
@@ -300,6 +331,15 @@ public interface I_TF_CrusherKatingEntry
 	public int getTF_RentedVehicle_ID();
 
 	public I_TF_RentedVehicle getTF_RentedVehicle() throws RuntimeException;
+
+    /** Column name TF_Send_To */
+    public static final String COLUMNNAME_TF_Send_To = "TF_Send_To";
+
+	/** Set Send To	  */
+	public void setTF_Send_To (String TF_Send_To);
+
+	/** Get Send To	  */
+	public String getTF_Send_To();
 
     /** Column name TF_WeighmentEntry_ID */
     public static final String COLUMNNAME_TF_WeighmentEntry_ID = "TF_WeighmentEntry_ID";

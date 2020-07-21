@@ -9,6 +9,7 @@ import org.compiere.model.MBPartner;
 import org.compiere.model.MInvoiceLine;
 import org.compiere.model.MPriceList;
 import org.compiere.model.MSysConfig;
+import org.compiere.model.MWarehouse;
 import org.compiere.process.DocAction;
 import org.compiere.util.Env;
 
@@ -37,8 +38,30 @@ public class MCrusherKatingEntry extends X_TF_CrusherKatingEntry {
 			setDocStatus(DOCSTATUS_Completed);
 			setProcessed(true);
 			
+			MWeighmentEntry wEntry = (MWeighmentEntry) getTF_WeighmentEntry();
+			if(wEntry != null) {				
+				wEntry.close();
+				wEntry.saveEx();
+			}
+			
+			int BoulderID = MSysConfig.getIntValue("BOULDER_ID", 1000233, getAD_Client_ID(), getAD_Org_ID());
+			if(wEntry.getTF_Send_To().equals("P") && BoulderID == getM_Product_ID()) {
+				MBoulderMovement.createBoulderIssue(get_TrxName(), getDateAcct(), getAD_Org_ID(), getM_Product_ID(), getTonnage(), getTF_WeighmentEntry_ID());
+				MSubcontractMaterialMovement.createRawmaterialMovement(get_TrxName(), getDateAcct(), getAD_Org_ID(), 0, 0, getM_Product_ID(), getTF_WeighmentEntry_ID(), getTonnage());
+				
+				if(!MSysConfig.getValue("AGGREGATE_STOCK_APPROACH","B", getAD_Client_ID(), getAD_Org_ID()).equals("B")) {
+					postCrusherProduction();	
+				}
+			}
+						
+			
 			//Transporter Invoice
 			MRentedVehicle vehicle = new MRentedVehicle(getCtx(), getTF_RentedVehicle_ID(), get_TrxName());
+			if(!vehicle.isTransporter() && getTF_RentedVehicle_ID() > 0) {
+				return;
+			}
+			
+			//Transporter Invoice			
 			MBPartner bp = new MBPartner(getCtx(), vehicle.getC_BPartner_ID(), get_TrxName());			
 			//Invoice Header
 			TF_MInvoice invoice = new TF_MInvoice(getCtx(), 0, get_TrxName());
@@ -169,11 +192,7 @@ public class MCrusherKatingEntry extends X_TF_CrusherKatingEntry {
 				
 				setLoaderInvoice_ID(invoice.getC_Invoice_ID());
 			}
-			MWeighmentEntry wEntry = (MWeighmentEntry) getTF_WeighmentEntry();
-			if(wEntry != null) {				
-				wEntry.close();
-				wEntry.saveEx();
-			}
+			
 		}
 	}
 	
@@ -199,6 +218,55 @@ public class MCrusherKatingEntry extends X_TF_CrusherKatingEntry {
 			wEntry.reverse();
 			wEntry.saveEx();
 		}
+		MSubcontractMaterialMovement.deleteWeighmentMovement(getTF_WeighmentEntry_ID(), get_TrxName());
+		MBoulderMovement.deleteBoulderMovement(getTF_WeighmentEntry_ID(), get_TrxName());
+		reverseCrusherProduction();
 	}
 
+	public void postCrusherProduction() {
+		String m_processMsg = null;
+		//Create Crusher Production
+		TF_MProduct prod=new TF_MProduct(getCtx(), getM_Product_ID(), get_TrxName());
+		MCrusherProduction cProd = new MCrusherProduction(getCtx(), 0, get_TrxName());
+		cProd.setAD_Org_ID(getAD_Org_ID());
+		cProd.setTF_ProductionPlant_ID(getTF_ProductionPlant_ID());		
+		cProd.setTF_BlueMetal_Type(getTF_BlueMetal_Type());
+		cProd.setTF_WeighmentEntry_ID(getTF_WeighmentEntry_ID());
+		cProd.setMovementDate(getCreated());
+		cProd.setC_UOM_ID(prod.getC_UOM_ID());		
+		cProd.setM_Warehouse_ID(getM_Warehouse_ID());
+		MWarehouse wh = MWarehouse.get(getCtx(),getM_Warehouse_ID());
+		cProd.setM_Locator_ID(wh.getDefaultLocator().get_ID());
+		cProd.setRM_Product_ID(getM_Product_ID());
+		cProd.setQtyUsed(getTonnage());
+		//cProd.setDescription("Created from Boulder Receipt : " + getDocumentNo());
+		cProd.setDescription("Created from Boulder Receipt : ");
+		cProd.setDocStatus(MBoulderReceipt.DOCSTATUS_Drafted);
+		cProd.setDocAction(MBoulderReceipt.DOCACTION_Prepare);
+		cProd.saveEx();
+		
+		//Update Crusher Production Reference to Boulder Receipt
+		setTF_Crusher_Production_ID(cProd.getTF_Crusher_Production_ID());
+		
+		cProd.createProduction(true);
+		cProd.saveEx();		
+		//End Create
+		
+		//Post Crusher Production
+		m_processMsg = cProd.processIt(MBoulderReceipt.DOCACTION_Complete);
+		if(m_processMsg == null)			
+			cProd.saveEx();
+		
+		//return m_processMsg;
+	}
+	
+	public void reverseCrusherProduction() {
+		if(getTF_Crusher_Production_ID() > 0) {
+			MCrusherProduction crProd = new MCrusherProduction(getCtx(), getTF_Crusher_Production_ID(), get_TrxName());
+			crProd.reverseIt();
+			crProd.saveEx();
+			setTF_Crusher_Production_ID(0);
+		}		
+	}
+	
 }

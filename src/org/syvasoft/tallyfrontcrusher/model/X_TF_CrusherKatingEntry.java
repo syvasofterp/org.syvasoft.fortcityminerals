@@ -26,14 +26,14 @@ import org.compiere.util.Env;
 
 /** Generated Model for TF_CrusherKatingEntry
  *  @author iDempiere (generated) 
- *  @version Release 4.1 - $Id$ */
+ *  @version Release 5.1 - $Id$ */
 public class X_TF_CrusherKatingEntry extends PO implements I_TF_CrusherKatingEntry, I_Persistent 
 {
 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180520L;
+	private static final long serialVersionUID = 20200721L;
 
     /** Standard Constructor */
     public X_TF_CrusherKatingEntry (Properties ctx, int TF_CrusherKatingEntry_ID, String trxName)
@@ -115,7 +115,7 @@ public class X_TF_CrusherKatingEntry extends PO implements I_TF_CrusherKatingEnt
 	  */
 	public void setDateAcct (Timestamp DateAcct)
 	{
-		set_ValueNoCheck (COLUMNNAME_DateAcct, DateAcct);
+		set_Value (COLUMNNAME_DateAcct, DateAcct);
 	}
 
 	/** Get Account Date.
@@ -439,6 +439,56 @@ public class X_TF_CrusherKatingEntry extends PO implements I_TF_CrusherKatingEnt
 		return false;
 	}
 
+	/** Regular = R */
+	public static final String TF_BLUEMETAL_TYPE_Regular = "R";
+	/** Wetmix = W */
+	public static final String TF_BLUEMETAL_TYPE_Wetmix = "W";
+	/** Regular + Geosand = RG */
+	public static final String TF_BLUEMETAL_TYPE_RegularPlusGeosand = "RG";
+	/** 40 MM only = 40 */
+	public static final String TF_BLUEMETAL_TYPE_40MMOnly = "40";
+	/** GSB = GSB */
+	public static final String TF_BLUEMETAL_TYPE_GSB = "GSB";
+	/** Set Production Type.
+		@param TF_BlueMetal_Type Production Type	  */
+	public void setTF_BlueMetal_Type (String TF_BlueMetal_Type)
+	{
+
+		set_Value (COLUMNNAME_TF_BlueMetal_Type, TF_BlueMetal_Type);
+	}
+
+	/** Get Production Type.
+		@return Production Type	  */
+	public String getTF_BlueMetal_Type () 
+	{
+		return (String)get_Value(COLUMNNAME_TF_BlueMetal_Type);
+	}
+
+	public I_TF_Crusher_Production getTF_Crusher_Production() throws RuntimeException
+    {
+		return (I_TF_Crusher_Production)MTable.get(getCtx(), I_TF_Crusher_Production.Table_Name)
+			.getPO(getTF_Crusher_Production_ID(), get_TrxName());	}
+
+	/** Set Crusher Production.
+		@param TF_Crusher_Production_ID Crusher Production	  */
+	public void setTF_Crusher_Production_ID (int TF_Crusher_Production_ID)
+	{
+		if (TF_Crusher_Production_ID < 1) 
+			set_Value (COLUMNNAME_TF_Crusher_Production_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_Crusher_Production_ID, Integer.valueOf(TF_Crusher_Production_ID));
+	}
+
+	/** Get Crusher Production.
+		@return Crusher Production	  */
+	public int getTF_Crusher_Production_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Crusher_Production_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	/** Set Crusher Kating Entry.
 		@param TF_CrusherKatingEntry_ID Crusher Kating Entry	  */
 	public void setTF_CrusherKatingEntry_ID (int TF_CrusherKatingEntry_ID)
@@ -473,6 +523,31 @@ public class X_TF_CrusherKatingEntry extends PO implements I_TF_CrusherKatingEnt
 		return (String)get_Value(COLUMNNAME_TF_CrusherKatingEntry_UU);
 	}
 
+	public I_TF_ProductionPlant getTF_ProductionPlant() throws RuntimeException
+    {
+		return (I_TF_ProductionPlant)MTable.get(getCtx(), I_TF_ProductionPlant.Table_Name)
+			.getPO(getTF_ProductionPlant_ID(), get_TrxName());	}
+
+	/** Set Production Plant.
+		@param TF_ProductionPlant_ID Production Plant	  */
+	public void setTF_ProductionPlant_ID (int TF_ProductionPlant_ID)
+	{
+		if (TF_ProductionPlant_ID < 1) 
+			set_Value (COLUMNNAME_TF_ProductionPlant_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_ProductionPlant_ID, Integer.valueOf(TF_ProductionPlant_ID));
+	}
+
+	/** Get Production Plant.
+		@return Production Plant	  */
+	public int getTF_ProductionPlant_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_ProductionPlant_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	public I_TF_RentedVehicle getTF_RentedVehicle() throws RuntimeException
     {
 		return (I_TF_RentedVehicle)MTable.get(getCtx(), I_TF_RentedVehicle.Table_Name)
@@ -496,6 +571,27 @@ public class X_TF_CrusherKatingEntry extends PO implements I_TF_CrusherKatingEnt
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
+	}
+
+	/** Production = P */
+	public static final String TF_SEND_TO_Production = "P";
+	/** Stock = S */
+	public static final String TF_SEND_TO_Stock = "S";
+	/** Subcontract Production = T */
+	public static final String TF_SEND_TO_SubcontractProduction = "T";
+	/** Set Send To.
+		@param TF_Send_To Send To	  */
+	public void setTF_Send_To (String TF_Send_To)
+	{
+
+		set_Value (COLUMNNAME_TF_Send_To, TF_Send_To);
+	}
+
+	/** Get Send To.
+		@return Send To	  */
+	public String getTF_Send_To () 
+	{
+		return (String)get_Value(COLUMNNAME_TF_Send_To);
 	}
 
 	public I_TF_WeighmentEntry getTF_WeighmentEntry() throws RuntimeException

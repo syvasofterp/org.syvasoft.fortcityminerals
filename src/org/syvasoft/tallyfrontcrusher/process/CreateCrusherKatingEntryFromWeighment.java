@@ -5,6 +5,7 @@ import java.sql.Savepoint;
 import java.util.List;
 
 import org.adempiere.exceptions.AdempiereException;
+import org.compiere.model.MSysConfig;
 import org.compiere.model.Query;
 import org.compiere.process.DocAction;
 import org.compiere.process.SvrProcess;
@@ -23,33 +24,37 @@ public class CreateCrusherKatingEntryFromWeighment extends SvrProcess {
 	@Override
 	protected String doIt() throws Exception {
 		
-		String whereClause = " WeighmentEntryType = '5KA' AND Status = 'CO' "
+		String whereClause = " (WeighmentEntryType = '5KA' OR WeighmentEntryType = '4SR') AND Status = 'CO' "
 				+ " AND NOT EXISTS(SELECT k.TF_WeighmentEntry_ID FROM TF_CrusherKatingEntry k WHERE "
 				+ "k.TF_WeighmentEntry_ID =  TF_WeighmentEntry.TF_WeighmentEntry_ID)";
 		int i = 0;
+		
 		List<MWeighmentEntry> wEntries = new Query(getCtx(), MWeighmentEntry.Table_Name, whereClause, get_TrxName())
-				.setClient_ID().setOrderBy("AD_Org_ID") .list();
+				.setClient_ID()
+				.list();
 		for(MWeighmentEntry wEntry : wEntries) {
 			Trx trx = Trx.get(get_TrxName(), false);
 			Savepoint sp = null;
 			try {
 				MCrusherKatingEntry katEntry = new MCrusherKatingEntry(getCtx(), 0, get_TrxName());
 				MCrusherKatingConfig config = MCrusherKatingConfig.getConfig(wEntry.getAD_Org_ID());
-				if(config == null)
-					throw new AdempiereException("Crusher Kating Entry Configuration is not set!");
+				
 				katEntry.setAD_Org_ID(wEntry.getAD_Org_ID());
 				katEntry.setDateAcct(wEntry.getGrossWeightTime());
 				katEntry.setTF_WeighmentEntry_ID(wEntry.getTF_WeighmentEntry_ID());
-				katEntry.setKatingEntryType(config.getKatingEntryType());
+				katEntry.setKatingEntryType( config == null ? MCrusherKatingEntry.KATINGENTRYTYPE_Tonnage : config.getKatingEntryType());
 				katEntry.setM_Warehouse_ID(wEntry.getM_Warehouse_ID());
 				katEntry.setM_Product_ID(wEntry.getM_Product_ID());
 				katEntry.setTonnage(wEntry.getNetWeight().divide(new BigDecimal(1000)));
 				katEntry.setTotalLoad(BigDecimal.ONE);
 				katEntry.setTF_RentedVehicle_ID(wEntry.getTF_RentedVehicle_ID());
-				katEntry.setTransport_Price(config.getTransport_Price());				
-				katEntry.setLoaderVehicle_ID(config.getLoaderVehicle_ID());
-				katEntry.setLoading_Price(config.getLoading_Price());
+				katEntry.setTransport_Price(config == null ? BigDecimal.ZERO : config.getTransport_Price());				
+				katEntry.setLoaderVehicle_ID(config == null ? 0 : config.getLoaderVehicle_ID());
+				katEntry.setLoading_Price(config == null ? BigDecimal.ZERO : config.getLoading_Price());
 				katEntry.setDescription(wEntry.getDescription());
+				katEntry.setTF_Send_To(wEntry.getTF_Send_To());
+				katEntry.setTF_BlueMetal_Type(wEntry.getTF_BlueMetal_Type());
+				katEntry.setTF_ProductionPlant_ID(wEntry.getTF_ProductionPlant_ID());
 				
 				if(katEntry.getKatingEntryType().equals(MCrusherKatingEntry.KATINGENTRYTYPE_Tonnage)) {
 					katEntry.setTransport_Amount(katEntry.getTransport_Price().multiply(katEntry.getTonnage()));
