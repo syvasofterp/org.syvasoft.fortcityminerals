@@ -16,6 +16,8 @@ import org.compiere.process.SvrProcess;
 import org.compiere.util.Env;
 import org.compiere.util.Trx;
 import org.compiere.util.Util;
+import org.syvasoft.tallyfrontcrusher.model.MDestination;
+import org.syvasoft.tallyfrontcrusher.model.MLumpSumRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MPriceListUOM;
 import org.syvasoft.tallyfrontcrusher.model.MWeighmentEntry;
 import org.syvasoft.tallyfrontcrusher.model.TF_MBPartner;
@@ -24,10 +26,7 @@ import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
 public class CreatePurchaseEntryFromWeighment extends SvrProcess {
 
 	private int C_DocType_ID = 1000050;
-	private int AD_Org_ID = 0;
-	private Timestamp DateFrom = null;
-	private Timestamp DateTo = null;
-
+	
 	@Override
 	protected void prepare() {		
 
@@ -60,11 +59,7 @@ public class CreatePurchaseEntryFromWeighment extends SvrProcess {
 					C_BParner_ID = 1000020;		
 				TF_MBPartner bp = new TF_MBPartner(getCtx(), C_BParner_ID, get_TrxName());
 				ord.setBPartner(bp);
-				ord.setDescription(wEntry.getDescription());
-				if(ord.getDescription() != null)
-					ord.addDescription("Customer Name : " + wEntry.getPartyName());
-				else
-					ord.setDescription("Customer Name : " + wEntry.getPartyName());
+				ord.setDescription(wEntry.getDescription());				
 				ord.setPaymentRule(wEntry.getPaymentRule());		
 				//Price List
 				int m_M_PriceList_ID = Env.getContextAsInt(getCtx(), "#M_PriceList_ID");
@@ -78,7 +73,9 @@ public class CreatePurchaseEntryFromWeighment extends SvrProcess {
 				ord.setVehicleNo(wEntry.getVehicleNo());
 				ord.setTF_RentedVehicle_ID(wEntry.getTF_RentedVehicle_ID());
 				ord.setItem1_BucketQty(null);
-				
+				ord.setTF_Send_To(wEntry.getTF_Send_To());
+				ord.setTF_ProductionPlant_ID(wEntry.getTF_ProductionPlant_ID());
+				ord.setTF_BlueMetal_Type(wEntry.getTF_BlueMetal_Type());
 				
 				//Item
 				ord.setItem1_IsPermitSales(wEntry.isHasBalance());
@@ -103,11 +100,36 @@ public class CreatePurchaseEntryFromWeighment extends SvrProcess {
 				
 				//Get price from Purchase Price List by UOM
 				BigDecimal price =BigDecimal.ZERO;
-				MPriceListUOM pprice = MPriceListUOM.getPriceListUOM(getCtx(), wEntry.getM_Product_ID(), wEntry.getC_UOM_ID(), bp.getC_BPartner_ID(), false, wEntry.getGrossWeightTime());
+				
+				MPriceListUOM pprice = MPriceListUOM.getPriceListUOM(getCtx(), wEntry.getM_Product_ID(),
+						ord.getItem1_UOM_ID(), bp.getC_BPartner_ID(), false, wEntry.getGrossWeightTime());
+				if( pprice == null)
+					throw new AdempiereException("Please configure the Purchase Price!");
+				
 				price = pprice.getPrice();
 				ord.setItem1_Price(price);
 				ord.setItem1_UnitPrice(price);
 				ord.setItem1_Amt(ord.getItem1_Qty().multiply(ord.getItem1_Price()));
+				ord.setCreateTransporterInvoice(!pprice.isRentInclusive());
+				
+				//Setting Transporter Charge
+				if(!pprice.isRentInclusive() && ord.getTF_RentedVehicle_ID() > 0) {
+					MDestination dest = new MDestination(getCtx(), ord.getTF_Destination_ID(), get_TrxName());
+					BigDecimal RateKm=MLumpSumRentConfig.getRateKm(getCtx(), ord.getAD_Org_ID(), ord.getTF_Destination_ID(), 
+							ord.getItem1_VehicleType_ID(), dest.getDistance(), null);
+					ord.setRate(RateKm);
+					
+					if(RateKm.equals(BigDecimal.ZERO)) {
+						ord.setIsLumpSumRent(true);
+					}
+					else {
+						ord.setIsLumpSumRent(false);
+					}
+					BigDecimal RentAmt=MLumpSumRentConfig.getLumpSumRent(getCtx(),ord.getAD_Org_ID(), ord.getTF_Destination_ID(), 
+							ord.getItem1_VehicleType_ID(), dest.getDistance(), null);
+					ord.setRent_Amt(RentAmt);						
+					
+				}
 				
 				ord.saveEx();				
 				

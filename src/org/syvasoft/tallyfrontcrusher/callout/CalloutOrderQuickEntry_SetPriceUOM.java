@@ -55,7 +55,7 @@ public class CalloutOrderQuickEntry_SetPriceUOM implements IColumnCallout {
 				mTab.setValue(TF_MOrder.COLUMNNAME_IsTaxIncluded1, false);
 								
 				if(!isSOTrx) {
-					mTab.setValue(TF_MOrder.COLUMNNAME_CreateTransporterInvoice, isRentInclusive);
+					mTab.setValue(TF_MOrder.COLUMNNAME_CreateTransporterInvoice, !isRentInclusive);
 					mTab.setValue(TF_MOrder.COLUMNNAME_IsRentInclusive, false);
 				}
 				else {
