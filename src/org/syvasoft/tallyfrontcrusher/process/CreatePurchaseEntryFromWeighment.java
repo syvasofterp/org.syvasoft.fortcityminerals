@@ -127,7 +127,9 @@ public class CreatePurchaseEntryFromWeighment extends SvrProcess {
 					}
 					BigDecimal RentAmt=MLumpSumRentConfig.getLumpSumRent(getCtx(),ord.getAD_Org_ID(), ord.getTF_Destination_ID(), 
 							ord.getItem1_VehicleType_ID(), dest.getDistance(), null);
-					ord.setRent_Amt(RentAmt);						
+					ord.setRent_Amt(RentAmt);
+					ord.setRentMargin(BigDecimal.ZERO);
+					ord.setRentPayable(RentAmt);
 					
 				}
 				

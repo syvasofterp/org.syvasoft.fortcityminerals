@@ -1978,8 +1978,8 @@ public class TF_MOrder extends MOrder {
 	public String completeIt() {
 		if(getTF_RentedVehicle_ID() > 0 && getRent_Amt().doubleValue() <= 0 && isSOTrx())
 			throw new AdempiereException("Please specify Rent Amount!");
-		
-		if(getTF_RentedVehicle_ID() > 0 && getRent_Amt().doubleValue() <= 0 && !isSOTrx() && isCreateTransportInvoice())
+		MRentedVehicle rv = new MRentedVehicle(getCtx(), getTF_RentedVehicle_ID(), get_TrxName());
+		if(getTF_RentedVehicle_ID() > 0 && getRent_Amt().doubleValue() <= 0 && !isSOTrx() && isCreateTransportInvoice() && rv.isTransporter())
 			throw new AdempiereException("Please specify Rent Amount!");
 		
 		if(isSOTrx() && MSysConfig.getBooleanValue("DISCOUNT_REQUEST_ENABLED", false)) {
