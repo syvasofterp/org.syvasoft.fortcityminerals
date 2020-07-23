@@ -356,7 +356,7 @@ public class TF_MProduct extends MProduct {
 	}
 	
 	public void setOpeningStock(boolean newRecord) {	
-		if(getOpeningDate() == null || getQty().equals(BigDecimal.ZERO))
+		if(getOpeningDate() == null || getQty().equals(BigDecimal.ZERO) || !isStocked())
 			return;
 		//Physical Inventory Header
 		MInventory inv = new MInventory(getCtx(), 0, get_TrxName());

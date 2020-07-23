@@ -2425,17 +2425,18 @@ public class TF_MOrder extends MOrder {
 		if(isSOTrx())
 			return;
 		int BoulderID = MSysConfig.getIntValue("BOULDER_ID", 1000233, getAD_Client_ID(), getAD_Org_ID());
-		if(BoulderID == getItem1_ID()) {
+		if(BoulderID == getItem1_ID() && TF_SEND_TO_Production.equals(getTF_Send_To())) {
 			MSubcontractMaterialMovement.createRawmaterialMovement(get_TrxName(), getDateAcct(), getAD_Org_ID(),				
 					0, 0, getItem1_ID(), getTF_WeighmentEntry_ID(), getC_Order_ID(), getItem1_Qty());
+		}
+		else if(BoulderID == getItem1_ID() && TF_SEND_TO_Stock.equals(getTF_Send_To())) {
+			MBoulderMovement.createBoulderReceipt(get_TrxName(), getDateAcct(), getAD_Org_ID(), BoulderID, getItem1_Qty(), getTF_WeighmentEntry_ID());
 		}
 	}
 	
 	public String postCrusherProduction() {
-		int BoulderID = MSysConfig.getIntValue("BOULDER_ID", 1000233, getAD_Client_ID(), getAD_Org_ID());
-		if(isSOTrx() || !(getItem1_ID()==BoulderID && TF_SEND_TO_Production.equals(getTF_Send_To()))) {
-			MBoulderMovement.createBoulderReceipt(get_TrxName(), getDateAcct(), getAD_Org_ID(), getItem1_ID(), 
-					getItem1_Qty(), getTF_WeighmentEntry_ID());
+		
+		if(isSOTrx()) {
 			return null;
 		}
 		
@@ -2486,9 +2487,13 @@ public class TF_MOrder extends MOrder {
 			//Boulder based approach - tracking issued qty
 			int Boulder_ID = MSysConfig.getIntValue("BOULDER_ID", 1000099, getAD_Client_ID(), getAD_Org_ID());
 			MProduct rm = MProduct.get(getCtx(), Boulder_ID);
-			if(getItem1().getC_UOM_ID() == rm.getC_UOM_ID()) {
+			if(getItem1().getC_UOM_ID() == rm.getC_UOM_ID() && getItem1_ID() != Boulder_ID) {
 				MSubcontractMaterialMovement.createMaterialMovement(get_TrxName(), getDateAcct(), getAD_Org_ID(), getC_Order_ID(), 
 						getC_BPartner_ID(), getItem1_ID(), getItem1_Qty(), getTF_WeighmentEntry_ID());
+			}
+			else if(getItem1_ID() == Boulder_ID && getTF_WeighmentEntry_ID() > 0) {
+				MBoulderMovement.createBoulderIssue(get_TrxName(), getDateAcct(), getAD_Org_ID(), getItem1_ID(),
+						getItem1_Qty(), getTF_WeighmentEntry_ID());
 			}
 			return;
 		}
