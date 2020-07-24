@@ -8,6 +8,7 @@ import org.compiere.model.GridField;
 import org.compiere.model.GridTab;
 import org.syvasoft.tallyfrontcrusher.model.MFuelIssue;
 import org.syvasoft.tallyfrontcrusher.model.TF_MProduct;
+import org.syvasoft.tallyfrontcrusher.model.TF_MProductCategory;
 
 public class CalloutFuelIssue_SetPrice implements IColumnCallout {
 
@@ -16,6 +17,7 @@ public class CalloutFuelIssue_SetPrice implements IColumnCallout {
 		String issueType = (String) mTab.getValue(MFuelIssue.COLUMNNAME_IssueType);
 		if(issueType.equals(MFuelIssue.ISSUETYPE_Payment)) {
 			mTab.setValue(MFuelIssue.COLUMNNAME_Rate, BigDecimal.ZERO);
+			mTab.setValue(MFuelIssue.COLUMNNAME_Account_ID, null);
 			return null;
 		}
 		
@@ -27,6 +29,16 @@ public class CalloutFuelIssue_SetPrice implements IColumnCallout {
 			return null;
 		BigDecimal currentCost = TF_MProduct.getCurrentCost(AD_Org_ID, M_Product_ID);
 		mTab.setValue(MFuelIssue.COLUMNNAME_Rate, currentCost);
+		
+		int Product_Category_ID = 0;
+		TF_MProduct prod=new TF_MProduct(ctx, M_Product_ID, null);
+		Product_Category_ID=prod.getM_Product_Category_ID();
+		TF_MProductCategory prodc=new TF_MProductCategory(ctx, Product_Category_ID, null);
+		if(prodc!=null) {
+			mTab.setValue(MFuelIssue.COLUMNNAME_Account_ID, 
+					prodc.getSpareExpensesAcct_ID() > 0 ? prodc.getSpareExpensesAcct_ID() : null);
+		}
+		
 		return null;
 	}
 

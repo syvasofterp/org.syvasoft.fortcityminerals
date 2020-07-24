@@ -140,6 +140,8 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 	}
 	
 	private void createInternalUseInventory(String docAction) {
+		setCost();
+		
 		//Post Inventory Use Inventory for Fuel Expense.
 		MWarehouse wh = (MWarehouse) getM_Warehouse();
 		//Inventory Use Header
@@ -177,7 +179,51 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 		//Update Inventory Use ID back to Fuel Issue Entry.
 		setM_Inventory_ID(inv.getM_Inventory_ID());	
 	}
-	
+	private void setCost() {
+		MAcctSchema as = (MAcctSchema) MGLPostingConfig.getMGLPostingConfig(getCtx()).getC_AcctSchema();
+		TF_MProduct prod = new TF_MProduct(getCtx(), getM_Product_ID(), get_TrxName());
+		MCost cost = prod.getCostingRecord(as, getAD_Org_ID(), 0, prod.getCostingMethod(as));
+			
+		if (cost != null && cost.getCurrentCostPrice().equals(getRate())) {			
+			return;
+		}
+				
+		
+		//Cost Adjustment Header
+		MWarehouse[] whs = MWarehouse.getForOrg(getCtx(), getAD_Org_ID());
+		if(whs.length==0)
+			throw new AdempiereException("Create Warehouse for this Organization!");
+		MWarehouse wh = whs[0];		
+		MInventory inv = new MInventory(getCtx(), 0, get_TrxName());
+		inv.setC_DocType_ID(1000027); //Cost Adjustment		
+		String desc = getDocumentNo() + " Own Expense consumption Cost Update";
+		inv.setAD_Org_ID(getAD_Org_ID());
+		inv.setDescription(desc);
+		inv.setC_Currency_ID(as.getC_Currency_ID());
+		inv.setMovementDate(getDateAcct());
+		inv.setCostingMethod(prod.getCostingMethod(as));
+		inv.setDocStatus(MInventory.DOCSTATUS_Drafted);		
+		inv.saveEx();
+		//End Physical Inventory Header
+		
+		
+		//Inventory Line
+		int M_Locator_ID = wh.getDefaultLocator().get_ID();		
+		MInventoryLine costingLine = new MInventoryLine(getCtx(), 0, get_TrxName());
+		costingLine.setM_Inventory_ID(inv.getM_Inventory_ID());
+		costingLine.setM_Product_ID(getM_Product_ID());		
+		costingLine.setCurrentCostPrice(cost==null?BigDecimal.ZERO:cost.getCurrentCostPrice());
+		costingLine.setNewCostPrice(getRate());
+		costingLine.setM_Locator_ID(M_Locator_ID);
+		costingLine.setAD_Org_ID(getAD_Org_ID());
+		costingLine.setM_AttributeSetInstance_ID(0);
+		costingLine.saveEx();
+		//Inventory Line	
+		
+		//inv.processIt(DocAction.ACTION_Prepare);
+		inv.processIt(DocAction.ACTION_Complete);
+		inv.saveEx();
+	}
 	private void createDebitNote(MRentedVehicle rv, TF_MProject proj,TF_MBPartner bp) {	
 		int bPartnerID = 0;
 
