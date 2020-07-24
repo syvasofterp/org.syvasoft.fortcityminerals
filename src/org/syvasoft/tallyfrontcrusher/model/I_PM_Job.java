@@ -32,7 +32,7 @@ public interface I_PM_Job
     /** TableName=PM_Job */
     public static final String Table_Name = "PM_Job";
 
-    /** AD_Table_ID=1000313 */
+    /** AD_Table_ID=1000310 */
     public static final int Table_ID = MTable.getTable_ID(Table_Name);
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);

@@ -1,5 +1,6 @@
 package org.syvasoft.tallyfrontcrusher.model;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.util.Properties;
 
@@ -24,7 +25,32 @@ public class MMachinery extends X_PM_Machinery {
 		super(ctx, rs, trxName);
 		// TODO Auto-generated constructor stub
 	}
-
+	
+	public static int getPM_Machinery_ID(Properties ctx, int M_Product_ID, String trxName) {
+		String whereClause = "M_Product_ID = ?";
+		MMachinery m = new Query(ctx, Table_Name, whereClause, trxName)
+				.setClient_ID()
+				.setParameters(M_Product_ID)
+				.first();
+		if(m != null) {
+			return m.get_ID();
+		}
+		else {
+			return 0;
+		}
+	}
+	
+	public static BigDecimal getCurrentMeter(Properties ctx, int PM_Machinery_ID, int meterType_ID) {
+		String whereClause = "PM_Machinery_ID = ? AND C_UOM_ID=?";
+		MMeter mtr = new Query(ctx, MMeter.Table_Name, whereClause, null)
+				.setClient_ID()
+				.setParameters(PM_Machinery_ID, meterType_ID)
+				.first();
+		if(mtr != null)
+			return mtr.getCurrentMeter();
+		else 
+			return BigDecimal.ZERO;
+	}
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {
 		// TODO Auto-generated method stub
@@ -58,19 +84,4 @@ public class MMachinery extends X_PM_Machinery {
 		
 		return ok;
 	}
-	
-	public static int getPM_Machinery_ID(Properties ctx, int M_Product_ID, String trxName) {
-		String whereClause = "M_Product_ID = ?";
-		MMachinery m = new Query(ctx, Table_Name, whereClause, trxName)
-				.setClient_ID()
-				.setParameters(M_Product_ID)
-				.first();
-		if(m != null) {
-			return m.get_ID();
-		}
-		else {
-			return 0;
-		}
-	}	
-
 }

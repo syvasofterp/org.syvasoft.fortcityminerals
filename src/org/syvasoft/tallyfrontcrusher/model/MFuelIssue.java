@@ -135,6 +135,7 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 		mStatement.setDescription(getDescription());
 		mStatement.setC_ElementValue_ID(getAccount_ID());
 		mStatement.setTF_Fuel_Issue_ID(getTF_Fuel_Issue_ID());
+		mStatement.setPM_Job_ID(getPM_Job_ID());
 		mStatement.saveEx();
 	}
 	

@@ -33,7 +33,7 @@ public class X_PM_Schedule extends PO implements I_PM_Schedule, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20200612L;
+	private static final long serialVersionUID = 20200705L;
 
     /** Standard Constructor */
     public X_PM_Schedule (Properties ctx, int PM_Schedule_ID, String trxName)
@@ -41,8 +41,16 @@ public class X_PM_Schedule extends PO implements I_PM_Schedule, I_Persistent
       super (ctx, PM_Schedule_ID, trxName);
       /** if (PM_Schedule_ID == 0)
         {
+			setAdvanceReminderMeter (Env.ZERO);
+// 0
+			setAdvReminderDays (0);
+// 0
 			setInterval (Env.ZERO);
 			setName (null);
+			setOverDueDays (0);
+// 0
+			setOverDueMeter (Env.ZERO);
+// 0
 			setPM_Machinery_ID (0);
 			setPM_MachineryType_ID (0);
 			setPM_Schedule_ID (0);
@@ -78,6 +86,40 @@ public class X_PM_Schedule extends PO implements I_PM_Schedule, I_Persistent
         .append(get_ID()).append("]");
       return sb.toString();
     }
+
+	/** Set Advance Reminder Meter.
+		@param AdvanceReminderMeter Advance Reminder Meter	  */
+	public void setAdvanceReminderMeter (BigDecimal AdvanceReminderMeter)
+	{
+		set_Value (COLUMNNAME_AdvanceReminderMeter, AdvanceReminderMeter);
+	}
+
+	/** Get Advance Reminder Meter.
+		@return Advance Reminder Meter	  */
+	public BigDecimal getAdvanceReminderMeter () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_AdvanceReminderMeter);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set Advance Reminder Days.
+		@param AdvReminderDays Advance Reminder Days	  */
+	public void setAdvReminderDays (int AdvReminderDays)
+	{
+		set_Value (COLUMNNAME_AdvReminderDays, Integer.valueOf(AdvReminderDays));
+	}
+
+	/** Get Advance Reminder Days.
+		@return Advance Reminder Days	  */
+	public int getAdvReminderDays () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_AdvReminderDays);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
 
 	public org.compiere.model.I_C_UOM getC_UOM() throws RuntimeException
     {
@@ -204,6 +246,40 @@ public class X_PM_Schedule extends PO implements I_PM_Schedule, I_Persistent
 	public BigDecimal getNextMeter () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_NextMeter);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set Over Due Days.
+		@param OverDueDays Over Due Days	  */
+	public void setOverDueDays (int OverDueDays)
+	{
+		set_Value (COLUMNNAME_OverDueDays, Integer.valueOf(OverDueDays));
+	}
+
+	/** Get Over Due Days.
+		@return Over Due Days	  */
+	public int getOverDueDays () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_OverDueDays);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Set Over Due Meter.
+		@param OverDueMeter Over Due Meter	  */
+	public void setOverDueMeter (BigDecimal OverDueMeter)
+	{
+		set_Value (COLUMNNAME_OverDueMeter, OverDueMeter);
+	}
+
+	/** Get Over Due Meter.
+		@return Over Due Meter	  */
+	public BigDecimal getOverDueMeter () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_OverDueMeter);
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;

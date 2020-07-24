@@ -738,4 +738,22 @@ public class X_TF_Fuel_Issue extends PO implements I_TF_Fuel_Issue, I_Persistent
 			 return 0;
 		return ii.intValue();
 	}
+	
+	public static final String  COLUMNNAME_PM_Job_ID = "PM_Job_ID";
+	
+	public void setPM_Job_ID (int PM_Job_ID)
+	{
+		if (PM_Job_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_PM_Job_ID, null);
+		else 
+			set_ValueNoCheck (COLUMNNAME_PM_Job_ID, Integer.valueOf(PM_Job_ID));
+	}
+
+	public int getPM_Job_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_PM_Job_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
 }

@@ -33,7 +33,7 @@ public class X_PM_Job extends PO implements I_PM_Job, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20200612L;
+	private static final long serialVersionUID = 20200706L;
 
     /** Standard Constructor */
     public X_PM_Job (Properties ctx, int PM_Job_ID, String trxName)
@@ -224,6 +224,12 @@ public class X_PM_Job extends PO implements I_PM_Job, I_Persistent
 	public static final String DOCSTATUS_Completed = "CO";
 	/** Voided = VO */
 	public static final String DOCSTATUS_Voided = "VO";
+	/** Upcoming = UP */
+	public static final String DOCSTATUS_Upcoming = "UP";
+	/** Start Maintenance Job = ST */
+	public static final String DOCSTATUS_StartMaintenanceJob = "ST";
+	/** Modify Maintenance Job = MO */
+	public static final String DOCSTATUS_ModifyMaintenanceJob = "MO";
 	/** Set Document Status.
 		@param DocStatus 
 		The current status of the document

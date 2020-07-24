@@ -32,7 +32,7 @@ public interface I_PM_Schedule
     /** TableName=PM_Schedule */
     public static final String Table_Name = "PM_Schedule";
 
-    /** AD_Table_ID=1000312 */
+    /** AD_Table_ID=1000309 */
     public static final int Table_ID = MTable.getTable_ID(Table_Name);
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);
@@ -63,6 +63,24 @@ public interface I_PM_Schedule
 	  * Organizational entity within client
 	  */
 	public int getAD_Org_ID();
+
+    /** Column name AdvanceReminderMeter */
+    public static final String COLUMNNAME_AdvanceReminderMeter = "AdvanceReminderMeter";
+
+	/** Set Advance Reminder Meter	  */
+	public void setAdvanceReminderMeter (BigDecimal AdvanceReminderMeter);
+
+	/** Get Advance Reminder Meter	  */
+	public BigDecimal getAdvanceReminderMeter();
+
+    /** Column name AdvReminderDays */
+    public static final String COLUMNNAME_AdvReminderDays = "AdvReminderDays";
+
+	/** Set Advance Reminder Days	  */
+	public void setAdvReminderDays (int AdvReminderDays);
+
+	/** Get Advance Reminder Days	  */
+	public int getAdvReminderDays();
 
     /** Column name C_UOM_ID */
     public static final String COLUMNNAME_C_UOM_ID = "C_UOM_ID";
@@ -173,6 +191,24 @@ public interface I_PM_Schedule
 
 	/** Get Next Meter	  */
 	public BigDecimal getNextMeter();
+
+    /** Column name OverDueDays */
+    public static final String COLUMNNAME_OverDueDays = "OverDueDays";
+
+	/** Set Over Due Days	  */
+	public void setOverDueDays (int OverDueDays);
+
+	/** Get Over Due Days	  */
+	public int getOverDueDays();
+
+    /** Column name OverDueMeter */
+    public static final String COLUMNNAME_OverDueMeter = "OverDueMeter";
+
+	/** Set Over Due Meter	  */
+	public void setOverDueMeter (BigDecimal OverDueMeter);
+
+	/** Get Over Due Meter	  */
+	public BigDecimal getOverDueMeter();
 
     /** Column name PM_Machinery_ID */
     public static final String COLUMNNAME_PM_Machinery_ID = "PM_Machinery_ID";

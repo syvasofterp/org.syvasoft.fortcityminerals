@@ -677,7 +677,25 @@ public class TF_MPayment extends MPayment {
 		return ii.intValue();
 	}
 
-    /** Column name PM_Machinery_ID */
+    
+	public static final String  COLUMNNAME_PM_Job_ID = "PM_Job_ID";
+	
+	public void setPM_Job_ID (int PM_Job_ID)
+	{
+		if (PM_Job_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_PM_Job_ID, null);
+		else 
+			set_ValueNoCheck (COLUMNNAME_PM_Job_ID, Integer.valueOf(PM_Job_ID));
+	}
+
+	public int getPM_Job_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_PM_Job_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+	 /** Column name PM_Machinery_ID */
     public static final String COLUMNNAME_PM_Machinery_ID = "PM_Machinery_ID";
 	/** Set Machinery.
 	@param PM_Machinery_ID Machinery	  */
@@ -698,7 +716,7 @@ public class TF_MPayment extends MPayment {
 			 return 0;
 		return ii.intValue();
 	}
-
+	
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {
 		
@@ -709,7 +727,6 @@ public class TF_MPayment extends MPayment {
 		}
 		return ok;
 	}
-
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
 		if(newRecord || is_ValueChanged(COLUMNNAME_C_ElementValue_ID) || 
@@ -762,24 +779,7 @@ public class TF_MPayment extends MPayment {
 		
 		return super.beforeSave(newRecord);
 	}
-
-	private void createMachineryStatement() {
-		MMachineryStatement mStatement=new MMachineryStatement(getCtx(), 0, get_TrxName());
-		mStatement.setAD_Org_ID(getAD_Org_ID());
-		mStatement.setDateAcct(getDateAcct());
-		mStatement.setPM_Machinery_ID(getPM_Machinery_ID());
-		mStatement.setC_ElementValue_ID(getC_ElementValue_ID());
-		if(!isReceipt()) {
-			mStatement.setExpense(getPayAmt());
-		}
-		else {
-			mStatement.setIncome(getPayAmt());
-		}
-		mStatement.setDescription(getDescription());
-		mStatement.setC_Payment_ID(getC_Payment_ID());
-		mStatement.saveEx();
-	}
-
+	
 	@Override
 	public String completeIt() {
 		//Subcontract / Job Work
@@ -797,18 +797,6 @@ public class TF_MPayment extends MPayment {
 	}
 	@Override
 	public boolean reverseCorrectIt() {		
-		String whereClause="";
-		if(getPM_Machinery_ID()>0) {
-			whereClause="C_Payment_ID=?";
-			MMachineryStatement mStatement=new Query(getCtx(), MMachineryStatement.Table_Name, whereClause, get_TrxName())
-							.setClient_ID()
-							.setParameters(getC_Payment_ID())
-							.first();
-			if(mStatement!=null) {
-				mStatement.delete(true);
-			}
-		}
-
 		if(getSubcon_Invoice_ID()>0) {			
 			throw new AdempiereException("You cannot modify this entry before Reverse Correct Subcontractor Invoice!");
 		}
@@ -1284,6 +1272,24 @@ public class TF_MPayment extends MPayment {
 		
 		String seqNo = MSequence.getDocumentNoFromSeq(seq, get_TrxName(), this);
 		setDocumentNo2(seqNo);
+	}
+	
+	private void createMachineryStatement() {
+		MMachineryStatement mStatement=new MMachineryStatement(getCtx(), 0, get_TrxName());
+		mStatement.setAD_Org_ID(getAD_Org_ID());
+		mStatement.setDateAcct(getDateAcct());
+		mStatement.setPM_Machinery_ID(getPM_Machinery_ID());
+		mStatement.setPM_Job_ID(getPM_Job_ID());
+		mStatement.setC_ElementValue_ID(getC_ElementValue_ID());
+		if(!isReceipt()) {
+			mStatement.setExpense(getPayAmt());
+		}
+		else {
+			mStatement.setIncome(getPayAmt());
+		}
+		mStatement.setDescription(getDescription());
+		mStatement.setC_Payment_ID(getC_Payment_ID());
+		mStatement.saveEx();
 	}
 		
 }
