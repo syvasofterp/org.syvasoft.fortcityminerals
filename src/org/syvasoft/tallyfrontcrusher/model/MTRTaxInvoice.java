@@ -2,6 +2,7 @@ package org.syvasoft.tallyfrontcrusher.model;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Properties;
 
@@ -15,6 +16,7 @@ import org.compiere.model.MPriceList;
 import org.compiere.model.Query;
 import org.compiere.process.DocAction;
 import org.compiere.util.Env;
+import org.compiere.util.TimeUtil;
 
 
 public class MTRTaxInvoice extends X_TF_TRTaxInvoice {
@@ -270,5 +272,25 @@ public class MTRTaxInvoice extends X_TF_TRTaxInvoice {
 		}
 	}
 
-
+	public String validateInvoiceDate() {
+		//Invoice should be greater than or equal to running/latest invoice date.
+		String whereClause = "AD_Org_ID = ? AND DocStatus = 'CO'";
+		MTRTaxInvoice latestInv = new Query(getCtx(), get_TableName(), whereClause, get_TrxName())
+				.setClient_ID()
+				.setParameters(getAD_Org_ID())
+				.setOrderBy("DateAcct DESC")
+				.first();
+		if(latestInv != null) {
+			int interval = TimeUtil.getDaysBetween(latestInv.getDateAcct(), getDateAcct());
+			String datestring = new SimpleDateFormat("dd/MM/yyyy").format(latestInv.getDateAcct());
+			if(interval < 0)
+				return "Current Invoice Date:" 
+						+ datestring + " so Please do not enter old invoice date!";
+			else
+				return null;
+		}
+		else {
+			return null;
+		}
+	}
 }

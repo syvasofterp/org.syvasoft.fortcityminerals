@@ -33,7 +33,7 @@ public class X_TF_TRTaxInvoice extends PO implements I_TF_TRTaxInvoice, I_Persis
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20200305L;
+	private static final long serialVersionUID = 20200714L;
 
     /** Standard Constructor */
     public X_TF_TRTaxInvoice (Properties ctx, int TF_TRTaxInvoice_ID, String trxName)
@@ -217,6 +217,34 @@ public class X_TF_TRTaxInvoice extends PO implements I_TF_TRTaxInvoice, I_Persis
 	public int getC_Invoice_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_C_Invoice_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_Order getC_Order() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Order)MTable.get(getCtx(), org.compiere.model.I_C_Order.Table_Name)
+			.getPO(getC_Order_ID(), get_TrxName());	}
+
+	/** Set Order.
+		@param C_Order_ID 
+		Order
+	  */
+	public void setC_Order_ID (int C_Order_ID)
+	{
+		if (C_Order_ID < 1) 
+			set_Value (COLUMNNAME_C_Order_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_Order_ID, Integer.valueOf(C_Order_ID));
+	}
+
+	/** Get Order.
+		@return Order
+	  */
+	public int getC_Order_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_Order_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
