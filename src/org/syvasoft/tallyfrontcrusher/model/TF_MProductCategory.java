@@ -45,6 +45,29 @@ public class TF_MProductCategory extends MProductCategory {
 		return ii.intValue();
 	}
 
+    /** Column name TrackMaterialMovement */
+    public static final String COLUMNNAME_TrackMaterialMovement = "TrackMaterialMovement";
+    
+	/** Set Track Material Movement.
+	@param TrackMaterialMovement Track Material Movement	  */
+	public void setTrackMaterialMovement (boolean TrackMaterialMovement)
+	{
+		set_Value (COLUMNNAME_TrackMaterialMovement, Boolean.valueOf(TrackMaterialMovement));
+	}
+	
+	/** Get Track Material Movement.
+		@return Track Material Movement	  */
+	public boolean isTrackMaterialMovement () 
+	{
+		Object oo = get_Value(COLUMNNAME_TrackMaterialMovement);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
 
 	
 }

@@ -42,7 +42,7 @@ set search_path to adempiere;
 	-- delete from ad_changelog where ad_client_id not in (select ad_org_id from chuboe_org_preserve);
 
 -- ENHANCEMENT COMMENT END
-
+DELETE FROM pm_machinestmt;
 -- Crusher Tables
 UPDATE TF_Boulder_Receipt SET Subcon_Invoice_ID = NULL, TF_Employee_Salary_ID = NULL, TF_Vehicle_Rent_ID = NULL,
 	TF_Quarry_Rent_ID = NULL;
@@ -73,6 +73,8 @@ DELETE FROM TF_Vehicle_Rent;
 DELETE FROM TF_Quarry_Rent;
 DELETE FROM TF_Fuel_Issue;
 
+DELETE FROM tf_boulder_movement;
+DELETE FROM tf_crusherkatingentry;
 UPDATE tf_TripSheet SET tf_jobwork_issuedresource_id =NULL;
 UPDATE TF_Crusher_Production SET TF_WeighmentEntry_id = NULL, Subcon_Invoice_ID = NULL, Subcon2_Invoice_ID =NULL;
 

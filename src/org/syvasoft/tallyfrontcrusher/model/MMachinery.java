@@ -77,7 +77,7 @@ public class MMachinery extends X_PM_Machinery {
 			DB.executeUpdate("UPDATE PM_Machinery SET M_Product_ID = " + prod.getM_Product_ID() +
 						" WHERE PM_Machinery_ID = " + getPM_Machinery_ID(), get_TrxName());
 		}
-		if(!mType.getMileageType().equals(prod.get_ValueAsString(MMachineryType.COLUMNNAME_MileageType))) {
+		if(mType.getMileageType() != null && !mType.getMileageType().equals(prod.get_ValueAsString(MMachineryType.COLUMNNAME_MileageType))) {
 			prod.set_ValueOfColumn("MileageType", mType.getMileageType());
 			prod.saveEx();
 		}

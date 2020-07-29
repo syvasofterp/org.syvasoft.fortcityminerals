@@ -2487,9 +2487,11 @@ public class TF_MOrder extends MOrder {
 			//Boulder based approach - tracking issued qty
 			int Boulder_ID = MSysConfig.getIntValue("BOULDER_ID", 1000099, getAD_Client_ID(), getAD_Org_ID());
 			MProduct rm = MProduct.get(getCtx(), Boulder_ID);
-			if(getItem1().getC_UOM_ID() == rm.getC_UOM_ID() && getItem1_ID() != Boulder_ID) {
-				MSubcontractMaterialMovement.createMaterialMovement(get_TrxName(), getDateAcct(), getAD_Org_ID(), getC_Order_ID(), 
-						getC_BPartner_ID(), getItem1_ID(), getItem1_Qty(), getTF_WeighmentEntry_ID());
+			if(getItem1().getC_UOM_ID() == rm.getC_UOM_ID() && getItem1_ID() != Boulder_ID) {				
+				TF_MProductCategory pc = new TF_MProductCategory(getCtx(), getItem1().getM_Product_Category_ID(), get_TrxName());
+				if(pc.isTrackMaterialMovement())
+					MSubcontractMaterialMovement.createMaterialMovement(get_TrxName(), getDateAcct(), getAD_Org_ID(), getC_Order_ID(), 
+							getC_BPartner_ID(), getItem1_ID(), getItem1_Qty(), getTF_WeighmentEntry_ID());
 			}
 			else if(getItem1_ID() == Boulder_ID && getTF_WeighmentEntry_ID() > 0) {
 				MBoulderMovement.createBoulderIssue(get_TrxName(), getDateAcct(), getAD_Org_ID(), getItem1_ID(),
