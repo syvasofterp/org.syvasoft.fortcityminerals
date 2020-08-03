@@ -257,6 +257,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return MAdditionalTransactionSetup.class;
 		else if(MBoulderMovement.Table_Name.equals(tableName))			
 			return MBoulderMovement.class;
+		else if(MDrillingEntry.Table_Name.equals(tableName))			
+			return MDrillingEntry.class;
 		return null;
 	}
 
@@ -507,6 +509,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MAdditionalTransactionSetup(ctx, Record_ID, trxName);
 		else if(MBoulderMovement.Table_Name.equals(tableName))			
 			return new MBoulderMovement(ctx, Record_ID, trxName);
+		else if(MDrillingEntry.Table_Name.equals(tableName))			
+			return new MDrillingEntry(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -759,6 +763,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MAdditionalTransactionSetup(ctx, rs, trxName);
 		else if(MBoulderMovement.Table_Name.equals(tableName))			
 			return new MBoulderMovement(ctx, rs, trxName);
+		else if(MDrillingEntry.Table_Name.equals(tableName))			
+			return new MDrillingEntry(ctx, rs, trxName);
 		return null;
 	}
 

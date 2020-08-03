@@ -14,6 +14,7 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutBoulderReceipt_Warehouse;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutCrusherKatingEntry_CalcAmount;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutCrusherKatingEntry_SetPrice;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutCrusherKatingEntry_WeighmentEntry;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutDrillingEntry_CalcDrillingCost;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutElementValue_AccountGroup;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutEmployeeSalary;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutEmployeeSalaryIssue_CalcBalanceAmts;
@@ -98,6 +99,7 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_PriceIncludesTax;
 
 import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MCrusherKatingEntry;
+import org.syvasoft.tallyfrontcrusher.model.MDrillingEntry;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalary;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryIssue;
 import org.syvasoft.tallyfrontcrusher.model.MFuelIssue;
@@ -617,6 +619,13 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 				list.add(new CalloutToken_SetUOM());
 		}
 
+		if(tableName.equals(MDrillingEntry.Table_Name)) {
+			if(columnName.equals(MDrillingEntry.COLUMNNAME_Holes) ||
+					columnName.equals(MDrillingEntry.COLUMNNAME_Feet) ||
+					columnName.equals(MDrillingEntry.COLUMNNAME_FeetRate))
+				list.add(new CalloutDrillingEntry_CalcDrillingCost());
+		}
+		
 		return list != null ? list.toArray(new IColumnCallout[0]) : new IColumnCallout[0];
 	}
 
