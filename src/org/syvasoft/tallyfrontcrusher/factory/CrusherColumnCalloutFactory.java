@@ -59,6 +59,8 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_VehicleRent;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_VehicleType;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_Warehouse;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_WeighmentEntry;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutPMSchedule_TypeChange;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutPM_SetMachineryType;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPaymentCashType;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_CalcSalaryBalannceAmts;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_DocumentType;
@@ -110,6 +112,7 @@ import org.syvasoft.tallyfrontcrusher.model.MInvestmentReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MJobworkResourceRentEntry;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWage;
 import org.syvasoft.tallyfrontcrusher.model.MLabourWageIssue;
+import org.syvasoft.tallyfrontcrusher.model.MPMSchedule;
 import org.syvasoft.tallyfrontcrusher.model.MPermitPurchase;
 import org.syvasoft.tallyfrontcrusher.model.MPriceListUOM;
 import org.syvasoft.tallyfrontcrusher.model.MTRTaxInvoice;
@@ -625,6 +628,21 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 					columnName.equals(MDrillingEntry.COLUMNNAME_FeetRate))
 				list.add(new CalloutDrillingEntry_CalcDrillingCost());
 		}
+		
+		if(tableName.equals(MPMSchedule.Table_Name)) {
+			if(columnName.equals(MPMSchedule.COLUMNNAME_ScheduleType) ||
+					columnName.equals(MPMSchedule.COLUMNNAME_PM_Period_ID) ||
+					columnName.equals(MPMSchedule.COLUMNNAME_DateLastRun) ||
+					columnName.equals(MPMSchedule.COLUMNNAME_Interval) ||
+					columnName.equals(MPMSchedule.COLUMNNAME_C_UOM_ID) ||
+					columnName.equals(MPMSchedule.COLUMNNAME_LastMeter) ||
+					columnName.equals(MPMSchedule.COLUMNNAME_Interval))
+				list.add(new CalloutPMSchedule_TypeChange());
+			
+			if(columnName.equals(MPMSchedule.COLUMNNAME_PM_Machinery_ID))
+				list.add(new CalloutPM_SetMachineryType());
+		}
+		
 		
 		return list != null ? list.toArray(new IColumnCallout[0]) : new IColumnCallout[0];
 	}
