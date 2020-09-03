@@ -107,6 +107,21 @@ public interface I_TF_WeighmentEntry
 
 	public org.compiere.model.I_C_Order getC_Order() throws RuntimeException;
 
+    /** Column name C_OrderLine_ID */
+    public static final String COLUMNNAME_C_OrderLine_ID = "C_OrderLine_ID";
+
+	/** Set Sales Order Line.
+	  * Sales Order Line
+	  */
+	public void setC_OrderLine_ID (int C_OrderLine_ID);
+
+	/** Get Sales Order Line.
+	  * Sales Order Line
+	  */
+	public int getC_OrderLine_ID();
+
+	public org.compiere.model.I_C_OrderLine getC_OrderLine() throws RuntimeException;
+
     /** Column name C_Project_ID */
     public static final String COLUMNNAME_C_Project_ID = "C_Project_ID";
 
@@ -428,10 +443,10 @@ public interface I_TF_WeighmentEntry
     /** Column name TF_ProductionPlant_ID */
     public static final String COLUMNNAME_TF_ProductionPlant_ID = "TF_ProductionPlant_ID";
 
-	/** Set TF_ProductionPlant	  */
+	/** Set Production Plant	  */
 	public void setTF_ProductionPlant_ID (int TF_ProductionPlant_ID);
 
-	/** Get TF_ProductionPlant	  */
+	/** Get Production Plant	  */
 	public int getTF_ProductionPlant_ID();
 
 	public I_TF_ProductionPlant getTF_ProductionPlant() throws RuntimeException;

@@ -259,6 +259,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return MBoulderMovement.class;
 		else if(MDrillingEntry.Table_Name.equals(tableName))			
 			return MDrillingEntry.class;
+		else if(TF_MInOut.Table_Name.equals(tableName))			
+			return TF_MInOut.class;
 		return null;
 	}
 
@@ -511,6 +513,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MBoulderMovement(ctx, Record_ID, trxName);
 		else if(MDrillingEntry.Table_Name.equals(tableName))			
 			return new MDrillingEntry(ctx, Record_ID, trxName);
+		else if(TF_MInOut.Table_Name.equals(tableName))			
+			return new TF_MInOut(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -765,6 +769,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MBoulderMovement(ctx, rs, trxName);
 		else if(MDrillingEntry.Table_Name.equals(tableName))			
 			return new MDrillingEntry(ctx, rs, trxName);
+		else if(TF_MInOut.Table_Name.equals(tableName))			
+			return new TF_MInOut(ctx, rs, trxName);
 		return null;
 	}
 

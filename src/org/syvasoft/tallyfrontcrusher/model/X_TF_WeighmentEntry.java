@@ -33,7 +33,7 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20190918L;
+	private static final long serialVersionUID = 20200903L;
 
     /** Standard Constructor */
     public X_TF_WeighmentEntry (Properties ctx, int TF_WeighmentEntry_ID, String trxName)
@@ -47,7 +47,6 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 			setStatus (null);
 // IP
 			setTF_WeighmentEntry_ID (0);
-			setWeighmentEntryType (null);
         } */
     }
 
@@ -150,6 +149,34 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public int getC_Order_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_C_Order_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_OrderLine getC_OrderLine() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_OrderLine)MTable.get(getCtx(), org.compiere.model.I_C_OrderLine.Table_Name)
+			.getPO(getC_OrderLine_ID(), get_TrxName());	}
+
+	/** Set Sales Order Line.
+		@param C_OrderLine_ID 
+		Sales Order Line
+	  */
+	public void setC_OrderLine_ID (int C_OrderLine_ID)
+	{
+		if (C_OrderLine_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_C_OrderLine_ID, null);
+		else 
+			set_ValueNoCheck (COLUMNNAME_C_OrderLine_ID, Integer.valueOf(C_OrderLine_ID));
+	}
+
+	/** Get Sales Order Line.
+		@return Sales Order Line
+	  */
+	public int getC_OrderLine_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_OrderLine_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
@@ -439,7 +466,6 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		@return Party Name	  */
 	public String getPartyName () 
 	{
-		
 		return (String)get_Value(COLUMNNAME_PartyName);
 	}
 
@@ -614,26 +640,14 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 
 	/** Regular = R */
 	public static final String TF_BLUEMETAL_TYPE_Regular = "R";
-	/** Mix GSB = G */
-	public static final String TF_BLUEMETAL_TYPE_MixGSB = "G";
-	/** Mix WMM = W */
-	public static final String TF_BLUEMETAL_TYPE_MixWMM = "W";
-	/** Mix GSB + 40MM = G+ */
-	public static final String TF_BLUEMETAL_TYPE_MixGSBPlus40MM = "G+";
-	/** Mix WMM + 40MM = W+ */
-	public static final String TF_BLUEMETAL_TYPE_MixWMMPlus40MM = "W+";
-	/** M Sand Only = MSO */
-	public static final String TF_BLUEMETAL_TYPE_MSandOnly = "MSO";
-	/** M Sand Dust Only = MDO */
-	public static final String TF_BLUEMETAL_TYPE_MSandDustOnly = "MDO";
-	/** M Sand  59% + 6MM 30% = MSC */
-	public static final String TF_BLUEMETAL_TYPE_MSand59Plus6MM30 = "MSC";
-	/** M Sand 50% + 6MM 40% = MSD */
-	public static final String TF_BLUEMETAL_TYPE_MSand50Plus6MM40 = "MSD";
-	/** Dust 68% + 6MM 30% = MDC */
-	public static final String TF_BLUEMETAL_TYPE_Dust68Plus6MM30 = "MDC";
-	/** Dust 58% + Chips 40% = MDD */
-	public static final String TF_BLUEMETAL_TYPE_Dust58PlusChips40 = "MDD";
+	/** Wetmix = W */
+	public static final String TF_BLUEMETAL_TYPE_Wetmix = "W";
+	/** Regular + Geosand = RG */
+	public static final String TF_BLUEMETAL_TYPE_RegularPlusGeosand = "RG";
+	/** 40 MM only = 40 */
+	public static final String TF_BLUEMETAL_TYPE_40MMOnly = "40";
+	/** GSB = GSB */
+	public static final String TF_BLUEMETAL_TYPE_GSB = "GSB";
 	/** Set Production Type.
 		@param TF_BlueMetal_Type Production Type	  */
 	public void setTF_BlueMetal_Type (String TF_BlueMetal_Type)
@@ -704,8 +718,8 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return (I_TF_ProductionPlant)MTable.get(getCtx(), I_TF_ProductionPlant.Table_Name)
 			.getPO(getTF_ProductionPlant_ID(), get_TrxName());	}
 
-	/** Set TF_ProductionPlant.
-		@param TF_ProductionPlant_ID TF_ProductionPlant	  */
+	/** Set Production Plant.
+		@param TF_ProductionPlant_ID Production Plant	  */
 	public void setTF_ProductionPlant_ID (int TF_ProductionPlant_ID)
 	{
 		if (TF_ProductionPlant_ID < 1) 
@@ -714,8 +728,8 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 			set_Value (COLUMNNAME_TF_ProductionPlant_ID, Integer.valueOf(TF_ProductionPlant_ID));
 	}
 
-	/** Get TF_ProductionPlant.
-		@return TF_ProductionPlant	  */
+	/** Get Production Plant.
+		@return Production Plant	  */
 	public int getTF_ProductionPlant_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_TF_ProductionPlant_ID);
@@ -890,8 +904,8 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public static final String WEIGHMENTENTRYTYPE_OwnProductionReceipt = "3PR";
 	/** Subcontract Production Receipt = 4SR */
 	public static final String WEIGHMENTENTRYTYPE_SubcontractProductionReceipt = "4SR";
-	/** Kating = 5KA */
-	public static final String WEIGHMENTENTRYTYPE_Kating = "5KA";
+	/** Stock to Hopper = 5KA */
+	public static final String WEIGHMENTENTRYTYPE_StockToHopper = "5KA";
 	/** Set Type.
 		@param WeighmentEntryType Type	  */
 	public void setWeighmentEntryType (String WeighmentEntryType)
