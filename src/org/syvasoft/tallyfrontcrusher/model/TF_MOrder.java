@@ -2444,7 +2444,8 @@ public class TF_MOrder extends MOrder {
 		
 		String m_processMsg = null;
 		
-		if(MSysConfig.getValue("AGGREGATE_STOCK_APPROACH","B", getAD_Client_ID(), getAD_Org_ID()).equals("B") )
+		if(MSysConfig.getValue("AGGREGATE_STOCK_APPROACH","B", getAD_Client_ID(), getAD_Org_ID()).equals("B")
+				|| getTF_ProductionPlant_ID() == 0)
 			return null;
 		
 		//Create Crusher Production
