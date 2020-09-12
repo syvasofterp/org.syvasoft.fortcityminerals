@@ -34,7 +34,8 @@ public class CalloutOrder_Item1Tax implements IColumnCallout{
 				boolean isRentInclusive = mTab.getValueAsBoolean(TF_MOrder.COLUMNNAME_IsRentInclusive);
 				
 			if((boolean)mTab.getValue(TF_MOrder.COLUMNNAME_IsSOTrx) == true) {
-				if(((boolean)mTab.getValue(TF_MOrder.COLUMNNAME_IsTaxIncluded1)) == true) {
+				if(mTab.getValue(TF_MOrder.COLUMNNAME_IsTaxIncluded1) != null &&
+						((boolean)mTab.getValue(TF_MOrder.COLUMNNAME_IsTaxIncluded1)) == true) {
 					BigDecimal priceExcludesTax;
 					int tax_ID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_Tax_ID);
 					MTax tax = new MTax(ctx, tax_ID, null);
