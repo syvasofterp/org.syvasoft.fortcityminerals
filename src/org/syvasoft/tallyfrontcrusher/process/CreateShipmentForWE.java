@@ -53,6 +53,7 @@ public class CreateShipmentForWE extends SvrProcess {
 			else {
 				j=j+1;
 				we.setDescription("Net Weighment Qty cannot be zero");
+				we.saveEx();
 			}
 		}
 		return i + " weighment entries are procesed!, "+j+" invalid qty weighment entries are not processed!";
