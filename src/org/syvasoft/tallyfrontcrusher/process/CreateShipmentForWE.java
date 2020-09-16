@@ -41,10 +41,21 @@ public class CreateShipmentForWE extends SvrProcess {
 				.setClient_ID()
 				.setOrderBy("DocumentNo")
 				.list();
+		int i=0;
+		int j=0;
+				
 		for(MWeighmentEntry we : list) {
-			createShipmentDocument(we);
+			if(!we.getNetWeightUnit().equals(BigDecimal.ZERO))
+			{
+				createShipmentDocument(we);
+				i=i+1;
+			}
+			else {
+				j=j+1;
+				we.setDescription("Net Weighment Qty cannot be zero");
+			}
 		}
-		return list.size() + " weighment entries are procesed!";
+		return i + " weighment entries are procesed!, "+j+" invalid qty weighment entries are not processed!";
 	}
 	
 	public void createShipmentDocument(MWeighmentEntry we) {
