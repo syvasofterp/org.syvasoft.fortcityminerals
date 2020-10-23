@@ -71,6 +71,7 @@ DELETE FROM TF_Boulder_Receipt;
 DELETE FROM TF_Employee_Salary;
 DELETE FROM TF_Vehicle_Rent;
 DELETE FROM TF_Quarry_Rent;
+DELETE FROM pm_machinestmt;
 DELETE FROM TF_Fuel_Issue;
 
 UPDATE tf_TripSheet SET tf_jobwork_issuedresource_id =NULL;
@@ -112,11 +113,15 @@ DELETE FROM tf_katingentry;
 UPDATE C_Invoice SET GL_Journal_ID = Null WHERE ad_client_id=1000000 ;
 delete from gl_journalbatch WHERE ad_client_id=1000000 ;
 delete from gl_journalline WHERE ad_client_id=1000000 ; 
+UPDATE c_order SET tf_trtaxinvoice_ID = NULL;
+DELETE FROM tf_trtaxinvoiceLINE;
+DELETE FROM tf_trtaxinvoice;
 delete from gl_journal WHERE ad_client_id=1000000 ;  
 
 DELETE from c_validcombination WHERE C_Project_ID IN (SELECT C_Project_ID FROM C_Project WHERE C_Project_id !=1000000 AND ad_client_id=1000000);
 UPDATE C_Invoice SET C_Project_ID = null WHERE AD_client_ID = 1000000;
 UPDATE m_inventory SET C_Project_ID = null WHERE AD_Client_ID = 1000000;
+DELETE FROM pm_meter_log;
 DELETE FROM TF_TripSheet WHERE ad_client_id=1000000;
 UPDATE C_Order SET tf_weighmententry_id = null, C_PROJECT_id = NULL, IssueToSubcontract_ID= null, SUBCON_invoice_id = null,
 TransporterInvoice_ID = null
@@ -126,6 +131,8 @@ DELETE FROM TF_CrusherKatingEntry WHERE AD_client_ID = 1000000;
 DELETE FROM tf_crusherpermitledgerline WHERE ad_client_id=1000000;
 DELETE FROM tf_taxinvoice WHERE ad_client_id=1000000;
 DELETE FROM tf_weighment_permit WHERE ad_client_id=1000000;
+UPDATE tf_crusher_production SET tf_weighmententry_ID = NULL;
+UPDATE m_inout SET tf_weighmententry_ID = NULL;
 DELETE FROM tf_weighmententry WHERE ad_client_id=1000000;
 --DELETE FROM  C_Project WHERE C_Project_id !=1000000 AND ad_client_id=1000000;;
 
@@ -202,6 +209,7 @@ UPDATE c_order SET TF_TaxInvoice_ID = null WHERE ad_client_id=1000000;
 DELETE FROM tf_taxinvoice;
 UPDATE c_bpartner SET C_Invoice_ID = null WHERE ad_client_id=1000000;
 delete from tf_debitcreditnote;
+DELETE FROM tf_drillingentry;
 delete from c_Invoice WHERE ad_client_id=1000000;
 delete from PP_MRP WHERE ad_client_id=1000000;;
 delete from m_requisitionline  WHERE ad_client_id=1000000;;
@@ -327,12 +335,18 @@ DELETE FROM ad_note WHERE AD_CLIENT_ID= 1000000;
 DELETE FROM m_pricelist_trl WHERE AD_CLIENT_ID= 1000000;
 DELETE FROM m_pricelist_version_trl WHERE AD_CLIENT_ID= 1000000;
 
-DELETE FROM ad_preference WHERE ad_user_Id = 1000344
+DELETE FROM ad_preference WHERE AD_USER_ID NOT IN (1000004, 1000019, 1000005, 1000008, 1000279);
 
 DELETE FROM AD_USER WHERE AD_CLIENT_ID= 1000000 AND AD_USER_ID NOT IN (1000004, 1000019, 1000005, 1000008, 1000279);
 DELETE FROM tf_jobwork_assignedemployee;
 UPDATE C_ValidCombination SET C_BPartner_ID = NULL WHERE ad_client_id=1000000;;
 DELETE FROM tf_orgbpcashtrans_configx;
+DELETE FROM TF_TOKEN;
+
+DELETE FROM pm_job; 
+DELETE FROM pm_meter;
+DELETE FROM pm_schedule;
+DELETE FROM pm_machinery;
 DELETE FROM tf_rentedvehicle;
 DELETE FROM tf_jobwork_assignedvehicle;
 DELETE FROM tf_jobwork_assignedaccount;
