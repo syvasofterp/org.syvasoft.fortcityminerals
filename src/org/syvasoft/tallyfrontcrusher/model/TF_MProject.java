@@ -740,4 +740,87 @@ public class TF_MProject extends MProject {
 				.setClient_ID().setParameters(C_Project_ID).first();
 		return proj;
 	}
+	
+	/** Column name JobWorkWOTrans_Product_ID */
+    public static final String COLUMNNAME_JobWorkWOTrans_Product_ID = "JobWorkWOTrans_Product_ID";
+    public org.compiere.model.I_M_Product getJobWorkWOTrans_Product() throws RuntimeException
+    {
+		return (org.compiere.model.I_M_Product)MTable.get(getCtx(), org.compiere.model.I_M_Product.Table_Name)
+			.getPO(getJobWorkWOTrans_Product_ID(), get_TrxName());	}
+
+	/** Set Jobwork w/o Transport.
+		@param JobWorkWOTrans_Product_ID Jobwork w/o Transport	  */
+	public void setJobWorkWOTrans_Product_ID (int JobWorkWOTrans_Product_ID)
+	{
+		if (JobWorkWOTrans_Product_ID < 1) 
+			set_Value (COLUMNNAME_JobWorkWOTrans_Product_ID, null);
+		else 
+			set_Value (COLUMNNAME_JobWorkWOTrans_Product_ID, Integer.valueOf(JobWorkWOTrans_Product_ID));
+	}
+
+	/** Get Jobwork w/o Transport.
+		@return Jobwork w/o Transport	  */
+	public int getJobWorkWOTrans_Product_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_JobWorkWOTrans_Product_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_Tax getC_Tax() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Tax)MTable.get(getCtx(), org.compiere.model.I_C_Tax.Table_Name)
+			.getPO(getC_Tax_ID(), get_TrxName());	}
+
+	/** Column name C_Tax_ID */
+    public static final String COLUMNNAME_C_Tax_ID = "C_Tax_ID";
+    
+	/** Set Tax.
+		@param C_Tax_ID 
+		Tax identifier
+	  */
+	public void setC_Tax_ID (int C_Tax_ID)
+	{
+		if (C_Tax_ID < 1) 
+			set_Value (COLUMNNAME_C_Tax_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_Tax_ID, Integer.valueOf(C_Tax_ID));
+	}
+
+	/** Get Tax.
+		@return Tax identifier
+	  */
+	public int getC_Tax_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_Tax_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+	
+	/** Column name RequiredConsolidateInv */
+    public static final String COLUMNNAME_RequiredConsolidateInv = "RequiredConsolidateInv";
+    
+		/** Set Requires Consolidate Invoice.
+		@param RequiredConsolidateInv Requires Consolidate Invoice	  */
+	public void setRequiredConsolidateInv (boolean RequiredConsolidateInv)
+	{
+		set_Value (COLUMNNAME_RequiredConsolidateInv, Boolean.valueOf(RequiredConsolidateInv));
+	}
+	
+	/** Get Requires Consolidate Invoice.
+		@return Requires Consolidate Invoice	  */
+	public boolean isRequiredConsolidateInv () 
+	{
+		Object oo = get_Value(COLUMNNAME_RequiredConsolidateInv);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
 }
