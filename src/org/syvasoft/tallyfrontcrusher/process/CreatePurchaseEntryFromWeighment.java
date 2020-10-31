@@ -19,6 +19,7 @@ import org.compiere.util.Util;
 import org.syvasoft.tallyfrontcrusher.model.MDestination;
 import org.syvasoft.tallyfrontcrusher.model.MLumpSumRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MPriceListUOM;
+import org.syvasoft.tallyfrontcrusher.model.MRentedVehicle;
 import org.syvasoft.tallyfrontcrusher.model.MWeighmentEntry;
 import org.syvasoft.tallyfrontcrusher.model.TF_MBPartner;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
@@ -118,15 +119,16 @@ public class CreatePurchaseEntryFromWeighment extends SvrProcess {
 					BigDecimal RateKm=MLumpSumRentConfig.getRateKm(getCtx(), ord.getAD_Org_ID(), ord.getTF_Destination_ID(), 
 							ord.getItem1_VehicleType_ID(), dest.getDistance(), null);
 					ord.setRate(RateKm);
-					
+					MRentedVehicle rv = new MRentedVehicle(getCtx(), ord.getTF_RentedVehicle_ID(), get_TrxName());
+					int Vendor_ID = rv.getC_BPartner_ID();		
 					if(RateKm.equals(BigDecimal.ZERO)) {
 						ord.setIsLumpSumRent(true);
 					}
 					else {
 						ord.setIsLumpSumRent(false);
 					}
-					BigDecimal RentAmt=MLumpSumRentConfig.getLumpSumRent(getCtx(),ord.getAD_Org_ID(), ord.getTF_Destination_ID(), 
-							ord.getItem1_VehicleType_ID(), dest.getDistance(), null);
+					BigDecimal RentAmt=MLumpSumRentConfig.getLumpSumRent(getCtx(),ord.getAD_Org_ID(),Vendor_ID, ord.getC_BPartner_ID(), 
+							ord.getItem1_ID(), ord.getTF_Destination_ID(), ord.getItem1_VehicleType_ID(), dest.getDistance(), get_TrxName());
 					ord.setRent_Amt(RentAmt);
 					ord.setRentMargin(BigDecimal.ZERO);
 					ord.setRentPayable(RentAmt);

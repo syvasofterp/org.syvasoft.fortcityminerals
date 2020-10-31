@@ -32,7 +32,7 @@ public class X_TF_LumpSumRent_Config extends PO implements I_TF_LumpSumRent_Conf
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20181217L;
+	private static final long serialVersionUID = 20200603L;
 
     /** Standard Constructor */
     public X_TF_LumpSumRent_Config (Properties ctx, int TF_LumpSumRent_Config_ID, String trxName)
@@ -73,6 +73,62 @@ public class X_TF_LumpSumRent_Config extends PO implements I_TF_LumpSumRent_Conf
       return sb.toString();
     }
 
+	public org.compiere.model.I_C_BPartner getC_BPartner() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_BPartner)MTable.get(getCtx(), org.compiere.model.I_C_BPartner.Table_Name)
+			.getPO(getC_BPartner_ID(), get_TrxName());	}
+
+	/** Set Business Partner .
+		@param C_BPartner_ID 
+		Identifies a Business Partner
+	  */
+	public void setC_BPartner_ID (int C_BPartner_ID)
+	{
+		if (C_BPartner_ID < 1) 
+			set_Value (COLUMNNAME_C_BPartner_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_BPartner_ID, Integer.valueOf(C_BPartner_ID));
+	}
+
+	/** Get Business Partner .
+		@return Identifies a Business Partner
+	  */
+	public int getC_BPartner_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_BPartner_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_M_Product getM_Product() throws RuntimeException
+    {
+		return (org.compiere.model.I_M_Product)MTable.get(getCtx(), org.compiere.model.I_M_Product.Table_Name)
+			.getPO(getM_Product_ID(), get_TrxName());	}
+
+	/** Set Product.
+		@param M_Product_ID 
+		Product, Service, Item
+	  */
+	public void setM_Product_ID (int M_Product_ID)
+	{
+		if (M_Product_ID < 1) 
+			set_Value (COLUMNNAME_M_Product_ID, null);
+		else 
+			set_Value (COLUMNNAME_M_Product_ID, Integer.valueOf(M_Product_ID));
+	}
+
+	/** Get Product.
+		@return Product, Service, Item
+	  */
+	public int getM_Product_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_M_Product_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	/** Set MaxKM.
 		@param MaxKM MaxKM	  */
 	public void setMaxKM (int MaxKM)
@@ -107,15 +163,15 @@ public class X_TF_LumpSumRent_Config extends PO implements I_TF_LumpSumRent_Conf
 		return ii.intValue();
 	}
 
-	/** Set RateKM.
-		@param ratekm RateKM	  */
+	/** Set Rate / KM.
+		@param ratekm Rate / KM	  */
 	public void setratekm (BigDecimal ratekm)
 	{
 		set_Value (COLUMNNAME_ratekm, ratekm);
 	}
 
-	/** Get RateKM.
-		@return RateKM	  */
+	/** Get Rate / KM.
+		@return Rate / KM	  */
 	public BigDecimal getratekm () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_ratekm);
@@ -124,15 +180,49 @@ public class X_TF_LumpSumRent_Config extends PO implements I_TF_LumpSumRent_Conf
 		return bd;
 	}
 
-	/** Set Lumpsum Rent Amount.
-		@param Rent_Amt Lumpsum Rent Amount	  */
+	/** Set Rate / MT.
+		@param RateMT Rate / MT	  */
+	public void setRateMT (BigDecimal RateMT)
+	{
+		set_Value (COLUMNNAME_RateMT, RateMT);
+	}
+
+	/** Get Rate / MT.
+		@return Rate / MT	  */
+	public BigDecimal getRateMT () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_RateMT);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set Rate / MT / KM.
+		@param RateMTKM Rate / MT / KM	  */
+	public void setRateMTKM (BigDecimal RateMTKM)
+	{
+		set_Value (COLUMNNAME_RateMTKM, RateMTKM);
+	}
+
+	/** Get Rate / MT / KM.
+		@return Rate / MT / KM	  */
+	public BigDecimal getRateMTKM () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_RateMTKM);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set Rent (Amount).
+		@param Rent_Amt Rent (Amount)	  */
 	public void setRent_Amt (BigDecimal Rent_Amt)
 	{
 		set_Value (COLUMNNAME_Rent_Amt, Rent_Amt);
 	}
 
-	/** Get Lumpsum Rent Amount.
-		@return Lumpsum Rent Amount	  */
+	/** Get Rent (Amount).
+		@return Rent (Amount)	  */
 	public BigDecimal getRent_Amt () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Rent_Amt);
@@ -220,6 +310,34 @@ public class X_TF_LumpSumRent_Config extends PO implements I_TF_LumpSumRent_Conf
 	public int getTF_VehicleType_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_TF_VehicleType_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_BPartner getVendor() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_BPartner)MTable.get(getCtx(), org.compiere.model.I_C_BPartner.Table_Name)
+			.getPO(getVendor_ID(), get_TrxName());	}
+
+	/** Set Vendor.
+		@param Vendor_ID 
+		The Vendor of the product/service
+	  */
+	public void setVendor_ID (int Vendor_ID)
+	{
+		if (Vendor_ID < 1) 
+			set_Value (COLUMNNAME_Vendor_ID, null);
+		else 
+			set_Value (COLUMNNAME_Vendor_ID, Integer.valueOf(Vendor_ID));
+	}
+
+	/** Get Vendor.
+		@return The Vendor of the product/service
+	  */
+	public int getVendor_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Vendor_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();

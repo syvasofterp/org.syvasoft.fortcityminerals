@@ -32,7 +32,7 @@ public interface I_TF_LumpSumRent_Config
     /** TableName=TF_LumpSumRent_Config */
     public static final String Table_Name = "TF_LumpSumRent_Config";
 
-    /** AD_Table_ID=1000281 */
+    /** AD_Table_ID=1000304 */
     public static final int Table_ID = MTable.getTable_ID(Table_Name);
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);
@@ -64,6 +64,21 @@ public interface I_TF_LumpSumRent_Config
 	  */
 	public int getAD_Org_ID();
 
+    /** Column name C_BPartner_ID */
+    public static final String COLUMNNAME_C_BPartner_ID = "C_BPartner_ID";
+
+	/** Set Business Partner .
+	  * Identifies a Business Partner
+	  */
+	public void setC_BPartner_ID (int C_BPartner_ID);
+
+	/** Get Business Partner .
+	  * Identifies a Business Partner
+	  */
+	public int getC_BPartner_ID();
+
+	public org.compiere.model.I_C_BPartner getC_BPartner() throws RuntimeException;
+
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
 
@@ -93,6 +108,21 @@ public interface I_TF_LumpSumRent_Config
 	  */
 	public boolean isActive();
 
+    /** Column name M_Product_ID */
+    public static final String COLUMNNAME_M_Product_ID = "M_Product_ID";
+
+	/** Set Product.
+	  * Product, Service, Item
+	  */
+	public void setM_Product_ID (int M_Product_ID);
+
+	/** Get Product.
+	  * Product, Service, Item
+	  */
+	public int getM_Product_ID();
+
+	public org.compiere.model.I_M_Product getM_Product() throws RuntimeException;
+
     /** Column name MaxKM */
     public static final String COLUMNNAME_MaxKM = "MaxKM";
 
@@ -114,19 +144,37 @@ public interface I_TF_LumpSumRent_Config
     /** Column name ratekm */
     public static final String COLUMNNAME_ratekm = "ratekm";
 
-	/** Set RateKM	  */
+	/** Set Rate / KM	  */
 	public void setratekm (BigDecimal ratekm);
 
-	/** Get RateKM	  */
+	/** Get Rate / KM	  */
 	public BigDecimal getratekm();
+
+    /** Column name RateMT */
+    public static final String COLUMNNAME_RateMT = "RateMT";
+
+	/** Set Rate / MT	  */
+	public void setRateMT (BigDecimal RateMT);
+
+	/** Get Rate / MT	  */
+	public BigDecimal getRateMT();
+
+    /** Column name RateMTKM */
+    public static final String COLUMNNAME_RateMTKM = "RateMTKM";
+
+	/** Set Rate / MT / KM	  */
+	public void setRateMTKM (BigDecimal RateMTKM);
+
+	/** Get Rate / MT / KM	  */
+	public BigDecimal getRateMTKM();
 
     /** Column name Rent_Amt */
     public static final String COLUMNNAME_Rent_Amt = "Rent_Amt";
 
-	/** Set Lumpsum Rent Amount	  */
+	/** Set Rent (Amount)	  */
 	public void setRent_Amt (BigDecimal Rent_Amt);
 
-	/** Get Lumpsum Rent Amount	  */
+	/** Get Rent (Amount)	  */
 	public BigDecimal getRent_Amt();
 
     /** Column name TF_Destination_ID */
@@ -184,4 +232,19 @@ public interface I_TF_LumpSumRent_Config
 	  * User who updated this records
 	  */
 	public int getUpdatedBy();
+
+    /** Column name Vendor_ID */
+    public static final String COLUMNNAME_Vendor_ID = "Vendor_ID";
+
+	/** Set Vendor.
+	  * The Vendor of the product/service
+	  */
+	public void setVendor_ID (int Vendor_ID);
+
+	/** Get Vendor.
+	  * The Vendor of the product/service
+	  */
+	public int getVendor_ID();
+
+	public org.compiere.model.I_C_BPartner getVendor() throws RuntimeException;
 }

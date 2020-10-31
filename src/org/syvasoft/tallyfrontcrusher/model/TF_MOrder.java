@@ -2193,7 +2193,11 @@ public class TF_MOrder extends MOrder {
 		if(!isSOTrx() && !isCreateTransportInvoice())
 			return;
 		
+		
 		MRentedVehicle vehicle = new MRentedVehicle(getCtx(), getTF_RentedVehicle_ID(), get_TrxName());
+		if(vehicle.isOwnVehicle())
+			return;
+		
 		MBPartner bp = new MBPartner(getCtx(), vehicle.getC_BPartner_ID(), get_TrxName());
 		//Invoice Header
 		TF_MInvoice invoice = new TF_MInvoice(getCtx(), 0, get_TrxName());
