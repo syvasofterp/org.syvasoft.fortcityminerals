@@ -20,6 +20,7 @@ import org.syvasoft.tallyfrontcrusher.model.MLumpSumRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MPriceListUOM;
 import org.syvasoft.tallyfrontcrusher.model.MRentedVehicle;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentConfig;
+import org.syvasoft.tallyfrontcrusher.model.MVehicleType;
 import org.syvasoft.tallyfrontcrusher.model.MWeighmentEntry;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
 
@@ -196,7 +197,14 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 				mTab.setValue(TF_MOrder.COLUMNNAME_TF_BlueMetal_Type, weighment.getTF_BlueMetal_Type());
 				mTab.setValue(TF_MOrder.COLUMNNAME_TF_ProductionPlant_ID, weighment.getTF_ProductionPlant_ID());
 			}
-			
+			mTab.setValue(TF_MOrder.COLUMNNAME_C_DocTypeTarget_ID, weighment.getC_DocType_ID());
+			if(isSOTrx && weighment.getPermitPassAmount().doubleValue()!=0
+					&& weighment.getPassQtyIssued().doubleValue() != 0) {				
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item2_ID, weighment.getRoyaltyPassProduct_ID());
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item2_Qty, weighment.getPassQtyIssued());
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item2_Price, weighment.getPassPricePerUnit());
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item2_Amt, weighment.getPermitPassAmount());
+			}
 		}
 		return null;
 	}

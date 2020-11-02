@@ -1705,7 +1705,30 @@ public class TF_MOrder extends MOrder {
 		}
 		return false;
 	}
-		
+	
+	/** Column name IsRoyaltyPassInclusive */
+    public static final String COLUMNNAME_IsRoyaltyPassInclusive = "IsRoyaltyPassInclusive";
+	/** Set Royalty Pass Inclusive.
+	@param IsRoyaltyPassInclusive Royalty Pass Inclusive	  */
+	public void setIsRoyaltyPassInclusive (boolean IsRoyaltyPassInclusive)
+	{
+		set_Value (COLUMNNAME_IsRoyaltyPassInclusive, Boolean.valueOf(IsRoyaltyPassInclusive));
+	}
+	
+	/** Get Royalty Pass Inclusive.
+		@return Royalty Pass Inclusive	  */
+	public boolean isRoyaltyPassInclusive () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsRoyaltyPassInclusive);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+	
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
 		success = super.afterSave(newRecord, success);
@@ -3091,6 +3114,16 @@ public class TF_MOrder extends MOrder {
 				inv.saveEx();
 			}
 		}
+	}
+	
+	public static int GSTOrderDocType_ID(Properties ctx) {
+		int DocType_ID = MSysConfig.getIntValue("GST_ORDER_ID", 1000063, Env.getAD_Client_ID(ctx));
+		return DocType_ID;
+	}
+
+	public static int NonGSTOrderDocType_ID(Properties ctx) {
+		int DocType_ID = MSysConfig.getIntValue("NONGST_ORDER_ID", 1000062, Env.getAD_Client_ID(ctx));
+		return DocType_ID;
 	}
 
 }

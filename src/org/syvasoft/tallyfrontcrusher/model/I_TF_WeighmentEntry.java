@@ -152,6 +152,15 @@ public interface I_TF_WeighmentEntry
 
 	public org.compiere.model.I_C_UOM getC_UOM() throws RuntimeException;
 
+    /** Column name ChangeAmt */
+    public static final String COLUMNNAME_ChangeAmt = "ChangeAmt";
+
+	/** Set ChangeAmt	  */
+	public void setChangeAmt (BigDecimal ChangeAmt);
+
+	/** Get ChangeAmt	  */
+	public BigDecimal getChangeAmt();
+
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
 
@@ -194,6 +203,15 @@ public interface I_TF_WeighmentEntry
 	  */
 	public String getDocumentNo();
 
+    /** Column name DriverTips */
+    public static final String COLUMNNAME_DriverTips = "DriverTips";
+
+	/** Set Driver Tips	  */
+	public void setDriverTips (BigDecimal DriverTips);
+
+	/** Get Driver Tips	  */
+	public BigDecimal getDriverTips();
+
     /** Column name GrossWeight */
     public static final String COLUMNNAME_GrossWeight = "GrossWeight";
 
@@ -224,6 +242,19 @@ public interface I_TF_WeighmentEntry
 	  * Permit Sales / Non Permit Sales
 	  */
 	public boolean isHasBalance();
+
+    /** Column name InvoiceNo */
+    public static final String COLUMNNAME_InvoiceNo = "InvoiceNo";
+
+	/** Set Invoice No.
+	  * Invoice No generated from weighbridge app
+	  */
+	public void setInvoiceNo (String InvoiceNo);
+
+	/** Get Invoice No.
+	  * Invoice No generated from weighbridge app
+	  */
+	public String getInvoiceNo();
 
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";
@@ -317,6 +348,24 @@ public interface I_TF_WeighmentEntry
 	/** Get Party Name	  */
 	public String getPartyName();
 
+    /** Column name PassPricePerUnit */
+    public static final String COLUMNNAME_PassPricePerUnit = "PassPricePerUnit";
+
+	/** Set PassPricePerUnit	  */
+	public void setPassPricePerUnit (BigDecimal PassPricePerUnit);
+
+	/** Get PassPricePerUnit	  */
+	public BigDecimal getPassPricePerUnit();
+
+    /** Column name PassQtyIssued */
+    public static final String COLUMNNAME_PassQtyIssued = "PassQtyIssued";
+
+	/** Set PassQtyIssued	  */
+	public void setPassQtyIssued (BigDecimal PassQtyIssued);
+
+	/** Get PassQtyIssued	  */
+	public BigDecimal getPassQtyIssued();
+
     /** Column name PaymentRule */
     public static final String COLUMNNAME_PaymentRule = "PaymentRule";
 
@@ -338,6 +387,15 @@ public interface I_TF_WeighmentEntry
 
 	/** Get Permit Issued Qty	  */
 	public BigDecimal getPermitIssuedQty();
+
+    /** Column name PermitPassAmount */
+    public static final String COLUMNNAME_PermitPassAmount = "PermitPassAmount";
+
+	/** Set Permit Issue Amount	  */
+	public void setPermitPassAmount (BigDecimal PermitPassAmount);
+
+	/** Get Permit Issue Amount	  */
+	public BigDecimal getPermitPassAmount();
 
     /** Column name Phone */
     public static final String COLUMNNAME_Phone = "Phone";
@@ -378,6 +436,15 @@ public interface I_TF_WeighmentEntry
 	  */
 	public boolean isProcessed();
 
+    /** Column name Rent_Amt */
+    public static final String COLUMNNAME_Rent_Amt = "Rent_Amt";
+
+	/** Set Rent (Amount)	  */
+	public void setRent_Amt (BigDecimal Rent_Amt);
+
+	/** Get Rent (Amount)	  */
+	public BigDecimal getRent_Amt();
+
     /** Column name Status */
     public static final String COLUMNNAME_Status = "Status";
 
@@ -408,6 +475,19 @@ public interface I_TF_WeighmentEntry
 
 	/** Get Tare Weight Time	  */
 	public Timestamp getTareWeightTime();
+
+    /** Column name TenderAmount */
+    public static final String COLUMNNAME_TenderAmount = "TenderAmount";
+
+	/** Set Tender Amount.
+	  * Tender Amount
+	  */
+	public void setTenderAmount (BigDecimal TenderAmount);
+
+	/** Get Tender Amount.
+	  * Tender Amount
+	  */
+	public BigDecimal getTenderAmount();
 
     /** Column name TF_BlueMetal_Type */
     public static final String COLUMNNAME_TF_BlueMetal_Type = "TF_BlueMetal_Type";
@@ -510,6 +590,19 @@ public interface I_TF_WeighmentEntry
 
 	/** Get TF_WeighmentEntry_UU	  */
 	public String getTF_WeighmentEntry_UU();
+
+    /** Column name TotalAmt */
+    public static final String COLUMNNAME_TotalAmt = "TotalAmt";
+
+	/** Set Total Amount.
+	  * Total Amount
+	  */
+	public void setTotalAmt (BigDecimal TotalAmt);
+
+	/** Get Total Amount.
+	  * Total Amount
+	  */
+	public BigDecimal getTotalAmt();
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";

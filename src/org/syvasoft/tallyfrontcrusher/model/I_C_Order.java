@@ -14,7 +14,8 @@
  * ComPiere, Inc., 2620 Augustine Dr. #245, Santa Clara, CA 95054, USA        *
  * or via info@compiere.org or http://www.compiere.org/license.html           *
  *****************************************************************************/
-package org.syvasoft.tallyfrontcrusher.model;
+package org.syvasoft.tallyfrontcrusher.model
+;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -522,6 +523,15 @@ public interface I_C_Order
 	/** Get Create Tax Invoice	  */
 	public String getCreateTaxInvoice();
 
+    /** Column name CreateTransporterInvoice */
+    public static final String COLUMNNAME_CreateTransporterInvoice = "CreateTransporterInvoice";
+
+	/** Set Create Transporter Invoice	  */
+	public void setCreateTransporterInvoice (boolean CreateTransporterInvoice);
+
+	/** Get Create Transporter Invoice	  */
+	public boolean isCreateTransporterInvoice();
+
     /** Column name DateAcct */
     public static final String COLUMNNAME_DateAcct = "DateAcct";
 
@@ -946,6 +956,15 @@ public interface I_C_Order
 	  * Whether Unit Price includes rent?
 	  */
 	public boolean isRentInclusive();
+
+    /** Column name IsRoyaltyPassInclusive */
+    public static final String COLUMNNAME_IsRoyaltyPassInclusive = "IsRoyaltyPassInclusive";
+
+	/** Set Royalty Pass Inclusive	  */
+	public void setIsRoyaltyPassInclusive (boolean IsRoyaltyPassInclusive);
+
+	/** Get Royalty Pass Inclusive	  */
+	public boolean isRoyaltyPassInclusive();
 
     /** Column name IsSelected */
     public static final String COLUMNNAME_IsSelected = "IsSelected";
@@ -1868,10 +1887,10 @@ public interface I_C_Order
     /** Column name TF_ProductionPlant_ID */
     public static final String COLUMNNAME_TF_ProductionPlant_ID = "TF_ProductionPlant_ID";
 
-	/** Set TF_ProductionPlant	  */
+	/** Set Production Plant	  */
 	public void setTF_ProductionPlant_ID (int TF_ProductionPlant_ID);
 
-	/** Get TF_ProductionPlant	  */
+	/** Get Production Plant	  */
 	public int getTF_ProductionPlant_ID();
 
     /** Column name TF_RentedVehicle_ID */

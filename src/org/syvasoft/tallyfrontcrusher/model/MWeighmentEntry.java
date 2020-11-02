@@ -169,5 +169,21 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 					, 2, RoundingMode.HALF_EVEN);
 	}
 	
+	public boolean isGST() {
+		BigDecimal royaltyPassQty = getPassQtyIssued();
+		if(royaltyPassQty == null)
+			royaltyPassQty = BigDecimal.ZERO;
+		return royaltyPassQty.doubleValue() > 0;
+	}
 	
+	public int getC_DocType_ID() {
+		if(isGST())
+			return TF_MOrder.GSTOrderDocType_ID(getCtx());
+		else
+			return TF_MOrder.NonGSTOrderDocType_ID(getCtx());
+	}
+	
+	public int getRoyaltyPassProduct_ID() {
+		return MSysConfig.getIntValue("ROYALTY_PASS_PRODUCT_ID", 1000329, getAD_Client_ID(), getAD_Org_ID());
+	}
 }
