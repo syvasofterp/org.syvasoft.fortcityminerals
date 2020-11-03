@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 import java.util.Properties;
 
 import org.adempiere.exceptions.AdempiereException;
+import org.compiere.model.MInOutLine;
 import org.compiere.model.MOrgInfo;
 import org.compiere.model.MSysConfig;
 import org.compiere.model.Query;
@@ -149,14 +150,16 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 	}
 	
 	public void close() {
-		if(isProcessed())
-			throw new AdempiereException("Weighment Entry is already processed!");
+		//if(isProcessed())
+		//	throw new AdempiereException("Weighment Entry is already processed!");
 		setStatus(STATUS_Billed);
-		setProcessed(true);		
+		//setProcessed(true);		
 	}
 	public void reverse() {
 		setStatus(STATUS_Unbilled);		
-		setProcessed(false);
+		//setProcessed(false);
+		//Only Shipment document will set processed as True
+		//or false while reversing shipment document.
 	}
 	
 	public BigDecimal getCFTMultiplyRate() {
@@ -190,5 +193,36 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 	public int getC_Tax_ID() {
 		TF_MProduct p = new TF_MProduct(getCtx(), getM_Product_ID(), get_TrxName());
 		return p.getTax_ID(isGST());
+	}
+	
+	public int getM_InOut_ID() {
+		String whereClause = "TF_WeighmentEntry_ID = ? AND DocStatus IN ('CO','CL')";		
+		TF_MInOut inout = new Query(getCtx(), TF_MInOut.Table_Name, whereClause, get_TrxName())
+				.setClient_ID()
+				.setParameters(getTF_WeighmentEntry_ID())
+				.first();
+		if(inout != null)
+			return inout.get_ID();
+		else
+			return 0;
+	}
+	
+	public int getM_InOutLine_ID() {
+		String whereClause = "TF_WeighmentEntry_ID = ? AND DocStatus IN ('CO','CL')";		
+		TF_MInOut inout = new Query(getCtx(), TF_MInOut.Table_Name, whereClause, get_TrxName())
+				.setClient_ID()
+				.setParameters(getTF_WeighmentEntry_ID())
+				.first();
+		
+			
+		if(inout != null) {
+			for(MInOutLine line : inout.getLines()) {
+				if(line.getM_Product_ID() == getM_Product_ID()) {
+					return line.get_ID();
+				}
+			}
+		}
+		
+		 return 0;
 	}
 }

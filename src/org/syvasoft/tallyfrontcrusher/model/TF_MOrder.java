@@ -2069,7 +2069,7 @@ public class TF_MOrder extends MOrder {
 		closeWeighmentEntry();
 		closeTokenNo();
 		closeYardEntry();
-		
+		createInvoiceCustomer();
 		
 		
 		createTaxInvoice();
@@ -2109,64 +2109,67 @@ public class TF_MOrder extends MOrder {
 
 	@Override
 	public boolean voidIt() {
-			//POS Order's MR and Invoice should be reversed.
-			if(getC_DocType_ID() == 1000050 || getC_DocType_ID() == 1000041) {
-				//MR/Shipment reverse Correct
-				List<MInOut> inOutList = new Query(getCtx(), MInOut.Table_Name, "C_Order_ID=? AND DocStatus=?", get_TrxName())
-					.setClient_ID().setParameters(getC_Order_ID(),DOCSTATUS_Completed).list();
-				for(MInOut inout : inOutList) {
-					if(!inout.reverseCorrectIt())
-						return false;				
-					inout.saveEx();
-				}
-				
-				//Invoice reverse Correct
-				List<TF_MInvoice> invList = new Query(getCtx(), TF_MInvoice.Table_Name, "C_Order_ID=? AND DocStatus=?", get_TrxName())
-					.setClient_ID().setParameters(getC_Order_ID(), DOCSTATUS_Completed).list();
-				for(TF_MInvoice inv : invList) {
-					if(!inv.reverseCorrectIt())
-						return false;
-					inv.saveEx();
-				}
-				
-				
+		
+		//POS Order's MR and Invoice should be reversed.
+		if(getC_DocType_ID() == 1000050 || getC_DocType_ID() == 1000041
+				|| getC_DocType_ID() == TF_MOrder.GSTOrderDocType_ID(getCtx())
+				|| getC_DocType_ID() == TF_MOrder.NonGSTOrderDocType_ID(getCtx())) {
+			//MR/Shipment reverse Correct
+			List<MInOut> inOutList = new Query(getCtx(), MInOut.Table_Name, "C_Order_ID=? AND DocStatus=?", get_TrxName())
+				.setClient_ID().setParameters(getC_Order_ID(),DOCSTATUS_Completed).list();
+			for(MInOut inout : inOutList) {
+				if(!inout.reverseCorrectIt())
+					return false;				
+				inout.saveEx();
 			}
 			
-			if(getTF_DriverTips_Pay_ID() > 0) {
-				TF_MPayment payment = new TF_MPayment(getCtx(), getTF_DriverTips_Pay_ID(), get_TrxName());
-				if(payment.getDocStatus().equals(DOCSTATUS_Completed)) {
-					payment.reverseCorrectIt();
-				}
-				payment.saveEx();
-			}
-
-			if(getC_PaymentSalesDiscount_ID() > 0) {
-				TF_MPayment payment = new TF_MPayment(getCtx(), getC_PaymentSalesDiscount_ID(), get_TrxName());
-				if(payment.getDocStatus().equals(DOCSTATUS_Completed)) {
-					payment.reverseCorrectIt();
-				}
-				payment.saveEx();
-			}
-
-			if(getTF_DiscountRequest_ID() > 0) {
-				MDiscountRequest dr = new MDiscountRequest(getCtx(), getTF_DiscountRequest_ID(), get_TrxName());
-				dr.voidIt();
-				dr.saveEx();
+			//Invoice reverse Correct
+			List<TF_MInvoice> invList = new Query(getCtx(), TF_MInvoice.Table_Name, "C_Order_ID=? AND DocStatus=?", get_TrxName())
+				.setClient_ID().setParameters(getC_Order_ID(), DOCSTATUS_Completed).list();
+			for(TF_MInvoice inv : invList) {
+				if(!inv.reverseCorrectIt())
+					return false;
+				inv.saveEx();
 			}
 			
-			MJobworkItemIssue.ReverseFromPO(this);
-			reverseTransporterInvoice();
-			reverseWeighmentEntry();
-			reverseTokenNo();
-			reverseYardEntry();
-			reverseSubcontractPurchaseEntry();
-			reverseIssuedPermit();
-			reversePurchasedPermit();
-			reverseCrusherProduction();
-			voidTaxInvoice();
-			voidTR_TaxInvoice();
-			reverseAdditionalTransactions();
-			return super.voidIt();
+			
+		}
+		
+		if(getTF_DriverTips_Pay_ID() > 0) {
+			TF_MPayment payment = new TF_MPayment(getCtx(), getTF_DriverTips_Pay_ID(), get_TrxName());
+			if(payment.getDocStatus().equals(DOCSTATUS_Completed)) {
+				payment.reverseCorrectIt();
+			}
+			payment.saveEx();
+		}
+
+		if(getC_PaymentSalesDiscount_ID() > 0) {
+			TF_MPayment payment = new TF_MPayment(getCtx(), getC_PaymentSalesDiscount_ID(), get_TrxName());
+			if(payment.getDocStatus().equals(DOCSTATUS_Completed)) {
+				payment.reverseCorrectIt();
+			}
+			payment.saveEx();
+		}
+
+		if(getTF_DiscountRequest_ID() > 0) {
+			MDiscountRequest dr = new MDiscountRequest(getCtx(), getTF_DiscountRequest_ID(), get_TrxName());
+			dr.voidIt();
+			dr.saveEx();
+		}
+		
+		MJobworkItemIssue.ReverseFromPO(this);
+		reverseTransporterInvoice();
+		reverseWeighmentEntry();
+		reverseTokenNo();
+		reverseYardEntry();
+		reverseSubcontractPurchaseEntry();
+		reverseIssuedPermit();
+		reversePurchasedPermit();
+		reverseCrusherProduction();
+		voidTaxInvoice();
+		voidTR_TaxInvoice();
+		reverseAdditionalTransactions();
+		return super.voidIt();
 	}
 	
 	@Override
@@ -3149,4 +3152,65 @@ public class TF_MOrder extends MOrder {
 		return DocType_ID;
 	}
 
+	public void createInvoiceCustomer() {
+		
+		MWeighmentEntry weighment = new MWeighmentEntry(getCtx(), getTF_WeighmentEntry_ID(), get_TrxName());
+		
+		if(getC_DocTypeTarget_ID() != weighment.getC_DocType_ID())
+			return;
+		
+		//Invoice Header
+		TF_MBPartner bp = new TF_MBPartner(getCtx(), getC_BPartner_ID(), get_TrxName());
+		
+		TF_MInvoice invoice = new TF_MInvoice(getCtx(), 0, get_TrxName());
+		invoice.setC_Order_ID(getC_Order_ID());
+		invoice.setClientOrg(getAD_Client_ID(), getAD_Org_ID());
+		invoice.setC_DocTypeTarget_ID(getC_DocTypeTarget().getC_DocTypeInvoice_ID());	// Counter Doc
+		invoice.setIsSOTrx(isSOTrx());
+		invoice.setDateInvoiced(getDateAcct());
+		invoice.setDateAcct(getDateAcct());
+		//
+		invoice.setSalesRep_ID(Env.getAD_User_ID(getCtx()));		
+		//
+		
+		invoice.setBPartner(bp);				
+		invoice.setVehicleNo(getVehicleNo());
+		invoice.setDescription(getDescription());
+		
+		//Price List
+				
+		
+		invoice.setM_PriceList_ID(getM_PriceList_ID());
+		invoice.setC_Currency_ID(getC_Currency_ID());
+		
+		//Financial Dimension - Profit Center		
+		//invoice.setC_Project_ID(counterProj.getC_Project_ID());
+		invoice.setTF_WeighmentEntry_ID(getTF_WeighmentEntry_ID());		
+		invoice.saveEx();
+		
+		for(MOrderLine oLine : getLines() ) {
+			//Create Invoice Line
+			MInvoiceLine invLine = new MInvoiceLine(invoice);
+			int M_Product_ID = oLine.getM_Product_ID();
+			invLine.setM_Product_ID(M_Product_ID , true);
+			invLine.setC_UOM_ID(oLine.getC_UOM_ID());
+			invLine.setQty(oLine.getQtyOrdered());
+			invLine.setPriceActual(oLine.getPriceActual());
+			invLine.setPriceList(oLine.getPriceList());
+			invLine.setPriceLimit(oLine.getPriceLimit());
+			invLine.setPriceEntered(oLine.getPriceEntered());		
+			invLine.setC_Tax_ID(oLine.getC_Tax_ID());
+			invLine.setDescription(oLine.getDescription());
+			invLine.setC_Project_ID(getC_Project_ID());
+			if(weighment.getM_Product_ID() == oLine.getM_Product_ID()) {
+				invLine.setM_InOutLine_ID(weighment.getM_InOutLine_ID());
+			}
+			invLine.saveEx();
+		}
+		
+		//Invoice DocAction
+		if (!invoice.processIt(DocAction.ACTION_Complete))
+			throw new AdempiereException("Failed when processing document - " + invoice.getProcessMsg());
+		invoice.saveEx();
+	}
 }
