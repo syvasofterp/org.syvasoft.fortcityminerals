@@ -186,4 +186,9 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 	public int getRoyaltyPassProduct_ID() {
 		return MSysConfig.getIntValue("ROYALTY_PASS_PRODUCT_ID", 1000329, getAD_Client_ID(), getAD_Org_ID());
 	}
+	
+	public int getC_Tax_ID() {
+		TF_MProduct p = new TF_MProduct(getCtx(), getM_Product_ID(), get_TrxName());
+		return p.getTax_ID(isGST());
+	}
 }

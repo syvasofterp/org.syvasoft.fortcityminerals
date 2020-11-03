@@ -14,8 +14,7 @@
  * ComPiere, Inc., 2620 Augustine Dr. #245, Santa Clara, CA 95054, USA        *
  * or via info@compiere.org or http://www.compiere.org/license.html           *
  *****************************************************************************/
-package org.syvasoft.tallyfrontcrusher.model
-;
+package org.syvasoft.tallyfrontcrusher.model;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -1135,6 +1134,15 @@ public interface I_C_Order
 	  * Update Price into Price List
 	  */
 	public boolean isItem1_IsUpdatePrice();
+
+    /** Column name Item1_PassUnitPrice */
+    public static final String COLUMNNAME_Item1_PassUnitPrice = "Item1_PassUnitPrice";
+
+	/** Set Royalty Pass Unit Price	  */
+	public void setItem1_PassUnitPrice (BigDecimal Item1_PassUnitPrice);
+
+	/** Get Royalty Pass Unit Price	  */
+	public BigDecimal getItem1_PassUnitPrice();
 
     /** Column name Item1_PermitIssued */
     public static final String COLUMNNAME_Item1_PermitIssued = "Item1_PermitIssued";

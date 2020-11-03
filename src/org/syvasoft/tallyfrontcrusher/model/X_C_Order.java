@@ -97,6 +97,8 @@ public class X_C_Order extends PO implements I_C_Order, I_Persistent
 			setIsTaxIncluded1 (false);
 // N
 			setIsTransferred (false);
+			setItem1_PassUnitPrice (Env.ZERO);
+// 0
 			setM_PriceList_ID (0);
 			setM_Warehouse_ID (0);
 			setPaymentRule (null);
@@ -2162,6 +2164,23 @@ public class X_C_Order extends PO implements I_C_Order, I_Persistent
 			return "Y".equals(oo);
 		}
 		return false;
+	}
+
+	/** Set Royalty Pass Unit Price.
+		@param Item1_PassUnitPrice Royalty Pass Unit Price	  */
+	public void setItem1_PassUnitPrice (BigDecimal Item1_PassUnitPrice)
+	{
+		set_Value (COLUMNNAME_Item1_PassUnitPrice, Item1_PassUnitPrice);
+	}
+
+	/** Get Royalty Pass Unit Price.
+		@return Royalty Pass Unit Price	  */
+	public BigDecimal getItem1_PassUnitPrice () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Item1_PassUnitPrice);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
 	}
 
 	/** Set Permit Issued.

@@ -1781,6 +1781,25 @@ public class TF_MOrder extends MOrder {
 		line.setPriceEntered(price); // Price for the Sales UOM
 	}
 	
+    /** Column name Item1_PassUnitPrice */
+    public static final String COLUMNNAME_Item1_PassUnitPrice = "Item1_PassUnitPrice";
+	/** Set Royalty Pass Unit Price.
+	@param Item1_PassUnitPrice Royalty Pass Unit Price	  */
+	public void setItem1_PassUnitPrice (BigDecimal Item1_PassUnitPrice)
+	{
+		set_Value (COLUMNNAME_Item1_PassUnitPrice, Item1_PassUnitPrice);
+	}
+	
+	/** Get Royalty Pass Unit Price.
+		@return Royalty Pass Unit Price	  */
+	public BigDecimal getItem1_PassUnitPrice () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Item1_PassUnitPrice);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+	
 	public void updateQuickOrderLines() {
 		TF_MOrderLine ordLine = null;
 		//Delete empty item lines
@@ -1857,6 +1876,10 @@ public class TF_MOrder extends MOrder {
 		//Item 2
 		if(getItem2_ID() > 0 && (is_ValueChanged(COLUMNNAME_Item2_ID) || is_ValueChanged(COLUMNNAME_Item2_Qty)
 				|| is_ValueChanged(COLUMNNAME_Item2_Price) || getItem2_C_OrderLine_ID() == 0)) {
+			
+			//do not create Royalty Pass Invoice Line when the Royalty Pass Inclusive in the material price
+			if(isRoyaltyPassInclusive() && getItem2_ID() == MSysConfig.getIntValue("ROYALTY_PASS_PRODUCT_ID", 1000329, getAD_Client_ID(), getAD_Org_ID()))
+				return;
 			
 			if(getItem2_C_OrderLine_ID() > 0)
 				ordLine = new TF_MOrderLine(getCtx(), getItem2_C_OrderLine_ID(), get_TrxName());
