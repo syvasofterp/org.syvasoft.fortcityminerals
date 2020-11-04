@@ -19,8 +19,8 @@ public class TF_MInOut extends MInOut {
 		// TODO Auto-generated constructor stub
 	}
 
-	public TF_MInOut(Properties ctx, int S_Resource_ID, String trxName) {
-		super(ctx, S_Resource_ID, trxName);
+	public TF_MInOut(Properties ctx, int M_InOut_ID, String trxName) {
+		super(ctx, M_InOut_ID, trxName);
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -61,7 +61,7 @@ public class TF_MInOut extends MInOut {
 	public String completeIt() {
 		if(getTF_WeighmentEntry_ID() > 0) {
 			MWeighmentEntry we = new MWeighmentEntry(getCtx(), getTF_WeighmentEntry_ID(), get_TrxName());
-			we.close();
+			we.shipped();
 			we.saveEx();
 		}
 		// TODO Auto-generated method stub
@@ -72,7 +72,7 @@ public class TF_MInOut extends MInOut {
 	public boolean reverseCorrectIt() {
 		if(getTF_WeighmentEntry_ID() >0) {
 			MWeighmentEntry we = new MWeighmentEntry(getCtx(), getTF_WeighmentEntry_ID(), get_TrxName());
-			we.reverse();
+			we.reverseShipped();
 			we.saveEx();
 		}
 		// TODO Auto-generated method stub

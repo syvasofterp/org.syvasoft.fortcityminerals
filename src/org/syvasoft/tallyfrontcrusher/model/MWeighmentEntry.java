@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 import java.util.Properties;
 
 import org.adempiere.exceptions.AdempiereException;
+import org.compiere.model.MDocType;
 import org.compiere.model.MInOutLine;
 import org.compiere.model.MOrgInfo;
 import org.compiere.model.MSysConfig;
@@ -179,11 +180,24 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		return royaltyPassQty.doubleValue() > 0;
 	}
 	
+	/***
+	 * Returns Sales Quick Entry Document Type ID
+	 * @return
+	 */
 	public int getC_DocType_ID() {
 		if(isGST())
 			return TF_MOrder.GSTOrderDocType_ID(getCtx());
 		else
 			return TF_MOrder.NonGSTOrderDocType_ID(getCtx());
+	}
+	
+	/***
+	 * Returns Shipment (Customer) Document Type ID
+	 * @return
+	 */
+	public int getC_DocTypeShipment_ID() {
+		MDocType dt = new MDocType(getCtx(), getC_DocType_ID(), get_TrxName());
+		return dt.getC_DocTypeShipment_ID();
 	}
 	
 	public int getRoyaltyPassProduct_ID() {
@@ -224,5 +238,13 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		}
 		
 		 return 0;
+	}
+	
+	public void shipped() {
+		setProcessed(true);
+	}
+	
+	public void reverseShipped() {
+		setProcessed(false);
 	}
 }
