@@ -10,6 +10,7 @@ import org.compiere.model.Query;
 import org.compiere.process.DocAction;
 import org.compiere.process.SvrProcess;
 import org.syvasoft.tallyfrontcrusher.model.TF_MInOut;
+import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
 import org.syvasoft.tallyfrontcrusher.model.MWeighmentEntry;
 import org.syvasoft.tallyfrontcrusher.model.TF_MBPartner;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrderLine;
@@ -81,6 +82,17 @@ public class CreateShipmentForWE extends SvrProcess {
 			ioLine.setQty(we.getNetWeightUnit());
 			ioLine.setM_Locator_ID(we.getNetWeightUnit());
 			ioLine.saveEx(get_TrxName());
+			
+			
+			//Royalty Pass Issue Line
+			if(we.getPermitPassAmount().doubleValue()!=0 && we.getPassQtyIssued().doubleValue() != 0 && we.isGST()) {
+				ioLine = new MInOutLine(inout);
+				ioLine.setM_Product_ID(we.getRoyaltyPassProduct_ID(), true);							
+				ioLine.setQty(we.getPassQtyIssued());
+				ioLine.setM_Locator_ID(we.getNetWeightUnit());
+				ioLine.saveEx(get_TrxName());
+			}
+			
 			
 			//Material Issue DocAction
 			if (!inout.processIt(DocAction.ACTION_Complete))
