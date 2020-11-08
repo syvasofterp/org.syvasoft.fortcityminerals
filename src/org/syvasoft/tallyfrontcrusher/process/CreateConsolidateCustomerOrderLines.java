@@ -82,7 +82,7 @@ public class CreateConsolidateCustomerOrderLines extends SvrProcess {
 				
 				// create order line
 				//Assumed the Credit Customer material price always include Royalty Pass amount
-				//Later it has to calcualte the Material Price based on the Royalty Pass Issued
+				//Later it has to calculate the Material Price based on the Royalty Pass Issued
 								
 				TF_MOrderLine ordLine = new TF_MOrderLine(ord);
 				ordLine.setM_Product_ID(M_Product_ID, C_UOM_ID);				

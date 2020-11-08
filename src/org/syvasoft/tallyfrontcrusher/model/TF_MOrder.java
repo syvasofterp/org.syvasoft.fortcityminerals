@@ -2075,6 +2075,7 @@ public class TF_MOrder extends MOrder {
 		createTaxInvoice();
 		
 		createCashSalesDiscountPayment();
+		completeWeighmentEntriesForConsolidateInvoice();
 		return msg;
 	}
 
@@ -2169,6 +2170,7 @@ public class TF_MOrder extends MOrder {
 		voidTaxInvoice();
 		voidTR_TaxInvoice();
 		reverseAdditionalTransactions();
+		reverseConsolidateInvoice();
 		return super.voidIt();
 	}
 	
@@ -2225,6 +2227,7 @@ public class TF_MOrder extends MOrder {
 			reverseCrusherProduction();
 			voidTaxInvoice();
 			voidTR_TaxInvoice();
+			reverseConsolidateInvoice();
 			return super.reActivateIt();
 	}
 
@@ -3212,5 +3215,32 @@ public class TF_MOrder extends MOrder {
 		if (!invoice.processIt(DocAction.ACTION_Complete))
 			throw new AdempiereException("Failed when processing document - " + invoice.getProcessMsg());
 		invoice.saveEx();
+	}
+	
+	public void completeWeighmentEntriesForConsolidateInvoice() {
+		String whereClause = " TF_WeighmentEntry_ID IN (SELECT i.TF_WeighmentEntry_ID FROM M_InOut i WHERE i.C_Order_ID = ? ) AND Processed = 'Y' AND Status='CO'";
+		List<MWeighmentEntry> wEntries = new Query(getCtx(), MWeighmentEntry.Table_Name, whereClause, get_TrxName())
+				.setClient_ID()
+				.setParameters(getC_Order_ID())
+				.list();
+		for(MWeighmentEntry we : wEntries) {
+			we.close();
+			we.saveEx();
+		}
+	}
+
+	public void reverseConsolidateInvoice() {
+		String whereClause = " TF_WeighmentEntry_ID IN (SELECT i.TF_WeighmentEntry_ID FROM M_InOut i WHERE i.C_Order_ID = ? ) AND Processed = 'Y' AND Status='CO'";
+		List<MWeighmentEntry> wEntries = new Query(getCtx(), MWeighmentEntry.Table_Name, whereClause, get_TrxName())
+				.setClient_ID()
+				.setParameters(getC_Order_ID())
+				.list();
+		for(MWeighmentEntry we : wEntries) {
+			we.reverse();
+			we.saveEx();
+		}
+		
+		String sqlUpdate = "UPDATE M_InOut SET C_Order_ID = NULL WHERE C_Order_ID = ?";
+		DB.executeUpdate(sqlUpdate, get_TrxName());
 	}
 }
