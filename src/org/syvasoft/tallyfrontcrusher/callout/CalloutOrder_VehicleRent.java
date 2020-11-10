@@ -6,6 +6,8 @@ import java.util.Properties;
 import org.adempiere.base.IColumnCallout;
 import org.compiere.model.GridField;
 import org.compiere.model.GridTab;
+import org.compiere.model.MSysConfig;
+import org.compiere.util.Env;
 import org.syvasoft.tallyfrontcrusher.model.MLumpSumRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MRentedVehicle;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
@@ -61,26 +63,35 @@ public class CalloutOrder_VehicleRent implements IColumnCallout {
 			BigDecimal RateKM = MLumpSumRentConfig.getRateKm(ctx, AD_Org_ID, Vendor_ID, C_BPartner_ID, M_Product_ID, TF_Destination_ID, TF_VehicleType_ID, Distance, null);
 			BigDecimal RateMTKM = MLumpSumRentConfig.getRateMTKm(ctx, AD_Org_ID, Vendor_ID, C_BPartner_ID, M_Product_ID, TF_Destination_ID, TF_VehicleType_ID, Distance, null);
 			
+			int Rent_UOM_ID = 0;
+			
 			if(RateMT.doubleValue() > 0) {
 				mTab.setValue(TF_MOrder.COLUMNNAME_Rate, RateMT);
-				RentAmt = RateMT.multiply(Tonnage);				
+				RentAmt = RateMT.multiply(Tonnage);
+				Rent_UOM_ID = MSysConfig.getIntValue("TONNAGE_UOM", 1000069, Env.getAD_Client_ID(ctx));
 			}
 			else if(RateKM.doubleValue() > 0) {
-				mTab.setValue(TF_MOrder.COLUMNNAME_Rate, RateMT);
+				mTab.setValue(TF_MOrder.COLUMNNAME_Rate, RateKM);
 				RentAmt = RateKM.multiply(Distance);
+				Rent_UOM_ID = MSysConfig.getIntValue("KM_UOM", 1000071, Env.getAD_Client_ID(ctx));
 			}
 			else if(RateMTKM.doubleValue() > 0) {
 				mTab.setValue(TF_MOrder.COLUMNNAME_Rate, RateMTKM);
 				RentAmt = RateMTKM.multiply(Distance).multiply(Tonnage);
+				Rent_UOM_ID = MSysConfig.getIntValue("KM_UOM", 1000071, Env.getAD_Client_ID(ctx));
 			}
 			else {								
 				RentAmt=MLumpSumRentConfig.getLumpSumRent(ctx,AD_Org_ID,Vendor_ID, C_BPartner_ID, M_Product_ID, TF_Destination_ID, TF_VehicleType_ID, Distance, null);
 				if(RentAmt.doubleValue() > 0)
 					mTab.setValue(TF_MOrder.COLUMNNAME_IsLumpSumRent, true);
+				Rent_UOM_ID = MSysConfig.getIntValue("LOAD_UOM", 1000072, Env.getAD_Client_ID(ctx));
 			}
 			
 			if(RentAmt.doubleValue() > 0)
-				mTab.setValue(TF_MOrder.COLUMNNAME_Rent_Amt, RentAmt);						
+				mTab.setValue(TF_MOrder.COLUMNNAME_Rent_Amt, RentAmt);
+			
+			mTab.setValue(TF_MOrder.COLUMNNAME_Rent_UOM_ID, Rent_UOM_ID == 0 ? null : Rent_UOM_ID);
+			
 		}
 		return null;
 	

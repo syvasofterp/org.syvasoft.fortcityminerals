@@ -1800,6 +1800,32 @@ public class TF_MOrder extends MOrder {
 		return bd;
 	}
 	
+	/** Column name Rent_UOM_ID */
+    public static final String COLUMNNAME_Rent_UOM_ID = "Rent_UOM_ID";
+    public org.compiere.model.I_C_UOM getRent_UOM() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_UOM)MTable.get(getCtx(), org.compiere.model.I_C_UOM.Table_Name)
+			.getPO(getRent_UOM_ID(), get_TrxName());	}
+
+	/** Set Delivery UOM.
+		@param Rent_UOM_ID Delivery UOM	  */
+	public void setRent_UOM_ID (int Rent_UOM_ID)
+	{
+		if (Rent_UOM_ID < 1) 
+			set_Value (COLUMNNAME_Rent_UOM_ID, null);
+		else 
+			set_Value (COLUMNNAME_Rent_UOM_ID, Integer.valueOf(Rent_UOM_ID));
+	}
+
+	/** Get Delivery UOM.
+		@return Delivery UOM	  */
+	public int getRent_UOM_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Rent_UOM_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
 	public void updateQuickOrderLines() {
 		TF_MOrderLine ordLine = null;
 		//Delete empty item lines
@@ -1994,7 +2020,8 @@ public class TF_MOrder extends MOrder {
 				BigDecimal taxRate = (BigDecimal)tax.getRate();
 				BigDecimal hundred = new BigDecimal("100");
 				
-				rentAmount = getRent_Amt().divide(BigDecimal.ONE.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);
+				//rentAmount = getRent_Amt().divide(BigDecimal.ONE.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);
+				rentAmount = getRent_Amt();
 			}
 			else
 			{
@@ -2005,15 +2032,66 @@ public class TF_MOrder extends MOrder {
 			
 			TF_MOrder.addProductPricingIfNot(productID, getM_PriceList_ID(), getC_BPartner_ID(), BigDecimal.ONE, rentAmount, 
 					getDateOrdered(), getC_DocType().isSOTrx());
-			setOrderLine(ordLine, productID, BigDecimal.ONE, rentAmount);
+			
 			int load_uom_id = MSysConfig.getIntValue("LOAD_UOM", 1000072, getAD_Client_ID());
+			
+			BigDecimal price = rentAmount;
+			BigDecimal qty = BigDecimal.ONE;
+			String desc = null;
+			if(!isLumpSumRent() && 
+					getRate().multiply(getTonnage()).multiply(getDistance()).doubleValue() == getRent_Amt().doubleValue()) {
+				qty = getDistance();
+				price = getRate().multiply(getTonnage());
+				BigDecimal rate = getRate();
+				if(isSOTrx()) {
+					price = getRentPayable().divide(getDistance(), 2, RoundingMode.HALF_UP);
+					rate = price.divide(getTonnage(), 2, RoundingMode.HALF_UP);
+				}
+				load_uom_id  = MSysConfig.getIntValue("KM_UOM", 1000071, getAD_Client_ID());
+				
+				desc = "Tonnage : " + getTonnage().doubleValue()
+						+ ", Rate/ton/km : " + rate.doubleValue();
+			}
+			else if(getRate().multiply(getTonnage()).doubleValue() == getRent_Amt().doubleValue() ) {
+				load_uom_id = MSysConfig.getIntValue("TONNAGE_UOM", 1000069, getAD_Client_ID());
+				qty = getTonnage();
+				price = getRate();
+				if(isSOTrx()) {
+					price = getRentPayable().divide(getTonnage(), 2, RoundingMode.HALF_EVEN);
+				}				
+				//hdrDescription = hdrDescription + ", Tonnage : " + getTonnage().doubleValue();
+			}
+			else if(getRate().multiply(getDistance()).doubleValue() == getRent_Amt().doubleValue() ) {
+				load_uom_id = MSysConfig.getIntValue("KM_UOM", 1000071, getAD_Client_ID());
+				
+				qty = getDistance();
+				price = getRate();
+				if(isSOTrx()) {
+					price = getRentPayable().divide(getTonnage(), 2, RoundingMode.HALF_EVEN);
+				}				
+				//hdrDescription = hdrDescription + ", Tonnage : " + getTonnage().doubleValue();
+			}
+			else {
+				load_uom_id = MSysConfig.getIntValue("LOAD_UOM", 1000072, getAD_Client_ID());
+				
+				qty = BigDecimal.ONE;
+				price = getRent_Amt();
+				if(isSOTrx()) {
+					price = getRentPayable();
+				}				
+				desc = "Tonnage : " + getTonnage().doubleValue();
+			}		
+			
+			setOrderLine(ordLine, productID, qty, price);
+			
 			ordLine.setC_UOM_ID(load_uom_id);
-			
-			
 			
 			//MResource res = MResource.get(getCtx(), getVehicle().getS_Resource_ID());
 			//ordLine.setUser1_ID(res.get_ValueAsInt("C_ElementValue_ID"));
-			ordLine.setDescription("Vehicle Rent");
+			ordLine.setDescription("Transportation charges" +
+				(desc != null ? ", " + desc : ""));
+						
+			
 			ordLine.saveEx();
 			DB.executeUpdate("UPDATE C_Order SET " + COLUMNNAME_Vehicle_C_OrderLine_ID + " = "
 				+ ordLine.getC_OrderLine_ID() + " WHERE C_Order_ID = " + getC_Order_ID(), get_TrxName());	
@@ -2290,50 +2368,66 @@ public class TF_MOrder extends MOrder {
 		else {
 			hdrDescription = "Source : " + dest.getName();
 		}
-		if(!isLumpSumRent()) {			
-			hdrDescription = hdrDescription 
-					+ ", Rate/km : " + getRate().doubleValue()
-					+ ", Distance : " + getDistance() + " km";
-		}
-		
-		int load_uom_id = MSysConfig.getIntValue("LOAD_UOM", 1000072, getAD_Client_ID());
-		invLine.setC_UOM_ID(load_uom_id);
-		invLine.setQty(BigDecimal.ONE);
-		
-		int defaultTaxID = 0;
-		BigDecimal rentAmount = new BigDecimal(0);
-		BigDecimal taxRate = new BigDecimal(0);
-		BigDecimal hundred = new BigDecimal("100");
-		
-		if(getRent_Tax_ID() > 0){
-			defaultTaxID = getRent_Tax_ID();
-			
-			MTax tax = new MTax(getCtx(), defaultTaxID, get_TrxName());
-			taxRate = (BigDecimal)tax.getRate();
-			rentAmount = getRent_Amt().divide(BigDecimal.ONE.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);
-		}
-		else{
-			defaultTaxID = Env.getContextAsInt(getCtx(), "#C_Tax_ID");
-			rentAmount = getDistance().multiply(getRate());
-		}
-		invLine.setC_Tax_ID(defaultTaxID);
-		
-		BigDecimal price = rentAmount;
-		if(isSOTrx()) {
-			if(defaultTaxID > 0){
-				price = getRentPayable().divide(BigDecimal.ONE.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);
+		if(!isLumpSumRent() && 
+				getRate().multiply(getTonnage()).multiply(getDistance()).doubleValue() == getRent_Amt().doubleValue()) {
+			invLine.setQty(getDistance());
+			BigDecimal price = getRate().multiply(getTonnage());
+			BigDecimal rate = getRate();
+			if(isSOTrx()) {
+				price = getRentPayable().divide(getDistance(), 2, RoundingMode.HALF_UP);
+				rate = price.divide(getTonnage(), 2, RoundingMode.HALF_UP);
 			}
-			else {
+			int KM_uom_id = MSysConfig.getIntValue("KM_UOM", 1000071, getAD_Client_ID());
+			invLine.setC_UOM_ID(KM_uom_id);
+			invLine.setPriceActual(price);
+			invLine.setPriceList(price);
+			invLine.setPriceLimit(price);
+			invLine.setPriceEntered(price);
+			hdrDescription = hdrDescription + ", Tonnage : " + getTonnage().doubleValue()
+					+ ", Rate/ton/km : " + rate.doubleValue();
+		}
+		else if(getRate().multiply(getTonnage()).doubleValue() == getRent_Amt().doubleValue() ) {
+			int Tonne_uom_id = MSysConfig.getIntValue("TONNAGE_UOM", 1000069, getAD_Client_ID());
+			invLine.setC_UOM_ID(Tonne_uom_id);
+			invLine.setQty(getTonnage());
+			BigDecimal price = getRate();
+			if(isSOTrx()) {
+				price = getRentPayable().divide(getTonnage(), 2, RoundingMode.HALF_EVEN);
+			}
+			invLine.setPriceActual(price);
+			invLine.setPriceList(price);
+			invLine.setPriceLimit(price);
+			invLine.setPriceEntered(price);
+			//hdrDescription = hdrDescription + ", Tonnage : " + getTonnage().doubleValue();
+		}
+		else if(getRate().multiply(getDistance()).doubleValue() == getRent_Amt().doubleValue() ) {
+			int KM_uom_id = MSysConfig.getIntValue("KM_UOM", 1000071, getAD_Client_ID());
+			invLine.setC_UOM_ID(KM_uom_id);
+			invLine.setQty(getDistance());
+			BigDecimal price = getRate();
+			if(isSOTrx()) {
+				price = getRentPayable().divide(getTonnage(), 2, RoundingMode.HALF_EVEN);
+			}
+			invLine.setPriceActual(price);
+			invLine.setPriceList(price);
+			invLine.setPriceLimit(price);
+			invLine.setPriceEntered(price);
+			//hdrDescription = hdrDescription + ", Tonnage : " + getTonnage().doubleValue();
+		}
+		else {
+			int load_uom_id = MSysConfig.getIntValue("LOAD_UOM", 1000072, getAD_Client_ID());
+			invLine.setC_UOM_ID(load_uom_id);
+			invLine.setQty(BigDecimal.ONE);
+			BigDecimal price = getRent_Amt();
+			if(isSOTrx()) {
 				price = getRentPayable();
 			}
-		}
-		invLine.setPriceActual(price);
-		invLine.setPriceList(price);
-		invLine.setPriceLimit(price);
-		invLine.setPriceEntered(price);
-		invLine.saveEx();
-		
-		invoice.setDescription(hdrDescription);
+			invLine.setPriceActual(price);
+			invLine.setPriceList(price);
+			invLine.setPriceLimit(price);
+			invLine.setPriceEntered(price);
+			hdrDescription = hdrDescription + ", Tonnage : " + getTonnage().doubleValue();
+		}		
 		invoice.saveEx();
 		
 		//DocAction
