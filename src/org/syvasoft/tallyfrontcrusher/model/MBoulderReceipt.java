@@ -59,11 +59,23 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 		if(newRecord || is_ValueChanged(COLUMNNAME_C_Project_ID)) {
 			if(getC_Project_ID() > 0) {
 				TF_MProject proj = new TF_MProject(getCtx(), getC_Project_ID(), get_TrxName());
-				setJobWork_Product_ID(proj.getJobWork_Product_ID());
+				//setJobWork_Product_ID(proj.getJobWork_Product_ID());				
+				MWeighmentEntry weightmentEntry = new MWeighmentEntry(getCtx(), getTF_WeighmentEntry_ID(), get_TrxName());				
+				MRentedVehicle rentedVehichle = new MRentedVehicle(getCtx(), weightmentEntry.getTF_RentedVehicle_ID(), get_TrxName());				
+				if(rentedVehichle.getC_BPartner_ID() == weightmentEntry.getC_BPartner_ID())
+				{
+					//with transportation
+					setJobWork_Product_ID(proj.getJobWork_Product_ID());								
+				}
+				else
+				{
+					//without with transportation					
+					setJobWork_Product_ID(proj.getJobWorkWOTrans_Product_ID());
+					//set own vehicle
+				}							
 				BigDecimal purchasePrice = MJobworkProductPrice.getPrice(getCtx(), getC_Project_ID(), proj.getJobWork_Product_ID(), getDateAcct()) ;
 				setJobwork_StdPrice(purchasePrice);
 			}
-			//setC_UOM_ID(getM_Product().getC_UOM_ID());
 		}
 		
 				
@@ -99,12 +111,12 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 		setAD_Org_ID(entry.getAD_Org_ID());
 		setDateReceipt(entry.getTareWeightTime());
 		setDateAcct(entry.getTareWeightTime());		
-		TF_MProject proj = new TF_MProject(getCtx(), entry.getC_Project_ID(), get_TrxName());		
+		TF_MProject proj = new TF_MProject(getCtx(), entry.getC_Project_ID(), get_TrxName());	
+		
 		if(proj != null && proj.getC_Project_ID() > 0) {
 			setC_Project_ID(entry.getC_Project_ID());
 			setSubcontractor_ID(entry.getC_BPartner_ID());
-			setTF_Quarry_ID(proj.getTF_Quarry_ID());			
-			setJobWork_Product_ID(proj.getJobWork_Product_ID());
+			setTF_Quarry_ID(proj.getTF_Quarry_ID());									
 			setC_UOM_ID(proj.getC_UOM_ID());
 		}
 		if(entry.getTF_Quarry_ID() > 0) {
@@ -299,6 +311,7 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 	
 	public String processIt(String DocAction) {
 		String m_processMsg = null;
+		TF_MProject proj = new TF_MProject(getCtx(), getC_Project_ID(), get_TrxName());		
 		if(MBoulderReceipt.DOCACTION_Prepare.equals(DocAction)) {
 			setDocStatus(DOCSTATUS_InProgress);
 		}
@@ -308,8 +321,11 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 			int defaultLocatorID = warehouse.getDefaultLocator().getM_Locator_ID();
 			
 			if(getTF_Send_To().equals(TF_SEND_TO_SubcontractProduction)) {
-				createSubcontractMovement();
-				createSubcontractInvoice();
+				createSubcontractMovement();						
+				// to check Requires Consolidate Invoice				
+				if(!proj.isRequiredConsolidateInv())							
+					createSubcontractInvoice();
+			
 				setDocStatus(DOCSTATUS_Completed);
 				setProcessed(true);
 				return null;
@@ -394,8 +410,10 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 				
 				j.processIt(MJournal.ACTION_Complete);
 				j.saveEx();
-				
-				createSubcontractInvoice();
+
+				// to check Requires Consolidate Invoice	
+				if(!proj.isRequiredConsolidateInv())				
+					createSubcontractInvoice();
 				
 				setJobwork_Journal_ID(j.getGL_Journal_ID());			
 				

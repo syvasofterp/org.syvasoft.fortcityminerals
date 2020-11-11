@@ -2,7 +2,11 @@ package org.syvasoft.tallyfrontcrusher.model;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+//import java.sql.Date;
+import java.util.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -10,6 +14,8 @@ import java.util.Properties;
 import javax.security.auth.SubjectDomainCombiner;
 
 import org.adempiere.exceptions.AdempiereException;
+import org.adempiere.exceptions.DBException;
+import org.compiere.model.I_C_InvoiceLine;
 import org.compiere.model.MBPartner;
 import org.compiere.model.MClient;
 import org.compiere.model.MInvoice;
@@ -26,7 +32,7 @@ import org.compiere.process.DocAction;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
 
-public class TF_MInvoice extends MInvoice {
+public class TF_MInvoice<DateTime> extends MInvoice {
 
 	/**
 	 * 
@@ -218,6 +224,12 @@ public class TF_MInvoice extends MInvoice {
 	
 	/** Column name Item2_C_InvoiceLine_ID */
     public static final String COLUMNNAME_Item2_C_InvoiceLine_ID = "Item2_C_InvoiceLine_ID";
+    
+    /** Column name Item2_C_InvoiceLine_ID */
+    public static final String COLUMNNAME_DateFrom = "DateFrom";
+    public static final String COLUMNNAME_DateTo = "DateTo";
+    
+     
     
 	/** Set Item2 InvoiceLine ID.
 		@param Item2_C_InvoiceLine_ID Item2 InvoiceLine ID	  */
@@ -437,16 +449,97 @@ public class TF_MInvoice extends MInvoice {
 	
 	
 	@Override
-	public String completeIt() {		
+	public String completeIt() {				
 		String msg = super.completeIt();
 		createCounterProjectSalesInvoice();
 		if(getC_Project_ID() > 0) {
 			TF_MProject proj = new TF_MProject(getCtx(), getC_Project_ID(), get_TrxName());
 			proj.updateQtyBilled();
 			proj.saveEx();
+			//to update the Subcon_Invoice_ID on TF_Boulder_Receipt while clicking Document Action button in Inoice (Vendor) screen			
+			updateSubContractInvoice(proj); 
+			
 		}
 		createCounterInvoice();		
+		
 		return msg;
+	}
+	
+	private void reverseSubContractInvoice()
+	{
+		String where = "  ";
+		// to update the boulder recivept subcontract query
+		String sql = " UPDATE TF_Boulder_Receipt SET Subcon_Invoice_ID = NULL WHERE Subcon_Invoice_ID = ? AND C_Project_ID = ? AND DocStatus='CO' ";
+		PreparedStatement pstmt = null;
+		int result = 0;
+		try {
+
+			pstmt = DB.prepareStatement(sql, get_TrxName());
+			ArrayList<Object> params = new ArrayList<Object>();
+
+			params.add(this.getC_Invoice_ID());
+			params.add(this.getC_Project_ID()); // Quarry Subcontract_3_Quarry Subcontractor			
+			DB.setParameters(pstmt, params.toArray());
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			throw new DBException(e, sql);
+		} finally {
+			DB.close(pstmt);
+			pstmt = null;
+		}
+		
+	}
+	
+	private void updateSubContractInvoice(TF_MProject proj)
+	{
+		
+		DateTime dateFrom = (DateTime)get_Value(COLUMNNAME_DateFrom);
+		DateTime dateTo = (DateTime)get_Value(COLUMNNAME_DateTo);
+		
+		// to get the business partner id (Quarry Subcontractor)
+		TF_MBPartner bp = new TF_MBPartner(getCtx(), proj.getC_BPartner_ID(), get_TrxName());
+		String bPartName = bp.getName();
+		String subContractorName = "Quarry Subcontractor";			
+		
+		for(MInvoiceLine srcLine : getLines()) 
+		{			
+			if(srcLine.getC_Project_ID() == this.getC_Project_ID())
+			{
+				if(subContractorName.equals(bp.getName()) && !dateFrom.equals(null) && !dateTo.equals(null))		
+				{					
+					String where = "  ";			
+					//to update the boulder recivept subcontract query
+					String sql = " UPDATE TF_Boulder_Receipt SET Subcon_Invoice_ID = ? WHERE Subcon_Invoice_ID IS NULL"
+							+ " AND C_Project_ID = ? AND Subcontractor_ID = ? AND JobWork_Product_ID  = ? AND DocStatus='CO' "
+							+ " AND AD_Org_ID = ? AND DateReceipt >= ? AND DateReceipt <= ?";  																		
+					PreparedStatement pstmt = null;
+					int result = 0;			
+					try
+					{
+										
+					pstmt = DB.prepareStatement(sql, get_TrxName());
+					ArrayList<Object> params = new ArrayList<Object>();
+									
+					params.add(this.getC_Invoice_ID());
+					params.add(this.getC_Project_ID());	// Quarry Subcontract_3_Quarry Subcontractor	
+					params.add(proj.getC_BPartner_ID()); // Sub contractor id Quarry Subcontractor
+					params.add(srcLine.getM_Product_ID());  //JobWork_Product_ID Boulder Production with Transportation			
+					params.add(srcLine.getAD_Org_ID());
+					params.add(dateFrom);
+					params.add(dateTo);			
+				
+					DB.setParameters(pstmt,params.toArray());
+					result = pstmt.executeUpdate();
+					}
+				catch (SQLException e) {					
+					throw new DBException(e, sql);
+				} finally {
+					DB.close(pstmt);					
+					pstmt = null;			
+				}
+				}
+			}
+		}		
 	}
 
 	@Override
@@ -476,6 +569,8 @@ public class TF_MInvoice extends MInvoice {
 			}
 		}
 		
+		// TO N
+		reverseSubContractInvoice();
 		return ok;
 	}
 	

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.adempiere.base.IColumnCallout;
 import org.adempiere.base.IColumnCalloutFactory;
+import org.compiere.model.MInvoice;
 import org.compiere.model.MJournalLine;
 import org.compiere.model.MOrder;
 import org.compiere.model.MPayment;
@@ -29,6 +30,7 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutInterOrgCash_DestAccount;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutInterOrgCash_SrcOrg;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutInvestmentReceipt_AutoDescription;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutInvoiceHeaderItemAmount;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutInvoice_Subcontract;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutJournal_DistributeProfit;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutJournal_QuickEntryMode;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutJournal_SetJobWork;
@@ -281,6 +283,13 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 			if(columnName.equals(MBoulderReceipt.COLUMNNAME_M_Product_ID))
 				list.add(new CalloutBoulderReceipt_Product());
 		}
+		
+		//C_Invoice Vendor - Subcontract tamil
+		  if(tableName.equals(MInvoice.Table_Name)) {
+					if(columnName.equals(MInvoice.COLUMNNAME_C_Project_ID)) {
+						list.add(new CalloutInvoice_Subcontract());			
+					}
+		  }
 			
 		
 		//TF_TyreAssignment - Tyre, Tyre Assignment Type
