@@ -7,6 +7,8 @@ import java.sql.Timestamp;
 import java.util.Properties;
 
 import org.adempiere.exceptions.AdempiereException;
+import org.compiere.model.MDocType;
+import org.compiere.model.MInOutLine;
 import org.compiere.model.MOrgInfo;
 import org.compiere.model.MSysConfig;
 import org.compiere.model.Query;
@@ -149,14 +151,16 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 	}
 	
 	public void close() {
-		if(isProcessed())
-			throw new AdempiereException("Weighment Entry is already processed!");
+		//if(isProcessed())
+		//	throw new AdempiereException("Weighment Entry is already processed!");
 		setStatus(STATUS_Billed);
-		setProcessed(true);		
+		//setProcessed(true);		
 	}
 	public void reverse() {
 		setStatus(STATUS_Unbilled);		
-		setProcessed(false);
+		//setProcessed(false);
+		//Only Shipment document will set processed as True
+		//or false while reversing shipment document.
 	}
 	
 	public BigDecimal getCFTMultiplyRate() {
@@ -169,5 +173,78 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 					, 2, RoundingMode.HALF_EVEN);
 	}
 	
+	public boolean isGST() {
+		BigDecimal royaltyPassQty = getPassQtyIssued();
+		if(royaltyPassQty == null)
+			royaltyPassQty = BigDecimal.ZERO;
+		return royaltyPassQty.doubleValue() > 0;
+	}
 	
+	/***
+	 * Returns Sales Quick Entry Document Type ID
+	 * @return
+	 */
+	public int getC_DocType_ID() {
+		if(isGST())
+			return TF_MOrder.GSTOrderDocType_ID(getCtx());
+		else
+			return TF_MOrder.NonGSTOrderDocType_ID(getCtx());
+	}
+	
+	/***
+	 * Returns Shipment (Customer) Document Type ID
+	 * @return
+	 */
+	public int getC_DocTypeShipment_ID() {
+		MDocType dt = new MDocType(getCtx(), getC_DocType_ID(), get_TrxName());
+		return dt.getC_DocTypeShipment_ID();
+	}
+	
+	public int getRoyaltyPassProduct_ID() {
+		return MSysConfig.getIntValue("ROYALTY_PASS_PRODUCT_ID", 1000329, getAD_Client_ID(), getAD_Org_ID());
+	}
+	
+	public int getC_Tax_ID() {
+		TF_MProduct p = new TF_MProduct(getCtx(), getM_Product_ID(), get_TrxName());
+		return p.getTax_ID(isGST());
+	}
+	
+	public int getM_InOut_ID() {
+		String whereClause = "TF_WeighmentEntry_ID = ? AND DocStatus IN ('CO','CL')";		
+		TF_MInOut inout = new Query(getCtx(), TF_MInOut.Table_Name, whereClause, get_TrxName())
+				.setClient_ID()
+				.setParameters(getTF_WeighmentEntry_ID())
+				.first();
+		if(inout != null)
+			return inout.get_ID();
+		else
+			return 0;
+	}
+	
+	public int getM_InOutLine_ID() {
+		String whereClause = "TF_WeighmentEntry_ID = ? AND DocStatus IN ('CO','CL')";		
+		TF_MInOut inout = new Query(getCtx(), TF_MInOut.Table_Name, whereClause, get_TrxName())
+				.setClient_ID()
+				.setParameters(getTF_WeighmentEntry_ID())
+				.first();
+		
+			
+		if(inout != null) {
+			for(MInOutLine line : inout.getLines()) {
+				if(line.getM_Product_ID() == getM_Product_ID()) {
+					return line.get_ID();
+				}
+			}
+		}
+		
+		 return 0;
+	}
+	
+	public void shipped() {
+		setProcessed(true);
+	}
+	
+	public void reverseShipped() {
+		setProcessed(false);
+	}
 }

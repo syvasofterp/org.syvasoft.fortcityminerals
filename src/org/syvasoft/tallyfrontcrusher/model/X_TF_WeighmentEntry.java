@@ -33,7 +33,7 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20200903L;
+	private static final long serialVersionUID = 20201102L;
 
     /** Standard Constructor */
     public X_TF_WeighmentEntry (Properties ctx, int TF_WeighmentEntry_ID, String trxName)
@@ -238,6 +238,23 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return ii.intValue();
 	}
 
+	/** Set ChangeAmt.
+		@param ChangeAmt ChangeAmt	  */
+	public void setChangeAmt (BigDecimal ChangeAmt)
+	{
+		set_ValueNoCheck (COLUMNNAME_ChangeAmt, ChangeAmt);
+	}
+
+	/** Get ChangeAmt.
+		@return ChangeAmt	  */
+	public BigDecimal getChangeAmt () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_ChangeAmt);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
 	/** Set Description.
 		@param Description 
 		Optional short description of the record
@@ -270,6 +287,23 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public String getDocumentNo () 
 	{
 		return (String)get_Value(COLUMNNAME_DocumentNo);
+	}
+
+	/** Set Driver Tips.
+		@param DriverTips Driver Tips	  */
+	public void setDriverTips (BigDecimal DriverTips)
+	{
+		set_Value (COLUMNNAME_DriverTips, DriverTips);
+	}
+
+	/** Get Driver Tips.
+		@return Driver Tips	  */
+	public BigDecimal getDriverTips () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_DriverTips);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
 	}
 
 	/** Set Gross Weight (Kg).
@@ -325,6 +359,23 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 			return "Y".equals(oo);
 		}
 		return false;
+	}
+
+	/** Set Invoice No.
+		@param InvoiceNo 
+		Invoice No generated from weighbridge app
+	  */
+	public void setInvoiceNo (String InvoiceNo)
+	{
+		set_Value (COLUMNNAME_InvoiceNo, InvoiceNo);
+	}
+
+	/** Get Invoice No.
+		@return Invoice No generated from weighbridge app
+	  */
+	public String getInvoiceNo () 
+	{
+		return (String)get_Value(COLUMNNAME_InvoiceNo);
 	}
 
 	/** Set Manual.
@@ -469,6 +520,40 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return (String)get_Value(COLUMNNAME_PartyName);
 	}
 
+	/** Set PassPricePerUnit.
+		@param PassPricePerUnit PassPricePerUnit	  */
+	public void setPassPricePerUnit (BigDecimal PassPricePerUnit)
+	{
+		set_Value (COLUMNNAME_PassPricePerUnit, PassPricePerUnit);
+	}
+
+	/** Get PassPricePerUnit.
+		@return PassPricePerUnit	  */
+	public BigDecimal getPassPricePerUnit () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_PassPricePerUnit);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set PassQtyIssued.
+		@param PassQtyIssued PassQtyIssued	  */
+	public void setPassQtyIssued (BigDecimal PassQtyIssued)
+	{
+		set_Value (COLUMNNAME_PassQtyIssued, PassQtyIssued);
+	}
+
+	/** Get PassQtyIssued.
+		@return PassQtyIssued	  */
+	public BigDecimal getPassQtyIssued () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_PassQtyIssued);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
 	/** PaymentRule AD_Reference_ID=195 */
 	public static final int PAYMENTRULE_AD_Reference_ID=195;
 	/** Cash = B */
@@ -510,11 +595,29 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		set_Value (COLUMNNAME_PermitIssuedQty, PermitIssuedQty);
 	}
 
-	/** Get Permit Issued Qty.
+	/** DON OT USE IT
 		@return Permit Issued Qty	  */
 	public BigDecimal getPermitIssuedQty () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_PermitIssuedQty);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** DO NOT USE IT
+	 * 
+		@param PermitPassAmount Permit Issue Amount	  */
+	public void setPermitPassAmount (BigDecimal PermitPassAmount)
+	{
+		set_Value (COLUMNNAME_PermitPassAmount, PermitPassAmount);
+	}
+
+	/** Get Permit Issue Amount.
+		@return Permit Issue Amount	  */
+	public BigDecimal getPermitPassAmount () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_PermitPassAmount);
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
@@ -581,6 +684,23 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return false;
 	}
 
+	/** Set Rent (Amount).
+		@param Rent_Amt Rent (Amount)	  */
+	public void setRent_Amt (BigDecimal Rent_Amt)
+	{
+		set_Value (COLUMNNAME_Rent_Amt, Rent_Amt);
+	}
+
+	/** Get Rent (Amount).
+		@return Rent (Amount)	  */
+	public BigDecimal getRent_Amt () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Rent_Amt);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
 	/** In Progress = IP */
 	public static final String STATUS_InProgress = "IP";
 	/** Unbilled = CO */
@@ -636,6 +756,26 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public Timestamp getTareWeightTime () 
 	{
 		return (Timestamp)get_Value(COLUMNNAME_TareWeightTime);
+	}
+
+	/** Set Tender Amount.
+		@param TenderAmount 
+		Tender Amount
+	  */
+	public void setTenderAmount (BigDecimal TenderAmount)
+	{
+		set_Value (COLUMNNAME_TenderAmount, TenderAmount);
+	}
+
+	/** Get Tender Amount.
+		@return Tender Amount
+	  */
+	public BigDecimal getTenderAmount () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_TenderAmount);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
 	}
 
 	/** Regular = R */
@@ -868,6 +1008,26 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return (String)get_Value(COLUMNNAME_TF_WeighmentEntry_UU);
 	}
 
+	/** Set Total Amount.
+		@param TotalAmt 
+		Total Amount
+	  */
+	public void setTotalAmt (BigDecimal TotalAmt)
+	{
+		set_ValueNoCheck (COLUMNNAME_TotalAmt, TotalAmt);
+	}
+
+	/** Get Total Amount.
+		@return Total Amount
+	  */
+	public BigDecimal getTotalAmt () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_TotalAmt);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
 	/** Set User Name.
 		@param UserName User Name	  */
 	public void setUserName (String UserName)
@@ -898,14 +1058,14 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 
 	/** Sales = 1SO */
 	public static final String WEIGHMENTENTRYTYPE_Sales = "1SO";
-	/** Purchase = 2PO */
-	public static final String WEIGHMENTENTRYTYPE_Purchase = "2PO";
+	/** Input = 2PO */
+	public static final String WEIGHMENTENTRYTYPE_Input = "2PO";
 	/** Own Production Receipt = 3PR */
 	public static final String WEIGHMENTENTRYTYPE_OwnProductionReceipt = "3PR";
 	/** Subcontract Production Receipt = 4SR */
 	public static final String WEIGHMENTENTRYTYPE_SubcontractProductionReceipt = "4SR";
-	/** Stock to Hopper = 5KA */
-	public static final String WEIGHMENTENTRYTYPE_StockToHopper = "5KA";
+	/** Stock to Crusher = 5KA */
+	public static final String WEIGHMENTENTRYTYPE_StockToCrusher = "5KA";
 	/** Set Type.
 		@param WeighmentEntryType Type	  */
 	public void setWeighmentEntryType (String WeighmentEntryType)

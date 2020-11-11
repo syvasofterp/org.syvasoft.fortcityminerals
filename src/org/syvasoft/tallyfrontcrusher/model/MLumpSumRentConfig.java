@@ -24,7 +24,9 @@ public class MLumpSumRentConfig extends X_TF_LumpSumRent_Config {
 		super(ctx, rs, trxName);
 		// TODO Auto-generated constructor stub
 	}
-	public static BigDecimal getRateKm(Properties ctx,int AD_Org_ID,int TF_Destination_ID, int TF_VehicleType_ID,BigDecimal Distinace, String trxName) {
+	//old method -- do not use it.
+	public static BigDecimal getRateKm(Properties ctx,int AD_Org_ID,int TF_Destination_ID, 
+			int TF_VehicleType_ID,BigDecimal Distinace, String trxName) {
 		BigDecimal RateKM=BigDecimal.ZERO;
 		String Where;
 		
@@ -41,84 +43,169 @@ public class MLumpSumRentConfig extends X_TF_LumpSumRent_Config {
 		return RateKM;
 	}
 
-	public static BigDecimal getLumpSumRent(Properties ctx,int AD_Org_ID,int TF_Destination_ID, int TF_VehicleType_ID,BigDecimal Distance, String trxName) {
-		
-		BigDecimal Rent=BigDecimal.ZERO;
-		BigDecimal Distance1=BigDecimal.ZERO;
+	public static MLumpSumRentConfig getLumpSumRentConfig(Properties ctx,int AD_Org_ID,int Vendor_ID, int C_BPartner_ID, int M_Product_ID, int TF_Destination_ID, 
+			int TF_VehicleType_ID,BigDecimal Distance, String trxName) {		
 		String Where;
-		Where=" AD_Org_ID=? AND TF_Destination_ID=?";
+		//1 -- Vehicle Type, Vendor, Customer, Product
+		//2 -- Vehicle Type, Customer, Product
+		//3 -- Vehicle Type, Vendor, Product
+		//4 -- Vehicle Type, Customer
+		//5 -- Vehicle Type, Vendor
+		//6 -- Vehicle Type, Product
+		//7 -- Vehicle Type
 		
-		MDestination destination = new Query(ctx, MDestination.Table_Name,Where, trxName)
+		if(Distance.doubleValue() == 0)
+			Distance = BigDecimal.ONE;
+		
+		//1 -- Vehicle Type, Vendor, Customer, Product
+		Where=" AD_Org_ID=? AND Vendor_ID = ? AND C_BPartner_ID = ? AND TF_VehicleType_ID=? AND M_Product_ID = ? AND "
+				+ "(COALESCE(TF_Destination_ID,0) = ? OR ? between minkm AND maxkm)";
+		MLumpSumRentConfig lumpDistConfig=new Query(ctx, Table_Name, Where, trxName)
 				.setClient_ID()
 				.setOnlyActiveRecords(true)
-				.setParameters(AD_Org_ID,TF_Destination_ID)
+				.setParameters(AD_Org_ID,Vendor_ID, C_BPartner_ID, TF_VehicleType_ID, M_Product_ID, TF_Destination_ID, Distance)
+				.setOrderBy("COALESCE(TF_Destination_ID,0) DESC")
 				.first();
+		if(lumpDistConfig != null)
+			return lumpDistConfig;
 		
-		if(destination != null) {
-			
-			Distance1=destination.getDistance();
-			
-			Where=" AD_Org_ID=? AND TF_VehicleType_ID=? AND TF_Destination_ID=?";
-			MLumpSumRentConfig lumpDestConfig=new Query(ctx, Table_Name, Where, trxName)
-					.setClient_ID()
-					.setOnlyActiveRecords(true)
-					.setParameters(AD_Org_ID,TF_VehicleType_ID,TF_Destination_ID)
-					.first();
-			
-			if(lumpDestConfig!=null) {
-				if(lumpDestConfig.getRent_Amt().equals(BigDecimal.ZERO))
-				{
-					Rent=Distance1.multiply(lumpDestConfig.getratekm());
-				}
-				else
-				{
-					Rent=lumpDestConfig.getRent_Amt();
-				}
-			}
-			else {
-				Where=" AD_Org_ID=? AND TF_VehicleType_ID=? AND ? between minkm AND maxkm";
-				MLumpSumRentConfig lumpConfig=new Query(ctx, Table_Name, Where, trxName)
-					.setClient_ID()
-					.setOnlyActiveRecords(true)
-					.setParameters(AD_Org_ID,TF_VehicleType_ID,Distance1)
-					.first();
-
-				if(lumpConfig!=null) {
-					if(lumpConfig.getRent_Amt().equals(BigDecimal.ZERO))
-					{
-						Rent=Distance1.multiply(lumpConfig.getratekm());
-					}
-					else
-					{
-						Rent=lumpConfig.getRent_Amt();
-					}
-				}
+		//2 -- Vehicle Type, Customer, Product
+		Where=" AD_Org_ID=? AND Vendor_ID IS NULL AND  C_BPartner_ID = ? AND TF_VehicleType_ID=? AND M_Product_ID = ? AND "
+				+ "(COALESCE(TF_Destination_ID,0) = ? OR ? between minkm AND maxkm)";
+		lumpDistConfig=new Query(ctx, Table_Name, Where, trxName)
+				.setClient_ID()
+				.setOnlyActiveRecords(true)
+				.setParameters(AD_Org_ID,C_BPartner_ID, TF_VehicleType_ID, M_Product_ID, TF_Destination_ID, Distance)
+				.setOrderBy("COALESCE(TF_Destination_ID,0) DESC")
+				.first();
+		if(lumpDistConfig != null)
+			return lumpDistConfig;
+		
+		//3 -- Vehicle Type, Vendor, Product
+		Where=" AD_Org_ID=? AND Vendor_ID = ? AND  C_BPartner_ID IS NULL AND TF_VehicleType_ID=? AND M_Product_ID = ? AND "
+				+ "(COALESCE(TF_Destination_ID,0) = ? OR ? between minkm AND maxkm)";
+		lumpDistConfig=new Query(ctx, Table_Name, Where, trxName)
+				.setClient_ID()
+				.setOnlyActiveRecords(true)
+				.setParameters(AD_Org_ID,Vendor_ID, TF_VehicleType_ID, M_Product_ID, TF_Destination_ID, Distance)
+				.setOrderBy("COALESCE(TF_Destination_ID,0) DESC")
+				.first();
+		if(lumpDistConfig != null)
+			return lumpDistConfig;
+		
+		//4 -- Vehicle Type, Customer
+		Where=" AD_Org_ID=? AND C_BPartner_ID = ? AND Vendor_ID IS NULL AND TF_VehicleType_ID=? AND M_Product_ID IS NULL AND "
+				+ " (COALESCE(TF_Destination_ID,0) = ? OR ? between minkm AND maxkm)";
+		lumpDistConfig=new Query(ctx, Table_Name, Where, trxName)
+				.setClient_ID()
+				.setOnlyActiveRecords(true)
+				.setParameters(AD_Org_ID,C_BPartner_ID, TF_VehicleType_ID,TF_Destination_ID, Distance)
+				.setOrderBy("COALESCE(TF_Destination_ID,0) DESC")
+				.first();
+		if(lumpDistConfig != null)
+			return lumpDistConfig;
 				
-			}
-		}
-		else
-		{
-			Where=" AD_Org_ID=? AND TF_VehicleType_ID=? AND ? between minkm AND maxkm";
-			MLumpSumRentConfig lumpConfig=new Query(ctx, Table_Name, Where, trxName)
+		//5 -- Vehicle Type, Vendor
+		Where=" AD_Org_ID=? AND C_BPartner_ID IS NULL AND Vendor_ID = ? AND TF_VehicleType_ID=? AND M_Product_ID IS NULL AND "
+				+ " (COALESCE(TF_Destination_ID,0) = ? OR ? between minkm AND maxkm)";
+		lumpDistConfig=new Query(ctx, Table_Name, Where, trxName)
 				.setClient_ID()
 				.setOnlyActiveRecords(true)
-				.setParameters(AD_Org_ID,TF_VehicleType_ID,Distance)
+				.setParameters(AD_Org_ID,C_BPartner_ID, TF_VehicleType_ID,TF_Destination_ID, Distance)
+				.setOrderBy("COALESCE(TF_Destination_ID,0) DESC")
 				.first();
-
-			if(lumpConfig!=null) {
-				if(lumpConfig.getRent_Amt().equals(BigDecimal.ZERO))
-				{
-					Rent=Distance1.multiply(lumpConfig.getratekm());
-				}
-				else
-				{
-					Rent=lumpConfig.getRent_Amt();
-				}
+		if(lumpDistConfig != null)
+			return lumpDistConfig;
+						
+		
+		//6 -- Vehicle Type, Product 
+		Where=" AD_Org_ID=? AND TF_VehicleType_ID=? AND M_Product_ID = ? AND C_BPartner_ID IS NULL AND Vendor_ID IS NULL AND "
+				+ "(COALESCE(TF_Destination_ID,0) = ? OR ? between minkm AND maxkm)";
+		lumpDistConfig=new Query(ctx, Table_Name, Where, trxName)
+				.setClient_ID()
+				.setOnlyActiveRecords(true)
+				.setParameters(AD_Org_ID, TF_VehicleType_ID, M_Product_ID, TF_Destination_ID, Distance)
+				.setOrderBy("COALESCE(TF_Destination_ID,0) DESC")
+				.first();
+		if(lumpDistConfig != null)
+			return lumpDistConfig;
+					
+		
+		//7 Vehicle Type
+		Where=" AD_Org_ID=? AND TF_VehicleType_ID=? AND Vendor_ID IS NULL AND C_BPartner_ID IS NULL AND M_Product_ID IS NULL AND "
+				+ " (COALESCE(TF_Destination_ID,0) = ? OR ? between minkm AND maxkm)";
+		
+		lumpDistConfig=new Query(ctx, Table_Name, Where, trxName)
+				.setClient_ID()
+				.setOnlyActiveRecords(true)
+				.setParameters(AD_Org_ID,TF_VehicleType_ID,TF_Destination_ID, Distance)
+				.setOrderBy("COALESCE(TF_Destination_ID,0) DESC")
+				.first();
+		
+		return lumpDistConfig;
+	}
+	
+	public static BigDecimal getRateMT(Properties ctx,int AD_Org_ID,int Vendor_ID, int C_BPartner_ID, int M_Product_ID, int TF_Destination_ID, 
+			int TF_VehicleType_ID,BigDecimal Distance, String trxName) {
+		BigDecimal RateMT=BigDecimal.ZERO;		
+		
+		MLumpSumRentConfig lumpDistConfig = getLumpSumRentConfig(ctx, AD_Org_ID, Vendor_ID, C_BPartner_ID, M_Product_ID, TF_Destination_ID, 
+				TF_VehicleType_ID, Distance, trxName);
+		if(lumpDistConfig != null)
+			return lumpDistConfig.getRateMT();
+		else
+			return RateMT;
+		
+	}
+	
+	public static BigDecimal getRateKm(Properties ctx,int AD_Org_ID,int Vendor_ID, int C_BPartner_ID, int M_Product_ID, int TF_Destination_ID, 
+			int TF_VehicleType_ID,BigDecimal Distance, String trxName) {
+		BigDecimal RateKM=BigDecimal.ZERO;		
+		
+		
+		MLumpSumRentConfig lumpDistConfig = getLumpSumRentConfig(ctx, AD_Org_ID, Vendor_ID, C_BPartner_ID, M_Product_ID, TF_Destination_ID,
+				TF_VehicleType_ID, Distance, trxName);		
+		if(lumpDistConfig != null)
+			return lumpDistConfig.getratekm();
+		else
+			return RateKM;
+		
+	}
+	
+	public static BigDecimal getRateMTKm(Properties ctx,int AD_Org_ID,int Vendor_ID, int C_BPartner_ID, int M_Product_ID, int TF_Destination_ID, 
+			int TF_VehicleType_ID,BigDecimal Distance, String trxName) {
+		BigDecimal RateMTKM=BigDecimal.ZERO;		
+		
+		
+		MLumpSumRentConfig lumpDistConfig = getLumpSumRentConfig(ctx, AD_Org_ID, Vendor_ID, C_BPartner_ID, M_Product_ID, TF_Destination_ID,
+				TF_VehicleType_ID, Distance, trxName);		
+		if(lumpDistConfig != null)
+			return lumpDistConfig.getRateMTKM();
+		else
+			return RateMTKM;
+		
+	}
+	
+public static BigDecimal getLumpSumRent(Properties ctx,int AD_Org_ID, int Vendor_ID, int C_BPartner_ID, int M_Product_ID, int TF_Destination_ID, 
+		int TF_VehicleType_ID,BigDecimal Distance, String trxName) {
+		BigDecimal Rent=BigDecimal.ZERO;						
+		MLumpSumRentConfig lumpDistConfig = getLumpSumRentConfig(ctx, AD_Org_ID, Vendor_ID, C_BPartner_ID, M_Product_ID, TF_Destination_ID, 
+				TF_VehicleType_ID, Distance, trxName); 
+		
+		if(lumpDistConfig!=null) {
+			if(lumpDistConfig.getRent_Amt().equals(BigDecimal.ZERO))
+			{
+				Rent=Distance.multiply(lumpDistConfig.getratekm());
+			}
+			else
+			{
+				return lumpDistConfig.getRent_Amt();
 			}
 		}
+		
 		return Rent;
 	}
-
+	
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
 		// TODO Auto-generated method stub
@@ -128,11 +215,15 @@ public class MLumpSumRentConfig extends X_TF_LumpSumRent_Config {
 		
 		BigDecimal lumpsumRent=getRent_Amt();
 		BigDecimal RateKm=getratekm();
+		BigDecimal RateMT = getRateMT();
+		BigDecimal RateMTKM = getRateMTKM();
 		int result1 = lumpsumRent.compareTo(BigDecimal.ZERO);
 		int result2 = RateKm.compareTo(BigDecimal.ZERO);
+		int result3 = RateMT.compareTo(BigDecimal.ZERO);
+		int result4 = RateMTKM.compareTo(BigDecimal.ZERO);
 		
-		if(result1==1 && result2==1) {
-			throw new AdempiereException("Please enter either Lumpsum Rent or Rate per KM!");
+		if(result1==1 && result2==1 && result3 == 1 && result3 == result4) {
+			throw new AdempiereException("Please enter either Lumpsum Rent or Rate/KM or Rate/MT or Rate/MT/Km!");
 		}
 			
 		return super.beforeSave(newRecord);

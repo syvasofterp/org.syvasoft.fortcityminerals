@@ -7,6 +7,7 @@ import java.util.Properties;
 import org.adempiere.base.IColumnCallout;
 import org.compiere.model.GridField;
 import org.compiere.model.GridTab;
+import org.compiere.model.MSysConfig;
 import org.compiere.util.Env;
 import org.syvasoft.tallyfrontcrusher.model.MWeighmentEntry;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
@@ -48,6 +49,34 @@ public class CalloutOrder_SOUnitPriceRent implements IColumnCallout {
 				}
 			}
 			String orgType = (String) mTab.getValue(TF_MOrder.COLUMNNAME_OrgType);
+			
+			
+			//Calculate Pass Unit Price
+			//based on the item 2 Royalty pass amount, unit price has to be calculate dn set it here.
+			
+			int AD_Org_ID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_AD_Org_ID);
+			int Item2_ID = 0;
+			if(mTab.getValue(TF_MOrder.COLUMNNAME_Item2_ID) != null)
+				Item2_ID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_Item2_ID);
+			
+			if(Item2_ID ==  MSysConfig.getIntValue("ROYALTY_PASS_PRODUCT_ID", 1000329, Env.getAD_Client_ID(ctx), AD_Org_ID)) {
+			
+				BigDecimal RoyaltyPassAmount = BigDecimal.ZERO;
+				if(mTab.getValue(TF_MOrder.COLUMNNAME_Item2_Amt) != null)
+					RoyaltyPassAmount = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Item2_Amt);
+				BigDecimal RoyaltyPassUnitPrice = BigDecimal.ZERO;
+				if(qty.doubleValue() != 0)
+					RoyaltyPassUnitPrice = RoyaltyPassAmount.divide(qty,2,RoundingMode.HALF_UP);
+				
+				boolean isRoyaltyPassInclusive = mTab.getValueAsBoolean(TF_MOrder.COLUMNNAME_IsRoyaltyPassInclusive);
+				 
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_PassUnitPrice, RoyaltyPassUnitPrice);
+				
+				if(isRoyaltyPassInclusive) {
+					price = price.add(RoyaltyPassUnitPrice);
+				}
+			
+			}
 			
 			if(orgType != null)
 			{

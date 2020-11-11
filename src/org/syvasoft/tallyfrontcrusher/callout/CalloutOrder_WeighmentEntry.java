@@ -20,6 +20,7 @@ import org.syvasoft.tallyfrontcrusher.model.MLumpSumRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MPriceListUOM;
 import org.syvasoft.tallyfrontcrusher.model.MRentedVehicle;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentConfig;
+import org.syvasoft.tallyfrontcrusher.model.MVehicleType;
 import org.syvasoft.tallyfrontcrusher.model.MWeighmentEntry;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
 
@@ -71,7 +72,7 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 				mTab.setValue(TF_MOrder.COLUMNNAME_M_Warehouse_ID, weighment.getM_Warehouse_ID());
 			
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_ID, weighment.getM_Product_ID());
-			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Tax_ID, Env.getContext(ctx, "#C_Tax_ID"));
+			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Tax_ID, weighment.getC_Tax_ID()); //Env.getContext(ctx, "#C_Tax_ID"));
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_UOM_ID, uom_id);
 			
 			BigDecimal qty = weighment.getNetWeight();
@@ -95,10 +96,21 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 			if(weighment.getPrice() != null && weighment.getPrice().doubleValue() > 0)
 				price = weighment.getPrice();
 			
+			mTab.setValue(TF_MOrder.COLUMNNAME_C_DocTypeTarget_ID, weighment.getC_DocType_ID());
+			if(isSOTrx && weighment.getPermitPassAmount().doubleValue()!=0
+					&& weighment.getPassQtyIssued().doubleValue() != 0) {				
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item2_ID, weighment.getRoyaltyPassProduct_ID());
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item2_Qty, weighment.getPassQtyIssued());
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item2_Price, weighment.getPassPricePerUnit());
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item2_Amt, weighment.getPermitPassAmount());
+			}
+			
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Qty, qty);			
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Price, price);
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_UnitPrice, price);
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Amt, price.multiply(qty));
+			
+			
 			
 			MRentedVehicle rv;
 			if(weighment.getTF_RentedVehicle_ID() > 0) {

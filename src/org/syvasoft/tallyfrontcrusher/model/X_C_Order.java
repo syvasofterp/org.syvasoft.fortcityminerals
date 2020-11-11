@@ -34,7 +34,7 @@ public class X_C_Order extends PO implements I_C_Order, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20200707L;
+	private static final long serialVersionUID = 20201102L;
 
     /** Standard Constructor */
     public X_C_Order (Properties ctx, int C_Order_ID, String trxName)
@@ -51,6 +51,8 @@ public class X_C_Order extends PO implements I_C_Order, I_Persistent
 			setC_DocTypeTarget_ID (0);
 			setC_Order_ID (0);
 			setC_PaymentTerm_ID (0);
+			setCreateTransporterInvoice (true);
+// Y
 			setDateAcct (new Timestamp( System.currentTimeMillis() ));
 // @#Date@
 			setDateOrdered (new Timestamp( System.currentTimeMillis() ));
@@ -85,6 +87,8 @@ public class X_C_Order extends PO implements I_C_Order, I_Persistent
 			setIsPrinted (false);
 			setIsPriviledgedRate (false);
 // N
+			setIsRoyaltyPassInclusive (true);
+// Y
 			setIsSelected (false);
 			setIsSelfService (false);
 			setIsSOTrx (false);
@@ -93,6 +97,8 @@ public class X_C_Order extends PO implements I_C_Order, I_Persistent
 			setIsTaxIncluded1 (false);
 // N
 			setIsTransferred (false);
+			setItem1_PassUnitPrice (Env.ZERO);
+// 0
 			setM_PriceList_ID (0);
 			setM_Warehouse_ID (0);
 			setPaymentRule (null);
@@ -950,6 +956,27 @@ public class X_C_Order extends PO implements I_C_Order, I_Persistent
 		return (String)get_Value(COLUMNNAME_CreateTaxInvoice);
 	}
 
+	/** Set Create Transporter Invoice.
+		@param CreateTransporterInvoice Create Transporter Invoice	  */
+	public void setCreateTransporterInvoice (boolean CreateTransporterInvoice)
+	{
+		set_Value (COLUMNNAME_CreateTransporterInvoice, Boolean.valueOf(CreateTransporterInvoice));
+	}
+
+	/** Get Create Transporter Invoice.
+		@return Create Transporter Invoice	  */
+	public boolean isCreateTransporterInvoice () 
+	{
+		Object oo = get_Value(COLUMNNAME_CreateTransporterInvoice);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
 	/** Set Account Date.
 		@param DateAcct 
 		Accounting Date
@@ -1198,6 +1225,10 @@ public class X_C_Order extends PO implements I_C_Order, I_Persistent
 	public static final String DOCACTION_Cancel = "CA";
 	/** Activate = AC */
 	public static final String DOCACTION_Activate = "AC";
+	/** Start  = ST */
+	public static final String DOCACTION_Start = "ST";
+	/** Modify = MO */
+	public static final String DOCACTION_Modify = "MO";
 	/** Set Document Action.
 		@param DocAction 
 		The targeted status of the document
@@ -1248,6 +1279,12 @@ public class X_C_Order extends PO implements I_C_Order, I_Persistent
 	public static final String DOCSTATUS_Activated = "AC";
 	/** Canceled = CA */
 	public static final String DOCSTATUS_Canceled = "CA";
+	/** Overdue = OD */
+	public static final String DOCSTATUS_Overdue = "OD";
+	/** Due = DU */
+	public static final String DOCSTATUS_Due = "DU";
+	/** Upcoming = UP */
+	public static final String DOCSTATUS_Upcoming = "UP";
 	/** Set Document Status.
 		@param DocStatus 
 		The current status of the document
@@ -1764,6 +1801,27 @@ public class X_C_Order extends PO implements I_C_Order, I_Persistent
 		return false;
 	}
 
+	/** Set Royalty Pass Inclusive.
+		@param IsRoyaltyPassInclusive Royalty Pass Inclusive	  */
+	public void setIsRoyaltyPassInclusive (boolean IsRoyaltyPassInclusive)
+	{
+		set_Value (COLUMNNAME_IsRoyaltyPassInclusive, Boolean.valueOf(IsRoyaltyPassInclusive));
+	}
+
+	/** Get Royalty Pass Inclusive.
+		@return Royalty Pass Inclusive	  */
+	public boolean isRoyaltyPassInclusive () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsRoyaltyPassInclusive);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
 	/** Set Selected.
 		@param IsSelected Selected	  */
 	public void setIsSelected (boolean IsSelected)
@@ -2106,6 +2164,23 @@ public class X_C_Order extends PO implements I_C_Order, I_Persistent
 			return "Y".equals(oo);
 		}
 		return false;
+	}
+
+	/** Set Royalty Pass Unit Price.
+		@param Item1_PassUnitPrice Royalty Pass Unit Price	  */
+	public void setItem1_PassUnitPrice (BigDecimal Item1_PassUnitPrice)
+	{
+		set_Value (COLUMNNAME_Item1_PassUnitPrice, Item1_PassUnitPrice);
+	}
+
+	/** Get Royalty Pass Unit Price.
+		@return Royalty Pass Unit Price	  */
+	public BigDecimal getItem1_PassUnitPrice () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Item1_PassUnitPrice);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
 	}
 
 	/** Set Permit Issued.
@@ -3448,6 +3523,8 @@ public class X_C_Order extends PO implements I_C_Order, I_Persistent
 	public static final String TF_BLUEMETAL_TYPE_RegularPlusGeosand = "RG";
 	/** 40 MM only = 40 */
 	public static final String TF_BLUEMETAL_TYPE_40MMOnly = "40";
+	/** GSB = GSB */
+	public static final String TF_BLUEMETAL_TYPE_GSB = "GSB";
 	/** Set Production Type.
 		@param TF_BlueMetal_Type Production Type	  */
 	public void setTF_BlueMetal_Type (String TF_BlueMetal_Type)
@@ -3548,8 +3625,8 @@ public class X_C_Order extends PO implements I_C_Order, I_Persistent
 		return ii.intValue();
 	}
 
-	/** Set TF_ProductionPlant.
-		@param TF_ProductionPlant_ID TF_ProductionPlant	  */
+	/** Set Production Plant.
+		@param TF_ProductionPlant_ID Production Plant	  */
 	public void setTF_ProductionPlant_ID (int TF_ProductionPlant_ID)
 	{
 		if (TF_ProductionPlant_ID < 1) 
@@ -3558,8 +3635,8 @@ public class X_C_Order extends PO implements I_C_Order, I_Persistent
 			set_Value (COLUMNNAME_TF_ProductionPlant_ID, Integer.valueOf(TF_ProductionPlant_ID));
 	}
 
-	/** Get TF_ProductionPlant.
-		@return TF_ProductionPlant	  */
+	/** Get Production Plant.
+		@return Production Plant	  */
 	public int getTF_ProductionPlant_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_TF_ProductionPlant_ID);

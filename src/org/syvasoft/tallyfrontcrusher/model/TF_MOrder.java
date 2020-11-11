@@ -1705,7 +1705,30 @@ public class TF_MOrder extends MOrder {
 		}
 		return false;
 	}
-		
+	
+	/** Column name IsRoyaltyPassInclusive */
+    public static final String COLUMNNAME_IsRoyaltyPassInclusive = "IsRoyaltyPassInclusive";
+	/** Set Royalty Pass Inclusive.
+	@param IsRoyaltyPassInclusive Royalty Pass Inclusive	  */
+	public void setIsRoyaltyPassInclusive (boolean IsRoyaltyPassInclusive)
+	{
+		set_Value (COLUMNNAME_IsRoyaltyPassInclusive, Boolean.valueOf(IsRoyaltyPassInclusive));
+	}
+	
+	/** Get Royalty Pass Inclusive.
+		@return Royalty Pass Inclusive	  */
+	public boolean isRoyaltyPassInclusive () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsRoyaltyPassInclusive);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+	
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
 		success = super.afterSave(newRecord, success);
@@ -1758,6 +1781,51 @@ public class TF_MOrder extends MOrder {
 		line.setPriceEntered(price); // Price for the Sales UOM
 	}
 	
+    /** Column name Item1_PassUnitPrice */
+    public static final String COLUMNNAME_Item1_PassUnitPrice = "Item1_PassUnitPrice";
+	/** Set Royalty Pass Unit Price.
+	@param Item1_PassUnitPrice Royalty Pass Unit Price	  */
+	public void setItem1_PassUnitPrice (BigDecimal Item1_PassUnitPrice)
+	{
+		set_Value (COLUMNNAME_Item1_PassUnitPrice, Item1_PassUnitPrice);
+	}
+	
+	/** Get Royalty Pass Unit Price.
+		@return Royalty Pass Unit Price	  */
+	public BigDecimal getItem1_PassUnitPrice () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Item1_PassUnitPrice);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+	
+	/** Column name Rent_UOM_ID */
+    public static final String COLUMNNAME_Rent_UOM_ID = "Rent_UOM_ID";
+    public org.compiere.model.I_C_UOM getRent_UOM() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_UOM)MTable.get(getCtx(), org.compiere.model.I_C_UOM.Table_Name)
+			.getPO(getRent_UOM_ID(), get_TrxName());	}
+
+	/** Set Delivery UOM.
+		@param Rent_UOM_ID Delivery UOM	  */
+	public void setRent_UOM_ID (int Rent_UOM_ID)
+	{
+		if (Rent_UOM_ID < 1) 
+			set_Value (COLUMNNAME_Rent_UOM_ID, null);
+		else 
+			set_Value (COLUMNNAME_Rent_UOM_ID, Integer.valueOf(Rent_UOM_ID));
+	}
+
+	/** Get Delivery UOM.
+		@return Delivery UOM	  */
+	public int getRent_UOM_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Rent_UOM_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
 	public void updateQuickOrderLines() {
 		TF_MOrderLine ordLine = null;
 		//Delete empty item lines
@@ -1834,6 +1902,10 @@ public class TF_MOrder extends MOrder {
 		//Item 2
 		if(getItem2_ID() > 0 && (is_ValueChanged(COLUMNNAME_Item2_ID) || is_ValueChanged(COLUMNNAME_Item2_Qty)
 				|| is_ValueChanged(COLUMNNAME_Item2_Price) || getItem2_C_OrderLine_ID() == 0)) {
+			
+			//do not create Royalty Pass Invoice Line when the Royalty Pass Inclusive in the material price
+			if(isRoyaltyPassInclusive() && getItem2_ID() == MSysConfig.getIntValue("ROYALTY_PASS_PRODUCT_ID", 1000329, getAD_Client_ID(), getAD_Org_ID()))
+				return;
 			
 			if(getItem2_C_OrderLine_ID() > 0)
 				ordLine = new TF_MOrderLine(getCtx(), getItem2_C_OrderLine_ID(), get_TrxName());
@@ -1948,7 +2020,8 @@ public class TF_MOrder extends MOrder {
 				BigDecimal taxRate = (BigDecimal)tax.getRate();
 				BigDecimal hundred = new BigDecimal("100");
 				
-				rentAmount = getRent_Amt().divide(BigDecimal.ONE.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);
+				//rentAmount = getRent_Amt().divide(BigDecimal.ONE.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);
+				rentAmount = getRent_Amt();
 			}
 			else
 			{
@@ -1959,15 +2032,66 @@ public class TF_MOrder extends MOrder {
 			
 			TF_MOrder.addProductPricingIfNot(productID, getM_PriceList_ID(), getC_BPartner_ID(), BigDecimal.ONE, rentAmount, 
 					getDateOrdered(), getC_DocType().isSOTrx());
-			setOrderLine(ordLine, productID, BigDecimal.ONE, rentAmount);
+			
 			int load_uom_id = MSysConfig.getIntValue("LOAD_UOM", 1000072, getAD_Client_ID());
+			
+			BigDecimal price = rentAmount;
+			BigDecimal qty = BigDecimal.ONE;
+			String desc = null;
+			if(!isLumpSumRent() && 
+					getRate().multiply(getTonnage()).multiply(getDistance()).doubleValue() == getRent_Amt().doubleValue()) {
+				qty = getDistance();
+				price = getRate().multiply(getTonnage());
+				BigDecimal rate = getRate();
+				if(isSOTrx()) {
+					price = getRentPayable().divide(getDistance(), 2, RoundingMode.HALF_UP);
+					rate = price.divide(getTonnage(), 2, RoundingMode.HALF_UP);
+				}
+				load_uom_id  = MSysConfig.getIntValue("KM_UOM", 1000071, getAD_Client_ID());
+				
+				desc = "Tonnage : " + getTonnage().doubleValue()
+						+ ", Rate/ton/km : " + rate.doubleValue();
+			}
+			else if(getRate().multiply(getTonnage()).doubleValue() == getRent_Amt().doubleValue() ) {
+				load_uom_id = MSysConfig.getIntValue("TONNAGE_UOM", 1000069, getAD_Client_ID());
+				qty = getTonnage();
+				price = getRate();
+				if(isSOTrx()) {
+					price = getRentPayable().divide(getTonnage(), 2, RoundingMode.HALF_EVEN);
+				}				
+				//hdrDescription = hdrDescription + ", Tonnage : " + getTonnage().doubleValue();
+			}
+			else if(getRate().multiply(getDistance()).doubleValue() == getRent_Amt().doubleValue() ) {
+				load_uom_id = MSysConfig.getIntValue("KM_UOM", 1000071, getAD_Client_ID());
+				
+				qty = getDistance();
+				price = getRate();
+				if(isSOTrx()) {
+					price = getRentPayable().divide(getTonnage(), 2, RoundingMode.HALF_EVEN);
+				}				
+				//hdrDescription = hdrDescription + ", Tonnage : " + getTonnage().doubleValue();
+			}
+			else {
+				load_uom_id = MSysConfig.getIntValue("LOAD_UOM", 1000072, getAD_Client_ID());
+				
+				qty = BigDecimal.ONE;
+				price = getRent_Amt();
+				if(isSOTrx()) {
+					price = getRentPayable();
+				}				
+				desc = "Tonnage : " + getTonnage().doubleValue();
+			}		
+			
+			setOrderLine(ordLine, productID, qty, price);
+			
 			ordLine.setC_UOM_ID(load_uom_id);
-			
-			
 			
 			//MResource res = MResource.get(getCtx(), getVehicle().getS_Resource_ID());
 			//ordLine.setUser1_ID(res.get_ValueAsInt("C_ElementValue_ID"));
-			ordLine.setDescription("Vehicle Rent");
+			ordLine.setDescription("Transportation charges" +
+				(desc != null ? ", " + desc : ""));
+						
+			
 			ordLine.saveEx();
 			DB.executeUpdate("UPDATE C_Order SET " + COLUMNNAME_Vehicle_C_OrderLine_ID + " = "
 				+ ordLine.getC_OrderLine_ID() + " WHERE C_Order_ID = " + getC_Order_ID(), get_TrxName());	
@@ -2023,12 +2147,13 @@ public class TF_MOrder extends MOrder {
 		closeWeighmentEntry();
 		closeTokenNo();
 		closeYardEntry();
-		
+		createInvoiceCustomer();
 		
 		
 		createTaxInvoice();
 		
 		createCashSalesDiscountPayment();
+		completeWeighmentEntriesForConsolidateInvoice();
 		return msg;
 	}
 
@@ -2063,64 +2188,68 @@ public class TF_MOrder extends MOrder {
 
 	@Override
 	public boolean voidIt() {
-			//POS Order's MR and Invoice should be reversed.
-			if(getC_DocType_ID() == 1000050 || getC_DocType_ID() == 1000041) {
-				//MR/Shipment reverse Correct
-				List<MInOut> inOutList = new Query(getCtx(), MInOut.Table_Name, "C_Order_ID=? AND DocStatus=?", get_TrxName())
-					.setClient_ID().setParameters(getC_Order_ID(),DOCSTATUS_Completed).list();
-				for(MInOut inout : inOutList) {
-					if(!inout.reverseCorrectIt())
-						return false;				
-					inout.saveEx();
-				}
-				
-				//Invoice reverse Correct
-				List<TF_MInvoice> invList = new Query(getCtx(), TF_MInvoice.Table_Name, "C_Order_ID=? AND DocStatus=?", get_TrxName())
-					.setClient_ID().setParameters(getC_Order_ID(), DOCSTATUS_Completed).list();
-				for(TF_MInvoice inv : invList) {
-					if(!inv.reverseCorrectIt())
-						return false;
-					inv.saveEx();
-				}
-				
-				
+		
+		//POS Order's MR and Invoice should be reversed.
+		if(getC_DocType_ID() == 1000050 || getC_DocType_ID() == 1000041
+				|| getC_DocType_ID() == TF_MOrder.GSTOrderDocType_ID(getCtx())
+				|| getC_DocType_ID() == TF_MOrder.NonGSTOrderDocType_ID(getCtx())) {
+			//MR/Shipment reverse Correct
+			List<MInOut> inOutList = new Query(getCtx(), MInOut.Table_Name, "C_Order_ID=? AND DocStatus=?", get_TrxName())
+				.setClient_ID().setParameters(getC_Order_ID(),DOCSTATUS_Completed).list();
+			for(MInOut inout : inOutList) {
+				if(!inout.reverseCorrectIt())
+					return false;				
+				inout.saveEx();
 			}
 			
-			if(getTF_DriverTips_Pay_ID() > 0) {
-				TF_MPayment payment = new TF_MPayment(getCtx(), getTF_DriverTips_Pay_ID(), get_TrxName());
-				if(payment.getDocStatus().equals(DOCSTATUS_Completed)) {
-					payment.reverseCorrectIt();
-				}
-				payment.saveEx();
-			}
-
-			if(getC_PaymentSalesDiscount_ID() > 0) {
-				TF_MPayment payment = new TF_MPayment(getCtx(), getC_PaymentSalesDiscount_ID(), get_TrxName());
-				if(payment.getDocStatus().equals(DOCSTATUS_Completed)) {
-					payment.reverseCorrectIt();
-				}
-				payment.saveEx();
-			}
-
-			if(getTF_DiscountRequest_ID() > 0) {
-				MDiscountRequest dr = new MDiscountRequest(getCtx(), getTF_DiscountRequest_ID(), get_TrxName());
-				dr.voidIt();
-				dr.saveEx();
+			//Invoice reverse Correct
+			List<TF_MInvoice> invList = new Query(getCtx(), TF_MInvoice.Table_Name, "C_Order_ID=? AND DocStatus=?", get_TrxName())
+				.setClient_ID().setParameters(getC_Order_ID(), DOCSTATUS_Completed).list();
+			for(TF_MInvoice inv : invList) {
+				if(!inv.reverseCorrectIt())
+					return false;
+				inv.saveEx();
 			}
 			
-			MJobworkItemIssue.ReverseFromPO(this);
-			reverseTransporterInvoice();
-			reverseWeighmentEntry();
-			reverseTokenNo();
-			reverseYardEntry();
-			reverseSubcontractPurchaseEntry();
-			reverseIssuedPermit();
-			reversePurchasedPermit();
-			reverseCrusherProduction();
-			voidTaxInvoice();
-			voidTR_TaxInvoice();
-			reverseAdditionalTransactions();
-			return super.voidIt();
+			
+		}
+		
+		if(getTF_DriverTips_Pay_ID() > 0) {
+			TF_MPayment payment = new TF_MPayment(getCtx(), getTF_DriverTips_Pay_ID(), get_TrxName());
+			if(payment.getDocStatus().equals(DOCSTATUS_Completed)) {
+				payment.reverseCorrectIt();
+			}
+			payment.saveEx();
+		}
+
+		if(getC_PaymentSalesDiscount_ID() > 0) {
+			TF_MPayment payment = new TF_MPayment(getCtx(), getC_PaymentSalesDiscount_ID(), get_TrxName());
+			if(payment.getDocStatus().equals(DOCSTATUS_Completed)) {
+				payment.reverseCorrectIt();
+			}
+			payment.saveEx();
+		}
+
+		if(getTF_DiscountRequest_ID() > 0) {
+			MDiscountRequest dr = new MDiscountRequest(getCtx(), getTF_DiscountRequest_ID(), get_TrxName());
+			dr.voidIt();
+			dr.saveEx();
+		}
+		
+		MJobworkItemIssue.ReverseFromPO(this);
+		reverseTransporterInvoice();
+		reverseWeighmentEntry();
+		reverseTokenNo();
+		reverseYardEntry();
+		reverseSubcontractPurchaseEntry();
+		reverseIssuedPermit();
+		reversePurchasedPermit();
+		reverseCrusherProduction();
+		voidTaxInvoice();
+		voidTR_TaxInvoice();
+		reverseAdditionalTransactions();
+		reverseConsolidateInvoice();
+		return super.voidIt();
 	}
 	
 	@Override
@@ -2176,6 +2305,7 @@ public class TF_MOrder extends MOrder {
 			reverseCrusherProduction();
 			voidTaxInvoice();
 			voidTR_TaxInvoice();
+			reverseConsolidateInvoice();
 			return super.reActivateIt();
 	}
 
@@ -2193,7 +2323,11 @@ public class TF_MOrder extends MOrder {
 		if(!isSOTrx() && !isCreateTransportInvoice())
 			return;
 		
+		
 		MRentedVehicle vehicle = new MRentedVehicle(getCtx(), getTF_RentedVehicle_ID(), get_TrxName());
+		if(vehicle.isOwnVehicle())
+			return;
+		
 		MBPartner bp = new MBPartner(getCtx(), vehicle.getC_BPartner_ID(), get_TrxName());
 		//Invoice Header
 		TF_MInvoice invoice = new TF_MInvoice(getCtx(), 0, get_TrxName());
@@ -2234,50 +2368,66 @@ public class TF_MOrder extends MOrder {
 		else {
 			hdrDescription = "Source : " + dest.getName();
 		}
-		if(!isLumpSumRent()) {			
-			hdrDescription = hdrDescription 
-					+ ", Rate/km : " + getRate().doubleValue()
-					+ ", Distance : " + getDistance() + " km";
-		}
-		
-		int load_uom_id = MSysConfig.getIntValue("LOAD_UOM", 1000072, getAD_Client_ID());
-		invLine.setC_UOM_ID(load_uom_id);
-		invLine.setQty(BigDecimal.ONE);
-		
-		int defaultTaxID = 0;
-		BigDecimal rentAmount = new BigDecimal(0);
-		BigDecimal taxRate = new BigDecimal(0);
-		BigDecimal hundred = new BigDecimal("100");
-		
-		if(getRent_Tax_ID() > 0){
-			defaultTaxID = getRent_Tax_ID();
-			
-			MTax tax = new MTax(getCtx(), defaultTaxID, get_TrxName());
-			taxRate = (BigDecimal)tax.getRate();
-			rentAmount = getRent_Amt().divide(BigDecimal.ONE.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);
-		}
-		else{
-			defaultTaxID = Env.getContextAsInt(getCtx(), "#C_Tax_ID");
-			rentAmount = getDistance().multiply(getRate());
-		}
-		invLine.setC_Tax_ID(defaultTaxID);
-		
-		BigDecimal price = rentAmount;
-		if(isSOTrx()) {
-			if(defaultTaxID > 0){
-				price = getRentPayable().divide(BigDecimal.ONE.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);
+		if(!isLumpSumRent() && 
+				getRate().multiply(getTonnage()).multiply(getDistance()).doubleValue() == getRent_Amt().doubleValue()) {
+			invLine.setQty(getDistance());
+			BigDecimal price = getRate().multiply(getTonnage());
+			BigDecimal rate = getRate();
+			if(isSOTrx()) {
+				price = getRentPayable().divide(getDistance(), 2, RoundingMode.HALF_UP);
+				rate = price.divide(getTonnage(), 2, RoundingMode.HALF_UP);
 			}
-			else {
+			int KM_uom_id = MSysConfig.getIntValue("KM_UOM", 1000071, getAD_Client_ID());
+			invLine.setC_UOM_ID(KM_uom_id);
+			invLine.setPriceActual(price);
+			invLine.setPriceList(price);
+			invLine.setPriceLimit(price);
+			invLine.setPriceEntered(price);
+			hdrDescription = hdrDescription + ", Tonnage : " + getTonnage().doubleValue()
+					+ ", Rate/ton/km : " + rate.doubleValue();
+		}
+		else if(getRate().multiply(getTonnage()).doubleValue() == getRent_Amt().doubleValue() ) {
+			int Tonne_uom_id = MSysConfig.getIntValue("TONNAGE_UOM", 1000069, getAD_Client_ID());
+			invLine.setC_UOM_ID(Tonne_uom_id);
+			invLine.setQty(getTonnage());
+			BigDecimal price = getRate();
+			if(isSOTrx()) {
+				price = getRentPayable().divide(getTonnage(), 2, RoundingMode.HALF_EVEN);
+			}
+			invLine.setPriceActual(price);
+			invLine.setPriceList(price);
+			invLine.setPriceLimit(price);
+			invLine.setPriceEntered(price);
+			//hdrDescription = hdrDescription + ", Tonnage : " + getTonnage().doubleValue();
+		}
+		else if(getRate().multiply(getDistance()).doubleValue() == getRent_Amt().doubleValue() ) {
+			int KM_uom_id = MSysConfig.getIntValue("KM_UOM", 1000071, getAD_Client_ID());
+			invLine.setC_UOM_ID(KM_uom_id);
+			invLine.setQty(getDistance());
+			BigDecimal price = getRate();
+			if(isSOTrx()) {
+				price = getRentPayable().divide(getTonnage(), 2, RoundingMode.HALF_EVEN);
+			}
+			invLine.setPriceActual(price);
+			invLine.setPriceList(price);
+			invLine.setPriceLimit(price);
+			invLine.setPriceEntered(price);
+			//hdrDescription = hdrDescription + ", Tonnage : " + getTonnage().doubleValue();
+		}
+		else {
+			int load_uom_id = MSysConfig.getIntValue("LOAD_UOM", 1000072, getAD_Client_ID());
+			invLine.setC_UOM_ID(load_uom_id);
+			invLine.setQty(BigDecimal.ONE);
+			BigDecimal price = getRent_Amt();
+			if(isSOTrx()) {
 				price = getRentPayable();
 			}
-		}
-		invLine.setPriceActual(price);
-		invLine.setPriceList(price);
-		invLine.setPriceLimit(price);
-		invLine.setPriceEntered(price);
-		invLine.saveEx();
-		
-		invoice.setDescription(hdrDescription);
+			invLine.setPriceActual(price);
+			invLine.setPriceList(price);
+			invLine.setPriceLimit(price);
+			invLine.setPriceEntered(price);
+			hdrDescription = hdrDescription + ", Tonnage : " + getTonnage().doubleValue();
+		}		
 		invoice.saveEx();
 		
 		//DocAction
@@ -3088,5 +3238,103 @@ public class TF_MOrder extends MOrder {
 			}
 		}
 	}
+	
+	public static int GSTOrderDocType_ID(Properties ctx) {
+		int DocType_ID = MSysConfig.getIntValue("GST_ORDER_ID", 1000063, Env.getAD_Client_ID(ctx));
+		return DocType_ID;
+	}
 
+	public static int NonGSTOrderDocType_ID(Properties ctx) {
+		int DocType_ID = MSysConfig.getIntValue("NONGST_ORDER_ID", 1000062, Env.getAD_Client_ID(ctx));
+		return DocType_ID;
+	}
+
+	public void createInvoiceCustomer() {
+		
+		MWeighmentEntry weighment = new MWeighmentEntry(getCtx(), getTF_WeighmentEntry_ID(), get_TrxName());
+		
+		if(getC_DocTypeTarget_ID() != weighment.getC_DocType_ID())
+			return;
+		
+		//Invoice Header
+		TF_MBPartner bp = new TF_MBPartner(getCtx(), getC_BPartner_ID(), get_TrxName());
+		
+		TF_MInvoice invoice = new TF_MInvoice(getCtx(), 0, get_TrxName());
+		invoice.setC_Order_ID(getC_Order_ID());
+		invoice.setClientOrg(getAD_Client_ID(), getAD_Org_ID());
+		invoice.setC_DocTypeTarget_ID(getC_DocTypeTarget().getC_DocTypeInvoice_ID());	// Counter Doc
+		invoice.setIsSOTrx(isSOTrx());
+		invoice.setDateInvoiced(getDateAcct());
+		invoice.setDateAcct(getDateAcct());
+		//
+		invoice.setSalesRep_ID(Env.getAD_User_ID(getCtx()));		
+		//
+		
+		invoice.setBPartner(bp);				
+		invoice.setVehicleNo(getVehicleNo());
+		invoice.setDescription(getDescription());
+		
+		//Price List
+				
+		
+		invoice.setM_PriceList_ID(getM_PriceList_ID());
+		invoice.setC_Currency_ID(getC_Currency_ID());
+		
+		//Financial Dimension - Profit Center		
+		//invoice.setC_Project_ID(counterProj.getC_Project_ID());
+		invoice.setTF_WeighmentEntry_ID(getTF_WeighmentEntry_ID());		
+		invoice.saveEx();
+		
+		for(MOrderLine oLine : getLines() ) {
+			//Create Invoice Line
+			MInvoiceLine invLine = new MInvoiceLine(invoice);
+			int M_Product_ID = oLine.getM_Product_ID();
+			invLine.setM_Product_ID(M_Product_ID , true);
+			invLine.setC_UOM_ID(oLine.getC_UOM_ID());
+			invLine.setQty(oLine.getQtyOrdered());
+			invLine.setPriceActual(oLine.getPriceActual());
+			invLine.setPriceList(oLine.getPriceList());
+			invLine.setPriceLimit(oLine.getPriceLimit());
+			invLine.setPriceEntered(oLine.getPriceEntered());		
+			invLine.setC_Tax_ID(oLine.getC_Tax_ID());
+			invLine.setDescription(oLine.getDescription());
+			invLine.setC_Project_ID(getC_Project_ID());
+			if(weighment.getM_Product_ID() == oLine.getM_Product_ID()) {
+				invLine.setM_InOutLine_ID(weighment.getM_InOutLine_ID());
+			}
+			invLine.saveEx();
+		}
+		
+		//Invoice DocAction
+		if (!invoice.processIt(DocAction.ACTION_Complete))
+			throw new AdempiereException("Failed when processing document - " + invoice.getProcessMsg());
+		invoice.saveEx();
+	}
+	
+	public void completeWeighmentEntriesForConsolidateInvoice() {
+		String whereClause = " TF_WeighmentEntry_ID IN (SELECT i.TF_WeighmentEntry_ID FROM M_InOut i WHERE i.C_Order_ID = ? ) AND Processed = 'Y' AND Status='CO'";
+		List<MWeighmentEntry> wEntries = new Query(getCtx(), MWeighmentEntry.Table_Name, whereClause, get_TrxName())
+				.setClient_ID()
+				.setParameters(getC_Order_ID())
+				.list();
+		for(MWeighmentEntry we : wEntries) {
+			we.close();
+			we.saveEx();
+		}
+	}
+
+	public void reverseConsolidateInvoice() {
+		String whereClause = " TF_WeighmentEntry_ID IN (SELECT i.TF_WeighmentEntry_ID FROM M_InOut i WHERE i.C_Order_ID = ? ) AND Processed = 'Y' AND Status='CO'";
+		List<MWeighmentEntry> wEntries = new Query(getCtx(), MWeighmentEntry.Table_Name, whereClause, get_TrxName())
+				.setClient_ID()
+				.setParameters(getC_Order_ID())
+				.list();
+		for(MWeighmentEntry we : wEntries) {
+			we.reverse();
+			we.saveEx();
+		}
+		
+		String sqlUpdate = "UPDATE M_InOut SET C_Order_ID = NULL WHERE C_Order_ID = ?";
+		DB.executeUpdate(sqlUpdate, get_TrxName());
+	}
 }

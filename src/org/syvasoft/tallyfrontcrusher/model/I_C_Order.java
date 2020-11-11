@@ -522,6 +522,15 @@ public interface I_C_Order
 	/** Get Create Tax Invoice	  */
 	public String getCreateTaxInvoice();
 
+    /** Column name CreateTransporterInvoice */
+    public static final String COLUMNNAME_CreateTransporterInvoice = "CreateTransporterInvoice";
+
+	/** Set Create Transporter Invoice	  */
+	public void setCreateTransporterInvoice (boolean CreateTransporterInvoice);
+
+	/** Get Create Transporter Invoice	  */
+	public boolean isCreateTransporterInvoice();
+
     /** Column name DateAcct */
     public static final String COLUMNNAME_DateAcct = "DateAcct";
 
@@ -947,6 +956,15 @@ public interface I_C_Order
 	  */
 	public boolean isRentInclusive();
 
+    /** Column name IsRoyaltyPassInclusive */
+    public static final String COLUMNNAME_IsRoyaltyPassInclusive = "IsRoyaltyPassInclusive";
+
+	/** Set Royalty Pass Inclusive	  */
+	public void setIsRoyaltyPassInclusive (boolean IsRoyaltyPassInclusive);
+
+	/** Get Royalty Pass Inclusive	  */
+	public boolean isRoyaltyPassInclusive();
+
     /** Column name IsSelected */
     public static final String COLUMNNAME_IsSelected = "IsSelected";
 
@@ -1116,6 +1134,15 @@ public interface I_C_Order
 	  * Update Price into Price List
 	  */
 	public boolean isItem1_IsUpdatePrice();
+
+    /** Column name Item1_PassUnitPrice */
+    public static final String COLUMNNAME_Item1_PassUnitPrice = "Item1_PassUnitPrice";
+
+	/** Set Royalty Pass Unit Price	  */
+	public void setItem1_PassUnitPrice (BigDecimal Item1_PassUnitPrice);
+
+	/** Get Royalty Pass Unit Price	  */
+	public BigDecimal getItem1_PassUnitPrice();
 
     /** Column name Item1_PermitIssued */
     public static final String COLUMNNAME_Item1_PermitIssued = "Item1_PermitIssued";
@@ -1868,10 +1895,10 @@ public interface I_C_Order
     /** Column name TF_ProductionPlant_ID */
     public static final String COLUMNNAME_TF_ProductionPlant_ID = "TF_ProductionPlant_ID";
 
-	/** Set TF_ProductionPlant	  */
+	/** Set Production Plant	  */
 	public void setTF_ProductionPlant_ID (int TF_ProductionPlant_ID);
 
-	/** Get TF_ProductionPlant	  */
+	/** Get Production Plant	  */
 	public int getTF_ProductionPlant_ID();
 
     /** Column name TF_RentedVehicle_ID */

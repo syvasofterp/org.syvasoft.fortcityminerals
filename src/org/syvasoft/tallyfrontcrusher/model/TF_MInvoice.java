@@ -365,6 +365,28 @@ public class TF_MInvoice<DateTime> extends MInvoice {
 		return ii.intValue();
 	}
 
+	/** Column name TF_WeighmentEntry_ID */
+    public static final String COLUMNNAME_TF_WeighmentEntry_ID = "TF_WeighmentEntry_ID";
+    /** Set Weighment Entry.
+	@param TF_WeighmentEntry_ID Weighment Entry	  */
+	public void setTF_WeighmentEntry_ID (int TF_WeighmentEntry_ID)
+	{
+		if (TF_WeighmentEntry_ID < 1) 
+			set_Value (COLUMNNAME_TF_WeighmentEntry_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_WeighmentEntry_ID, Integer.valueOf(TF_WeighmentEntry_ID));
+	}
+	
+	/** Get Weighment Entry.
+		@return Weighment Entry	  */
+	public int getTF_WeighmentEntry_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_WeighmentEntry_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+	
 	
 	@Override
 	protected boolean beforeSave(boolean newRecord) {		
