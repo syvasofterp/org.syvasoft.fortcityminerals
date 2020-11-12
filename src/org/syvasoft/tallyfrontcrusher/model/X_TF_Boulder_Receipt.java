@@ -33,7 +33,7 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20200208L;
+	private static final long serialVersionUID = 20201111L;
 
     /** Standard Constructor */
     public X_TF_Boulder_Receipt (Properties ctx, int TF_Boulder_Receipt_ID, String trxName)
@@ -147,6 +147,31 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 		return ii.intValue();
 	}
 
+	public org.compiere.model.I_C_Invoice getCP_Invoice() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Invoice)MTable.get(getCtx(), org.compiere.model.I_C_Invoice.Table_Name)
+			.getPO(getCP_Invoice_ID(), get_TrxName());	}
+
+	/** Set Crusher Production Invoice.
+		@param CP_Invoice_ID Crusher Production Invoice	  */
+	public void setCP_Invoice_ID (int CP_Invoice_ID)
+	{
+		if (CP_Invoice_ID < 1) 
+			set_Value (COLUMNNAME_CP_Invoice_ID, null);
+		else 
+			set_Value (COLUMNNAME_CP_Invoice_ID, Integer.valueOf(CP_Invoice_ID));
+	}
+
+	/** Get Crusher Production Invoice.
+		@return Crusher Production Invoice	  */
+	public int getCP_Invoice_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_CP_Invoice_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	/** Set Create Subcontractor Invoice.
 		@param CreateSubcontractorInvoice Create Subcontractor Invoice	  */
 	public void setCreateSubcontractorInvoice (String CreateSubcontractorInvoice)
@@ -245,6 +270,10 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 	public static final String DOCACTION_Cancel = "CA";
 	/** Activate = AC */
 	public static final String DOCACTION_Activate = "AC";
+	/** Start  = ST */
+	public static final String DOCACTION_Start = "ST";
+	/** Modify = MO */
+	public static final String DOCACTION_Modify = "MO";
 	/** Set Document Action.
 		@param DocAction 
 		The targeted status of the document
@@ -295,6 +324,12 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 	public static final String DOCSTATUS_Activated = "AC";
 	/** Canceled = CA */
 	public static final String DOCSTATUS_Canceled = "CA";
+	/** Overdue = OD */
+	public static final String DOCSTATUS_Overdue = "OD";
+	/** Due = DU */
+	public static final String DOCSTATUS_Due = "DU";
+	/** Upcoming = UP */
+	public static final String DOCSTATUS_Upcoming = "UP";
 	/** Set Document Status.
 		@param DocStatus 
 		The current status of the document
@@ -860,6 +895,8 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 	public static final String TF_BLUEMETAL_TYPE_RegularPlusGeosand = "RG";
 	/** 40 MM only = 40 */
 	public static final String TF_BLUEMETAL_TYPE_40MMOnly = "40";
+	/** GSB = GSB */
+	public static final String TF_BLUEMETAL_TYPE_GSB = "GSB";
 	/** Set Production Type.
 		@param TF_BlueMetal_Type Production Type	  */
 	public void setTF_BlueMetal_Type (String TF_BlueMetal_Type)
@@ -964,8 +1001,8 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 		return (I_TF_ProductionPlant)MTable.get(getCtx(), I_TF_ProductionPlant.Table_Name)
 			.getPO(getTF_ProductionPlant_ID(), get_TrxName());	}
 
-	/** Set TF_ProductionPlant.
-		@param TF_ProductionPlant_ID TF_ProductionPlant	  */
+	/** Set Production Plant.
+		@param TF_ProductionPlant_ID Production Plant	  */
 	public void setTF_ProductionPlant_ID (int TF_ProductionPlant_ID)
 	{
 		if (TF_ProductionPlant_ID < 1) 
@@ -974,8 +1011,8 @@ public class X_TF_Boulder_Receipt extends PO implements I_TF_Boulder_Receipt, I_
 			set_Value (COLUMNNAME_TF_ProductionPlant_ID, Integer.valueOf(TF_ProductionPlant_ID));
 	}
 
-	/** Get TF_ProductionPlant.
-		@return TF_ProductionPlant	  */
+	/** Get Production Plant.
+		@return Production Plant	  */
 	public int getTF_ProductionPlant_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_TF_ProductionPlant_ID);

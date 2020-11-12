@@ -94,6 +94,17 @@ public interface I_TF_Boulder_Receipt
 
 	public org.compiere.model.I_C_UOM getC_UOM() throws RuntimeException;
 
+    /** Column name CP_Invoice_ID */
+    public static final String COLUMNNAME_CP_Invoice_ID = "CP_Invoice_ID";
+
+	/** Set Crusher Production Invoice	  */
+	public void setCP_Invoice_ID (int CP_Invoice_ID);
+
+	/** Get Crusher Production Invoice	  */
+	public int getCP_Invoice_ID();
+
+	public org.compiere.model.I_C_Invoice getCP_Invoice() throws RuntimeException;
+
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
 
@@ -521,10 +532,10 @@ public interface I_TF_Boulder_Receipt
     /** Column name TF_ProductionPlant_ID */
     public static final String COLUMNNAME_TF_ProductionPlant_ID = "TF_ProductionPlant_ID";
 
-	/** Set TF_ProductionPlant	  */
+	/** Set Production Plant	  */
 	public void setTF_ProductionPlant_ID (int TF_ProductionPlant_ID);
 
-	/** Get TF_ProductionPlant	  */
+	/** Get Production Plant	  */
 	public int getTF_ProductionPlant_ID();
 
 	public I_TF_ProductionPlant getTF_ProductionPlant() throws RuntimeException;
