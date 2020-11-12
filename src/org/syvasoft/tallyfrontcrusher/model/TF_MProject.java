@@ -823,4 +823,55 @@ public class TF_MProject extends MProject {
 		return false;
 	}
 
+    /** Column name MinContract_UOM_ID */
+    public static final String COLUMNNAME_MinContract_UOM_ID = "MinContract_UOM_ID";
+    
+    /** Column name MinContract_Amt */
+    public static final String COLUMNNAME_MinContract_Amt = "MinContract_Amt";
+    
+    /** Set Minimum Contract Amount.
+	@param MinContract_Amt Minimum Contract Amount	  */
+	public void setMinContract_Amt (BigDecimal MinContract_Amt)
+	{
+		set_Value (COLUMNNAME_MinContract_Amt, MinContract_Amt);
+	}
+	
+	/** Get Minimum Contract Amount.
+		@return Minimum Contract Amount	  */
+	public BigDecimal getMinContract_Amt () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_MinContract_Amt);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	public org.compiere.model.I_C_UOM getMinContract_UOM() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_UOM)MTable.get(getCtx(), org.compiere.model.I_C_UOM.Table_Name)
+			.getPO(getMinContract_UOM_ID(), get_TrxName());	}
+
+	/** Set Minimum Contract UOM.
+		@param MinContract_UOM_ID 
+		Minimum Contract Unit of Measure
+	  */
+	public void setMinContract_UOM_ID (int MinContract_UOM_ID)
+	{
+		if (MinContract_UOM_ID < 1) 
+			set_Value (COLUMNNAME_MinContract_UOM_ID, null);
+		else 
+			set_Value (COLUMNNAME_MinContract_UOM_ID, Integer.valueOf(MinContract_UOM_ID));
+	}
+
+	/** Get Minimum Contract UOM.
+		@return Minimum Contract Unit of Measure
+	  */
+	public int getMinContract_UOM_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_MinContract_UOM_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 }
