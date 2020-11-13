@@ -6,11 +6,16 @@ import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.MInOut;
 import org.compiere.model.MInOutLine;
 import org.compiere.model.MOrder;
+import org.compiere.model.MSysConfig;
 import org.compiere.model.Query;
 import org.compiere.process.DocAction;
 import org.compiere.process.SvrProcess;
+import org.compiere.util.Env;
 import org.syvasoft.tallyfrontcrusher.model.TF_MInOut;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
+import org.syvasoft.tallyfrontcrusher.model.MDestination;
+import org.syvasoft.tallyfrontcrusher.model.MLumpSumRentConfig;
+import org.syvasoft.tallyfrontcrusher.model.MRentedVehicle;
 import org.syvasoft.tallyfrontcrusher.model.MWeighmentEntry;
 import org.syvasoft.tallyfrontcrusher.model.TF_MBPartner;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrderLine;
@@ -93,6 +98,58 @@ public class CreateShipmentForWE extends SvrProcess {
 				ioLine.saveEx(get_TrxName());
 			}
 			
+			
+			//Create Vehicle Rent Line for the Hired and Owned Vehicle
+			if(we.getTF_RentedVehicle() != null) {
+				MRentedVehicle rv = (MRentedVehicle) we.getTF_RentedVehicle();
+				if(rv.isOwnVehicle() || rv.isTransporter()) {
+					int Vendor_ID = rv.getC_BPartner_ID();
+					MDestination dest = new MDestination(getCtx(), we.getTF_Destination_ID(), get_TrxName());
+					BigDecimal RateMT = MLumpSumRentConfig.getRateMT(getCtx(), we.getAD_Org_ID(), Vendor_ID, we.getC_BPartner_ID(), we.getM_Product_ID(), 
+							we.getTF_Destination_ID(), we.getTF_VehicleType_ID(), dest.getDistance(), get_TrxName());
+					BigDecimal RateKM = MLumpSumRentConfig.getRateKm(getCtx(), we.getAD_Org_ID(), Vendor_ID, we.getC_BPartner_ID(), we.getM_Product_ID(), 
+							we.getTF_Destination_ID(), we.getTF_VehicleType_ID(), dest.getDistance(), get_TrxName());
+					BigDecimal RateMTKM = MLumpSumRentConfig.getRateMTKm(getCtx(), we.getAD_Org_ID(), Vendor_ID, we.getC_BPartner_ID(), we.getM_Product_ID(), 
+							we.getTF_Destination_ID(), we.getTF_VehicleType_ID(), dest.getDistance(), get_TrxName());
+					
+					int Rent_UOM_ID = 0;
+					BigDecimal qty = BigDecimal.ZERO;
+					BigDecimal price = BigDecimal.ZERO;
+					if(RateMT.doubleValue() > 0) {						
+						Rent_UOM_ID = MSysConfig.getIntValue("TONNAGE_UOM", 1000069, we.getAD_Client_ID());
+						qty = we.getNetWeightUnit();
+						price = RateMT;
+					}
+					else if(RateKM.doubleValue() > 0) {						
+						Rent_UOM_ID = MSysConfig.getIntValue("KM_UOM", 1000071, we.getAD_Client_ID());
+						qty = dest.getDistance();
+						price = RateKM;
+					}
+					else if(RateMTKM.doubleValue() > 0) {
+						//Currently the price is converted from RateMTKM to RateKM
+						//since two measurement cannot be shown as quantity. 
+						//It can be changed according to customer requirement to be shown as RateMT
+						Rent_UOM_ID = MSysConfig.getIntValue("KM_UOM", 1000071, we.getAD_Client_ID());
+						qty = dest.getDistance();
+						price = RateMTKM.multiply(we.getNetWeightUnit());
+					}
+					else {
+						Rent_UOM_ID = MSysConfig.getIntValue("LOAD_UOM", 1000072, we.getAD_Client_ID());
+						qty = BigDecimal.ONE;
+						price = MLumpSumRentConfig.getLumpSumRent(getCtx(),we.getAD_Org_ID(),Vendor_ID, we.getC_BPartner_ID(), we.getM_Product_ID(), 
+								we.getTF_Destination_ID(), we.getTF_VehicleType_ID(), dest.getDistance(), get_TrxName());
+					}
+					
+					ioLine = new MInOutLine(inout);
+					ioLine.setM_Product_ID(rv.getM_Product_ID());
+					ioLine.setC_UOM_ID(Rent_UOM_ID);
+					ioLine.setQty(qty);
+					ioLine.set_ValueOfColumn("Price", price);
+					ioLine.setM_Locator_ID(qty);
+					ioLine.setDescription("Destination : " + dest.getName());
+					ioLine.saveEx(get_TrxName());
+				}
+			}
 			
 			//Material Issue DocAction
 			if (!inout.processIt(DocAction.ACTION_Complete))
