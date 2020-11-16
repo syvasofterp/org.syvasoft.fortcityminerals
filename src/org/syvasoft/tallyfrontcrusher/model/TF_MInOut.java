@@ -74,7 +74,7 @@ public class TF_MInOut extends MInOut {
 			MWeighmentEntry we = new MWeighmentEntry(getCtx(), getTF_WeighmentEntry_ID(), get_TrxName());
 			if(we.getWeighmentEntryType().equals(MWeighmentEntry.WEIGHMENTENTRYTYPE_Sales) && isSOTrx())
 				we.reverseShipped();
-			else if(!isSOTrx())
+			else if(!we.getWeighmentEntryType().equals(MWeighmentEntry.WEIGHMENTENTRYTYPE_Sales) && !isSOTrx() )
 				we.reverseShipped();				
 			we.saveEx();
 		}
