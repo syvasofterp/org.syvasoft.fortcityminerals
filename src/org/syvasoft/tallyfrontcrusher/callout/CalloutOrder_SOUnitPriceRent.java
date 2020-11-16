@@ -90,6 +90,7 @@ public class CalloutOrder_SOUnitPriceRent implements IColumnCallout {
 						price = weighment.getPrice();
 				}
 				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Price, price);
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Amt, price.multiply(qty));
 			}
 		}
 		return null;
