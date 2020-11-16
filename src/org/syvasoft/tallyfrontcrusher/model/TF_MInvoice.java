@@ -7,6 +7,7 @@ import java.util.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -32,7 +33,7 @@ import org.compiere.process.DocAction;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
 
-public class TF_MInvoice<DateTime> extends MInvoice {
+public class TF_MInvoice extends MInvoice {
 
 	/**
 	 * 
@@ -515,8 +516,8 @@ public class TF_MInvoice<DateTime> extends MInvoice {
 	private void updateSubContractInvoice(TF_MProject proj)
 	{
 		
-		DateTime dateFrom = (DateTime)get_Value(COLUMNNAME_DateFrom);
-		DateTime dateTo = (DateTime)get_Value(COLUMNNAME_DateTo);
+		Timestamp dateFrom = (Timestamp)get_Value(COLUMNNAME_DateFrom);
+		Timestamp dateTo = (Timestamp)get_Value(COLUMNNAME_DateTo);
 		
 		// to get the business partner id (Quarry Subcontractor)
 		TF_MBPartner bp = new TF_MBPartner(getCtx(), proj.getC_BPartner_ID(), get_TrxName());

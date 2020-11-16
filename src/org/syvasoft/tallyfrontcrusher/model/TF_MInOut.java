@@ -70,9 +70,12 @@ public class TF_MInOut extends MInOut {
 	
 	@Override
 	public boolean reverseCorrectIt() {
-		if(getTF_WeighmentEntry_ID() >0) {
+		if(getTF_WeighmentEntry_ID() >0) {			
 			MWeighmentEntry we = new MWeighmentEntry(getCtx(), getTF_WeighmentEntry_ID(), get_TrxName());
-			we.reverseShipped();
+			if(we.getWeighmentEntryType().equals(MWeighmentEntry.WEIGHMENTENTRYTYPE_Sales) && isSOTrx())
+				we.reverseShipped();
+			else if(!isSOTrx())
+				we.reverseShipped();				
 			we.saveEx();
 		}
 		// TODO Auto-generated method stub

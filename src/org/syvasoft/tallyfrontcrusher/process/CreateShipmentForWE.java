@@ -115,7 +115,12 @@ public class CreateShipmentForWE extends SvrProcess {
 					int Rent_UOM_ID = 0;
 					BigDecimal qty = BigDecimal.ZERO;
 					BigDecimal price = BigDecimal.ZERO;
-					if(RateMT.doubleValue() > 0) {						
+					if(we.getRent_Amt().doubleValue() > 0) {
+						Rent_UOM_ID = MSysConfig.getIntValue("LOAD_UOM", 1000072, we.getAD_Client_ID());
+						qty = BigDecimal.ONE;
+						price = we.getRent_Amt();
+					}
+					else if(RateMT.doubleValue() > 0) {						
 						Rent_UOM_ID = MSysConfig.getIntValue("TONNAGE_UOM", 1000069, we.getAD_Client_ID());
 						qty = we.getNetWeightUnit();
 						price = RateMT;

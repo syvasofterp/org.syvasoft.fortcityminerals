@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Properties;
 
 import org.adempiere.exceptions.AdempiereException;
-import org.compiere.apps.form.PaySelect.BankInfo;
 import org.compiere.model.MBPartner;
 import org.compiere.model.MInOut;
 import org.compiere.model.MInOutLine;
@@ -24,7 +23,6 @@ import org.compiere.model.MResource;
 import org.compiere.model.MSysConfig;
 import org.compiere.model.MTable;
 import org.compiere.model.MTax;
-import org.compiere.model.MUOM;
 import org.compiere.model.MUOMConversion;
 import org.compiere.model.MUser;
 import org.compiere.model.MWarehouse;
@@ -2142,7 +2140,13 @@ public class TF_MOrder extends MOrder {
 		String msg = super.completeIt();
 		purchasePermit();
 		issuePermit();
-		createTransporterInvoice();
+		boolean createTransportInvoice = MSysConfig.getBooleanValue("CONSOLIDATED_TRANSPORT_INVOICE_ENABLED", true , getAD_Client_ID(), getAD_Org_ID());
+		
+		if(!createTransportInvoice)
+			createTransporterInvoice();
+		else
+			createTransportMaterialReceipt();
+		
 		createAdditionalInvoice();
 		closeWeighmentEntry();
 		closeTokenNo();
@@ -2238,6 +2242,7 @@ public class TF_MOrder extends MOrder {
 		
 		MJobworkItemIssue.ReverseFromPO(this);
 		reverseTransporterInvoice();
+		reverseTransportMaterialReceipt();
 		reverseWeighmentEntry();
 		reverseTokenNo();
 		reverseYardEntry();
@@ -2427,7 +2432,8 @@ public class TF_MOrder extends MOrder {
 			invLine.setPriceLimit(price);
 			invLine.setPriceEntered(price);
 			hdrDescription = hdrDescription + ", Tonnage : " + getTonnage().doubleValue();
-		}		
+		}
+		invLine.saveEx();
 		invoice.saveEx();
 		
 		//DocAction
@@ -3334,7 +3340,109 @@ public class TF_MOrder extends MOrder {
 			we.saveEx();
 		}
 		
-		String sqlUpdate = "UPDATE M_InOut SET C_Order_ID = NULL WHERE C_Order_ID = ?";
+		String sqlUpdate = "UPDATE M_InOut SET C_Order_ID = NULL WHERE C_Order_ID = " + getC_Order_ID();
 		DB.executeUpdate(sqlUpdate, get_TrxName());
+	}
+	
+	public void createTransportMaterialReceipt() {
+		if(getTF_RentedVehicle_ID() == 0)
+			return;
+		
+		MRentedVehicle rv = new MRentedVehicle(getCtx(), getTF_RentedVehicle_ID(), get_TrxName());
+		if(rv.isOwnVehicle() || !rv.isTransporter())
+			return;
+				
+		MDestination dest = new MDestination(getCtx(), getTF_Destination_ID(), get_TrxName());
+		TF_MBPartner bp = new TF_MBPartner(getCtx(), rv.getC_BPartner_ID(), get_TrxName());
+		
+		TF_MInOut inout = new TF_MInOut(getCtx(), 0, get_TrxName());
+		inout.setTF_WeighmentEntry_ID(getTF_WeighmentEntry_ID());		
+		
+		inout.setC_DocType_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getMaterialReceipt_DocType_ID());
+		inout.setMovementType(MInOut.MOVEMENTTYPE_VendorReceipts);
+		inout.setDateAcct(getDateAcct());		
+		inout.setC_BPartner_ID(rv.getC_BPartner_ID());
+		inout.setC_BPartner_Location_ID(bp.getPrimaryC_BPartner_Location_ID());
+		inout.setAD_User_ID(bp.getAD_User_ID());
+		inout.setM_Warehouse_ID(getM_Warehouse_ID());
+		inout.setPriorityRule(TF_MInOut.PRIORITYRULE_Medium);
+		inout.setFreightCostRule(TF_MInOut.FREIGHTCOSTRULE_FreightIncluded);
+		inout.saveEx(get_TrxName());
+		
+		//Material Receipt Line
+		MInOutLine ioLine = new MInOutLine(inout);
+		MWarehouse wh = (MWarehouse) getM_Warehouse();
+		
+		ioLine.setLine(10);
+		ioLine.setM_Product_ID(rv.getM_Product_ID());
+		ioLine.setM_Locator_ID(wh.getDefaultLocator().get_ID());
+		
+		
+		int Rent_UOM_ID = 0;
+		BigDecimal qty = BigDecimal.ZERO;
+		BigDecimal price = BigDecimal.ZERO;		
+					
+		//Setting correct UOM for Vehicle Rent
+		if(!isLumpSumRent() && 
+				getRate().multiply(getTonnage()).multiply(getDistance()).doubleValue() == getRent_Amt().doubleValue()) {
+			qty = getDistance();
+			price = getRate().multiply(getTonnage());			
+			if(isSOTrx()) {
+				price = getRentPayable().divide(getDistance(), 2, RoundingMode.HALF_UP);
+				//rate = price.divide(getTonnage(), 2, RoundingMode.HALF_UP);
+			}
+			Rent_UOM_ID = MSysConfig.getIntValue("KM_UOM", 1000071, getAD_Client_ID());		
+			
+		}
+		else if(getRate().multiply(getTonnage()).doubleValue() == getRent_Amt().doubleValue() ) {
+			Rent_UOM_ID = MSysConfig.getIntValue("TONNAGE_UOM", 1000069, getAD_Client_ID());			
+			qty = getTonnage();
+			price = getRate();
+			if(isSOTrx()) {
+				price = getRentPayable().divide(getTonnage(), 2, RoundingMode.HALF_EVEN);
+			}			
+		}
+		else if(getRate().multiply(getDistance()).doubleValue() == getRent_Amt().doubleValue() ) {
+			Rent_UOM_ID = MSysConfig.getIntValue("KM_UOM", 1000071, getAD_Client_ID());			
+			qty = getDistance();
+			price = getRate();
+			if(isSOTrx()) {
+				price = getRentPayable().divide(getTonnage(), 2, RoundingMode.HALF_EVEN);
+			}			
+			//hdrDescription = hdrDescription + ", Tonnage : " + getTonnage().doubleValue();
+		}
+		else {
+			Rent_UOM_ID = MSysConfig.getIntValue("LOAD_UOM", 1000072, getAD_Client_ID());			
+			qty = BigDecimal.ONE;
+			price = getRent_Amt();
+			if(isSOTrx()) {
+				price = getRentPayable();
+			}			
+		}
+		
+		ioLine.setQty(qty);
+		ioLine.setC_UOM_ID(Rent_UOM_ID);
+		ioLine.set_ValueOfColumn("Price", price);
+		ioLine.setDescription("Destination : " + dest.getName());		
+		ioLine.saveEx(get_TrxName());
+		
+		//Material Receipt DocAction
+		if (!inout.processIt(DocAction.ACTION_Complete))
+			throw new AdempiereException("Failed when processing document - " + inout.getProcessMsg());
+		
+		inout.saveEx();
+	}
+	
+	public void reverseTransportMaterialReceipt() {
+		String whereClause = "TF_WeighmentEntry_ID = ? AND MovementType = ? AND DocStatus = 'CO'";
+		List<TF_MInOut> list = new Query(getCtx(), TF_MInOut.Table_Name, whereClause, get_TrxName())
+				.setClient_ID()
+				.setParameters(getTF_WeighmentEntry_ID(), MInOut.MOVEMENTTYPE_VendorReceipts)
+				.list();
+		for(TF_MInOut io : list) {
+			if(io.getDocStatus().equals(DOCSTATUS_Completed))
+				io.reverseCorrectIt();
+			io.saveEx();
+		}
 	}
 }
