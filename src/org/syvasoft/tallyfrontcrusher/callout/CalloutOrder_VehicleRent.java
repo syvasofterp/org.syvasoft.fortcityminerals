@@ -63,7 +63,11 @@ public class CalloutOrder_VehicleRent implements IColumnCallout {
 			BigDecimal RateMT = MLumpSumRentConfig.getRateMT(ctx, AD_Org_ID, Vendor_ID, C_BPartner_ID, M_Product_ID, TF_Destination_ID, TF_VehicleType_ID, Distance, null);
 			BigDecimal RateKM = MLumpSumRentConfig.getRateKm(ctx, AD_Org_ID, Vendor_ID, C_BPartner_ID, M_Product_ID, TF_Destination_ID, TF_VehicleType_ID, Distance, null);
 			BigDecimal RateMTKM = MLumpSumRentConfig.getRateMTKm(ctx, AD_Org_ID, Vendor_ID, C_BPartner_ID, M_Product_ID, TF_Destination_ID, TF_VehicleType_ID, Distance, null);
-			int TF_WeighmentEntry_ID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_TF_WeighmentEntry_ID);
+			
+			int TF_WeighmentEntry_ID = 0; 
+			if(mTab.getValue(TF_MOrder.COLUMNNAME_TF_WeighmentEntry_ID) != null)
+				TF_WeighmentEntry_ID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_TF_WeighmentEntry_ID);
+			
 			MWeighmentEntry we = new MWeighmentEntry(ctx, TF_WeighmentEntry_ID, null);
 			int Rent_UOM_ID = 0;
 			

@@ -1727,6 +1727,31 @@ public class TF_MOrder extends MOrder {
 		return false;
 	}
 	
+    /** Column name IsRoyaltyPassBreakup */
+    public static final String COLUMNNAME_IsRoyaltyPassBreakup = "IsRoyaltyPassBreakup";
+    
+	/** Set Show Royalty Pass Breakup.
+	@param IsRoyaltyPassBreakup Show Royalty Pass Breakup	  */
+	public void setIsRoyaltyPassBreakup (boolean IsRoyaltyPassBreakup)
+	{
+		set_Value (COLUMNNAME_IsRoyaltyPassBreakup, Boolean.valueOf(IsRoyaltyPassBreakup));
+	}
+	
+	/** Get Show Royalty Pass Breakup.
+		@return Show Royalty Pass Breakup	  */
+	public boolean isRoyaltyPassBreakup () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsRoyaltyPassBreakup);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
 		success = super.afterSave(newRecord, success);
@@ -1902,7 +1927,7 @@ public class TF_MOrder extends MOrder {
 				|| is_ValueChanged(COLUMNNAME_Item2_Price) || getItem2_C_OrderLine_ID() == 0)) {
 			
 			//do not create Royalty Pass Invoice Line when the Royalty Pass Inclusive in the material price
-			if(isRoyaltyPassInclusive() && getItem2_ID() == MSysConfig.getIntValue("ROYALTY_PASS_PRODUCT_ID", 1000329, getAD_Client_ID(), getAD_Org_ID()))
+			if(!isRoyaltyPassBreakup() && getItem2_ID() == MSysConfig.getIntValue("ROYALTY_PASS_PRODUCT_ID", 1000329, getAD_Client_ID(), getAD_Org_ID()))
 				return;
 			
 			if(getItem2_C_OrderLine_ID() > 0)
@@ -2041,10 +2066,6 @@ public class TF_MOrder extends MOrder {
 				qty = getDistance();
 				price = getRate().multiply(getTonnage());
 				BigDecimal rate = getRate();
-				if(isSOTrx()) {
-					price = getRentPayable().divide(getDistance(), 2, RoundingMode.HALF_UP);
-					rate = price.divide(getTonnage(), 2, RoundingMode.HALF_UP);
-				}
 				load_uom_id  = MSysConfig.getIntValue("KM_UOM", 1000071, getAD_Client_ID());
 				
 				desc = "Tonnage : " + getTonnage().doubleValue()
@@ -2053,30 +2074,21 @@ public class TF_MOrder extends MOrder {
 			else if(getRate().multiply(getTonnage()).doubleValue() == getRent_Amt().doubleValue() ) {
 				load_uom_id = MSysConfig.getIntValue("TONNAGE_UOM", 1000069, getAD_Client_ID());
 				qty = getTonnage();
-				price = getRate();
-				if(isSOTrx()) {
-					price = getRentPayable().divide(getTonnage(), 2, RoundingMode.HALF_EVEN);
-				}				
+				price = getRate();				
 				//hdrDescription = hdrDescription + ", Tonnage : " + getTonnage().doubleValue();
 			}
 			else if(getRate().multiply(getDistance()).doubleValue() == getRent_Amt().doubleValue() ) {
 				load_uom_id = MSysConfig.getIntValue("KM_UOM", 1000071, getAD_Client_ID());
 				
 				qty = getDistance();
-				price = getRate();
-				if(isSOTrx()) {
-					price = getRentPayable().divide(getTonnage(), 2, RoundingMode.HALF_EVEN);
-				}				
+				price = getRate();				
 				//hdrDescription = hdrDescription + ", Tonnage : " + getTonnage().doubleValue();
 			}
 			else {
 				load_uom_id = MSysConfig.getIntValue("LOAD_UOM", 1000072, getAD_Client_ID());
 				
 				qty = BigDecimal.ONE;
-				price = getRent_Amt();
-				if(isSOTrx()) {
-					price = getRentPayable();
-				}				
+				price = getRent_Amt();				
 				desc = "Tonnage : " + getTonnage().doubleValue();
 			}		
 			

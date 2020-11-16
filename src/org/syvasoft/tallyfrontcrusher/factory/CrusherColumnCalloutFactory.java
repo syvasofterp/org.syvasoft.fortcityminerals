@@ -388,7 +388,8 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		if(tableName.equals(TF_MOrder.Table_Name) && (columnName.equals(TF_MOrder.COLUMNNAME_IsRentBreakup)
 				|| columnName.equals(TF_MOrder.COLUMNNAME_Item1_UnitPrice)
 				|| columnName.equals(TF_MOrder.COLUMNNAME_IsRentInclusive)
-				|| columnName.equals(TF_MOrder.COLUMNNAME_IsRoyaltyPassInclusive) ) ) {
+				|| columnName.equals(TF_MOrder.COLUMNNAME_IsRoyaltyPassInclusive)
+				|| columnName.equals(TF_MOrder.COLUMNNAME_IsRoyaltyPassBreakup)) ) {
 			list.add(new CalloutOrder_SOUnitPriceRent());
 		}
 		

@@ -69,11 +69,17 @@ public class CalloutOrder_SOUnitPriceRent implements IColumnCallout {
 					RoyaltyPassUnitPrice = RoyaltyPassAmount.divide(qty,2,RoundingMode.HALF_UP);
 				
 				boolean isRoyaltyPassInclusive = mTab.getValueAsBoolean(TF_MOrder.COLUMNNAME_IsRoyaltyPassInclusive);
-				 
+				boolean isRoyaltyPassBreakup = mTab.getValueAsBoolean(TF_MOrder.COLUMNNAME_IsRoyaltyPassBreakup);
+				
 				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_PassUnitPrice, RoyaltyPassUnitPrice);
 				
 				if(isRoyaltyPassInclusive) {
-					price = price.add(RoyaltyPassUnitPrice);
+					if(isRoyaltyPassBreakup)
+						price = price.subtract(RoyaltyPassUnitPrice);					
+				}
+				else {					
+					if(!isRoyaltyPassBreakup)
+						price = price.add(RoyaltyPassUnitPrice);										
 				}
 			
 			}
@@ -90,7 +96,7 @@ public class CalloutOrder_SOUnitPriceRent implements IColumnCallout {
 						price = weighment.getPrice();
 				}
 				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Price, price);
-				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Amt, price.multiply(qty));
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_Amt, price.multiply(qty).setScale(2, RoundingMode.HALF_EVEN));
 			}
 		}
 		return null;
