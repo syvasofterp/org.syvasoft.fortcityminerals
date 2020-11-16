@@ -2252,20 +2252,22 @@ public class TF_MOrder extends MOrder {
 			dr.saveEx();
 		}
 		
-		MJobworkItemIssue.ReverseFromPO(this);
-		reverseTransporterInvoice();
-		reverseTransportMaterialReceipt();
-		reverseWeighmentEntry();
-		reverseTokenNo();
-		reverseYardEntry();
-		reverseSubcontractPurchaseEntry();
-		reverseIssuedPermit();
-		reversePurchasedPermit();
-		reverseCrusherProduction();
-		voidTaxInvoice();
-		voidTR_TaxInvoice();
-		reverseAdditionalTransactions();
-		reverseConsolidateInvoice();
+		if(getDocStatus().equals(DOCSTATUS_Completed)) {
+			MJobworkItemIssue.ReverseFromPO(this);		
+			reverseTransporterInvoice();
+			reverseTransportMaterialReceipt();		
+			reverseWeighmentEntry();		
+			reverseTokenNo();
+			reverseYardEntry();
+			reverseSubcontractPurchaseEntry();
+			reverseIssuedPermit();
+			reversePurchasedPermit();
+			reverseCrusherProduction();
+			voidTaxInvoice();
+			voidTR_TaxInvoice();
+			reverseAdditionalTransactions();
+			reverseConsolidateInvoice();
+		}
 		return super.voidIt();
 	}
 	
