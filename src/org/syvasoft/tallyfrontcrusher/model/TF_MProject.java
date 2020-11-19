@@ -318,7 +318,12 @@ public class TF_MProject extends MProject {
 		@return Subcontract Type	  */
 	public String getSubcontractType () 
 	{
-		return (String)get_Value(COLUMNNAME_SubcontractType);
+		String stype = (String)get_Value(COLUMNNAME_SubcontractType);		
+		if(stype == null) {
+			MSubcontractType st = new MSubcontractType(getCtx(), getTF_SubcontractType_ID(), get_TrxName());
+			stype = st.getSubcontractType();
+		}
+		return stype;		
 	}
 
 	/** Column name M_Warehouse_ID */
