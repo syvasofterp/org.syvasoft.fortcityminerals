@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.adempiere.exceptions.AdempiereException;
+import org.adempiere.exceptions.ProductNotOnPriceListException;
 import org.compiere.model.MBPartner;
 import org.compiere.model.MInOut;
 import org.compiere.model.MInOutLine;
@@ -2206,9 +2207,7 @@ public class TF_MOrder extends MOrder {
 	public boolean voidIt() {
 		
 		//POS Order's MR and Invoice should be reversed.
-		if(getC_DocType_ID() == 1000050 || getC_DocType_ID() == 1000041
-				|| getC_DocType_ID() == TF_MOrder.GSTOrderDocType_ID(getCtx())
-				|| getC_DocType_ID() == TF_MOrder.NonGSTOrderDocType_ID(getCtx())) {
+		if(getC_DocType_ID() == 1000050 || getC_DocType_ID() == 1000041) {
 			//MR/Shipment reverse Correct
 			List<MInOut> inOutList = new Query(getCtx(), MInOut.Table_Name, "C_Order_ID=? AND DocStatus=?", get_TrxName())
 				.setClient_ID().setParameters(getC_Order_ID(),DOCSTATUS_Completed).list();
@@ -2566,10 +2565,13 @@ public class TF_MOrder extends MOrder {
 		sql = " SELECT Count(*) FROM M_ProductPrice WHERE M_PriceList_Version_ID =? AND M_Product_ID =? AND IsActive='Y'";
 		BigDecimal count = DB.getSQLValueBD(null, sql, M_PriceList_Version_ID,M_Product_ID);
 		if(count == null || count.doubleValue() == 0) {
-			prodPrice = new MProductPrice(Env.getCtx(), M_PriceList_Version_ID, M_Product_ID, null);			
-			prodPrice.setPrices(price, price, price);		
-			prodPrice.saveEx();	
+			prodPrice = new MProductPrice(Env.getCtx(), M_PriceList_Version_ID, M_Product_ID, null);
 		}
+		else {
+			prodPrice = MProductPrice.get(Env.getCtx(), M_PriceList_Version_ID, M_Product_ID, null);
+		}
+		prodPrice.setPrices(price, price, price);		
+		prodPrice.saveEx();
 		return prodPrice;
 	}
 	
@@ -3273,7 +3275,8 @@ public class TF_MOrder extends MOrder {
 		
 		MWeighmentEntry weighment = new MWeighmentEntry(getCtx(), getTF_WeighmentEntry_ID(), get_TrxName());
 		
-		if(getC_DocTypeTarget_ID() != weighment.getC_DocType_ID())
+		if(getC_DocTypeTarget_ID() != TF_MOrder.GSTOrderDocType_ID(getCtx()) &&
+				getC_DocTypeTarget_ID() != TF_MOrder.NonGSTOrderDocType_ID(getCtx()))
 			return;
 		
 		//Invoice Header
@@ -3319,6 +3322,9 @@ public class TF_MOrder extends MOrder {
 			invLine.setC_Tax_ID(oLine.getC_Tax_ID());
 			invLine.setDescription(oLine.getDescription());
 			invLine.setC_Project_ID(getC_Project_ID());
+			if(oLine.getPriceEntered().doubleValue() == 0) {
+				throw new AdempiereException("Invalid Price at Line: " + oLine.getLine() + " for Product Name : " + oLine.getM_Product().getName());
+			}
 			if(weighment.getM_Product_ID() == oLine.getM_Product_ID()) {
 				invLine.setM_InOutLine_ID(weighment.getM_InOutLine_ID());
 			}
@@ -3332,6 +3338,9 @@ public class TF_MOrder extends MOrder {
 	}
 	
 	public void completeWeighmentEntriesForConsolidateInvoice() {
+		if(getTF_WeighmentEntry_ID() > 0)
+			return;
+		
 		String whereClause = " TF_WeighmentEntry_ID IN (SELECT i.TF_WeighmentEntry_ID FROM M_InOut i WHERE i.C_Order_ID = ? ) AND Processed = 'Y' AND Status='CO'";
 		List<MWeighmentEntry> wEntries = new Query(getCtx(), MWeighmentEntry.Table_Name, whereClause, get_TrxName())
 				.setClient_ID()
@@ -3343,8 +3352,11 @@ public class TF_MOrder extends MOrder {
 		}
 	}
 
-	public void reverseConsolidateInvoice() {
-		String whereClause = " TF_WeighmentEntry_ID IN (SELECT i.TF_WeighmentEntry_ID FROM M_InOut i WHERE i.C_Order_ID = ? ) AND Processed = 'Y' AND Status='CO'";
+	public void reverseConsolidateInvoice() {	
+		if(getTF_WeighmentEntry_ID() > 0)
+			return;
+		
+		String whereClause = " TF_WeighmentEntry_ID IN (SELECT i.TF_WeighmentEntry_ID FROM M_InOut i WHERE i.C_Order_ID = ? ) AND Processed = 'Y' AND Status='CL'";
 		List<MWeighmentEntry> wEntries = new Query(getCtx(), MWeighmentEntry.Table_Name, whereClause, get_TrxName())
 				.setClient_ID()
 				.setParameters(getC_Order_ID())

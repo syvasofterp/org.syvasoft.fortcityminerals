@@ -15,6 +15,7 @@ import org.compiere.process.SvrProcess;
 import org.compiere.util.DB;
 import org.syvasoft.tallyfrontcrusher.model.MPriceListUOM;
 import org.syvasoft.tallyfrontcrusher.model.MRentedVehicle;
+import org.syvasoft.tallyfrontcrusher.model.TF_MInOut;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrderLine;
 import org.syvasoft.tallyfrontcrusher.model.TF_MProduct;
@@ -46,14 +47,14 @@ public class CreateConsolidateCustomerOrderLines extends SvrProcess {
 	@Override
 	protected String doIt() throws Exception {
 		
-		String sqlUpate = "UPDATE M_Inout io SET C_Order_ID = ? WHERE io.AD_Org_ID = ? AND C_DocType_ID = ? AND io.C_BPartner_ID = ? "
-				+ " AND io.Docstatus IN ('CO','CL') AND IsSOTrx='Y' "  
-				+ "	io.MovementDate >= ? AND io.MovementDate <= ? AND C_Order_ID IS NULL";
+		String sqlUpate = "UPDATE M_Inout SET C_Order_ID = ? WHERE AD_Org_ID = ? AND C_DocType_ID = ? AND C_BPartner_ID = ? "
+				+ " AND Docstatus IN ('CO','CL') AND IsSOTrx='Y' "  
+				+ "	AND MovementDate >= ? AND MovementDate <= ? AND C_Order_ID IS NULL";
 		ArrayList<Object> params = new ArrayList<Object>();
 		params.add(ord.getC_Order_ID());
 		params.add(ord.getAD_Org_ID());
 		params.add(ord.getC_DocTypeTarget().getC_DocTypeShipment_ID());
-		params.add(ord.getC_BPartner_ID());
+		params.add(ord.getC_BPartner_ID());		
 		params.add(dateFrom);
 		params.add(dateTo);
 		DB.executeUpdateEx(sqlUpate, params.toArray(), get_TrxName());
@@ -61,10 +62,13 @@ public class CreateConsolidateCustomerOrderLines extends SvrProcess {
 		int RoyaltyPassProduct_ID = MSysConfig.getIntValue("ROYALTY_PASS_PRODUCT_ID", 1000329, getAD_Client_ID(), ord.getAD_Org_ID());
 		
 		 //Excluding Royalty Pass Shipment Line because Royalty Pass price is already included in the Material Price
-		String sql = "SELECT M_Product_ID, C_UOM_ID, SUM(MovementQty) qtyShipped, ioLine.Price, ioLine.Description FROM "
+		String sql = "SELECT MAX(p.Name) ProductName, ioLine.M_Product_ID, ioLIne.C_UOM_ID, SUM(MovementQty) qtyShipped, ioLine.Price, ioLine.Description  FROM "
 				+ " M_InOut io INNER JOIN M_InOutLine ioLine ON io.M_InOut_ID = ioLine.M_InOut_ID "
-				+ " WHERE io.C_Order_ID = ? AND ioLine.M_Product_ID != ? "
-				+ " GROUP BY M_Product_ID, C_UOM_ID, ioLine.Price ioLine.Description ";
+				+ " INNER JOIN M_Product p ON ioLine.M_Product_ID = p.M_Product_ID "
+				+ " WHERE io.C_Order_ID = ? AND ioLine.M_Product_ID != ? AND " 
+				+ "	io.DocStatus = 'CO' AND io.IsSOTrx='Y' "
+				+ " GROUP BY ioLine.M_Product_ID, ioLine.C_UOM_ID, ioLine.Price, ioLine.Description "
+				+ " ORDER BY C_UOM_ID, ProductName";
 		
 		PreparedStatement pstmt =  null;
 		ResultSet rs = null;
@@ -86,9 +90,9 @@ public class CreateConsolidateCustomerOrderLines extends SvrProcess {
 				boolean isVehicle = MRentedVehicle.get(getCtx(), M_Product_ID, get_TrxName()) != null;
 				
 				TF_MOrderLine ordLine = new TF_MOrderLine(ord);
-				ordLine.setM_Product_ID(M_Product_ID, C_UOM_ID);				
-				ordLine.setQty(qtyShipped);				
-				
+				ordLine.setM_Product_ID(M_Product_ID, true);
+				ordLine.setC_UOM_ID(C_UOM_ID);								
+				ordLine.setQty(qtyShipped);
 				if(!isVehicle) {
 					// create order line
 					//the Credit Customer material price always include Royalty Pass amount

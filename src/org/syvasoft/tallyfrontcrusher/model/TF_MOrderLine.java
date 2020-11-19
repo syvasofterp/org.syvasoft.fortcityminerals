@@ -216,9 +216,13 @@ public class TF_MOrderLine extends MOrderLine {
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
 		setQtyReserved(BigDecimal.ZERO);
+		//everytime price list price will be updated with current price
 		TF_MOrder.addProductPricingIfNot(getM_Product_ID(), getC_Order().getM_PriceList_ID(), getC_BPartner_ID(), 
 				getQtyEntered(), getPriceEntered(), getC_Order().getDateOrdered(), getC_Order().isSOTrx());
-		return super.beforeSave(newRecord);
+		int C_UOM_ID = getC_UOM_ID();		
+		boolean success = super.beforeSave(newRecord);
+		setC_UOM_ID(C_UOM_ID);
+		return success;
 	}
 
 	@Override

@@ -3,8 +3,13 @@ package org.syvasoft.tallyfrontcrusher.model;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.Properties;
+
+import org.compiere.model.MDocType;
 import org.compiere.model.MInOut;
 import org.compiere.model.MOrder;
+import org.compiere.model.MRMA;
+import org.compiere.model.MWarehouse;
+import org.compiere.util.Msg;
 
 
 public class TF_MInOut extends MInOut {
@@ -55,8 +60,7 @@ public class TF_MInOut extends MInOut {
 			 return 0;
 		return ii.intValue();
 	}
-	
-	
+
 	@Override
 	public String completeIt() {
 		if(getTF_WeighmentEntry_ID() > 0) {
