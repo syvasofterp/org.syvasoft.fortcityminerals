@@ -261,6 +261,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return MDrillingEntry.class;
 		else if(TF_MInOut.Table_Name.equals(tableName))			
 			return TF_MInOut.class;
+		else if(TF_MInOutLine.Table_Name.equals(tableName))			
+			return TF_MInOutLine.class;
 		return null;
 	}
 
@@ -515,6 +517,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MDrillingEntry(ctx, Record_ID, trxName);
 		else if(TF_MInOut.Table_Name.equals(tableName))			
 			return new TF_MInOut(ctx, Record_ID, trxName);
+		else if(TF_MInOutLine.Table_Name.equals(tableName))			
+			return new TF_MInOutLine(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -771,6 +775,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MDrillingEntry(ctx, rs, trxName);
 		else if(TF_MInOut.Table_Name.equals(tableName))			
 			return new TF_MInOut(ctx, rs, trxName);
+		else if(TF_MInOutLine.Table_Name.equals(tableName))			
+			return new TF_MInOutLine(ctx, rs, trxName);
 		return null;
 	}
 

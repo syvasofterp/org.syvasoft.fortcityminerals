@@ -1162,4 +1162,30 @@ public class X_TF_GLPosting_Config extends PO implements I_TF_GLPosting_Config, 
 			 return 0;
 		return ii.intValue();
 	}
+	
+	public org.compiere.model.I_C_DocType getMaterialReceipt_DocType() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_DocType)MTable.get(getCtx(), org.compiere.model.I_C_DocType.Table_Name)
+			.getPO(getMaterialReceipt_DocType_ID(), get_TrxName());	}
+
+	/** Set Material Receipt Doc Type.
+		@param MaterialReceipt_DocType_ID Material Receipt Doc Type	  */
+	public void setMaterialReceipt_DocType_ID (int MaterialReceipt_DocType_ID)
+	{
+		if (MaterialReceipt_DocType_ID < 1) 
+			set_Value (COLUMNNAME_MaterialReceipt_DocType_ID, null);
+		else 
+			set_Value (COLUMNNAME_MaterialReceipt_DocType_ID, Integer.valueOf(MaterialReceipt_DocType_ID));
+	}
+
+	/** Get Material Receipt Doc Type.
+		@return Material Receipt Doc Type	  */
+	public int getMaterialReceipt_DocType_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_MaterialReceipt_DocType_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 }

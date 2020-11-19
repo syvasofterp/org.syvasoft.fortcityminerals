@@ -114,5 +114,13 @@ public class MRentedVehicle extends X_TF_RentedVehicle {
 	}
 	
 	
+	public static MRentedVehicle get(Properties ctx, int M_Product_ID, String trxName) {
+		String whereClause = "M_Product_ID = ?";
+		MRentedVehicle rv = new Query(ctx, MRentedVehicle.Table_Name, whereClause, trxName)
+				.setClient_ID()
+				.setParameters(M_Product_ID)
+				.first();
+		return rv;
+	}
 
 }

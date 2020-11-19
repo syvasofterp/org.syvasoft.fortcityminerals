@@ -616,4 +616,7 @@ public interface I_TF_GLPosting_Config
 	public int getWagePayableAcct_ID();
 
 	public org.compiere.model.I_C_ElementValue getWagePayableAcct() throws RuntimeException;
+	
+	/** Column name MaterialReceipt_DocType_ID */
+    public static final String COLUMNNAME_MaterialReceipt_DocType_ID = "MaterialReceipt_DocType_ID";
 }

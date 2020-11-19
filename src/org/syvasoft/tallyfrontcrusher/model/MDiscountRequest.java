@@ -53,11 +53,11 @@ public class MDiscountRequest extends X_TF_DiscountRequest {
 	protected boolean afterSave(boolean newRecord, boolean success) {
 		try {
 			if(DISCNTSTATUS_Requested.equals(getDiscntStatus()) && newRecord) {
-				sendEmailforDiscountRequest();
+				//sendEmailforDiscountRequest();
 			}
 			else if(!newRecord && DISCNTSTATUS_Approved.equals(getDiscntStatus()) 
 					&& is_ValueChanged(COLUMNNAME_DiscntStatus)) {
-				sendEmailforDiscountApproved();
+				//sendEmailforDiscountApproved();
 			}
 		}
 		catch (Exception ex) {

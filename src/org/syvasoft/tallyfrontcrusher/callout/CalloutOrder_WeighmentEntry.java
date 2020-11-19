@@ -144,8 +144,12 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 			else
 				mTab.setValue(TF_MOrder.COLUMNNAME_Description, null);
 			
-			if(weighment.getPaymentRule() != null)
+			if(weighment.getPaymentRule() != null) {
 				mTab.setValue(TF_MOrder.COLUMNNAME_PaymentRule, weighment.getPaymentRule());
+				boolean isRoyaltyPassInclusive = !weighment.getPaymentRule().equals(MWeighmentEntry.PAYMENTRULE_Cash);
+				mTab.setValue(TF_MOrder.COLUMNNAME_IsRoyaltyPassInclusive, isRoyaltyPassInclusive);
+					
+			}
 									
 			mTab.setValue(TF_MOrder.COLUMNNAME_VehicleNo, weighment.getVehicleNo());
 			
