@@ -7,6 +7,7 @@ import java.util.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -32,7 +33,7 @@ import org.compiere.process.DocAction;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
 
-public class TF_MInvoice<DateTime> extends MInvoice {
+public class TF_MInvoice extends MInvoice {
 
 	/**
 	 * 
@@ -506,8 +507,8 @@ public class TF_MInvoice<DateTime> extends MInvoice {
 	}
 
 	private void reverseCPInvoice() {
-		DateTime dateFrom = (DateTime) get_Value(COLUMNNAME_DateFrom);
-		DateTime dateTo = (DateTime) get_Value(COLUMNNAME_DateTo);
+		Timestamp dateFrom = (Timestamp) get_Value(COLUMNNAME_DateFrom);
+		Timestamp dateTo = (Timestamp) get_Value(COLUMNNAME_DateTo);
 		String sql = "UPDATE TF_Boulder_Receipt SET CP_Invoice_ID = NULL WHERE DateReceipt >= ? AND DateReceipt <= ?";
 		ArrayList<Object> params = new ArrayList<Object>();
 		params.add(dateFrom);
@@ -516,8 +517,8 @@ public class TF_MInvoice<DateTime> extends MInvoice {
 	}
 
 	private void updateCPInvoice(TF_MProject proj) {
-		DateTime dateFrom = (DateTime) get_Value(COLUMNNAME_DateFrom);
-		DateTime dateTo = (DateTime) get_Value(COLUMNNAME_DateTo);
+		Timestamp dateFrom = (Timestamp) get_Value(COLUMNNAME_DateFrom);
+		Timestamp dateTo = (Timestamp) get_Value(COLUMNNAME_DateTo);
 		TF_MBPartner bp = new TF_MBPartner(getCtx(), proj.getC_BPartner_ID(), get_TrxName());
 		// to update the boulder recivept subcontract query
 		String sql = " UPDATE TF_Boulder_Receipt SET CP_Invoice_ID  = ? WHERE CP_Invoice_ID IS NULL"
@@ -531,8 +532,8 @@ public class TF_MInvoice<DateTime> extends MInvoice {
 
 	private void updateSubContractInvoice(TF_MProject proj) {
 
-		DateTime dateFrom = (DateTime) get_Value(COLUMNNAME_DateFrom);
-		DateTime dateTo = (DateTime) get_Value(COLUMNNAME_DateTo);
+		Timestamp dateFrom = (Timestamp) get_Value(COLUMNNAME_DateFrom);
+		Timestamp dateTo = (Timestamp) get_Value(COLUMNNAME_DateTo);
 		if (!dateFrom.equals(null) && !dateTo.equals(null))
 			return;
 
