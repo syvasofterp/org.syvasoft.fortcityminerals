@@ -519,7 +519,7 @@ public class TF_MInvoice extends MInvoice {
 	private void updateCPInvoice(TF_MProject proj) {
 		Timestamp dateFrom = (Timestamp) get_Value(COLUMNNAME_DateFrom);
 		Timestamp dateTo = (Timestamp) get_Value(COLUMNNAME_DateTo);
-		TF_MBPartner bp = new TF_MBPartner(getCtx(), proj.getC_BPartner_ID(), get_TrxName());
+		
 		// to update the boulder recivept subcontract query
 		String sql = " UPDATE TF_Boulder_Receipt SET CP_Invoice_ID  = ? WHERE CP_Invoice_ID IS NULL"
 				+ " AND DocStatus='CO' AND DateReceipt >= ? AND DateReceipt <= ?";

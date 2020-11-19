@@ -2008,10 +2008,10 @@ public class TF_MOrder extends MOrder {
 	}
 
 	public void updateRentedVehicleRentLine() {
-		MOrderLine ordLine = null;
+		TF_MOrderLine ordLine = null;
 		//Delete empty item lines
 		if(!isRentBreakup() || is_ValueChanged(COLUMNNAME_TF_RentedVehicle_ID) || (getTF_RentedVehicle_ID() == 0 && getVehicle_C_OrderLine_ID() > 0)) {
-			ordLine = new MOrderLine(getCtx(), getVehicle_C_OrderLine_ID(), get_TrxName());
+			ordLine = new TF_MOrderLine(getCtx(), getVehicle_C_OrderLine_ID(), get_TrxName());
 			if(ordLine.get_ID() > 0) {
 				ordLine.setQtyReserved(BigDecimal.ZERO);
 				ordLine.delete(false);
@@ -2021,6 +2021,9 @@ public class TF_MOrder extends MOrder {
 			}			
 		}//End Delete
 		
+		if(createConsolidatedTransportInvoice)
+			return;
+		
 		//Update modified Vehicle Rent line.		
 		//Vehicle Rent
 		if(isRentBreakup())
@@ -2028,9 +2031,9 @@ public class TF_MOrder extends MOrder {
 				|| getVehicle_C_OrderLine_ID() == 0 || is_ValueChanged(COLUMNNAME_IsTaxIncluded1))) {
 			
 			if(getVehicle_C_OrderLine_ID() > 0) 
-				ordLine = new MOrderLine(getCtx(), getVehicle_C_OrderLine_ID(), get_TrxName());
+				ordLine = new TF_MOrderLine(getCtx(), getVehicle_C_OrderLine_ID(), get_TrxName());
 			else
-				ordLine = new MOrderLine(this);
+				ordLine = new TF_MOrderLine(this);
 			MRentedVehicle rentVehicle = new MRentedVehicle(getCtx(), getTF_RentedVehicle_ID(), get_TrxName());
 			int productID = rentVehicle.getM_Product_ID();
 			int defaultTaxID = 0;
@@ -2039,11 +2042,7 @@ public class TF_MOrder extends MOrder {
 			if(getRent_Tax_ID() > 0)
 			{
 				defaultTaxID = getRent_Tax_ID();
-				
-				MTax tax = new MTax(getCtx(), defaultTaxID, get_TrxName());
-				BigDecimal taxRate = (BigDecimal)tax.getRate();
-				BigDecimal hundred = new BigDecimal("100");
-				
+								
 				//rentAmount = getRent_Amt().divide(BigDecimal.ONE.add(taxRate.divide(hundred,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);
 				rentAmount = getRent_Amt();
 			}
@@ -2152,13 +2151,12 @@ public class TF_MOrder extends MOrder {
 		
 		String msg = super.completeIt();
 		purchasePermit();
-		issuePermit();
-		boolean createTransportInvoice = MSysConfig.getBooleanValue("CONSOLIDATED_TRANSPORT_INVOICE_ENABLED", true , getAD_Client_ID(), getAD_Org_ID());
+		issuePermit();		
 		
-		if(!createTransportInvoice)
+		if(!createConsolidatedTransportInvoice)
 			createTransporterInvoice();
-		else
-			createTransportMaterialReceipt();
+		//else
+		//	createTransportMaterialReceipt();
 		
 		createAdditionalInvoice();
 		closeWeighmentEntry();
@@ -2173,13 +2171,17 @@ public class TF_MOrder extends MOrder {
 		completeWeighmentEntriesForConsolidateInvoice();
 		return msg;
 	}
-
+	
+	boolean createConsolidatedTransportInvoice = MSysConfig.getBooleanValue("CONSOLIDATED_TRANSPORT_INVOICE_ENABLED", true , getAD_Client_ID(), getAD_Org_ID());
+	
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
 		MRentedVehicle rv = new MRentedVehicle(getCtx(), getTF_RentedVehicle_ID(), get_TrxName());		
 		if(getTF_RentedVehicle_ID()>0 && getRent_Amt().doubleValue()==0 && isSOTrx()) {
-			if((rv.isOwnVehicle() && isSOTrx()) || rv.isTransporter())
-				throw new AdempiereUserError("Invalid Rent Amount");
+			if((rv.isOwnVehicle() && isSOTrx()) || rv.isTransporter()) {				
+				if(!createConsolidatedTransportInvoice)
+					throw new AdempiereUserError("Invalid Rent Amount");
+			}
 		}
 		
 		if(getTF_RentedVehicle_ID()>0 || !isSOTrx()) {
@@ -2254,7 +2256,7 @@ public class TF_MOrder extends MOrder {
 		if(getDocStatus().equals(DOCSTATUS_Completed)) {
 			MJobworkItemIssue.ReverseFromPO(this);		
 			reverseTransporterInvoice();
-			reverseTransportMaterialReceipt();		
+			//reverseTransportMaterialReceipt();		
 			reverseWeighmentEntry();		
 			reverseTokenNo();
 			reverseYardEntry();

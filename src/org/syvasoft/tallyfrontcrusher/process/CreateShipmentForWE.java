@@ -89,11 +89,12 @@ public class CreateShipmentForWE extends SvrProcess {
 			
 			
 			//Royalty Pass Issue Line
-			if(we.getPermitPassAmount().doubleValue()!=0 && we.getPassQtyIssued().doubleValue() != 0 && we.isGST()) {
+			//it is applicable even for Non GST
+			if(we.getPassQtyIssued().doubleValue() != 0) {
 				ioLine = new TF_MInOutLine(inout);
 				ioLine.setM_Product_ID(we.getRoyaltyPassProduct_ID(), true);							
 				ioLine.setQty(we.getPassQtyIssued());
-				ioLine.setM_Locator_ID(we.getNetWeightUnit());
+				ioLine.setM_Locator_ID(we.getPassQtyIssued());
 				ioLine.saveEx(get_TrxName());
 			}
 			
