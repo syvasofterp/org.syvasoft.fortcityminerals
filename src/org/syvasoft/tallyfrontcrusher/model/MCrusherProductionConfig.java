@@ -34,4 +34,13 @@ public class MCrusherProductionConfig extends X_TF_CrusherProduction_Config {
 		return prodConfigs.toArray(configs);
 	}
 
+	public static MCrusherProductionConfig getMCrusherProductionConfig(Properties ctx,
+			int AD_Org_ID,
+			String TF_BlueMetal_Type, int M_Product_ID) {
+		String where = " AD_Org_ID = ? AND TF_BlueMetal_Type=? AND M_Product_ID = ? ";
+		MCrusherProductionConfig prodConfig = new Query(ctx, Table_Name, where, null)
+		.setClient_ID().setParameters(AD_Org_ID, TF_BlueMetal_Type, M_Product_ID).setOnlyActiveRecords(true)
+		.setOrderBy("TF_CrusherProduction_Config_ID").first();
+		return prodConfig;
+	}
 }

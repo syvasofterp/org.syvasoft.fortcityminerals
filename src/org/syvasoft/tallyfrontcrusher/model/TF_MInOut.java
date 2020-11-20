@@ -71,6 +71,30 @@ public class TF_MInOut extends MInOut {
 
 	boolean createConsolidatedTransportInvoice = MSysConfig.getBooleanValue("CONSOLIDATED_TRANSPORT_INVOICE_ENABLED", true , getAD_Client_ID(), getAD_Org_ID());
 	
+	   /** Column name TF_Crusher_Production_ID */
+    public static final String COLUMNNAME_TF_Crusher_Production_ID = "TF_Crusher_Production_ID";
+
+	/** Set Crusher Production.
+	@param TF_Crusher_Production_ID Crusher Production	  */
+	public void setTF_Crusher_Production_ID (int TF_Crusher_Production_ID)
+	{
+		if (TF_Crusher_Production_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_TF_Crusher_Production_ID, null);
+		else 
+			set_ValueNoCheck (COLUMNNAME_TF_Crusher_Production_ID, Integer.valueOf(TF_Crusher_Production_ID));
+	}
+	
+	/** Get Crusher Production.
+		@return Crusher Production	  */
+	public int getTF_Crusher_Production_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Crusher_Production_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	
 	@Override
 	public String completeIt() {
 		if(getTF_WeighmentEntry_ID() > 0) {			
@@ -86,7 +110,11 @@ public class TF_MInOut extends MInOut {
 			
 			if(createConsolidatedTransportInvoice)
 				createTransportMaterialReceipt();
+			
+			m_processMsg = postCrusherProduction(we);
+			
 		}
+		
 		// TODO Auto-generated method stub
 		return super.completeIt();
 	}
@@ -103,6 +131,13 @@ public class TF_MInOut extends MInOut {
 			
 			reverseTransportMaterialReceipt();
 		}
+		
+		if(getTF_Crusher_Production_ID() > 0) {
+			MCrusherProduction crProd = new MCrusherProduction(getCtx(), getTF_Crusher_Production_ID(), get_TrxName());
+			crProd.reverseIt();
+			crProd.saveEx();
+			setTF_Crusher_Production_ID(0);
+		}		
 		
 		// TODO Auto-generated method stub
 		return super.reverseCorrectIt();
@@ -208,4 +243,78 @@ public class TF_MInOut extends MInOut {
 			io.saveEx();
 		}
 	}
+	
+	
+	public String postCrusherProduction(MWeighmentEntry wEntry) {				
+		String aggregateStockApproach = MSysConfig.getValue("AGGREGATE_STOCK_APPROACH","B", getAD_Client_ID(), getAD_Org_ID());  
+		if(aggregateStockApproach.equals("B") && isSOTrx()) {
+			
+				MCrusherProduction cProd = new MCrusherProduction(getCtx(), 0, get_TrxName());
+				MCrusherProductionConfig pConfig = MCrusherProductionConfig.getMCrusherProductionConfig(getCtx(), getAD_Org_ID(), "SO", wEntry.getM_Product_ID());
+				if(pConfig == null)
+					return null;
+				cProd.setAD_Org_ID(getAD_Org_ID());					
+				cProd.setTF_BlueMetal_Type("SO");
+				cProd.setTF_WeighmentEntry_ID(getTF_WeighmentEntry_ID());
+				cProd.setMovementDate(getMovementDate());
+				cProd.setC_UOM_ID(wEntry.getC_UOM_ID());		
+				cProd.setM_Warehouse_ID(getM_Warehouse_ID());
+				MWarehouse wh = MWarehouse.get(getCtx(), getM_Warehouse_ID());
+				cProd.setM_Locator_ID(wh.getDefaultLocator().get_ID());
+				cProd.setRM_Product_ID(wEntry.getM_Product_ID());
+				cProd.setQtyUsed(wEntry.getNetWeightUnit());				
+				cProd.setDocStatus(DOCSTATUS_Drafted);
+				cProd.setDocAction(DOCACTION_Prepare);
+				cProd.saveEx();
+				
+				//Update Crusher Production Reference to Material Receipt
+				setTF_Crusher_Production_ID(cProd.getTF_Crusher_Production_ID());
+				
+				cProd.createProductionBySales();
+				cProd.saveEx();		
+				//End Create
+				
+				//Post Crusher Production
+				m_processMsg = cProd.processIt(DOCACTION_Complete);
+				if(m_processMsg == null)			
+					cProd.saveEx();				
+			
+			}
+		else if(!isSOTrx() && aggregateStockApproach.equals("O") && 
+					MSysConfig.getIntValue("BOULDER_ID",getAD_Client_ID(), getAD_Org_ID()) == wEntry.getM_Product_ID())  {
+					
+				//Create Crusher Production
+				MCrusherProduction cProd = new MCrusherProduction(getCtx(), 0, get_TrxName());
+				cProd.setAD_Org_ID(getAD_Org_ID());
+				cProd.setTF_ProductionPlant_ID(wEntry.getTF_ProductionPlant_ID());		
+				cProd.setTF_BlueMetal_Type(wEntry.getTF_BlueMetal_Type());
+				cProd.setTF_WeighmentEntry_ID(getTF_WeighmentEntry_ID());
+				cProd.setMovementDate(getMovementDate());
+				cProd.setC_UOM_ID(wEntry.getC_UOM_ID());		
+				cProd.setM_Warehouse_ID(getM_Warehouse_ID());
+				MWarehouse wh = MWarehouse.get(getCtx(), getM_Warehouse_ID());
+				cProd.setM_Locator_ID(wh.getDefaultLocator().get_ID());
+				cProd.setRM_Product_ID(wEntry.getM_Product_ID());
+				cProd.setQtyUsed(wEntry.getNetWeightUnit());
+				cProd.setDescription("Created from Material Receipt : " + getDocumentNo());
+				cProd.setDocStatus(DOCSTATUS_Drafted);
+				cProd.setDocAction(DOCACTION_Prepare);
+				cProd.saveEx();
+				
+				//Update Crusher Production Reference to Material Receipt
+				setTF_Crusher_Production_ID(cProd.getTF_Crusher_Production_ID());
+				
+				cProd.createProduction(true);
+				cProd.saveEx();		
+				//End Create
+				
+				//Post Crusher Production
+				m_processMsg = cProd.processIt(DOCACTION_Complete);
+				if(m_processMsg == null)			
+					cProd.saveEx();
+			}
+		
+		return m_processMsg;
+	}	
+
 }
