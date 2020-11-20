@@ -335,35 +335,39 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 				createInternalUseInventory();
 			}
 			else {
-				//Update Storage for the received Product from the Joborder.
-				if (!MStorageOnHand.add(getCtx(), getM_Warehouse_ID(),
-						defaultLocatorID,
-						getM_Product_ID(),
-						0,
-						getQtyReceived(),getDateAcct(),
-						get_TrxName()))
+				if(getM_Product().isStocked()) {
+					//Update Storage for the received Product from the Joborder.
+					if (!MStorageOnHand.add(getCtx(), getM_Warehouse_ID(),
+							defaultLocatorID,
+							getM_Product_ID(),
+							0,
+							getQtyReceived(),getDateAcct(),
+							get_TrxName()))
+						{
+							String lastError = CLogger.retrieveErrorString("");
+							m_processMsg = "Cannot correct Inventory OnHand (MA) [" + getM_Product().getValue() + "] - " + lastError;				
+							return m_processMsg;
+						}
+					//Update Transaction History
+					MTransaction mtrx = new MTransaction (getCtx(), getAD_Org_ID(),
+						"J+", defaultLocatorID,
+						getM_Product_ID(), 0,
+						getQtyReceived(), getDateAcct(), get_TrxName());
+					mtrx.set_ValueOfColumn(MBoulderReceipt.COLUMNNAME_TF_Boulder_Receipt_ID, getTF_Boulder_Receipt_ID());
+					if (!mtrx.save())
 					{
-						String lastError = CLogger.retrieveErrorString("");
-						m_processMsg = "Cannot correct Inventory OnHand (MA) [" + getM_Product().getValue() + "] - " + lastError;				
+						m_processMsg = "Could not create Material Transaction (MA) [" + getM_Product().getValue() + "]";			
 						return m_processMsg;
 					}
-				//Update Transaction History
-				MTransaction mtrx = new MTransaction (getCtx(), getAD_Org_ID(),
-					"J+", defaultLocatorID,
-					getM_Product_ID(), 0,
-					getQtyReceived(), getDateAcct(), get_TrxName());
-				mtrx.set_ValueOfColumn(MBoulderReceipt.COLUMNNAME_TF_Boulder_Receipt_ID, getTF_Boulder_Receipt_ID());
-				if (!mtrx.save())
-				{
-					m_processMsg = "Could not create Material Transaction (MA) [" + getM_Product().getValue() + "]";			
-					return m_processMsg;
+					
+					//Update Costing Record...
+					MAcctSchema as = (MAcctSchema) MGLPostingConfig.getMGLPostingConfig(getCtx()).getC_AcctSchema();			
+					MCostDetail.createBoulderReceipt(as, getAD_Org_ID(), getM_Product_ID(), 0, getTF_Boulder_Receipt_ID()
+							, 0, getJobwork_StdPrice().multiply(getQtyReceived()), getQtyReceived(), getDescription(), get_TrxName());
+				
+					setM_Transaction_ID(mtrx.getM_Transaction_ID());
 				}
-				
-				//Update Costing Record...
-				MAcctSchema as = (MAcctSchema) MGLPostingConfig.getMGLPostingConfig(getCtx()).getC_AcctSchema();			
-				MCostDetail.createBoulderReceipt(as, getAD_Org_ID(), getM_Product_ID(), 0, getTF_Boulder_Receipt_ID()
-						, 0, getJobwork_StdPrice().multiply(getQtyReceived()), getQtyReceived(), getDescription(), get_TrxName());
-				
+				/*
 				//Posting GL journal for Jobwork expense 
 				MJournal j = new MJournal(getCtx(), 0, get_TrxName());
 				j.setAD_Org_ID(getAD_Org_ID());
@@ -410,15 +414,13 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 				
 				j.processIt(MJournal.ACTION_Complete);
 				j.saveEx();
-
+				setJobwork_Journal_ID(j.getGL_Journal_ID());		
+				
+				 */
+				
 				// to check Requires Consolidate Invoice	
 				if(!proj.isRequiredConsolidateInv())				
 					createSubcontractInvoice();
-				
-				setJobwork_Journal_ID(j.getGL_Journal_ID());			
-				
-				setM_Transaction_ID(mtrx.getM_Transaction_ID());
-				
 			}
 			
 			setDocStatus(DOCSTATUS_Completed);
