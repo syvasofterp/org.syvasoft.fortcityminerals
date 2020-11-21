@@ -127,17 +127,14 @@ public class MCrusherProduction extends X_TF_Crusher_Production {
 		setIsCreated("Y");		
 	}
 	
-	public void createProductionBySales(){
+	public void createProductionBySales(int M_Product_ID){
 				
 		// Delete if there is any productions...
 		//deleteProductions();
 		//RM - Raw Material, BM - Blue Metal
 		double RMQtyUsed = getQtyUsed().doubleValue();		
-		MCrusherProductionConfig[] configs = MCrusherProductionConfig.getMCrusherProductionConfig(getCtx(),
-				getTF_ProductionPlant_ID(),
-				getTF_BlueMetal_Type());
-		//Creating Production Headers
-		for(MCrusherProductionConfig config : configs) {
+		MCrusherProductionConfig config = MCrusherProductionConfig.getMCrusherProductionConfig(getCtx(), getAD_Org_ID(), getTF_BlueMetal_Type(), M_Product_ID);
+		//Creating Production Headers		
 			double BMPercent = config.getPercent().doubleValue();			
 			double BMUnitDivisor = config.getUnit_Divisor().doubleValue();
 			double RMQtyUsedPerBlueMetal = RMQtyUsed * BMPercent / 100;
@@ -177,8 +174,7 @@ public class MCrusherProduction extends X_TF_Crusher_Production {
 			bomLine.setMovementQty(new BigDecimal(RMQtyUsedPerBlueMetal));
 			bomLine.setPlannedQty(bomLine.getQtyUsed());			
 			bomLine.saveEx();
-			
-		}		
+	
 		setIsCreated("Y");		
 	}
 	
@@ -196,13 +192,14 @@ public class MCrusherProduction extends X_TF_Crusher_Production {
 			return;
 		
 		TF_MProject proj = new TF_MProject(getCtx(), getC_Project_ID(), get_TrxName());
-		MSubcontractType st = new MSubcontractType(getCtx(), proj.getTF_SubcontractType_ID(), get_TrxName());
+		if(proj.isRequiredConsolidateInv())
+			return;
+				
 		
 		int invoiceItem_id = 0;
 		int priceItem_id = 0;
 		String priceItemName = null;
-		
-		
+				
 		
 		invoiceItem_id = proj.getJobWork_Product_ID();
 						
@@ -379,8 +376,9 @@ public class MCrusherProduction extends X_TF_Crusher_Production {
 					m_processMsg = " Not able to Complete the Production! ";
 					break;
 				}
-			}
+			}			
 			createSubcontractInvoice();
+			
 			setDocStatus(DOCSTATUS_Completed);
 			setProcessed(true);
 			

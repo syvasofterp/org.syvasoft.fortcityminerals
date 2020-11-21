@@ -246,8 +246,9 @@ public class TF_MInOut extends MInOut {
 	
 	
 	public String postCrusherProduction(MWeighmentEntry wEntry) {				
-		String aggregateStockApproach = MSysConfig.getValue("AGGREGATE_STOCK_APPROACH","B", getAD_Client_ID(), getAD_Org_ID());  
-		if(aggregateStockApproach.equals("B") && isSOTrx()) {
+		String aggregateStockApproach = MSysConfig.getValue("AGGREGATE_STOCK_APPROACH","B", getAD_Client_ID(), getAD_Org_ID());
+		int Boulder_ID = MSysConfig.getIntValue("BOULDER_ID",getAD_Client_ID(), getAD_Org_ID());
+		if(aggregateStockApproach.equals("B") && isSOTrx() && Boulder_ID != wEntry.getM_Product_ID()) {
 			
 				MCrusherProduction cProd = new MCrusherProduction(getCtx(), 0, get_TrxName());
 				MCrusherProductionConfig pConfig = MCrusherProductionConfig.getMCrusherProductionConfig(getCtx(), getAD_Org_ID(), "SO", wEntry.getM_Product_ID());
@@ -255,13 +256,14 @@ public class TF_MInOut extends MInOut {
 					return null;
 				cProd.setAD_Org_ID(getAD_Org_ID());					
 				cProd.setTF_BlueMetal_Type("SO");
+				cProd.setTF_ProductionPlant_ID(pConfig.getTF_ProductionPlant_ID());
 				cProd.setTF_WeighmentEntry_ID(getTF_WeighmentEntry_ID());
 				cProd.setMovementDate(getMovementDate());
 				cProd.setC_UOM_ID(wEntry.getC_UOM_ID());		
 				cProd.setM_Warehouse_ID(getM_Warehouse_ID());
 				MWarehouse wh = MWarehouse.get(getCtx(), getM_Warehouse_ID());
 				cProd.setM_Locator_ID(wh.getDefaultLocator().get_ID());
-				cProd.setRM_Product_ID(wEntry.getM_Product_ID());
+				cProd.setRM_Product_ID(Boulder_ID);
 				cProd.setQtyUsed(wEntry.getNetWeightUnit());				
 				cProd.setDocStatus(DOCSTATUS_Drafted);
 				cProd.setDocAction(DOCACTION_Prepare);
@@ -270,7 +272,7 @@ public class TF_MInOut extends MInOut {
 				//Update Crusher Production Reference to Material Receipt
 				setTF_Crusher_Production_ID(cProd.getTF_Crusher_Production_ID());
 				
-				cProd.createProductionBySales();
+				cProd.createProductionBySales(wEntry.getM_Product_ID());
 				cProd.saveEx();		
 				//End Create
 				
