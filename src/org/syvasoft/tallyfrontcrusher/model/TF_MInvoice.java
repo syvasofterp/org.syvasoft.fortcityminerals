@@ -588,7 +588,7 @@ public class TF_MInvoice extends MInvoice {
 			}
 		}
 		
-		if (proj != null) {
+		if (getC_Project_ID() > 0 && proj != null) {
 			if (proj.getSubcontractType().equals(TF_MProject.SUBCONTRACTTYPE_QuarryProducton)) {
 				// to update the Subcon_Invoice_ID on TF_Boulder_Receipt while clicking Document . Action button in Inoice (Vendor) screen
 				reverseSubContractInvoice();

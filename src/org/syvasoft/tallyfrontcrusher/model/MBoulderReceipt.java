@@ -528,7 +528,7 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 			DB.executeUpdate(sql, get_TrxName());
 			rent.deleteEx(true);
 		}
-						
+		MBoulderMovement.deleteBoulderMovement(getTF_WeighmentEntry_ID(), get_TrxName());				
 		setProcessed(false);
 		setDocStatus(DOCSTATUS_Drafted);		
 	}

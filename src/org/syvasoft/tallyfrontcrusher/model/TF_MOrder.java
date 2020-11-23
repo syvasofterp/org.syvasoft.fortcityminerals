@@ -1997,8 +1997,7 @@ public class TF_MOrder extends MOrder {
 			TF_MOrder.addProductPricingIfNot(getVehicle_ID(), getM_PriceList_ID(), getC_BPartner_ID(), BigDecimal.ONE, getRent_Amt(), 
 					getDateOrdered(), getC_DocType().isSOTrx());
 			setOrderLine(ordLine, getVehicle_ID(), BigDecimal.ONE, getRent_Amt());
-			MResource res = MResource.get(getCtx(), getVehicle().getS_Resource_ID());
-			int defaultTaxID = Env.getContextAsInt(getCtx(), "#C_Tax_ID");
+			MResource res = MResource.get(getCtx(), getVehicle().getS_Resource_ID());			
 			ordLine.setUser1_ID(res.get_ValueAsInt("C_ElementValue_ID"));
 			ordLine.setDescription("Vehicle Rent");
 			ordLine.saveEx();
@@ -2146,9 +2145,9 @@ public class TF_MOrder extends MOrder {
 				}
 			}
 		}
-		createSubcontractPurchaseEntry();
+		//createSubcontractPurchaseEntry();
 			
-		postCrusherProduction();
+		//postCrusherProduction();
 		
 		String msg = super.completeIt();
 		purchasePermit();
@@ -2261,7 +2260,7 @@ public class TF_MOrder extends MOrder {
 			reverseWeighmentEntry();		
 			reverseTokenNo();
 			reverseYardEntry();
-			reverseSubcontractPurchaseEntry();
+			//reverseSubcontractPurchaseEntry();
 			reverseIssuedPermit();
 			reversePurchasedPermit();
 			reverseCrusherProduction();
@@ -2320,7 +2319,7 @@ public class TF_MOrder extends MOrder {
 			reverseWeighmentEntry();
 			reverseTokenNo();
 			reverseYardEntry();
-			reverseSubcontractPurchaseEntry();
+			//reverseSubcontractPurchaseEntry();
 			reverseIssuedPermit();
 			reversePurchasedPermit();
 			reverseCrusherProduction();
@@ -2655,6 +2654,7 @@ public class TF_MOrder extends MOrder {
 		return m_processMsg;
 	}
 	
+	/*
 	public void createSubcontractPurchaseEntry() {
 		if(!isSOTrx()) {		
 			return;
@@ -2832,7 +2832,8 @@ public class TF_MOrder extends MOrder {
 		setSubcon_Invoice_ID(invoice.getC_Invoice_ID());
 				
 	}
-	
+	*/
+	/*
 	public void reverseSubcontractPurchaseEntry() {
 		MSubcontractMaterialMovement.deleteSalesEntryMovement(getC_Order_ID(), get_TrxName());
 		MSubcontractMaterialMovement.deleteWeighmentMovement(getTF_WeighmentEntry_ID(), get_TrxName());
@@ -2856,7 +2857,7 @@ public class TF_MOrder extends MOrder {
 		}
 		
 	}
-	
+	*/
 	//Only for purchase
 	public void purchasePermit() {
 		if(!isSOTrx()) {

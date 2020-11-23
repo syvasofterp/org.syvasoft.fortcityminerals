@@ -12,6 +12,7 @@ import org.compiere.model.MDocType;
 import org.compiere.model.MInOut;
 import org.compiere.model.MInOutLine;
 import org.compiere.model.MOrder;
+import org.compiere.model.MProduct;
 import org.compiere.model.MRMA;
 import org.compiere.model.MSysConfig;
 import org.compiere.model.MWarehouse;
@@ -110,7 +111,7 @@ public class TF_MInOut extends MInOut {
 			
 			if(createConsolidatedTransportInvoice)
 				createTransportMaterialReceipt();
-			
+			createMaterialMovement(we);
 			m_processMsg = postCrusherProduction(we);
 			
 		}
@@ -132,14 +133,16 @@ public class TF_MInOut extends MInOut {
 			reverseTransportMaterialReceipt();
 		}
 		
+		MSubcontractMaterialMovement.deleteWeighmentMovement(getTF_WeighmentEntry_ID(), get_TrxName());
+		MBoulderMovement.deleteBoulderMovement(getTF_WeighmentEntry_ID(), get_TrxName());
+		
 		if(getTF_Crusher_Production_ID() > 0) {
 			MCrusherProduction crProd = new MCrusherProduction(getCtx(), getTF_Crusher_Production_ID(), get_TrxName());
 			crProd.reverseIt();
 			crProd.saveEx();
 			setTF_Crusher_Production_ID(0);
 		}		
-		
-		// TODO Auto-generated method stub
+				
 		return super.reverseCorrectIt();
 	}
 	
@@ -244,6 +247,32 @@ public class TF_MInOut extends MInOut {
 		}
 	}
 	
+	public void createMaterialMovement(MWeighmentEntry wEntry) {		
+		int BoulderID = MSysConfig.getIntValue("BOULDER_ID", 1000233, getAD_Client_ID(), getAD_Org_ID());
+		if(!isSOTrx()) {
+			if(BoulderID == wEntry.getM_Product_ID() && MWeighmentEntry.TF_SEND_TO_Production.equals(wEntry.getTF_Send_To())) {
+				MSubcontractMaterialMovement.createRawmaterialMovement(get_TrxName(), getDateAcct(), getAD_Org_ID(),				
+						0, 0, BoulderID, getTF_WeighmentEntry_ID(), 0, wEntry.getNetWeightUnit());
+			}
+			else if(BoulderID == wEntry.getM_Product_ID() && MWeighmentEntry.TF_SEND_TO_Stock.equals(wEntry.getTF_Send_To())) {
+				MBoulderMovement.createBoulderReceipt(get_TrxName(), getDateAcct(), getAD_Org_ID(), BoulderID, wEntry.getNetWeightUnit(), getTF_WeighmentEntry_ID());
+			}
+		}
+		else {
+			MProduct rm = MProduct.get(getCtx(), BoulderID);
+			//Need to add support for CFT sales and the resepctive MT material movement.
+			if(wEntry.getC_UOM_ID() == rm.getC_UOM_ID() && wEntry.getM_Product_ID() != BoulderID) {				
+				TF_MProductCategory pc = new TF_MProductCategory(getCtx(), wEntry.getM_Product().getM_Product_Category_ID(), get_TrxName());
+				if(pc.isTrackMaterialMovement())
+					MSubcontractMaterialMovement.createMaterialMovement(get_TrxName(), getDateAcct(), getAD_Org_ID(), getC_Order_ID(), 
+							getC_BPartner_ID(), wEntry.getM_Product_ID(), wEntry.getNetWeightUnit(), getTF_WeighmentEntry_ID());
+			}
+			else if(wEntry.getM_Product_ID() == BoulderID && getTF_WeighmentEntry_ID() > 0) {
+				MBoulderMovement.createBoulderIssue(get_TrxName(), getDateAcct(), getAD_Org_ID(), wEntry.getM_Product_ID(),
+						wEntry.getNetWeightUnit(), getTF_WeighmentEntry_ID());
+			}
+		}
+	}
 	
 	public String postCrusherProduction(MWeighmentEntry wEntry) {				
 		String aggregateStockApproach = MSysConfig.getValue("AGGREGATE_STOCK_APPROACH","B", getAD_Client_ID(), getAD_Org_ID());
