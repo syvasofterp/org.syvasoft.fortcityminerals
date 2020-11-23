@@ -509,7 +509,7 @@ public class TF_MInvoice extends MInvoice {
 	private void reverseCPInvoice() {
 		Timestamp dateFrom = (Timestamp) get_Value(COLUMNNAME_DateFrom);
 		Timestamp dateTo = (Timestamp) get_Value(COLUMNNAME_DateTo);
-		String sql = "UPDATE TF_Boulder_Receipt SET CP_Invoice_ID = NULL WHERE DateReceipt >= ? AND DateReceipt <= ?";
+		String sql = "UPDATE TF_RMSubcon_Movement SET C_Invoice_ID = NULL WHERE MovementDate  >= ? AND MovementDate  <= ?";
 		ArrayList<Object> params = new ArrayList<Object>();
 		params.add(dateFrom);
 		params.add(dateTo);
@@ -520,9 +520,9 @@ public class TF_MInvoice extends MInvoice {
 		Timestamp dateFrom = (Timestamp) get_Value(COLUMNNAME_DateFrom);
 		Timestamp dateTo = (Timestamp) get_Value(COLUMNNAME_DateTo);
 		
-		// to update the boulder recivept subcontract query
-		String sql = " UPDATE TF_Boulder_Receipt SET CP_Invoice_ID  = ? WHERE CP_Invoice_ID IS NULL"
-				+ " AND DocStatus='CO' AND DateReceipt >= ? AND DateReceipt <= ?";
+		// to update the boulder recivept subcontract query		
+		String sql = " UPDATE TF_RMSubcon_Movement SET C_Invoice_ID  = ? WHERE C_Invoice_ID IS NULL"
+						+ " AND MovementDate  >= ? AND MovementDate  <= ?";
 		ArrayList<Object> params = new ArrayList<Object>();
 		params.add(this.getC_Invoice_ID());
 		params.add(dateFrom);
@@ -588,7 +588,7 @@ public class TF_MInvoice extends MInvoice {
 			}
 		}
 		
-		if (getC_Project_ID() > 0 && proj != null) {
+		if (proj != null) {
 			if (proj.getSubcontractType().equals(TF_MProject.SUBCONTRACTTYPE_QuarryProducton)) {
 				// to update the Subcon_Invoice_ID on TF_Boulder_Receipt while clicking Document . Action button in Inoice (Vendor) screen
 				reverseSubContractInvoice();

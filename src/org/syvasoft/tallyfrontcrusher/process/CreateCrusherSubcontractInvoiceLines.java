@@ -70,8 +70,8 @@ public class CreateCrusherSubcontractInvoiceLines extends SvrProcess {
 		if (invoice.getLines().length > 0)
 			return "Invoice line item already created";	
 
-		String sql = "SELECT round(sum(QtyReceived),2) as QtyReceived FROM TF_Boulder_Receipt"
-				+ " WHERE DateReceipt >= ? AND DateReceipt <= ? " + " AND DocStatus='CO' AND CP_Invoice_ID IS NULL";
+		String sql = "SELECT round(sum(Qty_Receipt),2) as QtyReceived FROM TF_RMSubcon_Movement"
+				+ " WHERE MovementDate >= ? AND MovementDate <= ? " + " AND C_Invoice_ID IS NULL";
 
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
