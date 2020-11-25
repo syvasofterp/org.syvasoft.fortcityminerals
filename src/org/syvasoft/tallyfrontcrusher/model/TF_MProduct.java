@@ -412,4 +412,16 @@ public class TF_MProduct extends MProduct {
 		return cost.getCurrentCostPrice();		
 	}
 	
+	private MRentedVehicle rv = null;
+	
+	public MRentedVehicle getTF_RentedVehicle() {
+		if(rv == null)
+			rv = MRentedVehicle.get(getCtx(), getM_Product_ID(), get_TrxName());
+		return rv;
+	}
+	
+	public boolean isVehicle() {
+		MRentedVehicle rv = getTF_RentedVehicle();
+		return rv != null;
+	}
 }

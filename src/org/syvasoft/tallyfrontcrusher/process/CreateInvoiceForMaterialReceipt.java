@@ -16,9 +16,10 @@ import org.compiere.model.MInvoiceLine;
 import org.compiere.process.ProcessInfoParameter;
 import org.compiere.process.SvrProcess;
 import org.compiere.util.DB;
-
+import org.syvasoft.tallyfrontcrusher.model.MDestination;
+import org.syvasoft.tallyfrontcrusher.model.MLumpSumRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MPriceListUOM;
-
+import org.syvasoft.tallyfrontcrusher.model.MRentedVehicle;
 import org.syvasoft.tallyfrontcrusher.model.TF_MInvoice;
 import org.syvasoft.tallyfrontcrusher.model.TF_MProduct;
 
@@ -82,16 +83,11 @@ public class CreateInvoiceForMaterialReceipt extends SvrProcess {
 		
 		
 		// Consolidated invoice line will be created only for the new Products which are not in Invoice Lines already.
-		/*String where = "io.AD_Org_ID = ? AND io.C_BPartner_ID = ? AND io.DocStatus IN ('CO','CL') " + 
-				"	AND io.MovementDate >= ? AND io.MovementDate <= ?" +
-				" AND  (SELECT COALESCE(SUM(mi.Qty),0) FROM M_MatchInv mi WHERE mi.M_InOutLine_ID =inl.M_InOutLine_ID) = 0 "
-				+ " AND inl.M_Product_ID NOT IN (SELECT invLine.M_Product_ID FROM C_InvoiceLine invLine WHERE invLine.C_Invoice_ID = ? ) ";
-		*/
-		
-		String sql = "SELECT inl.M_Product_ID, inl.C_UOM_ID, sum (inl.QtyEntered) QtyEntered " + 
-				" FROM	M_InOut io INNER JOIN M_InOutLine inl ON inl.M_InOut_ID=io.M_InOut_ID " +
+		String sql = "SELECT inl.M_Product_ID, inl.C_UOM_ID, sum (inl.QtyEntered) QtyEntered, inl.Price, inl.Description, w.TF_Destination_ID " + 
+				" FROM	M_InOut io INNER JOIN M_InOutLine inl ON inl.M_InOut_ID=io.M_InOut_ID " + 
+				" LEFT OUTER JOIN TF_WeighmentEntry w ON io.TF_WeighmentEntry_ID = w.TF_WeighmentEntry_ID " +
 				" WHERE io.C_Invoice_ID = ? AND inl.M_Product_ID NOT IN (SELECT invLine.M_Product_ID FROM C_InvoiceLine invLine WHERE invLine.C_Invoice_ID = io.C_Invoice_ID ) "  + 
-				" GROUP BY inl.M_Product_ID, inl.C_UOM_ID";
+				" GROUP BY inl.M_Product_ID, inl.C_UOM_ID, inl.Price, inl.Description, w.TF_Destination_ID";
 				
 		PreparedStatement pstmt =  null;
 		ResultSet rs = null;
@@ -112,17 +108,52 @@ public class CreateInvoiceForMaterialReceipt extends SvrProcess {
 				MInvoiceLine invLine = new MInvoiceLine(invoice);				
 				invLine.setM_Product_ID(rs.getInt("M_Product_ID"), true);
 				invLine.setQty(rs.getBigDecimal("QtyEntered"));
-				invLine.setC_UOM_ID(rs.getInt("C_UOM_ID"));
-				
-				BigDecimal price =BigDecimal.ZERO;
+				invLine.setC_UOM_ID(rs.getInt("C_UOM_ID"));				
+				BigDecimal price = rs.getBigDecimal("Price");				
+				String destinationInfo = rs.getString("Description");
+				int TF_Destination_ID = rs.getInt("TF_Destination_ID");
 				
 				MPriceListUOM pprice = MPriceListUOM.getPriceListUOM(getCtx(), rs.getInt("M_Product_ID"),
 						rs.getInt("C_UOM_ID"), invoice.getC_BPartner_ID(), false, invoice.getDateInvoiced());
 				
 				TF_MProduct prod = new TF_MProduct(getCtx(), invLine.getM_Product_ID(), get_TrxName());
 				
-				if( pprice == null)
+				if( pprice == null && !prod.isVehicle()) {
 					throw new AdempiereException("Please configure the Purchase Price for " + prod.getName() + "!");
+				}
+				else if(prod.isVehicle()) {
+					invLine.setDescription(destinationInfo);
+					if(price == null || price.doubleValue() == 0 ) {
+						//get Rent Amount from Vehicle Rent Configuration
+						MDestination dest = new MDestination(getCtx(), TF_Destination_ID, get_TrxName());
+						MRentedVehicle rv = prod.getTF_RentedVehicle();
+						int Vendor_ID = invoice.getC_BPartner_ID();					
+						BigDecimal RateMT = MLumpSumRentConfig.getRateMT(getCtx(), invoice.getAD_Org_ID(), Vendor_ID, 0, 0, 
+								TF_Destination_ID, rv.getTF_VehicleType_ID(), dest.getDistance(), get_TrxName());
+						//BigDecimal RateKM = MLumpSumRentConfig.getRateKm(getCtx(), ord.getAD_Org_ID(), Vendor_ID, ord.getC_BPartner_ID(), ord.getItem1_ID(),
+						//		ord.getTF_Destination_ID(), ord.getItem1_VehicleType_ID(), dest.getDistance(), get_TrxName());
+						//BigDecimal RateMTKM = MLumpSumRentConfig.getRateMTKm(getCtx(), ord.getAD_Org_ID(), Vendor_ID, ord.getC_BPartner_ID(),
+						//		ord.getItem1_ID(), ord.getTF_Destination_ID(), ord.getItem1_VehicleType_ID(), dest.getDistance(), get_TrxName());
+						BigDecimal RentAmt = BigDecimal.ZERO;
+						
+						if(RateMT.doubleValue() > 0) {
+							price = RateMT;
+						}
+						//else if(RateKM.doubleValue() > 0) {
+						//	ord.setRate(RateKM);
+						//	RentAmt = RateKM.multiply(dest.getDistance());
+						//}
+						//else if(RateMTKM.doubleValue() > 0) {
+						//	ord.setRate(RateMTKM);
+						//	RentAmt = RateMTKM.multiply(ord.getDistance()).multiply(qty);
+						//}
+						else {								
+							RentAmt=MLumpSumRentConfig.getLumpSumRent(getCtx(), invoice.getAD_Org_ID() ,Vendor_ID, 0, 
+									0, TF_Destination_ID, rv.getTF_VehicleType_ID(), dest.getDistance(), get_TrxName());
+							price = RentAmt;
+						}						
+					}
+				}
 				
 				price = pprice.getPrice();				
 				invLine.setPriceActual(price);

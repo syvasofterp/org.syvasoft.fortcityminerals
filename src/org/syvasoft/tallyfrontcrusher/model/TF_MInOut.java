@@ -166,9 +166,9 @@ public class TF_MInOut extends MInOut {
 		
 		TF_MInOut inout = new TF_MInOut(getCtx(), 0, get_TrxName());
 		inout.setTF_WeighmentEntry_ID(getTF_WeighmentEntry_ID());		
-		
+		inout.setIsSOTrx(false);
 		inout.setC_DocType_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getMaterialReceipt_DocType_ID());
-		inout.setMovementType(MInOut.MOVEMENTTYPE_VendorReceipts);
+		inout.setMovementType(MInOut.MOVEMENTTYPE_VendorReceipts);		
 		inout.setDateAcct(getDateAcct());		
 		inout.setC_BPartner_ID(rv.getC_BPartner_ID());
 		inout.setC_BPartner_Location_ID(bp.getPrimaryC_BPartner_Location_ID());
