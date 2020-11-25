@@ -19,10 +19,12 @@ import org.adempiere.exceptions.DBException;
 import org.compiere.model.I_C_InvoiceLine;
 import org.compiere.model.MBPartner;
 import org.compiere.model.MClient;
+import org.compiere.model.MInOutLine;
 import org.compiere.model.MInvoice;
 import org.compiere.model.MInvoiceLine;
 import org.compiere.model.MJournal;
 import org.compiere.model.MJournalLine;
+import org.compiere.model.MMatchInv;
 import org.compiere.model.MPeriod;
 import org.compiere.model.MPriceList;
 import org.compiere.model.MProduct;
@@ -228,10 +230,44 @@ public class TF_MInvoice extends MInvoice {
     
     /** Column name Item2_C_InvoiceLine_ID */
     public static final String COLUMNNAME_DateFrom = "DateFrom";
+
     public static final String COLUMNNAME_DateTo = "DateTo";
     
-     
     
+	/** Set Date From.
+	@param DateFrom 
+	Starting date for a range
+    */
+	public void setDateFrom (Timestamp DateFrom)
+	{
+		set_Value (COLUMNNAME_DateFrom, DateFrom);
+	}
+	
+	/** Get Date From.
+		@return Starting date for a range
+	  */
+	public Timestamp getDateFrom () 
+	{
+		return (Timestamp)get_Value(COLUMNNAME_DateFrom);
+	}
+	
+    
+	/** Set Date To.
+		@param DateTo 
+		End date of a date range
+	  */
+	public void setDateTo (Timestamp DateTo)
+	{
+		set_Value (COLUMNNAME_DateTo, DateTo);
+	}
+
+	/** Get Date To.
+		@return End date of a date range
+	  */
+	public Timestamp getDateTo () 
+	{
+		return (Timestamp)get_Value(COLUMNNAME_DateTo);
+	}
 	/** Set Item2 InvoiceLine ID.
 		@param Item2_C_InvoiceLine_ID Item2 InvoiceLine ID	  */
 	public void setItem2_C_InvoiceLine_ID (int Item2_C_InvoiceLine_ID)
@@ -389,6 +425,7 @@ public class TF_MInvoice extends MInvoice {
 	}
 	
 	
+	
 	@Override
 	protected boolean beforeSave(boolean newRecord) {		
 		boolean result = super.beforeSave(newRecord);
@@ -474,7 +511,7 @@ public class TF_MInvoice extends MInvoice {
 	@Override
 	public String completeIt() {
 		String msg = super.completeIt();
-		createCounterProjectSalesInvoice();
+		//createCounterProjectSalesInvoice();
 		if (getC_Project_ID() > 0) {
 			TF_MProject proj = new TF_MProject(getCtx(), getC_Project_ID(), get_TrxName());
 			proj.updateQtyBilled();
@@ -492,7 +529,8 @@ public class TF_MInvoice extends MInvoice {
 
 		}
 		createCounterInvoice();
-
+		createMatchInvReceipts();
+		
 		return msg;
 	}
 	
@@ -507,24 +545,26 @@ public class TF_MInvoice extends MInvoice {
 	}
 
 	private void reverseCPInvoice() {
-		Timestamp dateFrom = (Timestamp) get_Value(COLUMNNAME_DateFrom);
-		Timestamp dateTo = (Timestamp) get_Value(COLUMNNAME_DateTo);
-		String sql = "UPDATE TF_RMSubcon_Movement SET C_Invoice_ID = NULL WHERE MovementDate  >= ? AND MovementDate  <= ?";
+		Timestamp dateFrom = getDateFrom();
+		Timestamp dateTo = getDateTo();
+		String sql = "UPDATE TF_RMSubcon_Movement SET C_Invoice_ID = NULL WHERE AD_Org_ID = ? AND MovementDate  >= ? AND MovementDate  <= ?";
 		ArrayList<Object> params = new ArrayList<Object>();
+		params.add(getAD_Org_ID());
 		params.add(dateFrom);
 		params.add(dateTo);
 		DB.executeUpdateEx(sql, params.toArray(), get_TrxName());
 	}
 
 	private void updateCPInvoice(TF_MProject proj) {
-		Timestamp dateFrom = (Timestamp) get_Value(COLUMNNAME_DateFrom);
-		Timestamp dateTo = (Timestamp) get_Value(COLUMNNAME_DateTo);
+		Timestamp dateFrom = getDateFrom();
+		Timestamp dateTo = getDateTo();
 		
 		// to update the boulder recivept subcontract query		
-		String sql = " UPDATE TF_RMSubcon_Movement SET C_Invoice_ID  = ? WHERE C_Invoice_ID IS NULL"
+		String sql = " UPDATE TF_RMSubcon_Movement SET C_Invoice_ID  = ? WHERE AD_Org_ID = ? AND C_Invoice_ID IS NULL"
 						+ " AND MovementDate  >= ? AND MovementDate  <= ?";
 		ArrayList<Object> params = new ArrayList<Object>();
 		params.add(this.getC_Invoice_ID());
+		params.add(getAD_Org_ID());
 		params.add(dateFrom);
 		params.add(dateTo);
 		DB.executeUpdateEx(sql, params.toArray(), get_TrxName());
@@ -599,6 +639,7 @@ public class TF_MInvoice extends MInvoice {
 			}
 		}
 		
+		reverseConsolidateInvLineReceipts();
 		
 		return ok;
 	}
@@ -814,6 +855,36 @@ public class TF_MInvoice extends MInvoice {
 		
 		setRef_Invoice_ID(invoice.getC_Invoice_ID());
 		
+	}
+	
+	public void createMatchInvReceipts() {
+		if(getDateTo() == null || getDateFrom() == null || isSOTrx())
+			return;
+		
+		String whereClause = " M_InOutLine.M_Product_ID = ? AND M_InOutLine.M_InOut_ID IN "
+				+ " ( SELECT M_InOut.M_InOut_ID FROM M_InOut WHERE M_InOut.C_Invoice_ID = ?) ";
+				
+				
+		for(MInvoiceLine invLine : getLines()) {
+			
+			List<MInOutLine> ioLines = new Query(getCtx(), MInOutLine.Table_Name, whereClause, get_TrxName())
+					.setClient_ID()
+					.setParameters(invLine.getM_Product_ID(), getC_Invoice_ID())
+					.list();
+			for(MInOutLine ioLine : ioLines) {			
+				MMatchInv match = new MMatchInv (invLine, null, ioLine.getQtyEntered());
+				match.setM_InOutLine_ID(ioLine.getM_InOutLine_ID());
+				match.saveEx(get_TrxName());
+			}
+		}
+		
+	}
+	
+	public void reverseConsolidateInvLineReceipts() {
+		if(getDateTo() == null || getDateFrom() == null || isSOTrx())
+			return;
+		String sqlUpdate = "UPDATE M_InOut SET C_Invoice_ID = NULL WHERE C_Invoice_ID = " + getC_Invoice_ID();
+		DB.executeUpdate(sqlUpdate, get_TrxName());
 	}
 	
 }
