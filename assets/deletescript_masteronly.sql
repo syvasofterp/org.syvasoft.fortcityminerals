@@ -1,4 +1,4 @@
-﻿SET SEARCH_PATH TO adempiere;
+SET SEARCH_PATH TO adempiere;
 
 --SELECT * FROM C_Order WHERE ad_client_id=1000000;
 
@@ -176,15 +176,18 @@ UPDATE C_BPartner SET C_Invoice_ID = null WHERE ad_Client_ID = 1000000;
 UPDATE tf_jobwork_expense_entry set SubCon_Invoice_id = null;
 UPDATE TF_TripSheet SET SubCon_invoice_ID = null;
 delete from tf_bpopeningbalance WHERE ad_client_id=1000000;
+UPDATE  C_Order SET TransporterInvoice_ID = NULL;
 delete from c_Invoice WHERE ad_client_id=1000000;
 delete from PP_MRP WHERE ad_client_id=1000000;;
 delete from m_requisitionline  WHERE ad_client_id=1000000;;
 delete from m_requisition WHERE ad_client_id=1000000;;
 update pp_order set c_orderline_id = null WHERE ad_client_id=1000000;;
+UPDATE C_Order SET Item1_C_OrderLine_ID = NULL, Item2_C_OrderLine_ID = NULL,Vehicle_C_OrderLine_ID =null;
 delete from c_orderline WHERE ad_client_id=1000000;;
 delete from c_ordertax  WHERE ad_client_id=1000000;;
 update r_request set c_order_id = null, M_inout_id = null WHERE ad_client_id=1000000;;
 update r_requestaction set c_order_id = null, M_inout_id = null WHERE ad_client_id=1000000;;
+DELETE FROM tf_rmsubcon_movement;
 delete from c_order WHERE ad_client_id=1000000;;
 UPDATE tf_jobwork_expense_entry SET GL_Journal_ID = null;
 delete from fact_acct WHERE ad_client_id=1000000;;
@@ -325,10 +328,10 @@ DELETE FROM TF_Generate_TaxInvoice WHERE ad_client_id=1000000;
 
 
 -- Master ----
-UPDATE c_elementvalue SET C_BankAccount_ID = nuLL WHERE ad_client_id=1000000;
-DELETE FROM tf_orgcashtransfer_config WHERE ad_client_id=1000000;
-DELETE FROM C_BankAccount WHERE ad_client_id=1000000;
-DELETE FROM C_Bank WHERE ad_client_id=1000000;
+--UPDATE c_elementvalue SET C_BankAccount_ID = nuLL WHERE ad_client_id=1000000;
+--DELETE FROM tf_orgcashtransfer_config WHERE ad_client_id=1000000;
+--DELETE FROM C_BankAccount WHERE ad_client_id=1000000;
+--DELETE FROM C_Bank WHERE ad_client_id=1000000;
 
 
 
@@ -428,3 +431,5 @@ UPDATE AD_Sequence SET CurrentNext = 1 WHERE AD_Sequence_ID=1000326;
 
 DELETE FROM AD_Sequence_No WHERE ad_client_id=1000000;
 DELETE FROM TF_DaySeq;
+
+DELETE FROM TF_Boulder_Movement;
