@@ -95,6 +95,7 @@ public class TF_MInOut extends MInOut {
 		return ii.intValue();
 	}
 
+	public boolean materialReceipt = true;
 	
 	@Override
 	public String completeIt() {
@@ -147,6 +148,8 @@ public class TF_MInOut extends MInOut {
 	}
 	
 	public void createTransportMaterialReceipt() {
+		
+		
 		MWeighmentEntry we = new MWeighmentEntry(getCtx(), getTF_WeighmentEntry_ID(), get_TrxName());
 				
 		if(we.getTF_RentedVehicle_ID() == 0)
@@ -165,6 +168,7 @@ public class TF_MInOut extends MInOut {
 		TF_MBPartner bp = new TF_MBPartner(getCtx(), rv.getC_BPartner_ID(), get_TrxName());
 		
 		TF_MInOut inout = new TF_MInOut(getCtx(), 0, get_TrxName());
+		inout.materialReceipt = false;
 		inout.setTF_WeighmentEntry_ID(getTF_WeighmentEntry_ID());		
 		inout.setIsSOTrx(false);
 		inout.setC_DocType_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getMaterialReceipt_DocType_ID());
@@ -206,11 +210,16 @@ public class TF_MInOut extends MInOut {
 			if(srcPrice != null)
 				price = (BigDecimal) srcPrice; 
 		}
+		else {
+			Rent_UOM_ID = we.getMT_UOM_ID();
+			qty = we.getMT();
+		}
 		
 		ioLine.setQty(qty);
 		ioLine.setC_UOM_ID(Rent_UOM_ID);
 		ioLine.set_ValueOfColumn("Price", price);
-		ioLine.setDescription("Destination : " + dest.getName());		
+		if(we.getTF_Destination_ID() > 0)
+			ioLine.setDescription("Destination : " + dest.getName());		
 		ioLine.saveEx(get_TrxName());
 		
 		//Material Receipt DocAction
@@ -230,15 +239,15 @@ public class TF_MInOut extends MInOut {
 		if(rv.isOwnVehicle() || !rv.isTransporter())
 			return;
 		
-		//Don't Create Material Receipt for the same Transporter
+		//Don't reverse Material Receipt for other than Transporters
 		//It stops the recursive loop
 		if(rv.getC_BPartner_ID() == getC_BPartner_ID())
 			return;
 		
-		String whereClause = "TF_WeighmentEntry_ID = ? AND MovementType = ? AND DocStatus = 'CO'";
+		String whereClause = "TF_WeighmentEntry_ID = ? AND MovementType = ? AND DocStatus = 'CO' AND M_InOut_ID != ? ";
 		List<TF_MInOut> list = new Query(getCtx(), TF_MInOut.Table_Name, whereClause, get_TrxName())
 				.setClient_ID()
-				.setParameters(getTF_WeighmentEntry_ID(), MInOut.MOVEMENTTYPE_VendorReceipts)
+				.setParameters(getTF_WeighmentEntry_ID(), MInOut.MOVEMENTTYPE_VendorReceipts, getM_InOut_ID())
 				.list();
 		for(TF_MInOut io : list) {
 			if(io.getDocStatus().equals(DOCSTATUS_Completed))
@@ -248,6 +257,9 @@ public class TF_MInOut extends MInOut {
 	}
 	
 	public void createMaterialMovement(MWeighmentEntry wEntry) {		
+		if(!materialReceipt)
+			return;
+		
 		int BoulderID = MSysConfig.getIntValue("BOULDER_ID", 1000233, getAD_Client_ID(), getAD_Org_ID());
 		if(!isSOTrx()) {
 			if(BoulderID == wEntry.getM_Product_ID() && MWeighmentEntry.TF_SEND_TO_Production.equals(wEntry.getTF_Send_To())) {

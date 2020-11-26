@@ -45,7 +45,9 @@ public class CreatePurchaseEntryFromWeighment extends SvrProcess {
 		String whereClause = " WeighmentEntryType = '2PO' AND Status = 'CO' AND Processed='N' "
 				+ " AND (SELECT M_Product_Category_ID FROM M_Product WHERE M_Product.M_Product_ID=TF_WeighmentEntry.M_Product_ID)=1000050"
 				+ " AND NOT EXISTS(SELECT C_Order.TF_WeighmentEntry_ID FROM C_Order WHERE "
-				+ "C_Order.TF_WeighmentEntry_ID =  TF_WeighmentEntry.TF_WeighmentEntry_ID)";
+				+ "C_Order.TF_WeighmentEntry_ID =  TF_WeighmentEntry.TF_WeighmentEntry_ID)"
+				+ " AND NOT EXISTS(SELECT M_InOut.TF_WeighmentEntry_ID FROM M_InOut WHERE "
+				+ " M_InOut.TF_WeighmentEntry_ID =  TF_WeighmentEntry.TF_WeighmentEntry_ID AND M_InOut.DocStatus IN ('CO','CL'))";
 		int i = 0;
 		List<MWeighmentEntry> wEntries = new Query(getCtx(), MWeighmentEntry.Table_Name, whereClause, get_TrxName())
 				.setClient_ID().list();
@@ -178,7 +180,8 @@ public class CreatePurchaseEntryFromWeighment extends SvrProcess {
 					//Material Receipt
 			
 					TF_MInOut inout = new TF_MInOut(getCtx(), 0, get_TrxName());
-					inout.setTF_WeighmentEntry_ID(wEntry.getTF_WeighmentEntry_ID());
+					inout.setAD_Org_ID(wEntry.getAD_Org_ID());
+					inout.setTF_WeighmentEntry_ID(wEntry.getTF_WeighmentEntry_ID());					
 					inout.setDescription(wEntry.getDescription());
 					inout.setC_DocType_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getMaterialReceipt_DocType_ID());
 					inout.setMovementType(MInOut.MOVEMENTTYPE_VendorReceipts);
@@ -186,7 +189,7 @@ public class CreatePurchaseEntryFromWeighment extends SvrProcess {
 					inout.setDateAcct(wEntry.getGrossWeightTime());
 					inout.setC_BPartner_ID(wEntry.getC_BPartner_ID());
 					inout.setC_BPartner_Location_ID(bp.getPrimaryC_BPartner_Location_ID());
-					inout.setAD_User_ID(bp.getAD_User_ID());
+					inout.setAD_User_ID(bp.getAD_User_ID());					
 					inout.setM_Warehouse_ID(wEntry.getM_Warehouse_ID());
 					inout.setPriorityRule(TF_MInOut.PRIORITYRULE_Medium);
 					inout.setFreightCostRule(TF_MInOut.FREIGHTCOSTRULE_FreightIncluded);

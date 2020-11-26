@@ -247,4 +247,12 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 	public void reverseShipped() {
 		setProcessed(false);
 	}
+	
+	public BigDecimal getMT() {
+		return getNetWeight().divide(new BigDecimal(1000), RoundingMode.HALF_EVEN);
+	}
+	
+	public int getMT_UOM_ID() {
+		return MSysConfig.getIntValue("TONNAGE_UOM", 1000069, getAD_Client_ID());
+	}
 }
