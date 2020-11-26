@@ -514,8 +514,8 @@ public class TF_MInvoice extends MInvoice {
 		//createCounterProjectSalesInvoice();
 		if (getC_Project_ID() > 0) {
 			TF_MProject proj = new TF_MProject(getCtx(), getC_Project_ID(), get_TrxName());
-			proj.updateQtyBilled();
-			proj.saveEx();
+			//proj.updateQtyBilled();
+			//proj.saveEx();
 			if (proj.getSubcontractType().equals(TF_MProject.SUBCONTRACTTYPE_QuarryProducton)) {
 				// to update the Subcon_Invoice_ID on TF_Boulder_Receipt while clicking Document
 				// Action button in Inoice (Vendor) screen
@@ -558,6 +558,8 @@ public class TF_MInvoice extends MInvoice {
 	private void updateCPInvoice(TF_MProject proj) {
 		Timestamp dateFrom = getDateFrom();
 		Timestamp dateTo = getDateTo();
+		if (dateFrom == null || dateTo == null)
+			return;
 		
 		// to update the boulder recivept subcontract query		
 		String sql = " UPDATE TF_RMSubcon_Movement SET C_Invoice_ID  = ? WHERE AD_Org_ID = ? AND C_Invoice_ID IS NULL"
@@ -572,12 +574,9 @@ public class TF_MInvoice extends MInvoice {
 
 	private void updateSubContractInvoice(TF_MProject proj) {
 
-		Timestamp dateFrom = (Timestamp) get_Value(COLUMNNAME_DateFrom);
-		Timestamp dateTo = (Timestamp) get_Value(COLUMNNAME_DateTo);
-		if (!dateFrom.equals(null) && !dateTo.equals(null))
-			return;
-
-		if (getC_Project_ID() != this.getC_Project_ID())
+		Timestamp dateFrom = getDateFrom();
+		Timestamp dateTo = getDateFrom();
+		if (dateFrom == null || dateTo == null)
 			return;
 
 		for (MInvoiceLine srcLine : getLines()) {
