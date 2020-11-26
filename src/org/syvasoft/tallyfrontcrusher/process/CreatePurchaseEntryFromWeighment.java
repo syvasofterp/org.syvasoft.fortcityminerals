@@ -42,8 +42,7 @@ public class CreatePurchaseEntryFromWeighment extends SvrProcess {
 		//String whereClause = " AD_Org_ID = ? AND TRUNC(GrossWeightTime) >= ? AND TRUNC(GrossWeightTime) <= ? AND "
 		boolean createConsolidatedPurchaseInvoice = true;
 		
-		String whereClause = " WeighmentEntryType = '2PO' AND Status = 'CO' AND (SELECT OrgType FROM AD_Org WHERE "				
-				+ "AD_Org.AD_Org_ID = TF_WeighmentEntry.AD_Org_ID) = 'C'"
+		String whereClause = " WeighmentEntryType = '2PO' AND Status = 'CO' AND Processed='N' "
 				+ " AND (SELECT M_Product_Category_ID FROM M_Product WHERE M_Product.M_Product_ID=TF_WeighmentEntry.M_Product_ID)=1000050"
 				+ " AND NOT EXISTS(SELECT C_Order.TF_WeighmentEntry_ID FROM C_Order WHERE "
 				+ "C_Order.TF_WeighmentEntry_ID =  TF_WeighmentEntry.TF_WeighmentEntry_ID)";
@@ -205,13 +204,14 @@ public class CreatePurchaseEntryFromWeighment extends SvrProcess {
 					ioLine.setC_UOM_ID(wEntry.getC_UOM_ID());
 					ioLine.saveEx(get_TrxName());
 					
+					sp = trx.setSavepoint(wEntry.getDocumentNo());	
 					//Material Issue DocAction
 					if (!inout.processIt(DocAction.ACTION_Complete))
 						throw new AdempiereException("Failed when processing document - " + inout.getProcessMsg());
 					
 					inout.saveEx();
 					
-					sp = trx.setSavepoint(wEntry.getDocumentNo());				
+							
 															
 					trx.releaseSavepoint(sp);
 					addLog(inout.get_Table_ID(), inout.getCreated(), null, inout.getDocumentNo() + " is created!", inout.get_Table_ID(), inout.get_ID());
