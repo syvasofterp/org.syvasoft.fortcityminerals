@@ -2020,8 +2020,8 @@ public class TF_MOrder extends MOrder {
 			}			
 		}//End Delete
 		
-		if(createConsolidatedTransportInvoice)
-			return;
+		//if(createConsolidatedTransportInvoice)
+		//	return;
 		
 		//Update modified Vehicle Rent line.		
 		//Vehicle Rent
@@ -2109,11 +2109,11 @@ public class TF_MOrder extends MOrder {
 	
 	@Override
 	public String completeIt() {
-		if(getTF_RentedVehicle_ID() > 0 && getRent_Amt().doubleValue() <= 0 && isSOTrx() && !createConsolidatedTransportInvoice)
+		if(getTF_RentedVehicle_ID() > 0 && getRent_Amt().doubleValue() <= 0 && isSOTrx()  )
 			throw new AdempiereException("Please specify Rent Amount!");
 		MRentedVehicle rv = new MRentedVehicle(getCtx(), getTF_RentedVehicle_ID(), get_TrxName());
 		if(getTF_RentedVehicle_ID() > 0 && getRent_Amt().doubleValue() <= 0 && !isSOTrx() && 
-				isCreateTransportInvoice() && rv.isTransporter() && !createConsolidatedTransportInvoice)
+				isCreateTransportInvoice() && rv.isTransporter() )
 			throw new AdempiereException("Please specify Rent Amount!");
 		
 		if(isSOTrx() && MSysConfig.getBooleanValue("DISCOUNT_REQUEST_ENABLED", false)) {
@@ -3295,6 +3295,8 @@ public class TF_MOrder extends MOrder {
 		invoice.setDateAcct(getDateAcct());
 		//
 		invoice.setSalesRep_ID(Env.getAD_User_ID(getCtx()));		
+		invoice.setPaymentRule(getPaymentRule());
+		invoice.setC_PaymentTerm_ID(getC_PaymentTerm_ID());
 		//
 		
 		invoice.setBPartner(bp);				

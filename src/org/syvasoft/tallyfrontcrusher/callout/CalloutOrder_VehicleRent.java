@@ -93,8 +93,8 @@ public class CalloutOrder_VehicleRent implements IColumnCallout {
 			}
 			else {								
 				RentAmt=MLumpSumRentConfig.getLumpSumRent(ctx,AD_Org_ID,Vendor_ID, C_BPartner_ID, M_Product_ID, TF_Destination_ID, TF_VehicleType_ID, Distance, null);
-				if(RentAmt.doubleValue() > 0)
-					mTab.setValue(TF_MOrder.COLUMNNAME_IsLumpSumRent, true);
+				//if(RentAmt.doubleValue() > 0)
+				mTab.setValue(TF_MOrder.COLUMNNAME_IsLumpSumRent, true);
 				Rent_UOM_ID = MSysConfig.getIntValue("LOAD_UOM", 1000072, Env.getAD_Client_ID(ctx));
 			}
 			
