@@ -532,6 +532,7 @@ public class TF_MInvoice extends MInvoice {
 			}
 
 		}
+		completeWeighmentEntriesForConsolidateInvoice();
 		createCounterInvoice();
 		createMatchInvReceipts();
 		
@@ -642,6 +643,7 @@ public class TF_MInvoice extends MInvoice {
 			}
 		}
 		
+		reverseConsolidateInvoice();
 		reverseConsolidateInvLineReceipts();
 		
 		return ok;
@@ -869,7 +871,8 @@ public class TF_MInvoice extends MInvoice {
 				
 				
 		for(MInvoiceLine invLine : getLines()) {
-			
+			if(!invLine.getM_Product().getProductType().equals(TF_MProduct.PRODUCTTYPE_Item))
+				continue;
 			List<MInOutLine> ioLines = new Query(getCtx(), MInOutLine.Table_Name, whereClause, get_TrxName())
 					.setClient_ID()
 					.setParameters(invLine.getM_Product_ID(), getC_Invoice_ID())
@@ -890,4 +893,40 @@ public class TF_MInvoice extends MInvoice {
 		DB.executeUpdate(sqlUpdate, get_TrxName());
 	}
 	
+	public void completeWeighmentEntriesForConsolidateInvoice() {
+		if(getTF_WeighmentEntry_ID() > 0 || isSOTrx())
+			return;
+		if(getDateTo() == null || getDateFrom() == null)
+			return;
+		
+		String whereClause = " TF_WeighmentEntry_ID IN (SELECT i.TF_WeighmentEntry_ID FROM M_InOut i WHERE i.C_Invoice_ID = ? ) AND Processed = 'Y' AND Status='CO'"
+				+ " AND C_BPartner_ID = ? ";
+		List<MWeighmentEntry> wEntries = new Query(getCtx(), MWeighmentEntry.Table_Name, whereClause, get_TrxName())
+				.setClient_ID()
+				.setParameters(getC_Invoice_ID(), getC_BPartner_ID())
+				.list();
+		for(MWeighmentEntry we : wEntries) {
+			we.close();
+			we.saveEx();
+		}
+	}
+	
+	public void reverseConsolidateInvoice() {	
+		if(getTF_WeighmentEntry_ID() > 0 || isSOTrx())
+			return;
+		if(getDateTo() == null || getDateFrom() == null)
+			return;
+		
+		String whereClause = " TF_WeighmentEntry_ID IN (SELECT i.TF_WeighmentEntry_ID FROM M_InOut i WHERE i.C_Invoice_ID = ? ) AND Processed = 'Y' AND Status='CL'"
+				+ " AND C_BPartner_ID = ? ";;
+		List<MWeighmentEntry> wEntries = new Query(getCtx(), MWeighmentEntry.Table_Name, whereClause, get_TrxName())
+				.setClient_ID()
+				.setParameters(getC_Invoice_ID(), getC_BPartner_ID())
+				.list();
+		for(MWeighmentEntry we : wEntries) {
+			we.reverse();
+			we.saveEx();
+		}
+		
+	}
 }
