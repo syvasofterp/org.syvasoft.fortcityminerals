@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 import org.adempiere.exceptions.DBException;
+import org.compiere.model.MInvoiceLine;
+import org.compiere.model.MOrderLine;
 import org.compiere.model.MSysConfig;
 import org.compiere.process.ProcessInfoParameter;
 import org.compiere.process.SvrProcess;
@@ -26,6 +28,7 @@ public class CreateConsolidateCustomerOrderLines extends SvrProcess {
 	
 	Timestamp dateFrom = null;
 	Timestamp dateTo = null;
+	boolean reCreate = false;	
 	
 	@Override
 	protected void prepare() {
@@ -39,6 +42,8 @@ public class CreateConsolidateCustomerOrderLines extends SvrProcess {
 				dateFrom = para.getParameterAsTimestamp();
 			else if("DateTo".equals(name) ) 
 				dateTo = para.getParameterAsTimestamp();
+			else if (name.equals("reCreate"))
+				reCreate = para.getParameterAsBoolean();
 			else
 				log.log(Level.SEVERE, "Unknown Parameter: " + name);
 		}
@@ -46,10 +51,22 @@ public class CreateConsolidateCustomerOrderLines extends SvrProcess {
 
 	@Override
 	protected String doIt() throws Exception {
+		String sqlUpdate = null;
+		if(reCreate) {
+			sqlUpdate = "UPDATE M_InOut SET C_Order_ID = NULL WHERE C_Order_ID = " + ord.getC_Order_ID();
+			DB.executeUpdate(sqlUpdate, get_TrxName());
+			for(MOrderLine ordLine : ord.getLines(true, null)) {
+				ordLine.delete(true, get_TrxName());
+			}
+		}
 		
-		String sqlUpate = "UPDATE M_Inout SET C_Order_ID = ? WHERE AD_Org_ID = ? AND C_DocType_ID = ? AND C_BPartner_ID = ? "
+		if(ord.getLines(true, null).length > 0)
+			return "The Consolidated Order Lines are already created!";
+		
+		sqlUpdate = "UPDATE M_Inout SET C_Order_ID = ? WHERE AD_Org_ID = ? AND C_DocType_ID = ? AND C_BPartner_ID = ? "
 				+ " AND Docstatus IN ('CO','CL') AND IsSOTrx='Y' "  
-				+ "	AND MovementDate >= ? AND MovementDate <= ? AND C_Order_ID IS NULL";
+				+ "	AND MovementDate >= ? AND MovementDate <= ? AND C_Order_ID IS NULL "
+				+ " AND EXISTS(SELECT * FROM TF_WeighmentEntry we WHERE we.TF_WeighmentEntry_ID = M_InOut.TF_WeighmentEntry_ID AND we.Status = 'CO')";
 		ArrayList<Object> params = new ArrayList<Object>();
 		params.add(ord.getC_Order_ID());
 		params.add(ord.getAD_Org_ID());
@@ -57,7 +74,7 @@ public class CreateConsolidateCustomerOrderLines extends SvrProcess {
 		params.add(ord.getC_BPartner_ID());		
 		params.add(dateFrom);
 		params.add(dateTo);
-		DB.executeUpdateEx(sqlUpate, params.toArray(), get_TrxName());
+		DB.executeUpdateEx(sqlUpdate, params.toArray(), get_TrxName());
 						
 		int RoyaltyPassProduct_ID = MSysConfig.getIntValue("ROYALTY_PASS_PRODUCT_ID", 1000329, getAD_Client_ID(), ord.getAD_Org_ID());
 		
