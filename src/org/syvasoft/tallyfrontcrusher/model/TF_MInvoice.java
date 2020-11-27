@@ -431,6 +431,10 @@ public class TF_MInvoice extends MInvoice {
 		boolean result = super.beforeSave(newRecord);
 		MBPartner bp = MBPartner.get(getCtx(), getC_BPartner_ID());
 		setBPartner(bp);
+		if(newRecord) {
+			if(getPaymentRule() == null)
+				setPaymentRule(PAYMENTRULE_OnCredit);
+		}
 		return result;
 	}
 
@@ -575,7 +579,7 @@ public class TF_MInvoice extends MInvoice {
 	private void updateSubContractInvoice(TF_MProject proj) {
 
 		Timestamp dateFrom = getDateFrom();
-		Timestamp dateTo = getDateFrom();
+		Timestamp dateTo = getDateTo();
 		if (dateFrom == null || dateTo == null)
 			return;
 
