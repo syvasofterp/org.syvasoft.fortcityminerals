@@ -2209,7 +2209,8 @@ public class TF_MOrder extends MOrder {
 	public boolean voidIt() {
 		
 		//POS Order's MR and Invoice should be reversed.
-		if(getC_DocType_ID() == 1000050 || getC_DocType_ID() == 1000041) {
+		if(getC_DocType_ID() == 1000050 || getC_DocType_ID() == 1000041 ||
+				getC_DocType_ID() == GSTOrderDocType_ID(getCtx()) || getC_DocType_ID() == NonGSTOrderDocType_ID(getCtx())) {
 			//MR/Shipment reverse Correct
 			List<MInOut> inOutList = new Query(getCtx(), MInOut.Table_Name, "C_Order_ID=? AND DocStatus=?", get_TrxName())
 				.setClient_ID().setParameters(getC_Order_ID(),DOCSTATUS_Completed).list();
