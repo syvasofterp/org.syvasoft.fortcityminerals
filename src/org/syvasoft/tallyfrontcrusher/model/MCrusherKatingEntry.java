@@ -39,8 +39,9 @@ public class MCrusherKatingEntry extends X_TF_CrusherKatingEntry {
 			setProcessed(true);
 			
 			MWeighmentEntry wEntry = (MWeighmentEntry) getTF_WeighmentEntry();
-			if(wEntry != null) {				
-				wEntry.close();
+			if(wEntry != null) {
+				wEntry.shipped();
+				wEntry.close();				
 				wEntry.saveEx();
 			}
 			
@@ -55,9 +56,10 @@ public class MCrusherKatingEntry extends X_TF_CrusherKatingEntry {
 			}
 						
 			
-			//Transporter Invoice
+			//Transporter Invoice has to be created according to client requirement.
+			//Material Receipt should be created for the consolidate invoice scenario.
 			MRentedVehicle vehicle = new MRentedVehicle(getCtx(), getTF_RentedVehicle_ID(), get_TrxName());
-			if(!vehicle.isTransporter() && getTF_RentedVehicle_ID() > 0) {
+			if(!vehicle.isTransporter() || getTF_RentedVehicle_ID() > 0) {
 				return;
 			}
 			
@@ -214,7 +216,8 @@ public class MCrusherKatingEntry extends X_TF_CrusherKatingEntry {
 		setDocStatus(DOCSTATUS_InProgress);
 		setProcessed(false);
 		MWeighmentEntry wEntry = (MWeighmentEntry) getTF_WeighmentEntry();
-		if(wEntry != null) {				
+		if(wEntry != null) {
+			wEntry.reverseShipped();
 			wEntry.reverse();
 			wEntry.saveEx();
 		}
