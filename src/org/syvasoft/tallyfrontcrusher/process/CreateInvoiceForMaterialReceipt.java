@@ -274,11 +274,11 @@ public class CreateInvoiceForMaterialReceipt extends SvrProcess {
 		String sqlCnt = "SELECT COUNT(*) FROM C_InvoiceLine WHERE C_Invoice_ID = ? AND M_Product_ID = ? ";
 		int count =  DB.getSQLValue(get_TrxName(), sqlCnt, invoice.getC_Invoice_ID(), proj.getJobWork_Product_ID());
 		if(count > 0)
-			return 1;
+			return i;
 	
 
 		String sql = "SELECT round(sum(Qty_Receipt),2) as QtyReceived FROM TF_RMSubcon_Movement"
-				+ " WHERE MovementDate >= ? AND MovementDate <= ? " + " AND C_Invoice_ID IS NULL";
+				+ " WHERE MovementDate >= ? AND MovementDate <= ? " + " AND C_Invoice_ID IS NULL AND Qty_Receipt IS NOT NULL";
 		
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;

@@ -568,7 +568,7 @@ public class TF_MInvoice extends MInvoice {
 		
 		// to update the boulder recivept subcontract query		
 		String sql = " UPDATE TF_RMSubcon_Movement SET C_Invoice_ID  = ? WHERE AD_Org_ID = ? AND C_Invoice_ID IS NULL"
-						+ " AND MovementDate  >= ? AND MovementDate  <= ?";
+						+ " AND MovementDate  >= ? AND MovementDate  <= ? AND Qty_Receipt IS NOT NULL ";
 		ArrayList<Object> params = new ArrayList<Object>();
 		params.add(this.getC_Invoice_ID());
 		params.add(getAD_Org_ID());
