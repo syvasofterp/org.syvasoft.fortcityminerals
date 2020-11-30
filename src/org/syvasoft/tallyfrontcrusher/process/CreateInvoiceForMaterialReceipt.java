@@ -278,18 +278,21 @@ public class CreateInvoiceForMaterialReceipt extends SvrProcess {
 	
 
 		String sql = "SELECT round(sum(Qty_Receipt),2) as QtyReceived FROM TF_RMSubcon_Movement"
-				+ " WHERE MovementDate >= ? AND MovementDate <= ? " + " AND C_Invoice_ID IS NULL AND Qty_Receipt IS NOT NULL";
+				+ " WHERE AD_Org_ID = ? AND  MovementDate >= ? AND MovementDate <= ? " + " AND C_Invoice_ID IS NULL AND Qty_Receipt IS NOT NULL";
 		
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
 			pstmt = DB.prepareStatement(sql, get_TrxName());
 			ArrayList<Object> params = new ArrayList<Object>();
+			params.add(invoice.getAD_Org_ID());
 			params.add(DateFrom);
 			params.add(DateTo);
 			DB.setParameters(pstmt, params.toArray());
 			rs = pstmt.executeQuery();		
 			while (rs.next()) {
+				if(rs.getBigDecimal("QtyReceived") == null)
+					continue;
 				// to create the invoice line item by clicking button Create Crusher Production Invoice line button				
 				BigDecimal minContractAmt = proj.getMinContract_Amt();
 				BigDecimal purchasePrice = MJobworkProductPrice.getPrice(getCtx(), invoice.getC_Project_ID(),
