@@ -28,7 +28,9 @@ public class MEmailAlertSetup extends X_VG_EmailAlertSetup {
 	}
 	
 	public static MEmailAlertSetup get(Properties ctx,int AD_Org_ID, String value, String trxName) {
-		return new Query(ctx, Table_Name, "AD_Org_ID = ? AND Value = ?", trxName).setClient_ID().setParameters(AD_Org_ID, value).first();
+		return new Query(ctx, Table_Name, "AD_Org_ID = ? AND Value = ?", trxName).setClient_ID().setParameters(AD_Org_ID, value)
+				.setOnlyActiveRecords(true)
+				.first();
 	}
 	
 	public List<MEmailAlertSetupCC> getCCs() {

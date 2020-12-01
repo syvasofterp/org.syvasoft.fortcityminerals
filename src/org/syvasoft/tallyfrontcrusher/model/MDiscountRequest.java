@@ -53,11 +53,11 @@ public class MDiscountRequest extends X_TF_DiscountRequest {
 	protected boolean afterSave(boolean newRecord, boolean success) {
 		try {
 			if(DISCNTSTATUS_Requested.equals(getDiscntStatus()) && newRecord) {
-				//sendEmailforDiscountRequest();
+				sendEmailforDiscountRequest();
 			}
 			else if(!newRecord && DISCNTSTATUS_Approved.equals(getDiscntStatus()) 
 					&& is_ValueChanged(COLUMNNAME_DiscntStatus)) {
-				//sendEmailforDiscountApproved();
+				sendEmailforDiscountApproved();
 			}
 		}
 		catch (Exception ex) {
@@ -71,7 +71,9 @@ public class MDiscountRequest extends X_TF_DiscountRequest {
 		
 		MEmailAlertSetup alertType = MEmailAlertSetup.get(getCtx(), getAD_Org_ID(), 
 				"DISCOUNT_REQUEST", get_TrxName());
-					
+		
+		if(alertType == null)
+			return;
 		
 		TF_MailText mailText = new TF_MailText(getCtx(), alertType.getR_MailText_ID(), get_TrxName());
 		mailText.setRecipientName(alertType.getAD_User().getName());
@@ -112,6 +114,10 @@ public class MDiscountRequest extends X_TF_DiscountRequest {
 		
 		MEmailAlertSetup alertType = MEmailAlertSetup.get(getCtx(), getAD_Org_ID(), 
 				"DISCOUNT_APPROVED", get_TrxName());
+		
+		if(alertType == null)
+			return;
+		
 		String toEmailId = null;
 		if(alertType.isEmailtoCreator()) {
 			toEmailId = alertType.getEmailAddress(getCreatedBy());
