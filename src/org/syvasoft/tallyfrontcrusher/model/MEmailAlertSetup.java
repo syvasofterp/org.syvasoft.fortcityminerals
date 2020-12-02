@@ -1,14 +1,11 @@
 package org.syvasoft.tallyfrontcrusher.model;
 
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
 import org.compiere.model.MUser;
-import org.compiere.model.MUserRoles;
 import org.compiere.model.Query;
-import org.compiere.util.Util;
+
 
 public class MEmailAlertSetup extends X_VG_EmailAlertSetup {
 
