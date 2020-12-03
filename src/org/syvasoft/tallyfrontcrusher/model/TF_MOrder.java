@@ -2192,9 +2192,9 @@ public class TF_MOrder extends MOrder {
 			setSalesDiscountAmt(BigDecimal.ZERO);
 		}
 		
-		TF_MProject proj = TF_MProject.getCrusherProductionSubcontractByWarehouse(getM_Warehouse_ID());
-		if(proj != null && getC_Project_ID() == 0)
-			setC_Project_ID(proj.getC_Project_ID());
+		//TF_MProject proj = TF_MProject.getCrusherProductionSubcontractByWarehouse(getM_Warehouse_ID());
+		//if(proj != null && getC_Project_ID() == 0)
+		//	setC_Project_ID(proj.getC_Project_ID());
 		
 		TF_MOrg org = new TF_MOrg(getCtx(), getAD_Org_ID(), get_TrxName());
 		setOrgType(org.getOrgType());
