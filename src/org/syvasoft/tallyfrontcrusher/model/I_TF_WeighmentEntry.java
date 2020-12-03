@@ -646,4 +646,7 @@ public interface I_TF_WeighmentEntry
 
 	/** Get Type	  */
 	public String getWeighmentEntryType();
+	
+    /** Column name NewDestination */
+    public static final String COLUMNNAME_NewDestination = "NewDestination";
 }

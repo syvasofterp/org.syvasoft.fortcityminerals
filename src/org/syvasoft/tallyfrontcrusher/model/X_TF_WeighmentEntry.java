@@ -1080,4 +1080,19 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	{
 		return (String)get_Value(COLUMNNAME_WeighmentEntryType);
 	}
+	
+	/** Set New Destination.
+	@param NewDestination New Destination	  */
+	public void setNewDestination (String NewDestination)
+	{
+		set_Value (COLUMNNAME_NewDestination, NewDestination);
+	}
+	
+	/** Get New Destination.
+		@return New Destination	  */
+	public String getNewDestination () 
+	{
+		return (String)get_Value(COLUMNNAME_NewDestination);
+	}
+
 }

@@ -30,7 +30,7 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 	}
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
-		
+		CreateDestination();
 		
 		if(getTF_RentedVehicle_ID() > 0 && (getVehicleNo() == null || getVehicleNo().length() == 0))
 				setVehicleNo(getTF_RentedVehicle().getVehicleNo());
@@ -148,6 +148,29 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		*/
 		boolean ok = super.beforeSave(newRecord);
 		return ok;
+	}
+	
+	void CreateDestination() {
+		if(getNewDestination()!=null && getTF_Destination_ID()==0) {
+			String whereClause="UPPER(replace(Name,' ',''))='"+getNewDestination().replace(" ","").toUpperCase()+"'";
+			MDestination dest=new Query(getCtx(),MDestination.Table_Name, whereClause,get_TrxName())
+					.setClient_ID()
+					.first();
+			if(dest!=null) {
+				setTF_Destination_ID(dest.getTF_Destination_ID());
+			}
+			else {
+				MDestination destnew=new MDestination(getCtx(), 0, get_TrxName());
+				destnew.setAD_Org_ID(getAD_Org_ID());
+				destnew.setName(getNewDestination());
+				destnew.setDistance(BigDecimal.ZERO);
+				destnew.setRate(BigDecimal.ZERO);
+				destnew.setIsActive(true);
+				destnew.saveEx();
+				
+				setTF_Destination_ID(destnew.get_ID());
+			}
+		}
 	}
 	
 	public void close() {
