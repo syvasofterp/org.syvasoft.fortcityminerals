@@ -41,6 +41,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return TF_MOrder.class;
 		else if (TF_MOrderLine.Table_Name.equals(tableName))			
 			return TF_MOrderLine.class;
+		else if (TF_MRequisition.Table_Name.equals(tableName))			
+			return TF_MRequisition.class;
+		else if (TF_MRequisitionLine.Table_Name.equals(tableName))			
+			return TF_MRequisitionLine.class;
 		else if (MFuelIssue.Table_Name.equals(tableName))
 			return MFuelIssue.class;
 		else if (MLabourWage.Table_Name.equals(tableName))
@@ -297,6 +301,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return new TF_MOrder(ctx, Record_ID, trxName);
 		else if (TF_MOrderLine.Table_Name.equals(tableName))
 			return new TF_MOrderLine(ctx, Record_ID, trxName);
+		else if (TF_MRequisition.Table_Name.equals(tableName))			
+			return new TF_MRequisition(ctx, Record_ID, trxName);
+		else if (TF_MRequisitionLine.Table_Name.equals(tableName))			
+			return new TF_MRequisitionLine(ctx, Record_ID, trxName);
 		else if (MFuelIssue.Table_Name.equals(tableName))
 			return new MFuelIssue(ctx, Record_ID, trxName);
 		else if (MLabourWage.Table_Name.equals(tableName))			
@@ -553,6 +561,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return new TF_MOrder(ctx, rs, trxName);
 		else if (TF_MOrderLine.Table_Name.equals(tableName))
 			return new TF_MOrderLine(ctx, rs, trxName);
+		else if (TF_MRequisition.Table_Name.equals(tableName))			
+			return new TF_MRequisition(ctx, rs, trxName);
+		else if (TF_MRequisitionLine.Table_Name.equals(tableName))			
+			return new TF_MRequisitionLine(ctx, rs, trxName);
 		else if (MFuelIssue.Table_Name.equals(tableName))
 			return new MFuelIssue(ctx, rs, trxName);
 		else if (MLabourWage.Table_Name.equals(tableName))			

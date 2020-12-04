@@ -27,12 +27,13 @@ public class CalloutRequisition_SetPriceUOM implements IColumnCallout {
 		TF_MRequisition requistion = new TF_MRequisition(ctx, requisitionId, null);
 		
 		if(value != null
-				&& mTab.getValue(TF_MRequisitionLine.COLUMNNAME_C_BPartner_ID) != null
-				&& mTab.getValue(TF_MRequisitionLine.COLUMNNAME_C_UOM_ID) != null
-				&& requistion.getDateRequired() != null
-				&& requistion.getM_PriceList_ID() > 0) {
+				&& mTab.getValue(TF_MRequisitionLine.COLUMNNAME_C_UOM_ID) != null) {
 			
-			int bPartner_ID = (int) mTab.getValue(TF_MRequisitionLine.COLUMNNAME_C_BPartner_ID);			
+			int bPartner_ID = 0;
+			
+			if(mTab.getValue(TF_MRequisitionLine.COLUMNNAME_C_BPartner_ID) != null)
+				bPartner_ID =  (int) mTab.getValue(TF_MRequisitionLine.COLUMNNAME_C_BPartner_ID);
+			
 			int product_ID = (int) mTab.getValue(TF_MRequisitionLine.COLUMNNAME_M_Product_ID);			
 						
 			int C_UOM_ID = (int) mTab.getValue(TF_MRequisitionLine.COLUMNNAME_C_UOM_ID);
