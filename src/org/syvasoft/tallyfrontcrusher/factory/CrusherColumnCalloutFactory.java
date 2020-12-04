@@ -76,6 +76,7 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutPriceList_BPartner;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutProduct_CalcTotalValue;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutRentalContract_ResourceType;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutRentalContract_VehicleNo;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutRequisition_SetPriceUOM;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTRTaxInvoiceLine_CalcAmount;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTRTaxInvoice_CalTotalAmt;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutTaxInvoice_CalcAmount;
@@ -135,6 +136,7 @@ import org.syvasoft.tallyfrontcrusher.model.TF_MInvoice;
 import org.syvasoft.tallyfrontcrusher.model.TF_MJournal;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
 import org.syvasoft.tallyfrontcrusher.model.TF_MPayment;
+import org.syvasoft.tallyfrontcrusher.model.TF_MRequisitionLine;
 
 public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 
@@ -654,6 +656,11 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 				list.add(new CalloutPM_SetMachineryType());
 		}
 		
+		//Set Price based on Selected UOM
+		if((tableName.equals(TF_MRequisitionLine.Table_Name)) && (columnName.equals(TF_MRequisitionLine.COLUMNNAME_M_Product_ID)				
+				|| columnName.equals(TF_MRequisitionLine.COLUMNNAME_C_UOM_ID) || columnName.equals(TF_MRequisitionLine.COLUMNNAME_C_BPartner_ID) )) {			
+			list.add(new CalloutRequisition_SetPriceUOM());
+		}
 		
 		return list != null ? list.toArray(new IColumnCallout[0]) : new IColumnCallout[0];
 	}
