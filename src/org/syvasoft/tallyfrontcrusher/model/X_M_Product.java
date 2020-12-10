@@ -34,7 +34,7 @@ public class X_M_Product extends PO implements I_M_Product, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20200510L;
+	private static final long serialVersionUID = 20201210L;
 
     /** Standard Constructor */
     public X_M_Product (Properties ctx, int M_Product_ID, String trxName)
@@ -42,6 +42,8 @@ public class X_M_Product extends PO implements I_M_Product, I_Persistent
       super (ctx, M_Product_ID, trxName);
       /** if (M_Product_ID == 0)
         {
+			setAggregateOSQty (Env.ZERO);
+// 0
 			setC_TaxCategory_ID (0);
 			setC_UOM_ID (0);
 			setGSTRate (Env.ZERO);
@@ -80,9 +82,13 @@ public class X_M_Product extends PO implements I_M_Product, I_Persistent
 			setM_Product_ID (0);
 			setMaintainPermitLedger (false);
 // N
+			setMileageType (null);
+// K
 			setName (null);
 			setProductType (null);
 // I
+			setTrackSpareLife (false);
+// N
 			setValue (null);
         } */
     }
@@ -114,6 +120,26 @@ public class X_M_Product extends PO implements I_M_Product, I_Persistent
         .append(get_ID()).append("]");
       return sb.toString();
     }
+
+	/** Set Aggregate Opening Stock Qty.
+		@param AggregateOSQty 
+		This opening stock qty is in the Aggregate Material Movement Report as opening stock
+	  */
+	public void setAggregateOSQty (BigDecimal AggregateOSQty)
+	{
+		set_Value (COLUMNNAME_AggregateOSQty, AggregateOSQty);
+	}
+
+	/** Get Aggregate Opening Stock Qty.
+		@return This opening stock qty is in the Aggregate Material Movement Report as opening stock
+	  */
+	public BigDecimal getAggregateOSQty () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_AggregateOSQty);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
 
 	/** Set Bill Price.
 		@param BillPrice Bill Price	  */
@@ -1301,6 +1327,25 @@ public class X_M_Product extends PO implements I_M_Product, I_Persistent
 		return false;
 	}
 
+	/** Km/litre = K */
+	public static final String MILEAGETYPE_KmLitre = "K";
+	/** litre/hr = H */
+	public static final String MILEAGETYPE_LitreHr = "H";
+	/** Set Mileage Type.
+		@param MileageType Mileage Type	  */
+	public void setMileageType (String MileageType)
+	{
+
+		set_Value (COLUMNNAME_MileageType, MileageType);
+	}
+
+	/** Get Mileage Type.
+		@return Mileage Type	  */
+	public String getMileageType () 
+	{
+		return (String)get_Value(COLUMNNAME_MileageType);
+	}
+
 	/** Set Name.
 		@param Name 
 		Alphanumeric identifier of the entity
@@ -1330,6 +1375,26 @@ public class X_M_Product extends PO implements I_M_Product, I_Persistent
 	public Timestamp getOpeningDate () 
 	{
 		return (Timestamp)get_Value(COLUMNNAME_OpeningDate);
+	}
+
+	/** Set Spare Group.
+		@param PM_SpareGroup_ID Spare Group	  */
+	public void setPM_SpareGroup_ID (int PM_SpareGroup_ID)
+	{
+		if (PM_SpareGroup_ID < 1) 
+			set_Value (COLUMNNAME_PM_SpareGroup_ID, null);
+		else 
+			set_Value (COLUMNNAME_PM_SpareGroup_ID, Integer.valueOf(PM_SpareGroup_ID));
+	}
+
+	/** Get Spare Group.
+		@return Spare Group	  */
+	public int getPM_SpareGroup_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_PM_SpareGroup_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	/** Set Price.
@@ -1631,6 +1696,85 @@ public class X_M_Product extends PO implements I_M_Product, I_Persistent
 		return (String)get_Value(COLUMNNAME_SKU);
 	}
 
+	public org.compiere.model.I_C_UOM getSpareLife_UOM() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_UOM)MTable.get(getCtx(), org.compiere.model.I_C_UOM.Table_Name)
+			.getPO(getSpareLife_UOM_ID(), get_TrxName());	}
+
+	/** Set Spare Life UOM.
+		@param SpareLife_UOM_ID Spare Life UOM	  */
+	public void setSpareLife_UOM_ID (int SpareLife_UOM_ID)
+	{
+		if (SpareLife_UOM_ID < 1) 
+			set_Value (COLUMNNAME_SpareLife_UOM_ID, null);
+		else 
+			set_Value (COLUMNNAME_SpareLife_UOM_ID, Integer.valueOf(SpareLife_UOM_ID));
+	}
+
+	/** Get Spare Life UOM.
+		@return Spare Life UOM	  */
+	public int getSpareLife_UOM_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_SpareLife_UOM_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Set Spare LIfe Green Limit.
+		@param SpareLIfeGreenLimit Spare LIfe Green Limit	  */
+	public void setSpareLIfeGreenLimit (BigDecimal SpareLIfeGreenLimit)
+	{
+		set_Value (COLUMNNAME_SpareLIfeGreenLimit, SpareLIfeGreenLimit);
+	}
+
+	/** Get Spare LIfe Green Limit.
+		@return Spare LIfe Green Limit	  */
+	public BigDecimal getSpareLIfeGreenLimit () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_SpareLIfeGreenLimit);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set Spare LIfe Yellow Limit.
+		@param SpareLIfeYellowLimit Spare LIfe Yellow Limit	  */
+	public void setSpareLIfeYellowLimit (BigDecimal SpareLIfeYellowLimit)
+	{
+		set_Value (COLUMNNAME_SpareLIfeYellowLimit, SpareLIfeYellowLimit);
+	}
+
+	/** Get Spare LIfe Yellow Limit.
+		@return Spare LIfe Yellow Limit	  */
+	public BigDecimal getSpareLIfeYellowLimit () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_SpareLIfeYellowLimit);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set Spare Standard Life.
+		@param SpareStdLife 
+		Spare Standard Life (in Spare Life UOM)
+	  */
+	public void setSpareStdLife (BigDecimal SpareStdLife)
+	{
+		set_Value (COLUMNNAME_SpareStdLife, SpareStdLife);
+	}
+
+	/** Get Spare Standard Life.
+		@return Spare Standard Life (in Spare Life UOM)
+	  */
+	public BigDecimal getSpareStdLife () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_SpareStdLife);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
 	/** Set Standard Load.
 		@param Std_Load Standard Load	  */
 	public void setStd_Load (BigDecimal Std_Load)
@@ -1683,6 +1827,27 @@ public class X_M_Product extends PO implements I_M_Product, I_Persistent
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
+	}
+
+	/** Set Track Spare Life.
+		@param TrackSpareLife Track Spare Life	  */
+	public void setTrackSpareLife (boolean TrackSpareLife)
+	{
+		set_Value (COLUMNNAME_TrackSpareLife, Boolean.valueOf(TrackSpareLife));
+	}
+
+	/** Get Track Spare Life.
+		@return Track Spare Life	  */
+	public boolean isTrackSpareLife () 
+	{
+		Object oo = get_Value(COLUMNNAME_TrackSpareLife);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
 	}
 
 	/** Set UnitsPerPack.

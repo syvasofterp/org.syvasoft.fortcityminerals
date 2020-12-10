@@ -64,6 +64,19 @@ public interface I_M_Product
 	  */
 	public int getAD_Org_ID();
 
+    /** Column name AggregateOSQty */
+    public static final String COLUMNNAME_AggregateOSQty = "AggregateOSQty";
+
+	/** Set Aggregate Opening Stock Qty.
+	  * This opening stock qty is in the Aggregate Material Movement Report as opening stock
+	  */
+	public void setAggregateOSQty (BigDecimal AggregateOSQty);
+
+	/** Get Aggregate Opening Stock Qty.
+	  * This opening stock qty is in the Aggregate Material Movement Report as opening stock
+	  */
+	public BigDecimal getAggregateOSQty();
+
     /** Column name BillPrice */
     public static final String COLUMNNAME_BillPrice = "BillPrice";
 
@@ -769,6 +782,15 @@ public interface I_M_Product
 	/** Get Maintain Permit Ledger	  */
 	public boolean isMaintainPermitLedger();
 
+    /** Column name MileageType */
+    public static final String COLUMNNAME_MileageType = "MileageType";
+
+	/** Set Mileage Type	  */
+	public void setMileageType (String MileageType);
+
+	/** Get Mileage Type	  */
+	public String getMileageType();
+
     /** Column name Name */
     public static final String COLUMNNAME_Name = "Name";
 
@@ -790,6 +812,15 @@ public interface I_M_Product
 
 	/** Get AS On	  */
 	public Timestamp getOpeningDate();
+
+    /** Column name PM_SpareGroup_ID */
+    public static final String COLUMNNAME_PM_SpareGroup_ID = "PM_SpareGroup_ID";
+
+	/** Set Spare Group	  */
+	public void setPM_SpareGroup_ID (int PM_SpareGroup_ID);
+
+	/** Get Spare Group	  */
+	public int getPM_SpareGroup_ID();
 
     /** Column name Price */
     public static final String COLUMNNAME_Price = "Price";
@@ -964,6 +995,48 @@ public interface I_M_Product
 	  */
 	public String getSKU();
 
+    /** Column name SpareLife_UOM_ID */
+    public static final String COLUMNNAME_SpareLife_UOM_ID = "SpareLife_UOM_ID";
+
+	/** Set Spare Life UOM	  */
+	public void setSpareLife_UOM_ID (int SpareLife_UOM_ID);
+
+	/** Get Spare Life UOM	  */
+	public int getSpareLife_UOM_ID();
+
+	public org.compiere.model.I_C_UOM getSpareLife_UOM() throws RuntimeException;
+
+    /** Column name SpareLIfeGreenLimit */
+    public static final String COLUMNNAME_SpareLIfeGreenLimit = "SpareLIfeGreenLimit";
+
+	/** Set Spare LIfe Green Limit	  */
+	public void setSpareLIfeGreenLimit (BigDecimal SpareLIfeGreenLimit);
+
+	/** Get Spare LIfe Green Limit	  */
+	public BigDecimal getSpareLIfeGreenLimit();
+
+    /** Column name SpareLIfeYellowLimit */
+    public static final String COLUMNNAME_SpareLIfeYellowLimit = "SpareLIfeYellowLimit";
+
+	/** Set Spare LIfe Yellow Limit	  */
+	public void setSpareLIfeYellowLimit (BigDecimal SpareLIfeYellowLimit);
+
+	/** Get Spare LIfe Yellow Limit	  */
+	public BigDecimal getSpareLIfeYellowLimit();
+
+    /** Column name SpareStdLife */
+    public static final String COLUMNNAME_SpareStdLife = "SpareStdLife";
+
+	/** Set Spare Standard Life.
+	  * Spare Standard Life (in Spare Life UOM)
+	  */
+	public void setSpareStdLife (BigDecimal SpareStdLife);
+
+	/** Get Spare Standard Life.
+	  * Spare Standard Life (in Spare Life UOM)
+	  */
+	public BigDecimal getSpareStdLife();
+
     /** Column name Std_Load */
     public static final String COLUMNNAME_Std_Load = "Std_Load";
 
@@ -990,6 +1063,15 @@ public interface I_M_Product
 
 	/** Get Tonnage Per Unit	  */
 	public BigDecimal getTonnagePerUnit();
+
+    /** Column name TrackSpareLife */
+    public static final String COLUMNNAME_TrackSpareLife = "TrackSpareLife";
+
+	/** Set Track Spare Life	  */
+	public void setTrackSpareLife (boolean TrackSpareLife);
+
+	/** Get Track Spare Life	  */
+	public boolean isTrackSpareLife();
 
     /** Column name UnitsPerPack */
     public static final String COLUMNNAME_UnitsPerPack = "UnitsPerPack";
