@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Shri Bajrang Group of Stones
-Bundle-SymbolicName: org.syvasoft.shribajrangstone;singleton:=true
+Bundle-Name: Namakkal Bluemetals
+Bundle-SymbolicName: org.syvasoft.namakkal;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.adempiere.base;bundle-version="4.1.0",
