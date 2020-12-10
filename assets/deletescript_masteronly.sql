@@ -1,3 +1,5 @@
+--
+
 SET SEARCH_PATH TO adempiere;
 
 --SELECT * FROM C_Order WHERE ad_client_id=1000000;
@@ -77,6 +79,9 @@ UPDATE tf_TripSheet SET tf_jobwork_issuedresource_id =NULL;
 UPDATE TF_Crusher_Production SET TF_WeighmentEntry_id = NULL, Subcon_Invoice_ID = NULL, Subcon2_Invoice_ID =NULL;
 
 --SubContract Tables
+UPDATE M_InOut SET TF_WeighmentEntry_ID = NULL;
+UPDATE C_Invoice SET TF_WeighmentEntry_ID = NULL;
+UPDATE tf_crusherkatingentry SET TF_WeighmentEntry_ID = NULL;
 DELETE FROM TF_Jobwork_Expense;
 DELETE FROM TF_Jobwork_Charges;
 DELETE FROM tf_jobwork_resrententry;
