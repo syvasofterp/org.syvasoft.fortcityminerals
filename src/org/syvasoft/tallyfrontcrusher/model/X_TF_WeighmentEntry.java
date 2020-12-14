@@ -33,7 +33,7 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20201102L;
+	private static final long serialVersionUID = 20201211L;
 
     /** Standard Constructor */
     public X_TF_WeighmentEntry (Properties ctx, int TF_WeighmentEntry_ID, String trxName)
@@ -430,6 +430,31 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return ii.intValue();
 	}
 
+	public org.compiere.model.I_M_Product getM_Product2() throws RuntimeException
+    {
+		return (org.compiere.model.I_M_Product)MTable.get(getCtx(), org.compiere.model.I_M_Product.Table_Name)
+			.getPO(getM_Product2_ID(), get_TrxName());	}
+
+	/** Set Product 2.
+		@param M_Product2_ID Product 2	  */
+	public void setM_Product2_ID (int M_Product2_ID)
+	{
+		if (M_Product2_ID < 1) 
+			set_Value (COLUMNNAME_M_Product2_ID, null);
+		else 
+			set_Value (COLUMNNAME_M_Product2_ID, Integer.valueOf(M_Product2_ID));
+	}
+
+	/** Get Product 2.
+		@return Product 2	  */
+	public int getM_Product2_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_M_Product2_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	public org.compiere.model.I_M_Warehouse getM_Warehouse() throws RuntimeException
     {
 		return (org.compiere.model.I_M_Warehouse)MTable.get(getCtx(), org.compiere.model.I_M_Warehouse.Table_Name)
@@ -506,6 +531,20 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return bd;
 	}
 
+	/** Set New Destination.
+		@param NewDestination New Destination	  */
+	public void setNewDestination (String NewDestination)
+	{
+		set_Value (COLUMNNAME_NewDestination, NewDestination);
+	}
+
+	/** Get New Destination.
+		@return New Destination	  */
+	public String getNewDestination () 
+	{
+		return (String)get_Value(COLUMNNAME_NewDestination);
+	}
+
 	/** Set Party Name.
 		@param PartyName Party Name	  */
 	public void setPartyName (String PartyName)
@@ -520,15 +559,15 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return (String)get_Value(COLUMNNAME_PartyName);
 	}
 
-	/** Set PassPricePerUnit.
-		@param PassPricePerUnit PassPricePerUnit	  */
+	/** Set Pass Price.
+		@param PassPricePerUnit Pass Price	  */
 	public void setPassPricePerUnit (BigDecimal PassPricePerUnit)
 	{
 		set_Value (COLUMNNAME_PassPricePerUnit, PassPricePerUnit);
 	}
 
-	/** Get PassPricePerUnit.
-		@return PassPricePerUnit	  */
+	/** Get Pass Price.
+		@return Pass Price	  */
 	public BigDecimal getPassPricePerUnit () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_PassPricePerUnit);
@@ -595,7 +634,7 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		set_Value (COLUMNNAME_PermitIssuedQty, PermitIssuedQty);
 	}
 
-	/** DON OT USE IT
+	/** Get Permit Issued Qty.
 		@return Permit Issued Qty	  */
 	public BigDecimal getPermitIssuedQty () 
 	{
@@ -605,8 +644,7 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return bd;
 	}
 
-	/** DO NOT USE IT
-	 * 
+	/** Set Permit Issue Amount.
 		@param PermitPassAmount Permit Issue Amount	  */
 	public void setPermitPassAmount (BigDecimal PermitPassAmount)
 	{
@@ -788,6 +826,8 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public static final String TF_BLUEMETAL_TYPE_40MMOnly = "40";
 	/** GSB = GSB */
 	public static final String TF_BLUEMETAL_TYPE_GSB = "GSB";
+	/** SO = SO */
+	public static final String TF_BLUEMETAL_TYPE_SO = "SO";
 	/** Set Production Type.
 		@param TF_BlueMetal_Type Production Type	  */
 	public void setTF_BlueMetal_Type (String TF_BlueMetal_Type)
@@ -1080,19 +1120,4 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	{
 		return (String)get_Value(COLUMNNAME_WeighmentEntryType);
 	}
-	
-	/** Set New Destination.
-	@param NewDestination New Destination	  */
-	public void setNewDestination (String NewDestination)
-	{
-		set_Value (COLUMNNAME_NewDestination, NewDestination);
-	}
-	
-	/** Get New Destination.
-		@return New Destination	  */
-	public String getNewDestination () 
-	{
-		return (String)get_Value(COLUMNNAME_NewDestination);
-	}
-
 }

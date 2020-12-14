@@ -207,10 +207,7 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 	 * Returns Sales Quick Entry Document Type ID
 	 * @return
 	 */
-	public int getC_DocType_ID() {
-		if(isGST())
-			return TF_MOrder.GSTOrderDocType_ID(getCtx());
-		else
+	public int getC_DocType_ID() {		
 			return TF_MOrder.NonGSTOrderDocType_ID(getCtx());
 	}
 	

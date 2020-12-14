@@ -100,7 +100,7 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 				mTab.setValue(TF_MOrder.COLUMNNAME_C_DocTypeTarget_ID, weighment.getC_DocType_ID());
 			
 			if(isSOTrx && weighment.getPassQtyIssued().doubleValue() != 0) {				
-				mTab.setValue(TF_MOrder.COLUMNNAME_Item2_ID, weighment.getRoyaltyPassProduct_ID());
+				mTab.setValue(TF_MOrder.COLUMNNAME_Item2_ID, weighment.getM_Product2_ID());
 				mTab.setValue(TF_MOrder.COLUMNNAME_Item2_Qty, weighment.getPassQtyIssued());
 				mTab.setValue(TF_MOrder.COLUMNNAME_Item2_Price, weighment.getPassPricePerUnit());
 				mTab.setValue(TF_MOrder.COLUMNNAME_Item2_Amt, weighment.getPermitPassAmount());
@@ -148,7 +148,8 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 			if(weighment.getPaymentRule() != null) {
 				mTab.setValue(TF_MOrder.COLUMNNAME_PaymentRule, weighment.getPaymentRule());
 				boolean isRoyaltyPassInclusive = !weighment.getPaymentRule().equals(MWeighmentEntry.PAYMENTRULE_Cash);
-				mTab.setValue(TF_MOrder.COLUMNNAME_IsRoyaltyPassInclusive, isRoyaltyPassInclusive);
+				mTab.setValue(TF_MOrder.COLUMNNAME_IsRoyaltyPassInclusive, false);
+				mTab.setValue(TF_MOrder.COLUMNNAME_IsRoyaltyPassBreakup, true);
 					
 			}
 									

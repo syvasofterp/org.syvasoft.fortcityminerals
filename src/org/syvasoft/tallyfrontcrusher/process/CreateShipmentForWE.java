@@ -92,7 +92,8 @@ public class CreateShipmentForWE extends SvrProcess {
 			//it is applicable even for Non GST
 			if(we.getPassQtyIssued().doubleValue() != 0) {
 				ioLine = new TF_MInOutLine(inout);
-				ioLine.setM_Product_ID(we.getRoyaltyPassProduct_ID(), true);							
+				ioLine.setM_Product_ID(we.getM_Product2_ID());
+				ioLine.setC_UOM_ID(we.getC_UOM_ID());
 				ioLine.setQty(we.getPassQtyIssued());
 				ioLine.setM_Locator_ID(we.getPassQtyIssued());
 				ioLine.saveEx(get_TrxName());
