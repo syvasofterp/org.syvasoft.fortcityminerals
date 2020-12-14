@@ -297,6 +297,17 @@ public interface I_TF_WeighmentEntry
 
 	public org.compiere.model.I_M_Product getM_Product() throws RuntimeException;
 
+    /** Column name M_Product2_ID */
+    public static final String COLUMNNAME_M_Product2_ID = "M_Product2_ID";
+
+	/** Set Product 2	  */
+	public void setM_Product2_ID (int M_Product2_ID);
+
+	/** Get Product 2	  */
+	public int getM_Product2_ID();
+
+	public org.compiere.model.I_M_Product getM_Product2() throws RuntimeException;
+
     /** Column name M_Warehouse_ID */
     public static final String COLUMNNAME_M_Warehouse_ID = "M_Warehouse_ID";
 
@@ -339,6 +350,15 @@ public interface I_TF_WeighmentEntry
 	/** Get Net Weight (Unit)	  */
 	public BigDecimal getNetWeightUnit();
 
+    /** Column name NewDestination */
+    public static final String COLUMNNAME_NewDestination = "NewDestination";
+
+	/** Set New Destination	  */
+	public void setNewDestination (String NewDestination);
+
+	/** Get New Destination	  */
+	public String getNewDestination();
+
     /** Column name PartyName */
     public static final String COLUMNNAME_PartyName = "PartyName";
 
@@ -351,10 +371,10 @@ public interface I_TF_WeighmentEntry
     /** Column name PassPricePerUnit */
     public static final String COLUMNNAME_PassPricePerUnit = "PassPricePerUnit";
 
-	/** Set PassPricePerUnit	  */
+	/** Set Pass Price	  */
 	public void setPassPricePerUnit (BigDecimal PassPricePerUnit);
 
-	/** Get PassPricePerUnit	  */
+	/** Get Pass Price	  */
 	public BigDecimal getPassPricePerUnit();
 
     /** Column name PassQtyIssued */
@@ -646,7 +666,4 @@ public interface I_TF_WeighmentEntry
 
 	/** Get Type	  */
 	public String getWeighmentEntryType();
-	
-    /** Column name NewDestination */
-    public static final String COLUMNNAME_NewDestination = "NewDestination";
 }
