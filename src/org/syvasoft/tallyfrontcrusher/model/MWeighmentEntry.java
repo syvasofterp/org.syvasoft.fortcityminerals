@@ -58,6 +58,7 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 			}
 					
 		}
+		
 		/*
 		//csv import support
 		if(newRecord) {

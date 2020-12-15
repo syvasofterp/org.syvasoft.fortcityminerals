@@ -2109,8 +2109,8 @@ public class TF_MOrder extends MOrder {
 	
 	@Override
 	public String completeIt() {
-		if(getTF_RentedVehicle_ID() > 0 && getRent_Amt().doubleValue() <= 0 && isSOTrx()  )
-			throw new AdempiereException("Please specify Rent Amount!");
+		//if(getTF_RentedVehicle_ID() > 0 && getRent_Amt().doubleValue() <= 0 && isSOTrx()  )
+		//	throw new AdempiereException("Please specify Rent Amount!");
 		MRentedVehicle rv = new MRentedVehicle(getCtx(), getTF_RentedVehicle_ID(), get_TrxName());
 		if(getTF_RentedVehicle_ID() > 0 && getRent_Amt().doubleValue() <= 0 && !isSOTrx() && 
 				isCreateTransportInvoice() && rv.isTransporter() )
@@ -2956,12 +2956,15 @@ public class TF_MOrder extends MOrder {
 		inv.setPostGSTAsExpense(true);
 		inv.setC_BPartner_ID(getC_BPartner_ID());
 		inv.setDateSupply(getDateAcct());
+		inv.setIsSOTrx(true);
 		
 		MWeighmentEntry wEntry = new MWeighmentEntry(getCtx(), getTF_WeighmentEntry_ID(), get_TrxName());
 		TF_MBPartner partner = new TF_MBPartner(getCtx(),getC_BPartner_ID(),get_TrxName());
 		if(wEntry != null && partner.getIsPOSCashBP() && getPartyName() == null) {
 			inv.setPartyName(wEntry.getPartyName());
 		}
+		
+		inv.setDocumentNo(wEntry.getInvoiceNo());
 		
 		MDestination dest = new MDestination(getCtx(), getTF_Destination_ID(), get_TrxName());
 		
@@ -2972,6 +2975,7 @@ public class TF_MOrder extends MOrder {
 		inv.setC_BankAccount_ID(TF_MBankAccount.getDefaultBankAccount(getCtx(), Env.getAD_Org_ID(getCtx()), null));
 		inv.saveEx();
 
+		//item1
 		MTRTaxInvoiceLine invLine = new MTRTaxInvoiceLine(inv);
 		invLine.setAD_Org_ID(getAD_Org_ID());
 		invLine.setM_Product_ID(getItem1_ID());
@@ -2984,9 +2988,23 @@ public class TF_MOrder extends MOrder {
 		
 		//Set Price based on Customer Type Billing Price Ratio
 		//BigDecimal price = getItem1_Price();		
-		BigDecimal price = prod.getBillPrice();
-		if(price == null || price.doubleValue() == 0)
-			throw new AdempiereException("Please set Bill Price for " + prod.getName());
+		//BigDecimal price = prod.getBillPrice();
+		BigDecimal divisor = new BigDecimal(1.05);
+		divisor = divisor.setScale(2, RoundingMode.HALF_EVEN);
+		BigDecimal price = BigDecimal.ZERO;	
+		if(wEntry.isPermitSales()) {
+			if(getItem1_Price() == null || getItem1_Price().doubleValue() == 0)
+				throw new AdempiereException("Please set Item Price for " + prod.getName());
+		
+			price =getItem1_Price().divide(divisor,2,  RoundingMode.HALF_EVEN);
+		}
+		else {
+			if(prod.getBillPrice() == null || prod.getBillPrice().doubleValue() == 0)
+				throw new AdempiereException("Please set Bill Price for " + prod.getName());
+				
+			price = prod.getBillPrice().divide(divisor,2,  RoundingMode.HALF_EVEN);	
+		}
+	
 		/*
 		if(isRentBreakup())
 		{
@@ -3031,6 +3049,60 @@ public class TF_MOrder extends MOrder {
 		
 		invLine.calcAmounts();
 		invLine.saveEx();
+
+		if(getItem2_ID()>0)
+		{
+			//item2
+			MTRTaxInvoiceLine invLine2 = new MTRTaxInvoiceLine(inv);
+			invLine2.setAD_Org_ID(getAD_Org_ID());
+			invLine2.setM_Product_ID(getItem2_ID());
+			invLine2.setC_UOM_ID(getItem2_UOM_ID());
+			
+			TF_MBPartner bp2 = new TF_MBPartner(getCtx(), getC_BPartner_ID(), get_TrxName());
+			//MCustomerType custType = new MCustomerType(getCtx(), bp.getTF_CustomerType_ID(), get_TrxName());
+			TF_MProduct prod2=new TF_MProduct(getCtx(), getItem2_ID(), get_TrxName());
+			
+			
+			//Set Price based on Customer Type Billing Price Ratio
+			BigDecimal divisor2 = new BigDecimal(1.05);
+			divisor2 = divisor2.setScale(2, RoundingMode.HALF_EVEN);
+			BigDecimal price2 = BigDecimal.ZERO;	
+			if(wEntry.isPermitSales()) {
+				if(getItem2_Price() == null || getItem2_Price().doubleValue() == 0)
+					throw new AdempiereException("Please set Item 2 Price for " + prod.getName());
+			
+				price2 =getItem2_Price().divide(divisor2,2,  RoundingMode.HALF_EVEN);
+			}
+			else {
+				if(prod2.getBillPrice() == null || prod2.getBillPrice().doubleValue() == 0)
+					throw new AdempiereException("Please set Bill Price for " + prod2.getName());
+					
+				price2 = prod2.getBillPrice().divide(divisor2,2,  RoundingMode.HALF_EVEN);	
+			}
+			
+			//Set Qty based on Customer Type Billing Qty Ratio
+			BigDecimal qty2 = getItem2_Qty();
+			invLine2.setQty(qty2);
+			
+			
+			//Exclude Tax amount from Price
+			MTax tax2 = new MTax(getCtx(), prod2.getTax_ID(true), get_TrxName());				
+			BigDecimal taxRate2 = tax2.getRate();
+			BigDecimal hundred2 = new BigDecimal("100");				
+			BigDecimal priceExcludesTax2 = price2.divide(BigDecimal.ONE
+					.add(taxRate2.divide(hundred2,2,RoundingMode.HALF_UP)), 2, RoundingMode.HALF_UP);				
+			invLine2.setPrice(priceExcludesTax2);
+			invLine2.setTaxableAmount(priceExcludesTax2.multiply(invLine2.getQty()));
+							
+			BigDecimal SGST_Rate2 = taxRate2.divide(new BigDecimal(2), 2, RoundingMode.HALF_EVEN);				
+			invLine2.setSGST_Rate(SGST_Rate2);
+			invLine2.setCGST_Rate(SGST_Rate2);
+			invLine2.setIGST_Rate(BigDecimal.ZERO);
+			invLine2.setIGST_Amt(BigDecimal.ZERO);
+			
+			invLine2.calcAmounts();
+			invLine2.saveEx();
+		}
 		
 		//No Rent Included
 		
@@ -3267,7 +3339,8 @@ public class TF_MOrder extends MOrder {
 	}
 	
 	public static int GSTOrderDocType_ID(Properties ctx) {
-		int DocType_ID = MSysConfig.getIntValue("GST_ORDER_ID", 1000063, Env.getAD_Client_ID(ctx));
+		//int DocType_ID = MSysConfig.getIntValue("GST_ORDER_ID", 1000063, Env.getAD_Client_ID(ctx));
+		int DocType_ID = MSysConfig.getIntValue("NONGST_ORDER_ID", 1000062, Env.getAD_Client_ID(ctx));
 		return DocType_ID;
 	}
 

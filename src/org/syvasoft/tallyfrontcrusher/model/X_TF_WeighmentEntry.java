@@ -33,7 +33,7 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20201211L;
+	private static final long serialVersionUID = 20201214L;
 
     /** Standard Constructor */
     public X_TF_WeighmentEntry (Properties ctx, int TF_WeighmentEntry_ID, String trxName)
@@ -393,6 +393,27 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public boolean isManual () 
 	{
 		Object oo = get_Value(COLUMNNAME_IsManual);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	/** Set Permit Sales.
+		@param IsPermitSales Permit Sales	  */
+	public void setIsPermitSales (boolean IsPermitSales)
+	{
+		set_Value (COLUMNNAME_IsPermitSales, Boolean.valueOf(IsPermitSales));
+	}
+
+	/** Get Permit Sales.
+		@return Permit Sales	  */
+	public boolean isPermitSales () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsPermitSales);
 		if (oo != null) 
 		{
 			 if (oo instanceof Boolean) 

@@ -596,6 +596,31 @@ public class TF_MBPartner extends MBPartner {
 		return ii.intValue();
 	}
 	
+    /** Column name IsPermitSales */
+    public static final String COLUMNNAME_IsPermitSales = "IsPermitSales";
+
+    /** Set Permit Sales.
+	@param IsPermitSales Permit Sales	  */
+	public void setIsPermitSales (boolean IsPermitSales)
+	{
+		set_Value (COLUMNNAME_IsPermitSales, Boolean.valueOf(IsPermitSales));
+	}
+	
+	/** Get Permit Sales.
+		@return Permit Sales	  */
+	public boolean isPermitSales () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsPermitSales);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
 		if(IsRequiredTaxInvoicePerLoad()) {

@@ -1,21 +1,19 @@
 package org.syvasoft.tallyfrontcrusher.process;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Savepoint;
 import java.sql.Timestamp;
 import java.util.List;
 
-import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.MPriceList;
 import org.compiere.model.MSysConfig;
 import org.compiere.model.Query;
 import org.compiere.process.DocAction;
-import org.compiere.process.DocumentEngine;
 import org.compiere.process.ProcessInfoParameter;
 import org.compiere.process.SvrProcess;
 import org.compiere.util.Env;
 import org.compiere.util.Trx;
-import org.compiere.util.Util;
 import org.syvasoft.tallyfrontcrusher.model.MWeighmentEntry;
 import org.syvasoft.tallyfrontcrusher.model.TF_MBPartner;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
@@ -47,9 +45,10 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 	protected String doIt() throws Exception {
 		String whereClause = " AD_Org_ID = ? AND TRUNC(GrossWeightTime) >= ? AND TRUNC(GrossWeightTime) <= ? AND "
 				+ "WeighmentEntryType = '1SO' AND Status = 'CO' AND (SELECT OrgType FROM AD_Org WHERE "				
-				+ "AD_Org.AD_Org_ID = TF_WeighmentEntry.AD_Org_ID) = 'W'"
+				+ "AD_Org.AD_Org_ID = TF_WeighmentEntry.AD_Org_ID) = 'C'"
 				+ " AND NOT EXISTS(SELECT C_Order.TF_WeighmentEntry_ID FROM C_Order WHERE "
-				+ "C_Order.TF_WeighmentEntry_ID =  TF_WeighmentEntry.TF_WeighmentEntry_ID)";
+				+ "C_Order.TF_WeighmentEntry_ID =  TF_WeighmentEntry.TF_WeighmentEntry_ID "
+				+ "AND C_Order.DocStatus IN ('CO','DR','IR'))";
 		int i = 0;
 		List<MWeighmentEntry> wEntries = new Query(getCtx(), MWeighmentEntry.Table_Name, whereClause, get_TrxName())
 				.setClient_ID().setParameters(AD_Org_ID, DateFrom, DateTo).list();
@@ -57,10 +56,18 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 			Trx trx = Trx.get(get_TrxName(), false);
 			Savepoint sp = null;
 			try {
+				
+				String msg = null;
+				if(wEntry.getPrice().doubleValue() == 0) {
+					msg = wEntry.getDocumentNo() +  " : Material Price not Set";
+					addLog(wEntry.get_Table_ID(), wEntry.getGrossWeightTime(), null, msg, wEntry.get_Table_ID(), wEntry.get_ID());
+				}
+				
+				
 				TF_MOrder ord = new TF_MOrder(getCtx(), 0, get_TrxName());
 				ord.setAD_Org_ID(wEntry.getAD_Org_ID());
 				ord.setC_DocTypeTarget_ID(C_DocType_ID);
-				ord.setC_DocType_ID(C_DocType_ID);
+				ord.setC_DocType_ID(wEntry.getC_DocType_ID());
 				ord.setM_Warehouse_ID(wEntry.getM_Warehouse_ID());
 				ord.setDateAcct(wEntry.getGrossWeightTime());
 				ord.setDateOrdered(wEntry.getGrossWeightTime());
@@ -69,12 +76,15 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 					C_BParner_ID = 1000020;		
 				TF_MBPartner bp = new TF_MBPartner(getCtx(), C_BParner_ID, get_TrxName());
 				ord.setBPartner(bp);
+				ord.setPartyName(wEntry.getPartyName());
+				ord.setPhone(wEntry.getPhone());
 				ord.setDescription(wEntry.getDescription());
-				if(ord.getDescription() != null)
+				if(wEntry.getPartyName() != null)
 					ord.addDescription("Customer Name : " + wEntry.getPartyName());
-				else
-					ord.setDescription("Customer Name : " + wEntry.getPartyName());
-				ord.setPaymentRule(wEntry.getPaymentRule());		
+				
+				ord.setPaymentRule(wEntry.getPaymentRule());
+				ord.setOnAccount(true);
+
 				//Price List
 				int m_M_PriceList_ID = Env.getContextAsInt(getCtx(), "#M_PriceList_ID");
 				if(bp.getM_PriceList_ID() > 0)
@@ -99,12 +109,18 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 				ord.setItem1_ID(wEntry.getM_Product_ID());
 				
 				int tonnage_uom_id = MSysConfig.getIntValue("TONNAGE_UOM", 1000069, Env.getAD_Client_ID(getCtx()));
-				int uom_id = wEntry.getM_Product().getC_UOM_ID();
-				ord.setItem1_UOM_ID(ord.getItem1().getC_UOM_ID());
+				int uom_id = wEntry.getC_UOM_ID();
+				if(uom_id == 0)
+					uom_id = wEntry.getM_Product().getC_UOM_ID();
+				
+				ord.setItem1_UOM_ID(wEntry.getC_UOM_ID());
 				ord.setItem1_Tax_ID(1000000);
 				BigDecimal qty = wEntry.getNetWeight();
 				if(uom_id == tonnage_uom_id)
 					qty = qty.divide(new BigDecimal(1000));
+				else
+					qty = wEntry.getNetWeightUnit();
+				
 				ord.setItem1_TotalLoad(BigDecimal.ONE);
 				ord.setItem1_PermitIssued(wEntry.getPermitIssuedQty()); 
 				ord.setMDPNo(wEntry.getMDPNo());
@@ -113,7 +129,41 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 				ord.setItem1_Price(price);
 				ord.setItem1_UnitPrice(price);
 				ord.setItem1_Amt(ord.getItem1_Qty().multiply(ord.getItem1_Price()));
+	
 				
+				//Item2
+				ord.setItem2_UOM_ID(ord.getItem2().getC_UOM_ID());
+				ord.setItem2_Tax_ID(1000000);
+				
+				if(wEntry.getM_Product2() != null && wEntry.getM_Product2_ID()>0) {
+					ord.setItem2_ID(wEntry.getM_Product2_ID());
+					ord.setItem2_Qty(wEntry.getPassQtyIssued());	
+					ord.setItem2_UOM_ID(wEntry.getC_UOM_ID());
+					ord.setItem2_Price(wEntry.getPassPricePerUnit());
+					ord.setItem2_Amt(wEntry.getPermitPassAmount());
+				}
+				else {
+					ord.setItem2_ID(0);
+					ord.setItem2_Qty(BigDecimal.ZERO);
+				}
+				
+				ord.setIsLumpSumRent(true);
+				if(wEntry.getRent_Amt()!=null && wEntry.getRent_Amt().doubleValue()>0) {
+					ord.setIsRentBreakup(true);
+					BigDecimal UnitRent=wEntry.getRent_Amt().divide(wEntry.getNetWeightUnit(),RoundingMode.HALF_UP);
+					ord.setItem1_UnitRent(UnitRent);
+				}
+				else {
+					ord.setIsRentBreakup(false);
+				}
+				ord.setRent_Tax_ID(1000000);
+				ord.setRent_Amt(wEntry.getRent_Amt());
+
+				//Item3
+				
+				//ord.setDriverTips(wEntry.getDriverTips());
+				ord.setProcessed(false);
+				ord.setOnAccount(true);
 				ord.saveEx();				
 				
 				sp = trx.setSavepoint(wEntry.getDocumentNo());
@@ -122,10 +172,15 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 				ord.setDocStatus(TF_MOrder.DOCSTATUS_Completed);
 				ord.saveEx();
 				
-				String error = DocumentEngine.postImmediate(Env.getCtx(), ord.getAD_Client_ID(), ord.get_Table_ID(), ord.get_ID(), true, ord.get_TrxName());				
-				if (! Util.isEmpty(error)) {
-						throw new AdempiereException(error);
-				}
+				/*
+				ord.setDocAction(DocAction.ACTION_Prepare);
+				ord.setDocStatus(TF_MOrder.DOCSTATUS_Drafted);
+				ord.saveEx();
+				*/
+				//String error = DocumentEngine.postImmediate(Env.getCtx(), ord.getAD_Client_ID(), ord.get_Table_ID(), ord.get_ID(), true, ord.get_TrxName());				
+				//if (! Util.isEmpty(error)) {
+				//		throw new AdempiereException(error);
+				//}
 				trx.releaseSavepoint(sp);
 				addLog(ord.get_Table_ID(), ord.getCreated(), null, ord.getDocumentNo() + " is created!", ord.get_Table_ID(), ord.get_ID());
 			}

@@ -282,6 +282,15 @@ public interface I_TF_WeighmentEntry
 	  */
 	public boolean isManual();
 
+    /** Column name IsPermitSales */
+    public static final String COLUMNNAME_IsPermitSales = "IsPermitSales";
+
+	/** Set Permit Sales	  */
+	public void setIsPermitSales (boolean IsPermitSales);
+
+	/** Get Permit Sales	  */
+	public boolean isPermitSales();
+
     /** Column name M_Product_ID */
     public static final String COLUMNNAME_M_Product_ID = "M_Product_ID";
 
