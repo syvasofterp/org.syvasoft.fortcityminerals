@@ -66,8 +66,8 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 				
 				TF_MOrder ord = new TF_MOrder(getCtx(), 0, get_TrxName());
 				ord.setAD_Org_ID(wEntry.getAD_Org_ID());
-				ord.setC_DocTypeTarget_ID(C_DocType_ID);
 				ord.setC_DocType_ID(wEntry.getC_DocType_ID());
+				ord.setC_DocTypeTarget_ID(wEntry.getC_DocType_ID());
 				ord.setM_Warehouse_ID(wEntry.getM_Warehouse_ID());
 				ord.setDateAcct(wEntry.getGrossWeightTime());
 				ord.setDateOrdered(wEntry.getGrossWeightTime());
@@ -146,10 +146,11 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 					ord.setItem2_ID(0);
 					ord.setItem2_Qty(BigDecimal.ZERO);
 				}
+
 				
 				ord.setIsLumpSumRent(true);
 				if(wEntry.getRent_Amt()!=null && wEntry.getRent_Amt().doubleValue()>0) {
-					ord.setIsRentBreakup(true);
+					ord.setIsRentBreakup(false);
 					BigDecimal UnitRent=wEntry.getRent_Amt().divide(wEntry.getNetWeightUnit(),RoundingMode.HALF_UP);
 					ord.setItem1_UnitRent(UnitRent);
 				}
@@ -159,8 +160,6 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 				ord.setRent_Tax_ID(1000000);
 				ord.setRent_Amt(wEntry.getRent_Amt());
 
-				//Item3
-				
 				//ord.setDriverTips(wEntry.getDriverTips());
 				ord.setProcessed(false);
 				ord.setOnAccount(true);

@@ -2996,13 +2996,13 @@ public class TF_MOrder extends MOrder {
 			if(getItem1_Price() == null || getItem1_Price().doubleValue() == 0)
 				throw new AdempiereException("Please set Item Price for " + prod.getName());
 		
-			price =getItem1_Price().divide(divisor,2,  RoundingMode.HALF_EVEN);
+			price =getItem1_Price();
 		}
 		else {
 			if(prod.getBillPrice() == null || prod.getBillPrice().doubleValue() == 0)
 				throw new AdempiereException("Please set Bill Price for " + prod.getName());
 				
-			price = prod.getBillPrice().divide(divisor,2,  RoundingMode.HALF_EVEN);	
+			price = prod.getBillPrice();	
 		}
 	
 		/*
@@ -3064,21 +3064,23 @@ public class TF_MOrder extends MOrder {
 			
 			
 			//Set Price based on Customer Type Billing Price Ratio
+			
 			BigDecimal divisor2 = new BigDecimal(1.05);
 			divisor2 = divisor2.setScale(2, RoundingMode.HALF_EVEN);
 			BigDecimal price2 = BigDecimal.ZERO;	
 			if(wEntry.isPermitSales()) {
 				if(getItem2_Price() == null || getItem2_Price().doubleValue() == 0)
-					throw new AdempiereException("Please set Item 2 Price for " + prod.getName());
+					throw new AdempiereException("Please set Item 2 Price for " + prod2.getName());
 			
-				price2 =getItem2_Price().divide(divisor2,2,  RoundingMode.HALF_EVEN);
+				price2 =getItem2_Price();
 			}
 			else {
 				if(prod2.getBillPrice() == null || prod2.getBillPrice().doubleValue() == 0)
 					throw new AdempiereException("Please set Bill Price for " + prod2.getName());
 					
-				price2 = prod2.getBillPrice().divide(divisor2,2,  RoundingMode.HALF_EVEN);	
+				price2 = prod2.getBillPrice();	
 			}
+			
 			
 			//Set Qty based on Customer Type Billing Qty Ratio
 			BigDecimal qty2 = getItem2_Qty();
