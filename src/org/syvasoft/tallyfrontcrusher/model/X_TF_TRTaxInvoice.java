@@ -33,7 +33,7 @@ public class X_TF_TRTaxInvoice extends PO implements I_TF_TRTaxInvoice, I_Persis
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20200714L;
+	private static final long serialVersionUID = 20201217L;
 
     /** Standard Constructor */
     public X_TF_TRTaxInvoice (Properties ctx, int TF_TRTaxInvoice_ID, String trxName)
@@ -84,6 +84,20 @@ public class X_TF_TRTaxInvoice extends PO implements I_TF_TRTaxInvoice, I_Persis
         .append(get_ID()).append("]");
       return sb.toString();
     }
+
+	/** Set Billing Name.
+		@param BillingName Billing Name	  */
+	public void setBillingName (String BillingName)
+	{
+		set_Value (COLUMNNAME_BillingName, BillingName);
+	}
+
+	/** Get Billing Name.
+		@return Billing Name	  */
+	public String getBillingName () 
+	{
+		return (String)get_Value(COLUMNNAME_BillingName);
+	}
 
 	public org.compiere.model.I_C_BankAccount getC_BankAccount() throws RuntimeException
     {
@@ -333,6 +347,12 @@ public class X_TF_TRTaxInvoice extends PO implements I_TF_TRTaxInvoice, I_Persis
 	public static final String DOCSTATUS_Activated = "AC";
 	/** Canceled = CA */
 	public static final String DOCSTATUS_Canceled = "CA";
+	/** Overdue = OD */
+	public static final String DOCSTATUS_Overdue = "OD";
+	/** Due = DU */
+	public static final String DOCSTATUS_Due = "DU";
+	/** Upcoming = UP */
+	public static final String DOCSTATUS_Upcoming = "UP";
 	/** Set Document Status.
 		@param DocStatus 
 		The current status of the document
@@ -733,13 +753,15 @@ public class X_TF_TRTaxInvoice extends PO implements I_TF_TRTaxInvoice, I_Persis
 		return bd;
 	}
 
-	public I_TF_Generate_TaxInvoice getTF_Generate_Taxinvoice() throws RuntimeException
+	/*
+	public I_TF_Generate_Taxinvoice getTF_Generate_Taxinvoice() throws RuntimeException
     {
-		return (I_TF_Generate_TaxInvoice)MTable.get(getCtx(), I_TF_Generate_TaxInvoice.Table_Name)
+		return (I_TF_Generate_Taxinvoice)MTable.get(getCtx(), I_TF_Generate_Taxinvoice.Table_Name)
 			.getPO(getTF_Generate_Taxinvoice_ID(), get_TrxName());	}
-
+    */
 	/** Set Generate Tax Invoice.
 		@param TF_Generate_Taxinvoice_ID Generate Tax Invoice	  */
+	
 	public void setTF_Generate_Taxinvoice_ID (int TF_Generate_Taxinvoice_ID)
 	{
 		if (TF_Generate_Taxinvoice_ID < 1) 

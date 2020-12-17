@@ -2965,7 +2965,7 @@ public class TF_MOrder extends MOrder {
 		}
 		
 		inv.setDocumentNo(wEntry.getInvoiceNo());
-		
+		inv.setBillingName(wEntry.getBillingName());
 		MDestination dest = new MDestination(getCtx(), getTF_Destination_ID(), get_TrxName());
 		
 		inv.setPlaceOfSupply(dest.getName());

@@ -64,6 +64,15 @@ public interface I_TF_TRTaxInvoice
 	  */
 	public int getAD_Org_ID();
 
+    /** Column name BillingName */
+    public static final String COLUMNNAME_BillingName = "BillingName";
+
+	/** Set Billing Name	  */
+	public void setBillingName (String BillingName);
+
+	/** Get Billing Name	  */
+	public String getBillingName();
+
     /** Column name C_BankAccount_ID */
     public static final String COLUMNNAME_C_BankAccount_ID = "C_BankAccount_ID";
 
@@ -448,6 +457,7 @@ public interface I_TF_TRTaxInvoice
 	/** Get Round Off	  */
 	public BigDecimal getRoundOff();
 
+	
     /** Column name TF_Generate_Taxinvoice_ID */
     public static final String COLUMNNAME_TF_Generate_Taxinvoice_ID = "TF_Generate_Taxinvoice_ID";
 
@@ -457,7 +467,7 @@ public interface I_TF_TRTaxInvoice
 	/** Get Generate Tax Invoice	  */
 	public int getTF_Generate_Taxinvoice_ID();
 
-	public I_TF_Generate_TaxInvoice getTF_Generate_Taxinvoice() throws RuntimeException;
+	//public I_TF_Generate_Taxinvoice getTF_Generate_Taxinvoice() throws RuntimeException;
 
     /** Column name TF_TRTaxInvoice_ID */
     public static final String COLUMNNAME_TF_TRTaxInvoice_ID = "TF_TRTaxInvoice_ID";
