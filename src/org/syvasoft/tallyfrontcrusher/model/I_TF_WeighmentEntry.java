@@ -77,6 +77,15 @@ public interface I_TF_WeighmentEntry
 	  */
 	public BigDecimal getAmount();
 
+    /** Column name BillingName */
+    public static final String COLUMNNAME_BillingName = "BillingName";
+
+	/** Set Billing Name	  */
+	public void setBillingName (String BillingName);
+
+	/** Get Billing Name	  */
+	public String getBillingName();
+
     /** Column name C_BPartner_ID */
     public static final String COLUMNNAME_C_BPartner_ID = "C_BPartner_ID";
 
@@ -202,6 +211,15 @@ public interface I_TF_WeighmentEntry
 	  * Document sequence number of the document
 	  */
 	public String getDocumentNo();
+
+    /** Column name DriverName */
+    public static final String COLUMNNAME_DriverName = "DriverName";
+
+	/** Set Driver Name	  */
+	public void setDriverName (String DriverName);
+
+	/** Get Driver Name	  */
+	public String getDriverName();
 
     /** Column name DriverTips */
     public static final String COLUMNNAME_DriverTips = "DriverTips";

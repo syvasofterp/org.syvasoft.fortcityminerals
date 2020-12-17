@@ -33,7 +33,7 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20201214L;
+	private static final long serialVersionUID = 20201217L;
 
     /** Standard Constructor */
     public X_TF_WeighmentEntry (Properties ctx, int TF_WeighmentEntry_ID, String trxName)
@@ -96,6 +96,20 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
+	}
+
+	/** Set Billing Name.
+		@param BillingName Billing Name	  */
+	public void setBillingName (String BillingName)
+	{
+		set_Value (COLUMNNAME_BillingName, BillingName);
+	}
+
+	/** Get Billing Name.
+		@return Billing Name	  */
+	public String getBillingName () 
+	{
+		return (String)get_Value(COLUMNNAME_BillingName);
 	}
 
 	public org.compiere.model.I_C_BPartner getC_BPartner() throws RuntimeException
@@ -287,6 +301,20 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public String getDocumentNo () 
 	{
 		return (String)get_Value(COLUMNNAME_DocumentNo);
+	}
+
+	/** Set Driver Name.
+		@param DriverName Driver Name	  */
+	public void setDriverName (String DriverName)
+	{
+		set_Value (COLUMNNAME_DriverName, DriverName);
+	}
+
+	/** Get Driver Name.
+		@return Driver Name	  */
+	public String getDriverName () 
+	{
+		return (String)get_Value(COLUMNNAME_DriverName);
 	}
 
 	/** Set Driver Tips.

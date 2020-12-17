@@ -28,8 +28,47 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		super(ctx, TF_WeighmentEntry_ID, trxName);
 		// TODO Auto-generated constructor stub
 	}
+	void CreateBP() {
+		if(getPartyName()!=null && getC_BPartner_ID()==0) {
+			
+			//Check Customer with Phone No
+			String whereClause="lower(replace(Phone,' ',''))=lower(replace(?,' ','')) and IsCustomer='Y'";
+			TF_MBPartner bp = new Query(getCtx(), TF_MBPartner.Table_Name, whereClause, get_TrxName())
+					.setClient_ID().setParameters(getPhone().replace(" ", "")).first();
+			if(bp != null)
+				setC_BPartner_ID(bp.getC_BPartner_ID());
+			else{
+				//Get Destination
+				String CustomerDest="";
+				if(getTF_Destination_ID()>0) {
+					MDestination destc=new MDestination(getCtx(), getTF_Destination_ID(), get_TrxName());
+					CustomerDest=destc.getName();
+				}
+				else {
+					CustomerDest=getNewDestination();
+				}
+				TF_MBPartner bpnew=new TF_MBPartner(getCtx(), 0, get_TrxName());
+				bpnew.setAD_Org_ID(getAD_Org_ID());
+				bpnew.setValue(getPhone() != null ? getPhone() : getPartyName().toUpperCase());
+				bpnew.setName(getPartyName());
+				bpnew.setC_BP_Group_ID(1000001);
+				bpnew.setPhone(getPhone());
+				bpnew.setContactName(getPartyName());
+				bpnew.setAddress1(CustomerDest); //set Destination
+				bpnew.setCity(CustomerDest); // Set Destination
+				bpnew.setIsCustomer(true);
+				bpnew.setTF_CustomerType_ID(1000000);
+				bpnew.setC_Country_ID(208);
+				bpnew.saveEx();
+				
+				setC_BPartner_ID(bpnew.getC_BPartner_ID());
+			}
+		}
+	}
+	
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
+		CreateBP();
 		CreateDestination();
 		
 		if(getTF_RentedVehicle_ID() > 0 && (getVehicleNo() == null || getVehicleNo().length() == 0))
