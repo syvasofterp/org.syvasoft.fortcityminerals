@@ -33,7 +33,7 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20201217L;
+	private static final long serialVersionUID = 20201224L;
 
     /** Standard Constructor */
     public X_TF_WeighmentEntry (Properties ctx, int TF_WeighmentEntry_ID, String trxName)
@@ -284,6 +284,23 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public String getDescription () 
 	{
 		return (String)get_Value(COLUMNNAME_Description);
+	}
+
+	/** Set Discount Amount.
+		@param DiscountAmount Discount Amount	  */
+	public void setDiscountAmount (BigDecimal DiscountAmount)
+	{
+		set_Value (COLUMNNAME_DiscountAmount, DiscountAmount);
+	}
+
+	/** Get Discount Amount.
+		@return Discount Amount	  */
+	public BigDecimal getDiscountAmount () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_DiscountAmount);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
 	}
 
 	/** Set Document No.
@@ -788,10 +805,27 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return bd;
 	}
 
+	/** Set Rounding Off.
+		@param RoundingOff Rounding Off	  */
+	public void setRoundingOff (BigDecimal RoundingOff)
+	{
+		set_Value (COLUMNNAME_RoundingOff, RoundingOff);
+	}
+
+	/** Get Rounding Off.
+		@return Rounding Off	  */
+	public BigDecimal getRoundingOff () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_RoundingOff);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
 	/** In Progress = IP */
 	public static final String STATUS_InProgress = "IP";
-	/** Unbilled = CO */
-	public static final String STATUS_Unbilled = "CO";
+	/** Completed = CO */
+	public static final String STATUS_Completed = "CO";
 	/** Billed = CL */
 	public static final String STATUS_Billed = "CL";
 	/** Voided = VO */

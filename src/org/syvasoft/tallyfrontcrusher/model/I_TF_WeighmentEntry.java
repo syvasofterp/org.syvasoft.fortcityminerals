@@ -199,6 +199,15 @@ public interface I_TF_WeighmentEntry
 	  */
 	public String getDescription();
 
+    /** Column name DiscountAmount */
+    public static final String COLUMNNAME_DiscountAmount = "DiscountAmount";
+
+	/** Set Discount Amount	  */
+	public void setDiscountAmount (BigDecimal DiscountAmount);
+
+	/** Get Discount Amount	  */
+	public BigDecimal getDiscountAmount();
+
     /** Column name DocumentNo */
     public static final String COLUMNNAME_DocumentNo = "DocumentNo";
 
@@ -491,6 +500,15 @@ public interface I_TF_WeighmentEntry
 
 	/** Get Rent (Amount)	  */
 	public BigDecimal getRent_Amt();
+
+    /** Column name RoundingOff */
+    public static final String COLUMNNAME_RoundingOff = "RoundingOff";
+
+	/** Set Rounding Off	  */
+	public void setRoundingOff (BigDecimal RoundingOff);
+
+	/** Get Rounding Off	  */
+	public BigDecimal getRoundingOff();
 
     /** Column name Status */
     public static final String COLUMNNAME_Status = "Status";

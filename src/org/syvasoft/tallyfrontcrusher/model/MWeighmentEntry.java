@@ -220,7 +220,7 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		//setProcessed(true);		
 	}
 	public void reverse() {
-		setStatus(STATUS_Unbilled);		
+		setStatus(STATUS_Completed);		
 		//setProcessed(false);
 		//Only Shipment document will set processed as True
 		//or false while reversing shipment document.

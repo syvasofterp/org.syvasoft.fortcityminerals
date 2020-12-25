@@ -8,6 +8,8 @@ import org.adempiere.base.event.AbstractEventHandler;
 import org.adempiere.base.event.IEventTopics;
 import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.MAcctSchema;
+import org.compiere.model.MBank;
+import org.compiere.model.MBankAccount;
 import org.compiere.model.MClient;
 import org.compiere.model.MCost;
 import org.compiere.model.MCostDetail;
@@ -104,11 +106,27 @@ public class CrusherEventHandler extends AbstractEventHandler {
 					if(inv.getDescription() != null) {
 						payment.addDescription(inv.getDescription());
 					}
+					
+					/*
+					// Set Default Cash Counter
+					if(inv.getC_Order_ID() > 0 && inv.getPaymentRule().equals(MInvoice.PAYMENTRULE_Cash)) {
+						
+						String Where=" AD_Org_ID=? AND BankAccountType='B' AND IsDefault='Y'";
+						
+						TF_MOrder ord = new TF_MOrder(inv.getCtx(), inv.getC_Order_ID(), inv.get_TrxName());
+						MBankAccount defCashAc = new Query(payment.getCtx(),MBankAccount.Table_Name , Where, payment.get_TrxName())
+								.setClient_ID()
+								.setParameters(inv.getAD_Org_ID())
+								.setOnlyActiveRecords(true)
+								.first();
+						MWeighmentEntry we = new MWeighmentEntry(inv.getCtx(), ord.getTF_WeighmentEntry_ID(), inv.get_TrxName());
+						if(defCashAc.getC_BankAccount_ID() > 0) {
+							payment.setC_BankAccount_ID(defCashAc.getC_BankAccount_ID());
+						}
+					}*/
+
 				}
-				// Set Default Cash Counter
-				
-				
-				
+
 			  if(payment.is_new() && payment.get_ValueAsInt("TF_CashCounter_ID")==0) {
 				 
 					String Where=" IsDefault='Y'";
@@ -340,10 +358,10 @@ public class CrusherEventHandler extends AbstractEventHandler {
 		if(inv!=null) {
 			invoiceNo=inv.getDocumentNo();
 		}
-
 		
 		//Posting Payment Document for Driver Tips
 		TF_MPayment payment = new TF_MPayment(ord.getCtx(), 0, ord.get_TrxName());
+		payment.setAD_Org_ID(ord.getAD_Org_ID());
 		payment.setDateAcct(ord.getDateAcct());
 		payment.setDateTrx(ord.getDateAcct());
 		payment.setDescription("DRIVER BETA AMOUNT GIVEN FOR Sales Invoice: "+ invoiceNo +", Vehicle Type : "+vtype.getName());
@@ -354,11 +372,13 @@ public class CrusherEventHandler extends AbstractEventHandler {
 		payment.setUser1_ID(ord.getUser1_ID()); // Profit Center
 		payment.setC_ElementValue_ID(glConfig.getTipsExpenseAcct_ID());
 		
-		payment.setC_BankAccount_ID(TF_MBankAccount.getDefaultCashAccount(ord.getCtx(), Env.getAD_Org_ID(ord.getCtx()), null));
+		payment.setC_BankAccount_ID(TF_MBankAccount.getDefaultCashAccount(ord.getCtx(), ord.getAD_Org_ID(), null));
+		
 		MUser user = MUser.get(ord.getCtx(), Env.getAD_User_ID(ord.getCtx()));
 		payment.setC_BPartner_ID(user.getC_BPartner_ID());
 		payment.setPayAmt(amt);
-		payment.setC_Currency_ID(Env.getContextAsInt(ord.getCtx(), "$C_Currency_ID"));
+		//payment.setC_Currency_ID(Env.getContextAsInt(ord.getCtx(), "$C_Currency_ID"));
+		payment.setC_Currency_ID(ord.getC_Currency_ID());
 		payment.setDocStatus(TF_MOrder.DOCSTATUS_InProgress);
 		payment.setTenderType(TF_MPayment.TENDERTYPE_Cash);
 		payment.saveEx();

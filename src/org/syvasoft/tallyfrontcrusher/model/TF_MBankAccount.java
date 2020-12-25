@@ -373,7 +373,7 @@ public class TF_MBankAccount extends MBankAccount {
     }
     public static int getDefaultCashAccount(Properties ctx,int AD_Org_ID,String trxName)
     {
-		String Where=" AD_Org_ID=? AND BankAccountType='B'";
+		String Where=" AD_Org_ID=? AND BankAccountType='B' AND IsDefault='Y'";
 		MBankAccount cashAccount = new Query(ctx, Table_Name, Where, trxName)
 				.setClient_ID()
 				.setOnlyActiveRecords(true)
