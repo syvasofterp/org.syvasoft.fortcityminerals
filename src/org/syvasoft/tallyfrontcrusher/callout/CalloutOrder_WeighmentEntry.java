@@ -152,7 +152,9 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 				mTab.setValue(TF_MOrder.COLUMNNAME_IsRoyaltyPassBreakup, true);
 					
 			}
-									
+			
+			mTab.setValue(TF_MOrder.COLUMNNAME_OnAccount, true);
+			
 			mTab.setValue(TF_MOrder.COLUMNNAME_VehicleNo, weighment.getVehicleNo());
 			
 			String description = "";

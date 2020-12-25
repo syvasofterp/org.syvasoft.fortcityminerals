@@ -915,8 +915,8 @@ public class TF_MPayment extends MPayment {
 		TF_MJournal j = new TF_MJournal(getCtx(), 0, get_TrxName());
 		j.setDescription("Advance Deducted from " + getDocumentNo());
 		j.setAD_Org_ID(getAD_Org_ID());
-		j.setC_AcctSchema_ID(Env.getContextAsInt(getCtx(), "$C_AcctSchema_ID"));
-		j.setC_Currency_ID(Env.getContextAsInt(getCtx(), "$C_Currency_ID"));
+		j.setC_AcctSchema_ID(glConfig.getC_AcctSchema_ID());
+		j.setC_Currency_ID(glConfig.getC_AcctSchema().getC_Currency_ID());
 		j.setPostingType(TF_MJournal.POSTINGTYPE_Actual);
 		j.setC_DocType_ID(m_C_DocTypeTarget_ID);
 		j.setDateDoc(getDateTrx());

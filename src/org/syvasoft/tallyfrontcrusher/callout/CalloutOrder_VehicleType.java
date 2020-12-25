@@ -27,7 +27,8 @@ public class CalloutOrder_VehicleType implements IColumnCallout {
 				{
 					TF_VehicleType_ID=(int)mTab.getValue(TF_MOrder.COLUMNNAME_Item1_VehicleType_ID);
 					BigDecimal betaAmt= MDriverBetaConfig.getDriverBetaAmount(ctx, AD_Org_ID,TF_VehicleType_ID, null);
-					mTab.setValue(TF_MOrder.COLUMNNAME_DriverTips, betaAmt);
+					if(betaAmt.doubleValue() > 0)
+						mTab.setValue(TF_MOrder.COLUMNNAME_DriverTips, betaAmt);
 				}
 				else
 				{

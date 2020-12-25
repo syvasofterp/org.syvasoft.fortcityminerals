@@ -182,8 +182,8 @@ public class MTRTaxInvoice extends X_TF_TRTaxInvoice {
 				j.setDescription("GST Expense Posted from Sales Tax Invoice:" + getDocumentNo() 
 					+ " for Customer:" + (getPartyName() != null ? getPartyName() + " (Cash)" : getC_BPartner().getName()));
 				j.setAD_Org_ID(getAD_Org_ID());
-				j.setC_AcctSchema_ID(Env.getContextAsInt(getCtx(), "$C_AcctSchema_ID"));
-				j.setC_Currency_ID(Env.getContextAsInt(getCtx(), "$C_Currency_ID"));
+				j.setC_AcctSchema_ID(glConfig.getC_AcctSchema_ID());
+				j.setC_Currency_ID(glConfig.getC_AcctSchema().getC_Currency_ID());
 				j.setPostingType(TF_MJournal.POSTINGTYPE_Actual);
 				j.setC_DocType_ID(m_C_DocTypeTarget_ID);
 				j.setDateDoc(getDateAcct());

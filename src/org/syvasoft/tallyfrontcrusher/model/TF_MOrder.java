@@ -2972,7 +2972,7 @@ public class TF_MOrder extends MOrder {
 		
 		inv.setVehicleNo(getVehicleNo());		
 		//inv.calcAmounts();		
-		inv.setC_BankAccount_ID(TF_MBankAccount.getDefaultBankAccount(getCtx(), Env.getAD_Org_ID(getCtx()), null));
+		inv.setC_BankAccount_ID(TF_MBankAccount.getDefaultBankAccount(getCtx(), getAD_Org_ID(), null));
 		inv.saveEx();
 
 		//item1
@@ -3207,6 +3207,7 @@ public class TF_MOrder extends MOrder {
 
 		//Posting Payment Document for Driver Tips
 		TF_MPayment payment = new TF_MPayment(getCtx(), 0, get_TrxName());
+		payment.setAD_Org_ID(getAD_Org_ID());
 		payment.setDateAcct(getDateAcct());
 		payment.setDateTrx(getDateAcct());
 		payment.setDescription("Cash Sales Discount for "+ invoiceNo);
@@ -3217,11 +3218,11 @@ public class TF_MOrder extends MOrder {
 		payment.setUser1_ID(getUser1_ID()); // Profit Center
 		payment.setC_ElementValue_ID(glConfig.getSalesDiscountAcct_ID());
 		
-		payment.setC_BankAccount_ID(TF_MBankAccount.getDefaultCashAccount(getCtx(), Env.getAD_Org_ID(getCtx()), null));
+		payment.setC_BankAccount_ID(TF_MBankAccount.getDefaultCashAccount(getCtx(), getAD_Org_ID(), null));
 		MUser user = MUser.get(getCtx(), Env.getAD_User_ID(getCtx()));
 		payment.setC_BPartner_ID(user.getC_BPartner_ID());
 		payment.setPayAmt(amt);
-		payment.setC_Currency_ID(Env.getContextAsInt(getCtx(), "$C_Currency_ID"));
+		payment.setC_Currency_ID(getC_Currency_ID());
 		payment.setDocStatus(TF_MOrder.DOCSTATUS_InProgress);
 		payment.setTenderType(TF_MPayment.TENDERTYPE_Cash);
 		payment.saveEx();
@@ -3407,9 +3408,9 @@ public class TF_MOrder extends MOrder {
 			if(oLine.getPriceEntered().doubleValue() == 0) {
 				throw new AdempiereException("Invalid Price at Line: " + oLine.getLine() + " for Product Name : " + oLine.getM_Product().getName());
 			}
-			if(weighment.getM_Product_ID() == oLine.getM_Product_ID()) {
-				invLine.setM_InOutLine_ID(weighment.getM_InOutLine_ID());
-			}
+			//if(weighment.getM_Product_ID() == oLine.getM_Product_ID()) {
+			//	invLine.setM_InOutLine_ID(weighment.getM_InOutLine_ID());
+			//}
 			invLine.saveEx();
 		}
 		
