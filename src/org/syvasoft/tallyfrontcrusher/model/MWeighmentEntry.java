@@ -300,6 +300,26 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		 return 0;
 	}
 	
+	
+	public int getM_InOutLine_ID(int M_Product_ID) {
+		String whereClause = "TF_WeighmentEntry_ID = ? AND DocStatus IN ('CO','CL')";		
+		TF_MInOut inout = new Query(getCtx(), TF_MInOut.Table_Name, whereClause, get_TrxName())
+				.setClient_ID()
+				.setParameters(getTF_WeighmentEntry_ID())
+				.first();
+		
+			
+		if(inout != null) {
+			for(MInOutLine line : inout.getLines()) {
+				if(line.getM_Product_ID() == M_Product_ID) {
+					return line.get_ID();
+				}
+			}
+		}
+		
+		 return 0;
+	}
+	
 	public void shipped() {
 		setProcessed(true);
 	}

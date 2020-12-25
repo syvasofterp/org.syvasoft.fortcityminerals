@@ -3408,9 +3408,9 @@ public class TF_MOrder extends MOrder {
 			if(oLine.getPriceEntered().doubleValue() == 0) {
 				throw new AdempiereException("Invalid Price at Line: " + oLine.getLine() + " for Product Name : " + oLine.getM_Product().getName());
 			}
-			//if(weighment.getM_Product_ID() == oLine.getM_Product_ID()) {
-			//	invLine.setM_InOutLine_ID(weighment.getM_InOutLine_ID());
-			//}
+			
+			invLine.setM_InOutLine_ID(weighment.getM_InOutLine_ID(invLine.getM_Product_ID()));
+			
 			invLine.saveEx();
 		}
 		
