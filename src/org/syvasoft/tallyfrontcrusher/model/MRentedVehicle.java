@@ -98,7 +98,7 @@ public class MRentedVehicle extends X_TF_RentedVehicle {
 			machine.setPM_MachineryType_ID(getPM_MachineryType_ID());
 			machine.setTF_VehicleType_ID(getTF_VehicleType_ID());
 			machine.setTF_RentedVehicle_ID(getTF_RentedVehicle_ID());
-			machine.setM_Product_ID(getM_Product_ID());
+			machine.setM_Product_ID(prod.getM_Product_ID());
 			machine.saveEx();
 		}
 		
