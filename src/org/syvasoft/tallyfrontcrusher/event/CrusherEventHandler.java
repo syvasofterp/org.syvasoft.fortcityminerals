@@ -107,25 +107,16 @@ public class CrusherEventHandler extends AbstractEventHandler {
 						payment.addDescription(inv.getDescription());
 					}
 					
-					/*
-					// Set Default Cash Counter
+					
+					// Set Default Cash Account
 					if(inv.getC_Order_ID() > 0 && inv.getPaymentRule().equals(MInvoice.PAYMENTRULE_Cash)) {
-						
-						String Where=" AD_Org_ID=? AND BankAccountType='B' AND IsDefault='Y'";
-						
 						TF_MOrder ord = new TF_MOrder(inv.getCtx(), inv.getC_Order_ID(), inv.get_TrxName());
-						MBankAccount defCashAc = new Query(payment.getCtx(),MBankAccount.Table_Name , Where, payment.get_TrxName())
-								.setClient_ID()
-								.setParameters(inv.getAD_Org_ID())
-								.setOnlyActiveRecords(true)
-								.first();
 						MWeighmentEntry we = new MWeighmentEntry(inv.getCtx(), ord.getTF_WeighmentEntry_ID(), inv.get_TrxName());
-						if(defCashAc.getC_BankAccount_ID() > 0) {
-							payment.setC_BankAccount_ID(defCashAc.getC_BankAccount_ID());
-						}
-					}*/
-
-				}
+						if(ord.getC_BankAccount_ID() > 0) 
+							payment.setC_BankAccount_ID(ord.getC_BankAccount_ID());												
+						}						
+					}
+				
 
 			  if(payment.is_new() && payment.get_ValueAsInt("TF_CashCounter_ID")==0) {
 				 
