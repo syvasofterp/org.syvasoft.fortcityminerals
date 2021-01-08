@@ -217,7 +217,7 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 				mTab.setValue(TF_MOrder.COLUMNNAME_TF_ProductionPlant_ID, weighment.getTF_ProductionPlant_ID());
 			}
 			
-			if(weighment.getDiscountAmount().doubleValue()>0) {
+			if(weighment.getDiscountAmount().doubleValue()>0 && weighment.getPaymentRule().equals(MWeighmentEntry.PAYMENTRULE_Cash)) {
 				mTab.setValue(TF_MOrder.COLUMNNAME_SalesDiscountAmt, weighment.getDiscountAmount());
 			}
 			
