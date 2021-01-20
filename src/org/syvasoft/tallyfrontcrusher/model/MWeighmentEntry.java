@@ -68,7 +68,7 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 	
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
-		CreateBP();
+		//CreateBP();
 		CreateDestination();
 		
 		if(getTF_RentedVehicle_ID() > 0 && (getVehicleNo() == null || getVehicleNo().length() == 0))
