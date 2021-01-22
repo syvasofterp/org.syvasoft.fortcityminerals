@@ -205,15 +205,7 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 		invoice.setDescription(desc);
 		
 		//Price List
-		int m_M_PriceList_ID = Env.getContextAsInt(getCtx(), "#M_PriceList_ID");
-		if(bp.getPO_PriceList_ID() > 0)
-			m_M_PriceList_ID = bp.getPO_PriceList_ID();
-		if(m_M_PriceList_ID == 0) {
-			MPriceList pl = new Query(getCtx(), MPriceList.Table_Name, "IsDefault='Y' AND IsActive='Y'", get_TrxName())
-					.setClient_ID().first();
-			if(pl != null)
-				m_M_PriceList_ID = pl.getM_PriceList_ID();
-		}
+		int m_M_PriceList_ID = MPriceList.getDefault(getCtx(), true).getM_PriceList_ID();		
 		invoice.setC_Currency_ID(MPriceList.get(getCtx(), m_M_PriceList_ID, get_TrxName()).getC_Currency_ID());
 		if(invoice.getC_Currency_ID() == 0)
 			invoice.setC_Currency_ID(MClient.get(Env.getCtx()).getC_Currency_ID());
@@ -285,15 +277,7 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 		invoice.setDescription(desc);
 		
 		//Price List
-		int m_M_PriceList_ID = Env.getContextAsInt(getCtx(), "#M_PriceList_ID");
-		if(bp.getPO_PriceList_ID() > 0)
-			m_M_PriceList_ID = bp.getPO_PriceList_ID();
-		if(m_M_PriceList_ID == 0) {
-			MPriceList pl = new Query(getCtx(), MPriceList.Table_Name, "IsDefault='Y' AND IsActive='Y'", get_TrxName())
-					.setClient_ID().first();
-			if(pl != null)
-				m_M_PriceList_ID = pl.getM_PriceList_ID();
-		}
+		int m_M_PriceList_ID = MPriceList.getDefault(getCtx(), true).getM_PriceList_ID();		
 		invoice.setC_Currency_ID(MPriceList.get(getCtx(), m_M_PriceList_ID, get_TrxName()).getC_Currency_ID());
 		if(invoice.getC_Currency_ID() == 0)
 			invoice.setC_Currency_ID(MClient.get(Env.getCtx()).getC_Currency_ID());

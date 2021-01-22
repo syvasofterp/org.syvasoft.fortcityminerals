@@ -32,6 +32,7 @@ import org.compiere.process.DocAction;
 import org.compiere.util.AdempiereUserError;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
+import org.syvasoft.tallyfrontcrusher.process.GenerateTaxInvoiceLines;
 
 public class TF_MOrder extends MOrder {
 
@@ -2211,7 +2212,7 @@ public class TF_MOrder extends MOrder {
 		MRentedVehicle rv = new MRentedVehicle(getCtx(), getTF_RentedVehicle_ID(), get_TrxName());		
 		if(getTF_RentedVehicle_ID()>0 && getRent_Amt().doubleValue()==0 && isSOTrx()) {
 			if((rv.isOwnVehicle() && isSOTrx()) || rv.isTransporter()) {				
-				if(!createConsolidatedTransportInvoice)
+				if(!createConsolidatedTransportInvoice && getC_BPartner_ID() != rv.getC_BPartner_ID())
 					throw new AdempiereUserError("Invalid Rent Amount");
 			}
 		}
@@ -2366,7 +2367,7 @@ public class TF_MOrder extends MOrder {
 		if(getTF_RentedVehicle_ID() == 0 || getRent_Amt().doubleValue() == 0)
 			return;
 		MRentedVehicle rv = new MRentedVehicle(getCtx(), getTF_RentedVehicle_ID(), get_TrxName());
-		if(rv.isOwnVehicle())
+		if(rv.isOwnVehicle() || getC_BPartner_ID() == rv.getC_BPartner_ID())
 			return;
 		//if(getRent_Amt().doubleValue() > 0 && getTF_RentedVehicle_ID() == 0)
 		//	throw new AdempiereException("Please Select Rented Vehicle or Reset Rent (Amount) to ZERO!");
@@ -2396,9 +2397,8 @@ public class TF_MOrder extends MOrder {
 		invoice.setIsSOTrx(false);		
 		
 		//Price List
-		int m_M_PriceList_ID = Env.getContextAsInt(getCtx(), "#M_PriceList_ID");
-		if(bp.getPO_PriceList_ID() > 0)
-			m_M_PriceList_ID = bp.getPO_PriceList_ID();			
+		int m_M_PriceList_ID = MPriceList.getDefault(getCtx(), false).getM_PriceList_ID();
+					
 		invoice.setM_PriceList_ID(m_M_PriceList_ID);
 		invoice.setC_Currency_ID(MPriceList.get(getCtx(), m_M_PriceList_ID, get_TrxName()).getC_Currency_ID());
 		
@@ -3588,4 +3588,5 @@ public class TF_MOrder extends MOrder {
 			io.saveEx();
 		}
 	}
+		
 }

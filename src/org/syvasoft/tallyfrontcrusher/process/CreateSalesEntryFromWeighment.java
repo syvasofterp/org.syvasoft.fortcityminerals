@@ -14,6 +14,9 @@ import org.compiere.process.ProcessInfoParameter;
 import org.compiere.process.SvrProcess;
 import org.compiere.util.Env;
 import org.compiere.util.Trx;
+import org.syvasoft.tallyfrontcrusher.model.MDestination;
+import org.syvasoft.tallyfrontcrusher.model.MLumpSumRentConfig;
+import org.syvasoft.tallyfrontcrusher.model.MRentedVehicle;
 import org.syvasoft.tallyfrontcrusher.model.MWeighmentEntry;
 import org.syvasoft.tallyfrontcrusher.model.TF_MBPartner;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
@@ -85,12 +88,10 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 					ord.addDescription("Customer Name : " + wEntry.getPartyName());
 				
 				ord.setPaymentRule(wEntry.getPaymentRule());
-				ord.setOnAccount(true);
+				ord.setOnAccount(false);
 
 				//Price List
-				int m_M_PriceList_ID = Env.getContextAsInt(getCtx(), "#M_PriceList_ID");
-				if(bp.getM_PriceList_ID() > 0)
-					m_M_PriceList_ID = bp.getM_PriceList_ID();			
+				int m_M_PriceList_ID = MPriceList.getDefault(getCtx(), true).getM_PriceList_ID();							
 				ord.setM_PriceList_ID(m_M_PriceList_ID);
 				ord.setC_Currency_ID(MPriceList.get(getCtx(), m_M_PriceList_ID, get_TrxName()).getC_Currency_ID());
 				ord.setIsSOTrx(true);
@@ -116,13 +117,13 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 					uom_id = wEntry.getM_Product().getC_UOM_ID();
 				
 				ord.setItem1_UOM_ID(wEntry.getC_UOM_ID());
-				ord.setItem1_Tax_ID(1000000);
+				ord.setItem1_Tax_ID(wEntry.getC_Tax_ID());
 				BigDecimal qty = wEntry.getNetWeight();
 				if(uom_id == tonnage_uom_id)
 					qty = qty.divide(new BigDecimal(1000));
 				else
 					qty = wEntry.getNetWeightUnit();
-				
+				ord.setTonnage(qty);
 				ord.setItem1_TotalLoad(BigDecimal.ONE);
 				ord.setItem1_PermitIssued(wEntry.getPermitIssuedQty()); 
 				ord.setMDPNo(wEntry.getMDPNo());
@@ -149,23 +150,54 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 					ord.setItem2_Qty(BigDecimal.ZERO);
 				}
 
+				if(ord.getTF_RentedVehicle_ID() > 0) {		
+					ord.setIsLumpSumRent(false);
+					MDestination dest = new MDestination(getCtx(), ord.getTF_Destination_ID(), get_TrxName());
+					MRentedVehicle rv = new MRentedVehicle(getCtx(), ord.getTF_RentedVehicle_ID(), get_TrxName());
+					int Vendor_ID = rv.getC_BPartner_ID();					
+					BigDecimal RateMT = MLumpSumRentConfig.getRateMT(getCtx(), ord.getAD_Org_ID(), Vendor_ID, ord.getC_BPartner_ID(), ord.getItem1_ID(), 
+							ord.getTF_Destination_ID(), ord.getItem1_VehicleType_ID(), dest.getDistance(), get_TrxName());
+					BigDecimal RateKM = MLumpSumRentConfig.getRateKm(getCtx(), ord.getAD_Org_ID(), Vendor_ID, ord.getC_BPartner_ID(), ord.getItem1_ID(),
+							ord.getTF_Destination_ID(), ord.getItem1_VehicleType_ID(), dest.getDistance(), get_TrxName());
+					BigDecimal RateMTKM = MLumpSumRentConfig.getRateMTKm(getCtx(), ord.getAD_Org_ID(), Vendor_ID, ord.getC_BPartner_ID(),
+							ord.getItem1_ID(), ord.getTF_Destination_ID(), ord.getItem1_VehicleType_ID(), dest.getDistance(), get_TrxName());
+					BigDecimal RentAmt = BigDecimal.ZERO;
+					
+					if(RateMT.doubleValue() > 0) {
+						ord.setRate(RateMT);						
+						RentAmt = RateMT.multiply(qty);				
+					}
+					else if(RateKM.doubleValue() > 0) {
+						ord.setRate(RateKM);
+						RentAmt = RateKM.multiply(dest.getDistance());
+					}
+					else if(RateMTKM.doubleValue() > 0) {
+						ord.setRate(RateMTKM);
+						RentAmt = RateMTKM.multiply(ord.getDistance()).multiply(qty);
+					}
+					else {								
+						RentAmt=MLumpSumRentConfig.getLumpSumRent(getCtx(),ord.getAD_Org_ID(),Vendor_ID, ord.getC_BPartner_ID(), 
+								ord.getItem1_ID(), ord.getTF_Destination_ID(), ord.getItem1_VehicleType_ID(), dest.getDistance(), get_TrxName());
+						if(RentAmt.doubleValue() > 0)
+							ord.setIsLumpSumRent(true);
+					}
+					
+					
+					ord.setRent_Amt(RentAmt);										
+					ord.setRentMargin(BigDecimal.ZERO);
+					ord.setRentPayable(RentAmt);
+					
+				}
+				ord.setIsRentBreakup(false);
+				ord.setIsRentInclusive(true);			
 				
-				ord.setIsLumpSumRent(true);
-				if(wEntry.getRent_Amt()!=null && wEntry.getRent_Amt().doubleValue()>0) {
-					ord.setIsRentBreakup(false);
-					BigDecimal UnitRent=wEntry.getRent_Amt().divide(wEntry.getNetWeightUnit(),RoundingMode.HALF_UP);
-					ord.setItem1_UnitRent(UnitRent);
-				}
-				else {
-					ord.setIsRentBreakup(false);
-				}
 				ord.setRent_Tax_ID(1000000);
-				ord.setRent_Amt(wEntry.getRent_Amt());
+				//ord.setRent_Amt(wEntry.getRent_Amt());
 				ord.setSalesDiscountAmt(wEntry.getDiscountAmount());
 
 				ord.setDriverTips(wEntry.getDriverTips());
 				ord.setProcessed(false);
-				ord.setOnAccount(true);
+				ord.setOnAccount(false);
 				ord.saveEx();				
 				
 				sp = trx.setSavepoint(wEntry.getDocumentNo());
