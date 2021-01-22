@@ -103,7 +103,7 @@ public class CreateShipmentForWE extends SvrProcess {
 			//Create Vehicle Rent Line for the Hired and Owned Vehicle
 			if(we.getTF_RentedVehicle() != null) {
 				MRentedVehicle rv = (MRentedVehicle) we.getTF_RentedVehicle();
-				if(rv.isOwnVehicle() || rv.isTransporter()) {
+				if(rv.isOwnVehicle() || (rv.isTransporter() && rv.getC_BPartner_ID() != we.getC_BPartner_ID() )) {
 					int Vendor_ID = rv.getC_BPartner_ID();
 					MDestination dest = new MDestination(getCtx(), we.getTF_Destination_ID(), get_TrxName());
 					BigDecimal RateMT = MLumpSumRentConfig.getRateMT(getCtx(), we.getAD_Org_ID(), Vendor_ID, we.getC_BPartner_ID(), we.getM_Product_ID(), 
