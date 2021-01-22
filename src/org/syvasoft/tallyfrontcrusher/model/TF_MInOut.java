@@ -267,7 +267,7 @@ public class TF_MInOut extends MInOut {
 						0, 0, BoulderID, getTF_WeighmentEntry_ID(), 0, wEntry.getNetWeightUnit());
 			}
 			else if(BoulderID == wEntry.getM_Product_ID() && MWeighmentEntry.TF_SEND_TO_Stock.equals(wEntry.getTF_Send_To())) {
-				MBoulderMovement.createBoulderReceipt(get_TrxName(), getDateAcct(), getAD_Org_ID(), BoulderID, wEntry.getNetWeightUnit(), getTF_WeighmentEntry_ID());
+				MBoulderMovement.createBoulderReceipt(get_TrxName(), getDateAcct(), getAD_Org_ID(), BoulderID, wEntry.getNetWeightUnit(), getTF_WeighmentEntry_ID(), getM_Warehouse_ID());
 			}
 		}
 		else {

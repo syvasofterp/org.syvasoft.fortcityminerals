@@ -33,7 +33,7 @@ public class X_TF_Boulder_Movement extends PO implements I_TF_Boulder_Movement, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20200720L;
+	private static final long serialVersionUID = 20210122L;
 
     /** Standard Constructor */
     public X_TF_Boulder_Movement (Properties ctx, int TF_Boulder_Movement_ID, String trxName)
@@ -41,9 +41,9 @@ public class X_TF_Boulder_Movement extends PO implements I_TF_Boulder_Movement, 
       super (ctx, TF_Boulder_Movement_ID, trxName);
       /** if (TF_Boulder_Movement_ID == 0)
         {
-			setDescription (null);
 			setMovementDate (new Timestamp( System.currentTimeMillis() ));
 			setTF_Boulder_Movement_ID (0);
+			setTF_WeighmentEntry_ID (0);
         } */
     }
 
@@ -115,6 +115,34 @@ public class X_TF_Boulder_Movement extends PO implements I_TF_Boulder_Movement, 
 	public int getM_Product_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_M_Product_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_M_Warehouse getM_Warehouse() throws RuntimeException
+    {
+		return (org.compiere.model.I_M_Warehouse)MTable.get(getCtx(), org.compiere.model.I_M_Warehouse.Table_Name)
+			.getPO(getM_Warehouse_ID(), get_TrxName());	}
+
+	/** Set Warehouse.
+		@param M_Warehouse_ID 
+		Storage Warehouse and Service Point
+	  */
+	public void setM_Warehouse_ID (int M_Warehouse_ID)
+	{
+		if (M_Warehouse_ID < 1) 
+			set_Value (COLUMNNAME_M_Warehouse_ID, null);
+		else 
+			set_Value (COLUMNNAME_M_Warehouse_ID, Integer.valueOf(M_Warehouse_ID));
+	}
+
+	/** Get Warehouse.
+		@return Storage Warehouse and Service Point
+	  */
+	public int getM_Warehouse_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_M_Warehouse_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();

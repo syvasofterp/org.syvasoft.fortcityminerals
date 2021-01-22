@@ -2637,7 +2637,7 @@ public class TF_MOrder extends MOrder {
 					0, 0, getItem1_ID(), getTF_WeighmentEntry_ID(), getC_Order_ID(), getItem1_Qty());
 		}
 		else if(BoulderID == getItem1_ID() && TF_SEND_TO_Stock.equals(getTF_Send_To())) {
-			MBoulderMovement.createBoulderReceipt(get_TrxName(), getDateAcct(), getAD_Org_ID(), BoulderID, getItem1_Qty(), getTF_WeighmentEntry_ID());
+			MBoulderMovement.createBoulderReceipt(get_TrxName(), getDateAcct(), getAD_Org_ID(), BoulderID, getItem1_Qty(), getTF_WeighmentEntry_ID(), getM_Warehouse_ID());
 		}
 	}
 	

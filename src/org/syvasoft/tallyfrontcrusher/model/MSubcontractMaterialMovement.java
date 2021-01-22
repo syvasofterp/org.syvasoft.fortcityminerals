@@ -29,6 +29,25 @@ public class MSubcontractMaterialMovement extends X_TF_RMSubcon_Movement {
 		// TODO Auto-generated constructor stub
 	}
 	
+	@Override
+	protected boolean beforeSave(boolean newRecord) {
+		if(newRecord && getTF_WeighmentEntry_ID() > 0) {
+			setWarehouse();
+		}
+		return super.beforeSave(newRecord);
+	}
+	
+	public void setWarehouse() {
+		MWeighmentEntry we = new MWeighmentEntry(getCtx(), getTF_WeighmentEntry_ID(), get_TrxName());
+		if(we.getTF_ProductionPlant_ID() > 0 ) {
+			MProductionPlant pp = new MProductionPlant(getCtx(), we.getTF_ProductionPlant_ID(), get_TrxName());
+			setM_Warehouse_ID(pp.getM_Warehouse_ID());
+		}
+		else {
+			setM_Warehouse_ID(we.getM_Warehouse_ID());
+		}
+	}
+	
 	public static void createRawmaterialMovementsFromWeighment(String trxName) {
 		String whereClause = "C_Project_ID IS NOT NULL AND Status='CO' AND Processed='N' AND TareWeightTime IS NOT NULL AND GrossWeightTime IS NOT NULL";
 		List<MWeighmentEntry> wEntries = new Query(Env.getCtx(), MWeighmentEntry.Table_Name, whereClause, trxName)

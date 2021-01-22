@@ -106,6 +106,21 @@ public interface I_TF_ProductionPlant
 	  */
 	public boolean isActive();
 
+    /** Column name M_Warehouse_ID */
+    public static final String COLUMNNAME_M_Warehouse_ID = "M_Warehouse_ID";
+
+	/** Set Warehouse.
+	  * Storage Warehouse and Service Point
+	  */
+	public void setM_Warehouse_ID (int M_Warehouse_ID);
+
+	/** Get Warehouse.
+	  * Storage Warehouse and Service Point
+	  */
+	public int getM_Warehouse_ID();
+
+	public org.compiere.model.I_M_Warehouse getM_Warehouse() throws RuntimeException;
+
     /** Column name Name */
     public static final String COLUMNNAME_Name = "Name";
 
@@ -122,10 +137,10 @@ public interface I_TF_ProductionPlant
     /** Column name TF_ProductionPlant_ID */
     public static final String COLUMNNAME_TF_ProductionPlant_ID = "TF_ProductionPlant_ID";
 
-	/** Set TF_ProductionPlant	  */
+	/** Set Production Plant	  */
 	public void setTF_ProductionPlant_ID (int TF_ProductionPlant_ID);
 
-	/** Get TF_ProductionPlant	  */
+	/** Get Production Plant	  */
 	public int getTF_ProductionPlant_ID();
 
     /** Column name TF_ProductionPlant_UU */

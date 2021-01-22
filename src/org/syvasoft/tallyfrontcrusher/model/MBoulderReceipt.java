@@ -19,6 +19,7 @@ import org.compiere.model.MInvoice;
 import org.compiere.model.MInvoiceLine;
 import org.compiere.model.MJournal;
 import org.compiere.model.MJournalLine;
+import org.compiere.model.MOrgInfo;
 import org.compiere.model.MPeriod;
 import org.compiere.model.MPriceList;
 import org.compiere.model.MPriceListVersion;
@@ -88,12 +89,16 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 		
 		if(getC_Project_ID() > 0 && TF_SEND_TO_Production.equals(getTF_Send_To())) {
 			TF_MProject proj = TF_MProject.getCrusherProductionSubcontractByWarehouse(getM_Warehouse_ID());
+			if(proj == null) {				
+				proj = new TF_MProject(getCtx(), getC_Project_ID(), get_TrxName());
+			}
 			MSubcontractType st = new MSubcontractType(getCtx(), proj.getTF_SubcontractType_ID(), get_TrxName());
 			if(st.isTrackMaterialMovement() ) {
 				int matMov_ID = MSubcontractMaterialMovement.createRawmaterialMovement(get_TrxName(), getDateAcct(), getAD_Org_ID(),
 						proj.getC_Project_ID(), proj.getC_BPartner_ID(), getM_Product_ID(), getTF_WeighmentEntry_ID(), getQtyReceived());
 				setTF_RMSubcon_Movement_ID(matMov_ID);
 			}
+			
 		}
 		else if(TF_SEND_TO_Production.equals(getTF_Send_To())) {
 			
@@ -103,7 +108,7 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 		}
 		else if(getTF_WeighmentEntry_ID() > 0){
 			MBoulderMovement.createBoulderReceipt(get_TrxName(), getDateReceipt(), getAD_Org_ID(), getM_Product_ID(), getQtyReceived(),
-					getTF_WeighmentEntry_ID());
+					getTF_WeighmentEntry_ID(), getM_Warehouse_ID());
 		}
 			
 	}
@@ -128,6 +133,16 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 		setQtyReceived( new BigDecimal(entry.getNetWeight().doubleValue()/1000));
 		
 		setM_Warehouse_ID(entry.getM_Warehouse_ID());
+		
+		//set destination warehouse where the boulder is received
+		if(entry.getTF_Send_To().equals(TF_SEND_TO_Production)) {
+			MProductionPlant pp = new MProductionPlant(getCtx(), entry.getTF_ProductionPlant_ID(), get_TrxName());
+			setM_Warehouse_ID(pp.getM_Warehouse_ID());
+		}
+		else {
+			MOrgInfo orgIn = MOrgInfo.get(getCtx(), getAD_Org_ID(), get_TrxName()); 
+			setM_Warehouse_ID(orgIn.getM_Warehouse_ID());
+		}
 		setDescription(entry.getDescription());
 		setVehicleNo(entry.getVehicleNo());		
 		setTF_Send_To(entry.getTF_Send_To());
