@@ -60,7 +60,7 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 			mTab.setValue(TF_MOrder.COLUMNNAME_M_PriceList_ID, priceList_id);
 			MPriceList pl = new MPriceList(ctx, priceList_id, null);
 			mTab.setValue(TF_MOrder.COLUMNNAME_C_Currency_ID, pl.getC_Currency_ID());
-
+			
 			int uom_id = weighment.getM_Product().getC_UOM_ID();
 			if(weighment.getC_UOM_ID() > 0) {
 				uom_id = weighment.getC_UOM_ID();
@@ -153,7 +153,7 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 					
 			}
 			
-			mTab.setValue(TF_MOrder.COLUMNNAME_OnAccount, true);
+			mTab.setValue(TF_MOrder.COLUMNNAME_OnAccount, false);
 			
 			mTab.setValue(TF_MOrder.COLUMNNAME_VehicleNo, weighment.getVehicleNo());
 			
@@ -195,9 +195,9 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 			{
 				mTab.setValue(TF_MOrder.COLUMNNAME_Item1_VehicleType_ID, weighment.getTF_VehicleType_ID());
 			
-				/*
-				 * this code is already in CalloutOrder_VehicleType hence it is commented here.
-				if(weighment.getVehicleNo()!="" && weighment.getTF_RentedVehicle_ID()==0 && isSOTrx)
+				
+				// * this code is already in CalloutOrder_VehicleType hence it is commented here.
+				if(weighment.getVehicleNo()!="" && isSOTrx)
 				{
 					BigDecimal betaAmt= MDriverBetaConfig.getDriverBetaAmount(ctx, Env.getAD_Org_ID(ctx),weighment.getTF_VehicleType_ID(), null);
 					mTab.setValue(TF_MOrder.COLUMNNAME_DriverTips, betaAmt);
@@ -206,7 +206,7 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 				{
 					mTab.setValue(TF_MOrder.COLUMNNAME_DriverTips, BigDecimal.ZERO);
 				}
-				*/
+				
 			}
 			
 			int BoulderID = MSysConfig.getIntValue("BOULDER_ID", 1000233, weighment.getAD_Client_ID(), weighment.getAD_Org_ID());

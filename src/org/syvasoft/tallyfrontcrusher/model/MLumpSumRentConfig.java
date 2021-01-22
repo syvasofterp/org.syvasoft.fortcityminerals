@@ -49,10 +49,11 @@ public class MLumpSumRentConfig extends X_TF_LumpSumRent_Config {
 		//1 -- Vehicle Type, Vendor, Customer, Product
 		//2 -- Vehicle Type, Customer, Product
 		//3 -- Vehicle Type, Vendor, Product
-		//4 -- Vehicle Type, Customer
-		//5 -- Vehicle Type, Vendor
-		//6 -- Vehicle Type, Product
-		//7 -- Vehicle Type
+		//4 -- Vehicle Type, Vendor, Customer for any product
+		//5 -- Vehicle Type, Customer
+		//6 -- Vehicle Type, Vendor
+		//7 -- Vehicle Type, Product
+		//8 -- Vehicle Type
 		
 		if(Distance.doubleValue() == 0)
 			Distance = BigDecimal.ONE;
@@ -93,7 +94,19 @@ public class MLumpSumRentConfig extends X_TF_LumpSumRent_Config {
 		if(lumpDistConfig != null)
 			return lumpDistConfig;
 		
-		//4 -- Vehicle Type, Customer
+		//4 -- Vehicle Type, Vendor, Customer for any product
+		Where=" AD_Org_ID=? AND C_BPartner_ID = ? AND Vendor_ID = ? AND TF_VehicleType_ID=? AND M_Product_ID IS NULL AND "
+				+ " (COALESCE(TF_Destination_ID,0) = ? OR ? between minkm AND maxkm)";
+		lumpDistConfig=new Query(ctx, Table_Name, Where, trxName)
+				.setClient_ID()
+				.setOnlyActiveRecords(true)
+				.setParameters(AD_Org_ID,C_BPartner_ID, Vendor_ID, TF_VehicleType_ID,TF_Destination_ID, Distance)
+				.setOrderBy("COALESCE(TF_Destination_ID,0) DESC")
+				.first();
+		if(lumpDistConfig != null)
+			return lumpDistConfig;
+		
+		//5 -- Vehicle Type, Customer
 		Where=" AD_Org_ID=? AND C_BPartner_ID = ? AND Vendor_ID IS NULL AND TF_VehicleType_ID=? AND M_Product_ID IS NULL AND "
 				+ " (COALESCE(TF_Destination_ID,0) = ? OR ? between minkm AND maxkm)";
 		lumpDistConfig=new Query(ctx, Table_Name, Where, trxName)
@@ -105,20 +118,20 @@ public class MLumpSumRentConfig extends X_TF_LumpSumRent_Config {
 		if(lumpDistConfig != null)
 			return lumpDistConfig;
 				
-		//5 -- Vehicle Type, Vendor
+		//6 -- Vehicle Type, Vendor
 		Where=" AD_Org_ID=? AND C_BPartner_ID IS NULL AND Vendor_ID = ? AND TF_VehicleType_ID=? AND M_Product_ID IS NULL AND "
 				+ " (COALESCE(TF_Destination_ID,0) = ? OR ? between minkm AND maxkm)";
 		lumpDistConfig=new Query(ctx, Table_Name, Where, trxName)
 				.setClient_ID()
 				.setOnlyActiveRecords(true)
-				.setParameters(AD_Org_ID,C_BPartner_ID, TF_VehicleType_ID,TF_Destination_ID, Distance)
+				.setParameters(AD_Org_ID,Vendor_ID, TF_VehicleType_ID,TF_Destination_ID, Distance)
 				.setOrderBy("COALESCE(TF_Destination_ID,0) DESC")
 				.first();
 		if(lumpDistConfig != null)
 			return lumpDistConfig;
 						
 		
-		//6 -- Vehicle Type, Product 
+		//7 -- Vehicle Type, Product 
 		Where=" AD_Org_ID=? AND TF_VehicleType_ID=? AND M_Product_ID = ? AND C_BPartner_ID IS NULL AND Vendor_ID IS NULL AND "
 				+ "(COALESCE(TF_Destination_ID,0) = ? OR ? between minkm AND maxkm)";
 		lumpDistConfig=new Query(ctx, Table_Name, Where, trxName)
@@ -131,7 +144,7 @@ public class MLumpSumRentConfig extends X_TF_LumpSumRent_Config {
 			return lumpDistConfig;
 					
 		
-		//7 Vehicle Type
+		//8 Vehicle Type
 		Where=" AD_Org_ID=? AND TF_VehicleType_ID=? AND Vendor_ID IS NULL AND C_BPartner_ID IS NULL AND M_Product_ID IS NULL AND "
 				+ " (COALESCE(TF_Destination_ID,0) = ? OR ? between minkm AND maxkm)";
 		

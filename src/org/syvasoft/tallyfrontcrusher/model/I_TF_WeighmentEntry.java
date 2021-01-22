@@ -170,6 +170,15 @@ public interface I_TF_WeighmentEntry
 	/** Get ChangeAmt	  */
 	public BigDecimal getChangeAmt();
 
+    /** Column name CompletedBy */
+    public static final String COLUMNNAME_CompletedBy = "CompletedBy";
+
+	/** Set Completed By	  */
+	public void setCompletedBy (String CompletedBy);
+
+	/** Get Completed By	  */
+	public String getCompletedBy();
+
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
 
@@ -256,6 +265,15 @@ public interface I_TF_WeighmentEntry
 
 	/** Get Gross Weight Time	  */
 	public Timestamp getGrossWeightTime();
+
+    /** Column name GSTAmount */
+    public static final String COLUMNNAME_GSTAmount = "GSTAmount";
+
+	/** Set GST Amount	  */
+	public void setGSTAmount (BigDecimal GSTAmount);
+
+	/** Get GST Amount	  */
+	public BigDecimal getGSTAmount();
 
     /** Column name HasBalance */
     public static final String COLUMNNAME_HasBalance = "HasBalance";

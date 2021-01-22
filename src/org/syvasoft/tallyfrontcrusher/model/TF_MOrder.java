@@ -2216,7 +2216,7 @@ public class TF_MOrder extends MOrder {
 			}
 		}
 		
-		if(getTF_RentedVehicle_ID()>0 || !isSOTrx()) {
+		if(!isSOTrx()) {
 			setDriverTips(BigDecimal.ZERO);
 		}
 		
@@ -2388,6 +2388,7 @@ public class TF_MOrder extends MOrder {
 		invoice.setC_DocTypeTarget_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getTransporterInvoiceDocType_ID());			
 		invoice.setDateInvoiced(getDateOrdered());
 		invoice.setDateAcct(getDateOrdered());
+		invoice.setTF_WeighmentEntry_ID(getTF_WeighmentEntry_ID());
 		//
 		invoice.setSalesRep_ID(Env.getAD_User_ID(getCtx()));
 		//
@@ -2481,6 +2482,7 @@ public class TF_MOrder extends MOrder {
 			invLine.setPriceEntered(price);
 			hdrDescription = hdrDescription + ", Tonnage : " + getTonnage().doubleValue();
 		}
+		invLine.addDescription(hdrDescription);
 		invLine.saveEx();
 		invoice.saveEx();
 		

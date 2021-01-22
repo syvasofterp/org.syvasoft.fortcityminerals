@@ -33,7 +33,7 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20201224L;
+	private static final long serialVersionUID = 20210122L;
 
     /** Standard Constructor */
     public X_TF_WeighmentEntry (Properties ctx, int TF_WeighmentEntry_ID, String trxName)
@@ -269,6 +269,20 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return bd;
 	}
 
+	/** Set Completed By.
+		@param CompletedBy Completed By	  */
+	public void setCompletedBy (String CompletedBy)
+	{
+		set_Value (COLUMNNAME_CompletedBy, CompletedBy);
+	}
+
+	/** Get Completed By.
+		@return Completed By	  */
+	public String getCompletedBy () 
+	{
+		return (String)get_Value(COLUMNNAME_CompletedBy);
+	}
+
 	/** Set Description.
 		@param Description 
 		Optional short description of the record
@@ -380,6 +394,23 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public Timestamp getGrossWeightTime () 
 	{
 		return (Timestamp)get_Value(COLUMNNAME_GrossWeightTime);
+	}
+
+	/** Set GST Amount.
+		@param GSTAmount GST Amount	  */
+	public void setGSTAmount (BigDecimal GSTAmount)
+	{
+		set_Value (COLUMNNAME_GSTAmount, GSTAmount);
+	}
+
+	/** Get GST Amount.
+		@return GST Amount	  */
+	public BigDecimal getGSTAmount () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_GSTAmount);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
 	}
 
 	/** Set Has Balance.
@@ -824,8 +855,8 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 
 	/** In Progress = IP */
 	public static final String STATUS_InProgress = "IP";
-	/** Completed = CO */
-	public static final String STATUS_Completed = "CO";
+	/** Unbilled = CO */
+	public static final String STATUS_Unbilled = "CO";
 	/** Billed = CL */
 	public static final String STATUS_Billed = "CL";
 	/** Voided = VO */

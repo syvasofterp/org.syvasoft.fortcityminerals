@@ -6,6 +6,7 @@ import java.util.Properties;
 import org.adempiere.base.IColumnCallout;
 import org.compiere.model.GridField;
 import org.compiere.model.GridTab;
+import org.compiere.model.MTab;
 import org.syvasoft.tallyfrontcrusher.model.MLumpSumRentConfig;
 import org.syvasoft.tallyfrontcrusher.model.MRentedVehicle;
 import org.syvasoft.tallyfrontcrusher.model.MVehicleRentConfig;
@@ -33,7 +34,8 @@ public class CalloutOrder_RentedVehicle implements IColumnCallout {
 			mTab.setValue(TF_MOrder.COLUMNNAME_VehicleNo, rv.getVehicleNo());
 			int C_BPartner_ID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_C_BPartner_ID);
 			TF_MBPartner bp = new TF_MBPartner(ctx, C_BPartner_ID, null);			
-			mTab.setValue(TF_MOrder.COLUMNNAME_IsRentBreakup, bp.isRentBreakup());
+			mTab.setValue(TF_MOrder.COLUMNNAME_IsRentBreakup, false);//bp.isRentBreakup());
+			mTab.setValue(TF_MOrder.COLUMNNAME_IsRentInclusive, true);
 			mTab.setValue(TF_MOrder.COLUMNNAME_Item1_VehicleType_ID, TF_VehicleType_ID);
 		}		
 		

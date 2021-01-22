@@ -252,7 +252,7 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		//setProcessed(true);		
 	}
 	public void reverse() {
-		setStatus(STATUS_Completed);		
+		setStatus(STATUS_Unbilled);		
 		//setProcessed(false);
 		//Only Shipment document will set processed as True
 		//or false while reversing shipment document.
@@ -269,17 +269,21 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 	}
 	
 	public boolean isGST() {
-		BigDecimal royaltyPassQty = getPassQtyIssued();
-		if(royaltyPassQty == null)
-			royaltyPassQty = BigDecimal.ZERO;
-		return royaltyPassQty.doubleValue() > 0;
+		//BigDecimal royaltyPassQty = getPassQtyIssued();
+		//if(royaltyPassQty == null)
+		//	royaltyPassQty = BigDecimal.ZERO;
+		
+		return getGSTAmount().doubleValue() > 0;
 	}
 	
 	/***
 	 * Returns Sales Quick Entry Document Type ID
 	 * @return
 	 */
-	public int getC_DocType_ID() {		
+	public int getC_DocType_ID() {
+		if(isGST())
+			return TF_MOrder.GSTOrderDocType_ID(getCtx());
+		else
 			return TF_MOrder.NonGSTOrderDocType_ID(getCtx());
 	}
 	
@@ -293,7 +297,7 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 	}
 	
 	public int getRoyaltyPassProduct_ID() {
-		return MSysConfig.getIntValue("ROYALTY_PASS_PRODUCT_ID", 1000329, getAD_Client_ID(), getAD_Org_ID());
+		return MSysConfig.getIntValue("ROYALTY_PASS_PRODUCT_ID", 0, getAD_Client_ID(), getAD_Org_ID());
 	}
 	
 	public int getC_Tax_ID() {
@@ -366,5 +370,14 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 	
 	public int getMT_UOM_ID() {
 		return MSysConfig.getIntValue("TONNAGE_UOM", 1000069, getAD_Client_ID());
+	}
+	
+	@Override
+	public String getPartyName() {
+		TF_MBPartner bp = new TF_MBPartner(getCtx(), getC_BPartner_ID(), get_TrxName());
+		if(bp.getIsPOSCashBP())
+			return super.getPartyName();
+		else
+			return null;
 	}
 }

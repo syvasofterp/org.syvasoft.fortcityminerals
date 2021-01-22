@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.util.List;
 import java.util.Properties;
 
+import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.MProduct;
 import org.compiere.model.MSysConfig;
 import org.compiere.model.Query;
@@ -38,6 +39,18 @@ public class MRentedVehicle extends X_TF_RentedVehicle {
 				setOldTareweight(TareWeight);
 			}
 		}
+		
+		if(newRecord && getC_BPartner_ID() > 0) {
+			TF_MBPartner bp = new TF_MBPartner(getCtx(), getC_BPartner_ID(), get_TrxName());
+			setIsTransporter(bp.isVendor());	
+			setIsOwnVehicle(false);
+		}
+		if(!newRecord && isTransporter()) {
+			TF_MBPartner bp = new TF_MBPartner(getCtx(), getC_BPartner_ID(), get_TrxName());
+			if(!bp.isVendor())
+				throw new AdempiereException("It is not a transporter vehicle!");
+		}
+		
 		boolean ok = super.beforeSave(newRecord);
 		return ok;
 	}

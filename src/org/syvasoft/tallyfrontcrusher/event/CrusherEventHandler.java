@@ -350,12 +350,15 @@ public class CrusherEventHandler extends AbstractEventHandler {
 			invoiceNo=inv.getDocumentNo();
 		}
 		
+		int TF_Weighment_ID = ord.get_ValueAsInt("TF_WeighmentEntry_ID");
+		MWeighmentEntry we = new MWeighmentEntry(ord.getCtx(), TF_Weighment_ID, null);
+		invoiceNo = we.getDocumentNo();
 		//Posting Payment Document for Driver Tips
 		TF_MPayment payment = new TF_MPayment(ord.getCtx(), 0, ord.get_TrxName());
 		payment.setAD_Org_ID(ord.getAD_Org_ID());
 		payment.setDateAcct(ord.getDateAcct());
 		payment.setDateTrx(ord.getDateAcct());
-		payment.setDescription("DRIVER BETA AMOUNT GIVEN FOR Sales Invoice: "+ invoiceNo +", Vehicle Type : "+vtype.getName());
+		payment.setDescription("DRIVER BETA AMOUNT GIVEN FOR DC:# "+ invoiceNo +", Vehicle Type : "+vtype.getName());
 		//* Commented for Laxmi Stone */
 		//payment.setCashType(TF_MPayment.CASHTYPE_GeneralExpense);
 		payment.setC_DocType_ID(false);		
