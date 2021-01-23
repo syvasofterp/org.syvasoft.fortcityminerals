@@ -24,7 +24,7 @@ public class CreateCrusherKatingEntryFromWeighment extends SvrProcess {
 	@Override
 	protected String doIt() throws Exception {
 		
-		String whereClause = " (WeighmentEntryType = '5KA' OR WeighmentEntryType = '4SR') AND Status = 'CO' "
+		String whereClause = " (WeighmentEntryType = '5KA') AND Status = 'CO' "
 				+ " AND NOT EXISTS(SELECT k.TF_WeighmentEntry_ID FROM TF_CrusherKatingEntry k WHERE "
 				+ "k.TF_WeighmentEntry_ID =  TF_WeighmentEntry.TF_WeighmentEntry_ID)";
 		int i = 0;
