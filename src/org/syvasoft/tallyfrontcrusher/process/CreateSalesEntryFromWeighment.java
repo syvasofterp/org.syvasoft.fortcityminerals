@@ -58,7 +58,7 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 		List<MWeighmentEntry> wEntries = new Query(getCtx(), MWeighmentEntry.Table_Name, whereClause, get_TrxName())
 				.setClient_ID().list();
 		for(MWeighmentEntry wEntry : wEntries) {
-			if(wEntry.getDescription().contains("ERROR:")) 
+			if(wEntry.getDescription() != null && wEntry.getDescription().contains("ERROR:")) 
 				continue;
 			
 			Trx trx = Trx.get(get_TrxName(), false);
