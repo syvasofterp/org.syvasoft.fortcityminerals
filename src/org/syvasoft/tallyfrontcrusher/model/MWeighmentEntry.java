@@ -191,7 +191,7 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		return ok;
 	}
 	void CreateCustomerVehicle() {
-		if(getTF_RentedVehicle_ID() == 0 && getPaymentRule() == PAYMENTRULE_OnCredit) {
+		if(getTF_RentedVehicle_ID() == 0 && getPaymentRule().equals(PAYMENTRULE_OnCredit.toString())) {
 			String whereClause="UPPER(replace(vehicleno,' ',''))='"+getVehicleNo().replace(" ","").toUpperCase()+"'";
 			
 			MRentedVehicle rentedVehicle = new Query(getCtx(), MRentedVehicle.Table_Name, whereClause, get_TrxName())
