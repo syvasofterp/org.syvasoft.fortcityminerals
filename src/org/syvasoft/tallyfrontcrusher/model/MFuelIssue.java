@@ -10,6 +10,7 @@ import org.compiere.model.MAcctSchema;
 import org.compiere.model.MBPartner;
 import org.compiere.model.MClient;
 import org.compiere.model.MCost;
+import org.compiere.model.MCostElement;
 import org.compiere.model.MInOut;
 import org.compiere.model.MInOutLine;
 import org.compiere.model.MInventory;
@@ -188,7 +189,12 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 			return;
 		}
 				
-		
+		//Create Costing record for the product.
+		int M_CostElement_ID = MCostElement.getByCostingMethod(getCtx(), prod.getCostingMethod(as)).get(0).get_ID();
+		cost = MCost.get(prod, 0,
+				as, getAD_Org_ID(),M_CostElement_ID , get_TrxName());
+		cost.saveEx();
+				
 		//Cost Adjustment Header
 		MWarehouse[] whs = MWarehouse.getForOrg(getCtx(), getAD_Org_ID());
 		if(whs.length==0)

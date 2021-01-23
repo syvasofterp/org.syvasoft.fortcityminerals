@@ -407,7 +407,7 @@ public class TF_MProduct extends MProduct {
 		String costingMethod = product.getCostingMethod(as);		
 		MCost cost = product.getCostingRecord(as, AD_Org_ID, 0, costingMethod);
 		if(cost == null)
-			throw new AdempiereException("No Costing Info for : "  + product.getName());
+			return BigDecimal.ZERO;
 		
 		return cost.getCurrentCostPrice();		
 	}
