@@ -281,7 +281,7 @@ public class TF_MInOut extends MInOut {
 			}
 			else if(wEntry.getM_Product_ID() == BoulderID && getTF_WeighmentEntry_ID() > 0) {
 				MBoulderMovement.createBoulderIssue(get_TrxName(), getDateAcct(), getAD_Org_ID(), wEntry.getM_Product_ID(),
-						wEntry.getNetWeightUnit(), getTF_WeighmentEntry_ID());
+						wEntry.getNetWeightUnit(), getTF_WeighmentEntry_ID(), getM_Warehouse_ID());
 			}
 		}
 	}

@@ -39,14 +39,15 @@ public class MBoulderMovement extends X_TF_Boulder_Movement {
 	}
 	
 	public static void createBoulderIssue(String trxName, Timestamp dateMovement,int AD_Org_ID,  
-			int M_Product_ID, BigDecimal QtyPayment, int TF_WeighmentEntry_ID) {	
+			int M_Product_ID, BigDecimal QtyPayment, int TF_WeighmentEntry_ID, int M_Warehouse_ID) {	
 		
 		MBoulderMovement bm = new MBoulderMovement(Env.getCtx(), 0, trxName);
 		bm.setAD_Org_ID(AD_Org_ID);
 		bm.setMovementDate(dateMovement);		
 		bm.setM_Product_ID(M_Product_ID);
 		bm.setQty_Payment(QtyPayment);
-		bm.setTF_WeighmentEntry_ID(TF_WeighmentEntry_ID);		
+		bm.setTF_WeighmentEntry_ID(TF_WeighmentEntry_ID);
+		bm.setM_Warehouse_ID(M_Warehouse_ID);
 		bm.saveEx();
 		
 	}
