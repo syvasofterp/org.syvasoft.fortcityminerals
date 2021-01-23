@@ -2211,7 +2211,8 @@ public class TF_MOrder extends MOrder {
 	protected boolean beforeSave(boolean newRecord) {
 		MRentedVehicle rv = new MRentedVehicle(getCtx(), getTF_RentedVehicle_ID(), get_TrxName());		
 		if(getTF_RentedVehicle_ID()>0 && getRent_Amt().doubleValue()==0 && isSOTrx()) {
-			if((rv.isOwnVehicle() && isSOTrx()) || rv.isTransporter()) {				
+			//if((rv.isOwnVehicle() && isSOTrx()) || rv.isTransporter()) { //to allow without rent 
+			if(rv.isTransporter()) {
 				if(!createConsolidatedTransportInvoice && getC_BPartner_ID() != rv.getC_BPartner_ID())
 					throw new AdempiereUserError("Invalid Rent Amount");
 			}
