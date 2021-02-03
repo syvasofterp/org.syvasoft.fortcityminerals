@@ -861,6 +861,8 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public static final String STATUS_Billed = "CL";
 	/** Voided = VO */
 	public static final String STATUS_Voided = "VO";
+	/** Under Review - UR*/
+	public static final String STATUS_UnderReview = "UR";
 	/** Set Status.
 		@param Status 
 		Status of the currently running check

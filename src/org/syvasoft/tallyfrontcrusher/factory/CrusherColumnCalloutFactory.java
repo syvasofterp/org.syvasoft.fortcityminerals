@@ -95,6 +95,7 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutTyreStatusChange_Tyre;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutVehicleRentConfig_Destination;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutVehicleRent_CalcAmount;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutVehicleRent_Vehicle;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutWeighmentEntry_CalcAmount;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutWeighmentEntry_CalcNetWeight;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutWeighmentEntry_Vehicle;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutYardEntry_CalcAmount;
@@ -352,6 +353,12 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 			if(columnName.equals(MWeighmentEntry.COLUMNNAME_TF_RentedVehicle_ID)) {
 				list.add(new CalloutWeighmentEntry_Vehicle());
 				list.add(new CalloutOrder_VehicleRent());
+			}
+			
+			if(columnName.equals(MWeighmentEntry.COLUMNNAME_Price) || 
+					columnName.equals(MWeighmentEntry.COLUMNNAME_GSTAmount) || 
+					columnName.equals(MWeighmentEntry.COLUMNNAME_DriverTips)) {
+				list.add(new CalloutWeighmentEntry_CalcAmount());
 			}
 		}
 		

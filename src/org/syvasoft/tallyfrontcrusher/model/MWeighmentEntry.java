@@ -99,6 +99,12 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 					
 		}
 		
+		if(!newRecord && getWeighmentEntryType().equals(WEIGHMENTENTRYTYPE_Sales)) {
+			if(is_Changed() && getStatus().equals(STATUS_Unbilled) && !is_ValueChanged(COLUMNNAME_Status)) {
+				setStatus(STATUS_UnderReview);
+			}
+		}
+		
 		/*
 		//csv import support
 		if(newRecord) {
@@ -380,4 +386,5 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		else
 			return null;
 	}
+			
 }

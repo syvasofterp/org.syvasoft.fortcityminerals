@@ -23,7 +23,7 @@ public class CalloutWeighmentEntry_Vehicle implements IColumnCallout {
 			tareWeight = vehicle.getTareWeight();
 		}
 		mTab.setValue(MWeighmentEntry.COLUMNNAME_VehicleNo, vehicleNo);
-		mTab.setValue(MWeighmentEntry.COLUMNNAME_TareWeight, tareWeight);
+		//mTab.setValue(MWeighmentEntry.COLUMNNAME_TareWeight, tareWeight);
 		return null;
 	}
 

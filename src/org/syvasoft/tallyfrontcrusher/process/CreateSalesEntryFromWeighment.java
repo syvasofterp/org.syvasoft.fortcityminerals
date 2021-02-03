@@ -49,14 +49,15 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 
 	@Override
 	protected String doIt() throws Exception {
-		String whereClause = " WeighmentEntryType = '1SO' AND Status = 'CO' AND (SELECT OrgType FROM AD_Org WHERE "				
-				+ "AD_Org.AD_Org_ID = TF_WeighmentEntry.AD_Org_ID) = 'C'"
-				+ " AND NOT EXISTS(SELECT C_Order.TF_WeighmentEntry_ID FROM C_Order WHERE "
-				+ "C_Order.TF_WeighmentEntry_ID =  TF_WeighmentEntry.TF_WeighmentEntry_ID)";
+		String whereClause = " WeighmentEntryType = '1SO' AND Status = 'CO' AND EXISTS (SELECT T_Selection_ID FROM T_Selection WHERE " +
+				" T_Selection.AD_PInstance_ID=? AND T_Selection.T_Selection_ID = TF_WeighmentEntry.TF_WeighmentEntry_ID) "
+				+ "  ";
 				//+ "AND C_Order.DocStatus IN ('CO','DR','IR'))";
 		int i = 0;
 		List<MWeighmentEntry> wEntries = new Query(getCtx(), MWeighmentEntry.Table_Name, whereClause, get_TrxName())
-				.setClient_ID().list();
+				.setClient_ID()
+				.setParameters(getAD_PInstance_ID())
+				.list();
 		for(MWeighmentEntry wEntry : wEntries) {
 			if(wEntry.getDescription() != null && wEntry.getDescription().contains("ERROR:")) 
 				continue;

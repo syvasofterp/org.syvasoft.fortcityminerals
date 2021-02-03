@@ -26,7 +26,7 @@ public class CreateShipmentForWE extends SvrProcess {
 
 	@Override
 	protected String doIt() throws Exception {
-		String whereClause = " TF_WeighmentEntry.WeighmentEntryType = '1SO' AND TF_WeighmentEntry.Status IN ('CO','CL') AND TF_WeighmentEntry.Processed='N' ";
+		String whereClause = " TF_WeighmentEntry.WeighmentEntryType = '1SO' AND TF_WeighmentEntry.Status IN ('CL') AND TF_WeighmentEntry.Processed='N' ";
 				
 		List<MWeighmentEntry> list = new Query(getCtx(), MWeighmentEntry.Table_Name, whereClause, get_TrxName())
 				.setClient_ID()
