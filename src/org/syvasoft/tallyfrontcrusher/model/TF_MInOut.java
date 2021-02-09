@@ -264,10 +264,10 @@ public class TF_MInOut extends MInOut {
 		if(!isSOTrx()) {
 			if(BoulderID == wEntry.getM_Product_ID() && MWeighmentEntry.TF_SEND_TO_Production.equals(wEntry.getTF_Send_To())) {
 				MSubcontractMaterialMovement.createRawmaterialMovement(get_TrxName(), getDateAcct(), getAD_Org_ID(),				
-						0, 0, BoulderID, getTF_WeighmentEntry_ID(), 0, wEntry.getNetWeightUnit());
+						0, 0, BoulderID, getTF_WeighmentEntry_ID(), 0, wEntry.getMovementQty());
 			}
 			else if(BoulderID == wEntry.getM_Product_ID() && MWeighmentEntry.TF_SEND_TO_Stock.equals(wEntry.getTF_Send_To())) {
-				MBoulderMovement.createBoulderReceipt(get_TrxName(), getDateAcct(), getAD_Org_ID(), BoulderID, wEntry.getNetWeightUnit(), getTF_WeighmentEntry_ID(), getM_Warehouse_ID());
+				MBoulderMovement.createBoulderReceipt(get_TrxName(), getDateAcct(), getAD_Org_ID(), BoulderID, wEntry.getMovementQty(), getTF_WeighmentEntry_ID(), getM_Warehouse_ID());
 			}
 		}
 		else {
@@ -277,11 +277,11 @@ public class TF_MInOut extends MInOut {
 				TF_MProductCategory pc = new TF_MProductCategory(getCtx(), wEntry.getM_Product().getM_Product_Category_ID(), get_TrxName());
 				if(pc.isTrackMaterialMovement())
 					MSubcontractMaterialMovement.createMaterialMovement(get_TrxName(), getDateAcct(), getAD_Org_ID(), getC_Order_ID(), 
-							getC_BPartner_ID(), wEntry.getM_Product_ID(), wEntry.getNetWeightUnit(), getTF_WeighmentEntry_ID());
+							getC_BPartner_ID(), wEntry.getM_Product_ID(), wEntry.getMovementQty(), getTF_WeighmentEntry_ID());
 			}
 			else if(wEntry.getM_Product_ID() == BoulderID && getTF_WeighmentEntry_ID() > 0) {
 				MBoulderMovement.createBoulderIssue(get_TrxName(), getDateAcct(), getAD_Org_ID(), wEntry.getM_Product_ID(),
-						wEntry.getNetWeightUnit(), getTF_WeighmentEntry_ID(), getM_Warehouse_ID());
+						wEntry.getMovementQty(), getTF_WeighmentEntry_ID(), getM_Warehouse_ID());
 			}
 		}
 	}

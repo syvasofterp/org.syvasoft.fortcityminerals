@@ -68,9 +68,9 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 	
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
-		//CreateBP();
+		CreateBP();
 		CreateDestination();
-		CreateCustomerVehicle();
+		//CreateCustomerVehicle();
 		
 		if(getTF_RentedVehicle_ID() > 0 && (getVehicleNo() == null || getVehicleNo().length() == 0))
 				setVehicleNo(getTF_RentedVehicle().getVehicleNo());
@@ -385,6 +385,19 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 			return super.getPartyName();
 		else
 			return null;
+	}
+	
+	public BigDecimal getMovementQty() {
+		int MT_UOM_ID = MSysConfig.getIntValue("TONNAGE_UOM", 1000069, getAD_Client_ID());
+		TF_MProduct prod = new TF_MProduct(getCtx(), getM_Product_ID(), get_TrxName());
+		BigDecimal divideRate = prod.getDivideRate(MT_UOM_ID, getC_UOM_ID());
+		BigDecimal MT = getNetWeight().divide(new BigDecimal(1000), 2, RoundingMode.HALF_EVEN);		
+		
+		if(getC_UOM_ID() == 0)
+			return MT;
+		
+		BigDecimal qtyMovement = MT.multiply(divideRate).setScale(2, RoundingMode.HALF_EVEN);
+		return qtyMovement;
 	}
 			
 }

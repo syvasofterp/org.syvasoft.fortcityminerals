@@ -153,7 +153,7 @@ public class CalloutOrder_WeighmentEntry implements IColumnCallout {
 					
 			}
 			
-			mTab.setValue(TF_MOrder.COLUMNNAME_OnAccount, false);
+			mTab.setValue(TF_MOrder.COLUMNNAME_OnAccount, weighment.isGST());
 			
 			mTab.setValue(TF_MOrder.COLUMNNAME_VehicleNo, weighment.getVehicleNo());
 			

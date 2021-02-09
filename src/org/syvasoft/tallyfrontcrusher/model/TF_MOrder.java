@@ -2982,13 +2982,15 @@ public class TF_MOrder extends MOrder {
 		/*if(getItem1_PermitIssued().doubleValue() <= 0)
 			throw new AdempiereException("Invalid Permit Issued!");*/
 		
+		MWeighmentEntry we = new MWeighmentEntry(getCtx(), getTF_WeighmentEntry_ID(), get_TrxName());
 		MTRTaxInvoice inv = new MTRTaxInvoice(getCtx(),0, get_TrxName());
 		inv.setAD_Org_ID(getAD_Org_ID());
 		inv.setDateAcct(getDateAcct());
+		inv.setDocumentNo(we.getDocumentNo());
 		inv.setM_Warehouse_ID(getM_Warehouse_ID());
 		inv.setPartyName(getPartyName());
 		inv.setPostTaxToCustomer(false);
-		inv.setPostGSTAsExpense(true);
+		inv.setPostGSTAsExpense(false);
 		inv.setC_BPartner_ID(getC_BPartner_ID());
 		inv.setDateSupply(getDateAcct());
 		inv.setIsSOTrx(true);
@@ -3027,19 +3029,19 @@ public class TF_MOrder extends MOrder {
 		BigDecimal divisor = new BigDecimal(1.05);
 		divisor = divisor.setScale(2, RoundingMode.HALF_EVEN);
 		BigDecimal price = BigDecimal.ZERO;	
-		if(wEntry.isPermitSales()) {
+		//if(wEntry.isPermitSales()) {
 			if(getItem1_Price() == null || getItem1_Price().doubleValue() == 0)
 				throw new AdempiereException("Please set Item Price for " + prod.getName());
 		
 			price =getItem1_Price();
-		}
-		else {
+		//}
+		/*else {
 			if(prod.getBillPrice() == null || prod.getBillPrice().doubleValue() == 0)
 				throw new AdempiereException("Please set Bill Price for " + prod.getName());
 				
 			price = prod.getBillPrice();	
 		}
-	
+		 */
 		/*
 		if(isRentBreakup())
 		{
@@ -3377,8 +3379,8 @@ public class TF_MOrder extends MOrder {
 	}
 	
 	public static int GSTOrderDocType_ID(Properties ctx) {
-		//int DocType_ID = MSysConfig.getIntValue("GST_ORDER_ID", 1000063, Env.getAD_Client_ID(ctx));
-		int DocType_ID = MSysConfig.getIntValue("NONGST_ORDER_ID", 1000062, Env.getAD_Client_ID(ctx));
+		int DocType_ID = MSysConfig.getIntValue("GST_ORDER_ID", 1000063, Env.getAD_Client_ID(ctx));
+		//int DocType_ID = MSysConfig.getIntValue("NONGST_ORDER_ID", 1000062, Env.getAD_Client_ID(ctx));
 		return DocType_ID;
 	}
 
@@ -3405,6 +3407,7 @@ public class TF_MOrder extends MOrder {
 		invoice.setIsSOTrx(isSOTrx());
 		invoice.setDateInvoiced(getDateAcct());
 		invoice.setDateAcct(getDateAcct());
+		invoice.setDocumentNo(weighment.getInvoiceNo());
 		//
 		invoice.setSalesRep_ID(Env.getAD_User_ID(getCtx()));		
 		invoice.setPaymentRule(getPaymentRule());
