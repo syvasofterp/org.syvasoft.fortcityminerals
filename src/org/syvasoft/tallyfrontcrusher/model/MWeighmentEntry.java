@@ -99,7 +99,9 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 					
 		}
 		
-		if(!newRecord && getWeighmentEntryType().equals(WEIGHMENTENTRYTYPE_Sales)) {
+		
+		if(!newRecord && getWeighmentEntryType().equals(WEIGHMENTENTRYTYPE_Sales)
+				&& MSysConfig.getBooleanValue("WEIGHMENT_REVIEW", false)) {
 			if(is_Changed() && getStatus().equals(STATUS_Unbilled) && !is_ValueChanged(COLUMNNAME_Status)) {
 				setStatus(STATUS_UnderReview);
 			}
@@ -377,16 +379,7 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 	public int getMT_UOM_ID() {
 		return MSysConfig.getIntValue("TONNAGE_UOM", 1000069, getAD_Client_ID());
 	}
-	
-	@Override
-	public String getPartyName() {
-		TF_MBPartner bp = new TF_MBPartner(getCtx(), getC_BPartner_ID(), get_TrxName());
-		if(bp.getIsPOSCashBP())
-			return super.getPartyName();
-		else
-			return null;
-	}
-	
+			
 	public BigDecimal getMovementQty() {
 		int MT_UOM_ID = MSysConfig.getIntValue("TONNAGE_UOM", 1000069, getAD_Client_ID());
 		TF_MProduct prod = new TF_MProduct(getCtx(), getM_Product_ID(), get_TrxName());
