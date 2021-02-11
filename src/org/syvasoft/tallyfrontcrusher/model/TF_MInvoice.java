@@ -435,6 +435,9 @@ public class TF_MInvoice extends MInvoice {
 			if(getPaymentRule() == null)
 				setPaymentRule(PAYMENTRULE_OnCredit);
 		}
+		if(!newRecord && isSOTrx() && is_ValueChanged(COLUMNNAME_DocStatus) && getDocStatus().equals(DOCSTATUS_Reversed)) {
+			setDocumentNo(getDocumentNo() + "-" + getC_Invoice_ID());
+		}
 		return result;
 	}
 
