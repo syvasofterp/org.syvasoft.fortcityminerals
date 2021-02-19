@@ -1,5 +1,6 @@
 package org.syvasoft.tallyfrontcrusher.model;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.util.Properties;
 
@@ -38,6 +39,67 @@ public class TF_MInOutLine extends MInOutLine {
 	public TF_MInOutLine(MInOut inout) {
 		super(inout);
 		// TODO Auto-generated constructor stub
+	}
+	
+	/** Column name Distance */
+    public static final String COLUMNNAME_Distance = "Distance";
+	/** Set Distance (km).
+	@param Distance Distance (km)	  */
+	public void setDistance (BigDecimal Distance)
+	{
+		set_Value (COLUMNNAME_Distance, Distance);
+	}
+	
+	/** Get Distance (km).
+		@return Distance (km)	  */
+	public BigDecimal getDistance () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Distance);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+	
+	
+	/** Column name TF_Destination_ID */
+    public static final String COLUMNNAME_TF_Destination_ID = "TF_Destination_ID";
+	/** Set Destination.
+	@param TF_Destination_ID Destination	  */
+	public void setTF_Destination_ID (int TF_Destination_ID)
+	{
+		if (TF_Destination_ID < 1) 
+			set_Value (COLUMNNAME_TF_Destination_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_Destination_ID, Integer.valueOf(TF_Destination_ID));
+	}
+	
+	/** Get Destination.
+		@return Destination	  */
+	public int getTF_Destination_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Destination_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+	
+    /** Column name RateMTKM */
+    public static final String COLUMNNAME_RateMTKM = "RateMTKM";
+	/** Set Rate / MT / KM.
+		@param RateMTKM Rate / MT / KM	  */
+	public void setRateMTKM (BigDecimal RateMTKM)
+	{
+		set_Value (COLUMNNAME_RateMTKM, RateMTKM);
+	}
+
+	/** Get Rate / MT / KM.
+		@return Rate / MT / KM	  */
+	public BigDecimal getRateMTKM () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_RateMTKM);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
 	}
 	
 	@Override

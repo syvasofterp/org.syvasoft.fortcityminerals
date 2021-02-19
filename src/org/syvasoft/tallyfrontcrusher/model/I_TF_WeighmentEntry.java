@@ -301,6 +301,19 @@ public interface I_TF_WeighmentEntry
 	  */
 	public String getInvoiceNo();
 
+    /** Column name InvoiceType */
+    public static final String COLUMNNAME_InvoiceType = "InvoiceType";
+
+	/** Set Invoice Type.
+	  * Actual Weight / TP Weight
+	  */
+	public void setInvoiceType (String InvoiceType);
+
+	/** Get Invoice Type.
+	  * Actual Weight / TP Weight
+	  */
+	public String getInvoiceType();
+
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";
 
@@ -335,6 +348,15 @@ public interface I_TF_WeighmentEntry
 
 	/** Get Permit Sales	  */
 	public boolean isPermitSales();
+
+    /** Column name IsSecondary */
+    public static final String COLUMNNAME_IsSecondary = "IsSecondary";
+
+	/** Set Secondary	  */
+	public void setIsSecondary (boolean IsSecondary);
+
+	/** Get Secondary	  */
+	public boolean isSecondary();
 
     /** Column name M_Product_ID */
     public static final String COLUMNNAME_M_Product_ID = "M_Product_ID";
@@ -413,6 +435,15 @@ public interface I_TF_WeighmentEntry
 	/** Get New Destination	  */
 	public String getNewDestination();
 
+    /** Column name NewProduct */
+    public static final String COLUMNNAME_NewProduct = "NewProduct";
+
+	/** Set New Product	  */
+	public void setNewProduct (String NewProduct);
+
+	/** Get New Product	  */
+	public String getNewProduct();
+
     /** Column name PartyName */
     public static final String COLUMNNAME_PartyName = "PartyName";
 
@@ -456,10 +487,10 @@ public interface I_TF_WeighmentEntry
     /** Column name PermitIssuedQty */
     public static final String COLUMNNAME_PermitIssuedQty = "PermitIssuedQty";
 
-	/** Set Permit Issued Qty	  */
+	/** Set TP Weight	  */
 	public void setPermitIssuedQty (BigDecimal PermitIssuedQty);
 
-	/** Get Permit Issued Qty	  */
+	/** Get TP Weight	  */
 	public BigDecimal getPermitIssuedQty();
 
     /** Column name PermitPassAmount */
@@ -674,6 +705,17 @@ public interface I_TF_WeighmentEntry
 	/** Get TF_WeighmentEntry_UU	  */
 	public String getTF_WeighmentEntry_UU();
 
+    /** Column name TF_WeighmentEntryPrimary_ID */
+    public static final String COLUMNNAME_TF_WeighmentEntryPrimary_ID = "TF_WeighmentEntryPrimary_ID";
+
+	/** Set Primary Weighment Entry	  */
+	public void setTF_WeighmentEntryPrimary_ID (int TF_WeighmentEntryPrimary_ID);
+
+	/** Get Primary Weighment Entry	  */
+	public int getTF_WeighmentEntryPrimary_ID();
+
+	public I_TF_WeighmentEntry getTF_WeighmentEntryPrimary() throws RuntimeException;
+
     /** Column name TotalAmt */
     public static final String COLUMNNAME_TotalAmt = "TotalAmt";
 
@@ -686,6 +728,15 @@ public interface I_TF_WeighmentEntry
 	  * Total Amount
 	  */
 	public BigDecimal getTotalAmt();
+
+    /** Column name TPNo */
+    public static final String COLUMNNAME_TPNo = "TPNo";
+
+	/** Set TP No	  */
+	public void setTPNo (String TPNo);
+
+	/** Get TP No	  */
+	public String getTPNo();
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";

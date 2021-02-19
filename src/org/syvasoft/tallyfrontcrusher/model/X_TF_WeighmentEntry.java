@@ -33,7 +33,7 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20210122L;
+	private static final long serialVersionUID = 20210219L;
 
     /** Standard Constructor */
     public X_TF_WeighmentEntry (Properties ctx, int TF_WeighmentEntry_ID, String trxName)
@@ -42,7 +42,10 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
       /** if (TF_WeighmentEntry_ID == 0)
         {
 			setDocumentNo (null);
-			setM_Product_ID (0);
+			setInvoiceType (null);
+// AW
+			setIsSecondary (false);
+// N
 			setProcessed (false);
 			setStatus (null);
 // IP
@@ -454,6 +457,28 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return (String)get_Value(COLUMNNAME_InvoiceNo);
 	}
 
+	/** Actual Weight = AW */
+	public static final String INVOICETYPE_ActualWeight = "AW";
+	/** TP Weight = TW */
+	public static final String INVOICETYPE_TPWeight = "TW";
+	/** Set Invoice Type.
+		@param InvoiceType 
+		Actual Weight / TP Weight
+	  */
+	public void setInvoiceType (String InvoiceType)
+	{
+
+		set_Value (COLUMNNAME_InvoiceType, InvoiceType);
+	}
+
+	/** Get Invoice Type.
+		@return Actual Weight / TP Weight
+	  */
+	public String getInvoiceType () 
+	{
+		return (String)get_Value(COLUMNNAME_InvoiceType);
+	}
+
 	/** Set Manual.
 		@param IsManual 
 		This is a manual process
@@ -490,6 +515,27 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public boolean isPermitSales () 
 	{
 		Object oo = get_Value(COLUMNNAME_IsPermitSales);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	/** Set Secondary.
+		@param IsSecondary Secondary	  */
+	public void setIsSecondary (boolean IsSecondary)
+	{
+		set_Value (COLUMNNAME_IsSecondary, Boolean.valueOf(IsSecondary));
+	}
+
+	/** Get Secondary.
+		@return Secondary	  */
+	public boolean isSecondary () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsSecondary);
 		if (oo != null) 
 		{
 			 if (oo instanceof Boolean) 
@@ -642,6 +688,20 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return (String)get_Value(COLUMNNAME_NewDestination);
 	}
 
+	/** Set New Product.
+		@param NewProduct New Product	  */
+	public void setNewProduct (String NewProduct)
+	{
+		set_Value (COLUMNNAME_NewProduct, NewProduct);
+	}
+
+	/** Get New Product.
+		@return New Product	  */
+	public String getNewProduct () 
+	{
+		return (String)get_Value(COLUMNNAME_NewProduct);
+	}
+
 	/** Set Party Name.
 		@param PartyName Party Name	  */
 	public void setPartyName (String PartyName)
@@ -706,6 +766,8 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public static final String PAYMENTRULE_DirectDebit = "D";
 	/** Mixed POS Payment = M */
 	public static final String PAYMENTRULE_MixedPOSPayment = "M";
+	/** Cash  = Z */
+	public static final String PAYMENTRULE_Prepaid = "Z";
 	/** Set Payment Rule.
 		@param PaymentRule 
 		How you pay the invoice
@@ -724,15 +786,15 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return (String)get_Value(COLUMNNAME_PaymentRule);
 	}
 
-	/** Set Permit Issued Qty.
-		@param PermitIssuedQty Permit Issued Qty	  */
+	/** Set TP Weight.
+		@param PermitIssuedQty TP Weight	  */
 	public void setPermitIssuedQty (BigDecimal PermitIssuedQty)
 	{
 		set_Value (COLUMNNAME_PermitIssuedQty, PermitIssuedQty);
 	}
 
-	/** Get Permit Issued Qty.
-		@return Permit Issued Qty	  */
+	/** Get TP Weight.
+		@return TP Weight	  */
 	public BigDecimal getPermitIssuedQty () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_PermitIssuedQty);
@@ -855,13 +917,13 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 
 	/** In Progress = IP */
 	public static final String STATUS_InProgress = "IP";
-	/** Unbilled = CO */
-	public static final String STATUS_Unbilled = "CO";
+	/** Completed = CO */
+	public static final String STATUS_Completed = "CO";
 	/** Billed = CL */
 	public static final String STATUS_Billed = "CL";
 	/** Voided = VO */
 	public static final String STATUS_Voided = "VO";
-	/** Under Review - UR*/
+	/** Under Review = UR */
 	public static final String STATUS_UnderReview = "UR";
 	/** Set Status.
 		@param Status 
@@ -1164,6 +1226,31 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return (String)get_Value(COLUMNNAME_TF_WeighmentEntry_UU);
 	}
 
+	public I_TF_WeighmentEntry getTF_WeighmentEntryPrimary() throws RuntimeException
+    {
+		return (I_TF_WeighmentEntry)MTable.get(getCtx(), I_TF_WeighmentEntry.Table_Name)
+			.getPO(getTF_WeighmentEntryPrimary_ID(), get_TrxName());	}
+
+	/** Set Primary Weighment Entry.
+		@param TF_WeighmentEntryPrimary_ID Primary Weighment Entry	  */
+	public void setTF_WeighmentEntryPrimary_ID (int TF_WeighmentEntryPrimary_ID)
+	{
+		if (TF_WeighmentEntryPrimary_ID < 1) 
+			set_Value (COLUMNNAME_TF_WeighmentEntryPrimary_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_WeighmentEntryPrimary_ID, Integer.valueOf(TF_WeighmentEntryPrimary_ID));
+	}
+
+	/** Get Primary Weighment Entry.
+		@return Primary Weighment Entry	  */
+	public int getTF_WeighmentEntryPrimary_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_WeighmentEntryPrimary_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	/** Set Total Amount.
 		@param TotalAmt 
 		Total Amount
@@ -1182,6 +1269,20 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
+	}
+
+	/** Set TP No.
+		@param TPNo TP No	  */
+	public void setTPNo (String TPNo)
+	{
+		set_Value (COLUMNNAME_TPNo, TPNo);
+	}
+
+	/** Get TP No.
+		@return TP No	  */
+	public String getTPNo () 
+	{
+		return (String)get_Value(COLUMNNAME_TPNo);
 	}
 
 	/** Set User Name.
@@ -1222,6 +1323,8 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public static final String WEIGHMENTENTRYTYPE_SubcontractProductionReceipt = "4SR";
 	/** Stock to Crusher = 5KA */
 	public static final String WEIGHMENTENTRYTYPE_StockToCrusher = "5KA";
+	/** Other Purchase = 8OP */
+	public static final String WEIGHMENTENTRYTYPE_OtherPurchase = "8OP";
 	/** Set Type.
 		@param WeighmentEntryType Type	  */
 	public void setWeighmentEntryType (String WeighmentEntryType)
