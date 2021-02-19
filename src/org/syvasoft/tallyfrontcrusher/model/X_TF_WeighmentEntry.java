@@ -368,6 +368,20 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return bd;
 	}
 
+	/** Set eWay Bill No.
+		@param eWayBillNo eWay Bill No	  */
+	public void seteWayBillNo (String eWayBillNo)
+	{
+		set_Value (COLUMNNAME_eWayBillNo, eWayBillNo);
+	}
+
+	/** Get eWay Bill No.
+		@return eWay Bill No	  */
+	public String geteWayBillNo () 
+	{
+		return (String)get_Value(COLUMNNAME_eWayBillNo);
+	}
+
 	/** Set Gross Weight (Kg).
 		@param GrossWeight Gross Weight (Kg)	  */
 	public void setGrossWeight (BigDecimal GrossWeight)
@@ -857,6 +871,20 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return bd;
 	}
 
+	/** Set Primary Document No.
+		@param PrimaryDocumentNo Primary Document No	  */
+	public void setPrimaryDocumentNo (String PrimaryDocumentNo)
+	{
+		set_Value (COLUMNNAME_PrimaryDocumentNo, PrimaryDocumentNo);
+	}
+
+	/** Get Primary Document No.
+		@return Primary Document No	  */
+	public String getPrimaryDocumentNo () 
+	{
+		return (String)get_Value(COLUMNNAME_PrimaryDocumentNo);
+	}
+
 	/** Set Processed.
 		@param Processed 
 		The document has been processed
@@ -913,6 +941,20 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
+	}
+
+	/** Set TP No.
+		@param RoyaltyNo TP No	  */
+	public void setRoyaltyNo (String RoyaltyNo)
+	{
+		set_Value (COLUMNNAME_RoyaltyNo, RoyaltyNo);
+	}
+
+	/** Get TP No.
+		@return TP No	  */
+	public String getRoyaltyNo () 
+	{
+		return (String)get_Value(COLUMNNAME_RoyaltyNo);
 	}
 
 	/** In Progress = IP */
@@ -1269,20 +1311,6 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
-	}
-
-	/** Set TP No.
-		@param TPNo TP No	  */
-	public void setTPNo (String TPNo)
-	{
-		set_Value (COLUMNNAME_TPNo, TPNo);
-	}
-
-	/** Get TP No.
-		@return TP No	  */
-	public String getTPNo () 
-	{
-		return (String)get_Value(COLUMNNAME_TPNo);
 	}
 
 	/** Set User Name.

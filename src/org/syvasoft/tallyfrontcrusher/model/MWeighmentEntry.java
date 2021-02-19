@@ -10,6 +10,7 @@ import org.compiere.model.MInOutLine;
 import org.compiere.model.MSysConfig;
 import org.compiere.model.Query;
 import org.compiere.util.DB;
+import org.compiere.util.Env;
 
 
 public class MWeighmentEntry extends X_TF_WeighmentEntry {
@@ -107,14 +108,30 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		
 		if(newRecord) {
 			if(isSecondary()) {
+				if(getTF_WeighmentEntryPrimary_ID() == 0 && getPrimaryDocumentNo() != null)
+					setTF_WeighmentEntryPrimary_ID(getTF_WeighmentEntryPrimary_ID(getPrimaryDocumentNo()));
+				else if(getPrimaryDocumentNo() == null)
+					throw new AdempiereException("Invalid Secondary Entry without Primary DC Reference");
+				
 				setInvoiceType(INVOICETYPE_TPWeight);
 			}
-			//else it could be either ActualWeight or TPWeight
 		}
 		
 		boolean ok = super.beforeSave(newRecord);
 		return ok;
 	}
+	
+	@Override
+	protected boolean afterSave(boolean newRecord, boolean success) {
+		//self referencing to facilitate easy info search.		
+		if(!isSecondary() && getTF_WeighmentEntryPrimary_ID() == 0) {
+			String updateSql = "UPDATE TF_WeighmentEntry SET TF_WeighmentEntryPrimary_ID = " + getTF_WeighmentEntry_ID() +
+			 " WHERE TF_WeighmentEntry_ID =  " + getTF_WeighmentEntry_ID();
+			DB.executeUpdate(updateSql, get_TrxName());
+		}
+		return super.afterSave(newRecord, success);
+	}
+	
 	void CreateCustomerVehicle() {
 		if(getTF_RentedVehicle_ID() == 0 && getPaymentRule().equals(PAYMENTRULE_OnCredit.toString())) {
 			String whereClause="UPPER(replace(vehicleno,' ',''))='"+getVehicleNo().replace(" ","").toUpperCase()+"'";
@@ -281,6 +298,18 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		 return 0;
 	}
 	
+	public int getTF_WeighmentEntryPrimary_ID(String documentNo) {
+		String whereClause = "DocumnentNo = ? ";
+		MWeighmentEntry wEntry = new Query(getCtx(), Table_Name, whereClause, get_TrxName())
+				.setClient_ID()
+				.setParameters(documentNo)
+				.first();
+		if(wEntry != null)
+			return wEntry.get_ID();
+		else
+			return 0;
+	}
+	
 	public void shipped() {
 		setProcessed(true);
 	}
@@ -310,16 +339,34 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		return qtyMovement;
 	}
 	
-	public boolean validateInvoiceType() {
+	public BigDecimal getBilledQty() {
+		int tonnage_uom_id = MSysConfig.getIntValue("TONNAGE_UOM", 1000069, Env.getAD_Client_ID(getCtx()));
+		BigDecimal qty = getNetWeight();
+		if(getC_UOM_ID() == tonnage_uom_id)
+			qty = qty.divide(new BigDecimal(1000));
+		else
+			qty = getNetWeightUnit();
+		
+		if((!isSecondary() && getInvoiceType().equals(INVOICETYPE_TPWeight)) || isSecondary())
+			qty = getPermitIssuedQty();		
+		
+		return qty;
+	}
+		
+	
+	public void validateInvoiceType() {
 		if(!getWeighmentEntryType().equals(WEIGHMENTENTRYTYPE_Sales)) 
-			return true;
+			return;
 		
 		BigDecimal totalTPWeight;
 		BigDecimal totalActualWeight;
 		//Validate Total TP Weight against Primary Weighment Entry without Order
-		if(getTF_WeighmentEntryPrimary_ID() > 0 || getC_OrderLine_ID() == 0) {
+		if(getTF_WeighmentEntryPrimary_ID() > 0 && getC_OrderLine_ID() == 0) {
 			int wEntry_ID = getTF_WeighmentEntryPrimary_ID() > 0 ? getTF_WeighmentEntryPrimary_ID() : getTF_WeighmentEntry_ID();
 			MWeighmentEntry wEntry = (MWeighmentEntry) (getTF_WeighmentEntryPrimary() != null ? getTF_WeighmentEntryPrimary() : this);
+			
+			if(wEntry.getInvoiceType().equals(INVOICETYPE_ActualWeight))
+				throw new AdempiereException("Please change Primary DC's Invoice type to Actual Weight");
 			
 			totalActualWeight = wEntry.getNetWeightUnit();
 			
@@ -339,7 +386,7 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		}
 				
 		if(totalTPWeight.doubleValue() <= totalActualWeight.doubleValue())
-			return true;
+			return ;
 		else
 			throw new AdempiereException("Total TP Weight : "+ totalActualWeight.doubleValue() + " MT is exceeded than Actual Weight : " + totalActualWeight.doubleValue() + " MT");
 		

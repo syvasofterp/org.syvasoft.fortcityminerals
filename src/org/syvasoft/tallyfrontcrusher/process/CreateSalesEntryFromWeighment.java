@@ -28,14 +28,15 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 	private Timestamp DateFrom = null;
 	private Timestamp DateTo = null;
 	*/
+	private String InvoiceType = null; 
 	@Override
 	protected void prepare() {		
 		ProcessInfoParameter[] para = getParameter();		
 		for (int i = 0; i < para.length; i++)
 		{						
 			String name = para[i].getParameterName();
-			if(name.equals("C_DocType_ID"))
-				C_DocType_ID = para[i].getParameterAsInt();			
+			if(name.equals("InvoiceType"))
+				InvoiceType = para[i].getParameterAsString();
 			/*
 			if(name.equals("AD_Org_ID"))
 				AD_Org_ID = para[i].getParameterAsInt();
@@ -66,12 +67,18 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 			Savepoint sp = null;
 			try {
 				
+				if(InvoiceType != null) {
+					wEntry.setInvoiceType(InvoiceType);
+					wEntry.saveEx();
+				}
+				
+				wEntry.validateInvoiceType();
+					
 				String msg = null;
 				if(wEntry.getPrice().doubleValue() == 0) {
 					msg = wEntry.getDocumentNo() +  " : Material Price not Set";
 					addLog(wEntry.get_Table_ID(), wEntry.getGrossWeightTime(), null, msg, wEntry.get_Table_ID(), wEntry.get_ID());
 				}
-				
 				
 				TF_MOrder ord = new TF_MOrder(getCtx(), 0, get_TrxName());
 				ord.setAD_Org_ID(wEntry.getAD_Org_ID());
@@ -122,11 +129,12 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 				
 				ord.setItem1_UOM_ID(wEntry.getC_UOM_ID());
 				ord.setItem1_Tax_ID(wEntry.getC_Tax_ID());
-				BigDecimal qty = wEntry.getNetWeight();
-				if(uom_id == tonnage_uom_id)
+				BigDecimal qty = wEntry.getBilledQty();
+				//BigDecimal qty = wEntry.getNetWeight();
+				//if(uom_id == tonnage_uom_id)
 					qty = qty.divide(new BigDecimal(1000));
-				else
-					qty = wEntry.getNetWeightUnit();
+				//else
+				//	qty = wEntry.getNetWeightUnit();
 				ord.setTonnage(qty);
 				ord.setItem1_TotalLoad(BigDecimal.ONE);
 				ord.setItem1_PermitIssued(wEntry.getPermitIssuedQty()); 
@@ -136,8 +144,7 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 				ord.setItem1_Price(price);
 				ord.setItem1_UnitPrice(price);
 				ord.setItem1_Amt(ord.getItem1_Qty().multiply(ord.getItem1_Price()));
-	
-				
+					
 				//Item2
 				ord.setItem2_UOM_ID(ord.getItem2().getC_UOM_ID());
 				ord.setItem2_Tax_ID(1000000);

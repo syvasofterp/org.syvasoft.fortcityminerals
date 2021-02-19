@@ -248,6 +248,15 @@ public interface I_TF_WeighmentEntry
 	/** Get Driver Tips	  */
 	public BigDecimal getDriverTips();
 
+    /** Column name eWayBillNo */
+    public static final String COLUMNNAME_eWayBillNo = "eWayBillNo";
+
+	/** Set eWay Bill No	  */
+	public void seteWayBillNo (String eWayBillNo);
+
+	/** Get eWay Bill No	  */
+	public String geteWayBillNo();
+
     /** Column name GrossWeight */
     public static final String COLUMNNAME_GrossWeight = "GrossWeight";
 
@@ -528,6 +537,15 @@ public interface I_TF_WeighmentEntry
 	  */
 	public BigDecimal getPrice();
 
+    /** Column name PrimaryDocumentNo */
+    public static final String COLUMNNAME_PrimaryDocumentNo = "PrimaryDocumentNo";
+
+	/** Set Primary Document No	  */
+	public void setPrimaryDocumentNo (String PrimaryDocumentNo);
+
+	/** Get Primary Document No	  */
+	public String getPrimaryDocumentNo();
+
     /** Column name Processed */
     public static final String COLUMNNAME_Processed = "Processed";
 
@@ -558,6 +576,15 @@ public interface I_TF_WeighmentEntry
 
 	/** Get Rounding Off	  */
 	public BigDecimal getRoundingOff();
+
+    /** Column name RoyaltyNo */
+    public static final String COLUMNNAME_RoyaltyNo = "RoyaltyNo";
+
+	/** Set TP No	  */
+	public void setRoyaltyNo (String RoyaltyNo);
+
+	/** Get TP No	  */
+	public String getRoyaltyNo();
 
     /** Column name Status */
     public static final String COLUMNNAME_Status = "Status";
@@ -728,15 +755,6 @@ public interface I_TF_WeighmentEntry
 	  * Total Amount
 	  */
 	public BigDecimal getTotalAmt();
-
-    /** Column name TPNo */
-    public static final String COLUMNNAME_TPNo = "TPNo";
-
-	/** Set TP No	  */
-	public void setTPNo (String TPNo);
-
-	/** Get TP No	  */
-	public String getTPNo();
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";
