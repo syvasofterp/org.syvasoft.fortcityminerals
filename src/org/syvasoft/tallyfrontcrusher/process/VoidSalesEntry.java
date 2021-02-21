@@ -13,6 +13,7 @@ import org.compiere.util.Trx;
 import org.compiere.util.Util;
 import org.syvasoft.tallyfrontcrusher.model.MWeighmentEntry;
 import org.syvasoft.tallyfrontcrusher.model.TF_MInOut;
+import org.syvasoft.tallyfrontcrusher.model.TF_MInvoice;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
 
 public class VoidSalesEntry extends SvrProcess {	
@@ -61,6 +62,8 @@ public class VoidSalesEntry extends SvrProcess {
 			try {
 				String msg = null;
 				sp = trx.setSavepoint(wEntry.getDocumentNo());
+				
+				//Shipment
 				TF_MInOut io = new Query(getCtx(), TF_MInOut.Table_Name, oWhereClause, get_TrxName())
 						.setClient_ID()
 						.setParameters(wEntry.getTF_WeighmentEntry_ID(), wEntry.getC_BPartner_ID())
@@ -72,6 +75,7 @@ public class VoidSalesEntry extends SvrProcess {
 					io.saveEx();
 				}
 				
+				//Order
 				TF_MOrder sale = new Query(getCtx(), TF_MOrder.Table_Name, oWhereClause, get_TrxName())
 						.setClient_ID()
 						.setParameters(wEntry.getTF_WeighmentEntry_ID(), wEntry.getC_BPartner_ID())
@@ -79,7 +83,18 @@ public class VoidSalesEntry extends SvrProcess {
 				sale.setDocAction(DocAction.ACTION_Void);
 				sale.voidIt();
 				sale.setDocStatus(TF_MOrder.DOCSTATUS_Voided);
-				sale.saveEx();				
+				sale.saveEx();
+				
+				//Invoice
+				TF_MInvoice inv = new Query(getCtx(), TF_MInvoice.Table_Name, oWhereClause, get_TrxName())
+						.setClient_ID()
+						.setParameters(wEntry.getTF_WeighmentEntry_ID(), wEntry.getC_BPartner_ID())
+						.first();
+				inv.setDocAction(DocAction.ACTION_Void);
+				inv.voidIt();
+				inv.setDocStatus(TF_MOrder.DOCSTATUS_Voided);
+				inv.saveEx();
+				
 				trx.releaseSavepoint(sp);
 			}
 			catch (Exception ex) {

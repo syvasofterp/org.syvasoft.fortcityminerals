@@ -238,6 +238,11 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		return dt.getC_DocTypeShipment_ID();
 	}
 	
+	public int getC_DocTypeInvoice_ID() {
+		MDocType dt = new MDocType(getCtx(), getC_DocType_ID(), get_TrxName());
+		return dt.getC_DocTypeInvoice_ID();
+	}
+	
 	public int getRoyaltyPassProduct_ID() {
 		return MSysConfig.getIntValue("ROYALTY_PASS_PRODUCT_ID", 0, getAD_Client_ID(), getAD_Org_ID());
 	}
@@ -390,6 +395,14 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		else
 			throw new AdempiereException("Total TP Weight : "+ totalActualWeight.doubleValue() + " MT is exceeded than Actual Weight : " + totalActualWeight.doubleValue() + " MT");
 		
+	}
+			
+	@Override
+	public int getC_Order_ID() {
+		if(getC_OrderLine_ID() > 0)
+			return getC_OrderLine().getC_Order_ID();
+		
+		return super.getC_Order_ID();
 	}
 				
 }

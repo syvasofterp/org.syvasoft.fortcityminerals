@@ -897,6 +897,15 @@ public class TF_MInvoice extends MInvoice {
 	}
 	
 	public void completeWeighmentEntriesForConsolidateInvoice() {
+		//Standard Sales Order Invoice
+		if(getTF_WeighmentEntry_ID() > 0 && isSOTrx()) {
+			MWeighmentEntry wEntry = new MWeighmentEntry(getCtx(), getTF_WeighmentEntry_ID(), get_TrxName());
+			if(wEntry.getC_Order_ID() == getC_Order_ID()) {
+				wEntry.close();
+				wEntry.saveEx();
+			}
+		}
+		
 		if(getTF_WeighmentEntry_ID() > 0 || isSOTrx())
 			return;
 		if(getDateTo() == null || getDateFrom() == null)
@@ -914,7 +923,16 @@ public class TF_MInvoice extends MInvoice {
 		}
 	}
 	
-	public void reverseConsolidateInvoice() {	
+	public void reverseConsolidateInvoice() {
+		//Standard Sales Order Invoice
+		if(getTF_WeighmentEntry_ID() > 0 && isSOTrx()) {
+			MWeighmentEntry wEntry = new MWeighmentEntry(getCtx(), getTF_WeighmentEntry_ID(), get_TrxName());
+			if(wEntry.getC_Order_ID() == getC_Order_ID()) {
+				wEntry.reverse();
+				wEntry.saveEx();
+			}
+		}
+		
 		if(getTF_WeighmentEntry_ID() > 0 || isSOTrx())
 			return;
 		if(getDateTo() == null || getDateFrom() == null)
