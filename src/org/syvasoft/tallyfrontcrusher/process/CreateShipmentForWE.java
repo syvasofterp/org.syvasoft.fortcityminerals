@@ -113,6 +113,8 @@ public class CreateShipmentForWE extends SvrProcess {
 					BigDecimal RateMTKM = MLumpSumRentConfig.getRateMTKm(getCtx(), we.getAD_Org_ID(), Vendor_ID, we.getC_BPartner_ID(), we.getM_Product_ID(), 
 							we.getTF_Destination_ID(), we.getTF_VehicleType_ID(), dest.getDistance(), get_TrxName());
 					
+					
+					BigDecimal distance = dest.getDistance();
 					int Rent_UOM_ID = 0;
 					BigDecimal qty = BigDecimal.ZERO;
 					BigDecimal price = BigDecimal.ZERO;
@@ -134,8 +136,11 @@ public class CreateShipmentForWE extends SvrProcess {
 					else if(RateMTKM.doubleValue() > 0) {
 						//Currently the price is converted from RateMTKM to RateKM
 						//since two measurement cannot be shown as quantity. 
-						//It can be changed according to customer requirement to be shown as RateMT
-						Rent_UOM_ID = MSysConfig.getIntValue("KM_UOM", 1000071, we.getAD_Client_ID());
+						//ioLine.setTF_Destination_ID(we.getTF_Destination_ID());
+						//ioLine.setDistance(distance);
+						//ioLine.setRateMTKM(RateMTKM);
+						//Creating consolidated Transporter Invoice should be reworked based on this condition.
+						Rent_UOM_ID = MSysConfig.getIntValue("MT_KM_UOM", 1000081, we.getAD_Client_ID());
 						qty = dest.getDistance();
 						price = RateMTKM.multiply(we.getNetWeightUnit());
 					}
@@ -149,6 +154,9 @@ public class CreateShipmentForWE extends SvrProcess {
 					ioLine = new TF_MInOutLine(inout);
 					ioLine.setM_Product_ID(rv.getM_Product_ID());
 					ioLine.setC_UOM_ID(Rent_UOM_ID);
+					ioLine.setTF_Destination_ID(we.getTF_Destination_ID());
+					ioLine.setDistance(distance);
+					ioLine.setRateMTKM(RateMTKM);
 					ioLine.setQty(qty);
 					ioLine.set_ValueOfColumn("Price", price);
 					ioLine.setM_Locator_ID(qty);

@@ -217,6 +217,9 @@ public class TF_MInOut extends MInOut {
 		
 		ioLine.setQty(qty);
 		ioLine.setC_UOM_ID(Rent_UOM_ID);
+		ioLine.set_ValueOfColumn("TF_Destination_ID", srcLine.getTF_Destination_ID());
+		ioLine.set_ValueOfColumn("Distance", srcLine.getDistance());
+		ioLine.set_ValueOfColumn("RateMTKM", srcLine.getRateMTKM());
 		ioLine.set_ValueOfColumn("Price", price);
 		if(we.getTF_Destination_ID() > 0)
 			ioLine.setDescription("Destination : " + dest.getName());		
