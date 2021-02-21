@@ -368,12 +368,12 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		//Validate Total TP Weight against Primary Weighment Entry without Order
 		if(getTF_WeighmentEntryPrimary_ID() > 0 && getC_OrderLine_ID() == 0) {
 			int wEntry_ID = getTF_WeighmentEntryPrimary_ID() > 0 ? getTF_WeighmentEntryPrimary_ID() : getTF_WeighmentEntry_ID();
-			MWeighmentEntry wEntry = (MWeighmentEntry) (getTF_WeighmentEntryPrimary() != null ? getTF_WeighmentEntryPrimary() : this);
+			MWeighmentEntry primary = (MWeighmentEntry) (getTF_WeighmentEntryPrimary() != null ? getTF_WeighmentEntryPrimary() : this);
 			
-			if(wEntry.getInvoiceType().equals(INVOICETYPE_ActualWeight))
+			if(primary.getInvoiceType().equals(INVOICETYPE_ActualWeight) && getInvoiceType().equalsIgnoreCase(INVOICETYPE_TPWeight))
 				throw new AdempiereException("Please change Primary DC's Invoice type to Actual Weight");
 			
-			totalActualWeight = wEntry.getNetWeightUnit();
+			totalActualWeight = primary.getNetWeightUnit();
 			
 			String sql = "SELECT SUM(PermitIssuedQty) FROM TF_WeighmentEntry WHERE ? IN (TF_WeighmentEntryPrimary_ID, TF_WeighmentEntry_ID) "
 					+ " AND STATUS IN ('CO','CL')";
@@ -382,10 +382,10 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		//Validate Total TP Weight against Order Line
 		//if(getC_OrderLine_ID() > 0)
 		else  {
-			String sqlTPWeight = "SELECT SUM(PermitIssuedQty) FROM TF_WeighmentEntry WHERE C_OrderLine_ID = ? AND DocStatus IN ('CO','CL')";
+			String sqlTPWeight = "SELECT SUM(PermitIssuedQty) FROM TF_WeighmentEntry WHERE C_OrderLine_ID = ? AND STATUS IN ('CO','CL')";
 			totalTPWeight = DB.getSQLValueBD(get_TrxName(), sqlTPWeight, getC_OrderLine_ID());
 			
-			String sqlActualWeight = "SELECT SUM(NetWeightUnit) FROM TF_WeighmentEntry WHERE C_OrderLine_ID = ? AND DocStatus IN ('CO','CL') AND "
+			String sqlActualWeight = "SELECT SUM(NetWeightUnit) FROM TF_WeighmentEntry WHERE C_OrderLine_ID = ? AND STATUS IN ('CO','CL') AND "
 					+ " IsSecondary='N'";
 			totalActualWeight = DB.getSQLValueBD(get_TrxName(), sqlActualWeight, getC_OrderLine_ID());			
 		}

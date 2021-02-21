@@ -159,7 +159,7 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 		BigDecimal qty = wEntry.getBilledQty();
 		//BigDecimal qty = wEntry.getNetWeight();
 		//if(uom_id == tonnage_uom_id)
-			qty = qty.divide(new BigDecimal(1000));
+		//	qty = qty.divide(new BigDecimal(1000));
 		//else
 		//	qty = wEntry.getNetWeightUnit();
 		ord.setTonnage(qty);
@@ -253,7 +253,7 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 		//		throw new AdempiereException(error);
 		//}
 		trx.releaseSavepoint(sp);
-		addLog(ord.get_Table_ID(), ord.getCreated(), null, ord.getDocumentNo() + " is created!", ord.get_Table_ID(), ord.get_ID());
+		addLog(ord.get_Table_ID(), ord.getCreated(), null, " Sales Entry : " + ord.getDocumentNo() + " is created!", ord.get_Table_ID(), ord.get_ID());
 	}
 
 	private void createInvoiceCustomer(MWeighmentEntry wEntry, Trx trx) throws Exception {		
@@ -325,6 +325,6 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 		
 		
 		trx.releaseSavepoint(sp);
-		addLog(invoice.get_Table_ID(), invoice.getCreated(), null, invoice.getDocumentNo() + " is created!", invoice.get_Table_ID(), invoice.get_ID());
+		addLog(invoice.get_Table_ID(), invoice.getCreated(), null, " Invoice No : " +  invoice.getDocumentNo() + " is created!", invoice.get_Table_ID(), invoice.get_ID());
 	}
 }

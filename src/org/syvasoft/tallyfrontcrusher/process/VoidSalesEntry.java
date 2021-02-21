@@ -80,21 +80,23 @@ public class VoidSalesEntry extends SvrProcess {
 						.setClient_ID()
 						.setParameters(wEntry.getTF_WeighmentEntry_ID(), wEntry.getC_BPartner_ID())
 						.first();
-				sale.setDocAction(DocAction.ACTION_Void);
-				sale.voidIt();
-				sale.setDocStatus(TF_MOrder.DOCSTATUS_Voided);
-				sale.saveEx();
-				
+				if(sale != null) {
+					sale.setDocAction(DocAction.ACTION_Void);
+					sale.voidIt();
+					sale.setDocStatus(TF_MOrder.DOCSTATUS_Voided);
+					sale.saveEx();
+				}
 				//Invoice
 				TF_MInvoice inv = new Query(getCtx(), TF_MInvoice.Table_Name, oWhereClause, get_TrxName())
 						.setClient_ID()
 						.setParameters(wEntry.getTF_WeighmentEntry_ID(), wEntry.getC_BPartner_ID())
 						.first();
-				inv.setDocAction(DocAction.ACTION_Void);
-				inv.voidIt();
-				inv.setDocStatus(TF_MOrder.DOCSTATUS_Voided);
-				inv.saveEx();
-				
+				if(inv != null) {
+					inv.setDocAction(DocAction.ACTION_Void);
+					inv.voidIt();
+					inv.setDocStatus(TF_MOrder.DOCSTATUS_Voided);
+					inv.saveEx();
+				}
 				trx.releaseSavepoint(sp);
 			}
 			catch (Exception ex) {
