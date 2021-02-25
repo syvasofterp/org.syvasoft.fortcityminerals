@@ -92,9 +92,9 @@ public class VoidSalesEntry extends SvrProcess {
 						.setParameters(wEntry.getTF_WeighmentEntry_ID(), wEntry.getC_BPartner_ID())
 						.first();
 				if(inv != null) {
-					inv.setDocAction(DocAction.ACTION_Void);
+					inv.setDocAction(DocAction.ACTION_Reverse_Correct);
 					inv.voidIt();
-					inv.setDocStatus(TF_MOrder.DOCSTATUS_Voided);
+					inv.setDocStatus(TF_MOrder.DOCSTATUS_Reversed);
 					inv.saveEx();
 				}
 				trx.releaseSavepoint(sp);

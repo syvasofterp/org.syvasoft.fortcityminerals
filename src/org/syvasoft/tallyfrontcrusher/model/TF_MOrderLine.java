@@ -202,6 +202,104 @@ public class TF_MOrderLine extends MOrderLine {
 		return bd;
 	}
 
+    /** Column name UnitPrice */
+    public static final String COLUMNNAME_UnitPrice = "UnitPrice";
+    
+	/** Set Unit Price.
+	@param UnitPrice Unit Price	  */
+	public void setUnitPrice (BigDecimal UnitPrice)
+	{
+		set_Value (COLUMNNAME_UnitPrice, UnitPrice);
+	}
+	
+	/** Get Unit Price.
+		@return Unit Price	  */
+	public BigDecimal getUnitPrice () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_UnitPrice);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Column name TF_Destination_ID */
+    public static final String COLUMNNAME_TF_Destination_ID = "TF_Destination_ID";
+    
+	/** Set Destination.
+	@param TF_Destination_ID Destination	  */
+	public void setTF_Destination_ID (int TF_Destination_ID)
+	{
+		if (TF_Destination_ID < 1) 
+			set_Value (COLUMNNAME_TF_Destination_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_Destination_ID, Integer.valueOf(TF_Destination_ID));
+	}
+	
+	/** Get Destination.
+		@return Destination	  */
+	public int getTF_Destination_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Destination_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Column name IsTaxIncluded */
+    public static final String COLUMNNAME_IsTaxIncluded = "IsTaxIncluded";
+	/** Set Price includes Tax.
+	@param IsTaxIncluded 
+	Tax is included in the price 
+	 */
+	public void setIsTaxIncluded (boolean IsTaxIncluded)
+	{
+		set_Value (COLUMNNAME_IsTaxIncluded, Boolean.valueOf(IsTaxIncluded));
+	}
+	
+	/** Get Price includes Tax.
+		@return Tax is included in the price 
+	  */
+	public boolean isTaxIncluded () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsTaxIncluded);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+	
+
+	/** Column name IsRentInclusive */
+    public static final String COLUMNNAME_IsRentInclusive = "IsRentInclusive";
+    
+	/** Set Freight Inclusive.
+	@param IsRentInclusive 
+	Whether Unit Price includes rent?
+  */
+	public void setIsRentInclusive (boolean IsRentInclusive)
+	{
+		set_Value (COLUMNNAME_IsRentInclusive, Boolean.valueOf(IsRentInclusive));
+	}
+	
+	/** Get Freight Inclusive.
+		@return Whether Unit Price includes rent?
+	  */
+	public boolean isRentInclusive () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsRentInclusive);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
 		Boolean ok = super.afterSave(newRecord, success);

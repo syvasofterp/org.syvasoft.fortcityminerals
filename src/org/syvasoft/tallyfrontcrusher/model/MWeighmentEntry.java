@@ -110,8 +110,8 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 			if(isSecondary()) {
 				if(getTF_WeighmentEntryPrimary_ID() == 0 && getPrimaryDocumentNo() != null)
 					setTF_WeighmentEntryPrimary_ID(getTF_WeighmentEntryPrimary_ID(getPrimaryDocumentNo()));
-				else if(getPrimaryDocumentNo() == null)
-					throw new AdempiereException("Invalid Secondary Entry without Primary DC Reference");
+				//else if(getPrimaryDocumentNo() == null)
+				//	throw new AdempiereException("Invalid Secondary Entry without Primary DC Reference");
 				
 				setInvoiceType(INVOICETYPE_TPWeight);
 			}
@@ -392,11 +392,11 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 				
 		if(totalTPWeight.doubleValue() <= totalActualWeight.doubleValue())
 			return ;
-		else
-			throw new AdempiereException("Total TP Weight : "+ totalActualWeight.doubleValue() + " MT is exceeded than Actual Weight : " + totalActualWeight.doubleValue() + " MT");
+		//else
+			//throw new AdempiereException("Total TP Weight : "+ totalActualWeight.doubleValue() + " MT is exceeded than Actual Weight : " + totalActualWeight.doubleValue() + " MT");
 		
 	}
-			
+	
 	@Override
 	public int getC_Order_ID() {
 		if(getC_OrderLine_ID() > 0)
