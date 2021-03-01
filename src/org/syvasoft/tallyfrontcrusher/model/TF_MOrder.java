@@ -2150,7 +2150,7 @@ public class TF_MOrder extends MOrder {
 			throw new AdempiereException("Please specify Rent Amount!");
 		
 		if(isSOTrx() && MSysConfig.getBooleanValue("DISCOUNT_REQUEST_ENABLED", false)) {
-			MPriceListUOM priceUOM = MPriceListUOM.getPriceListUOM(getCtx(), getItem1_ID(), getItem1_UOM_ID(), getC_BPartner_ID(), true, getDateAcct());
+			MPriceListUOM priceUOM = MPriceListUOM.getPriceListUOM(getCtx(), getItem1_ID(), getItem1_UOM_ID(), getC_BPartner_ID(),getTF_Destination_ID(), true, getDateAcct());
 			BigDecimal price=getItem1_UnitPrice();
 			BigDecimal priceMin = BigDecimal.ZERO;
 			if(priceUOM != null)

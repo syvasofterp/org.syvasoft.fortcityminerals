@@ -122,7 +122,7 @@ public class CreateInvoiceForMaterialReceipt extends SvrProcess {
 					
 					
 					MPriceListUOM pprice = MPriceListUOM.getPriceListUOM(getCtx(), rs.getInt("M_Product_ID"),
-							rs.getInt("C_UOM_ID"), invoice.getC_BPartner_ID(), false, invoice.getDateInvoiced());
+							rs.getInt("C_UOM_ID"), invoice.getC_BPartner_ID(),0, false, invoice.getDateInvoiced());
 					
 					TF_MProduct prod = new TF_MProduct(getCtx(), invLine.getM_Product_ID(), get_TrxName());
 					BigDecimal price = BigDecimal.ZERO;
@@ -192,7 +192,7 @@ public class CreateInvoiceForMaterialReceipt extends SvrProcess {
 				int TF_Destination_ID = rs.getInt("TF_Destination_ID");
 				
 				MPriceListUOM pprice = MPriceListUOM.getPriceListUOM(getCtx(), rs.getInt("M_Product_ID"),
-						rs.getInt("C_UOM_ID"), invoice.getC_BPartner_ID(), false, invoice.getDateInvoiced());
+						rs.getInt("C_UOM_ID"), invoice.getC_BPartner_ID(),0, false, invoice.getDateInvoiced());
 				
 				TF_MProduct prod = new TF_MProduct(getCtx(), invLine.getM_Product_ID(), get_TrxName());
 				
