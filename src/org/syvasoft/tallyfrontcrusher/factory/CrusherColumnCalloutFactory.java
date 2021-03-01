@@ -38,7 +38,8 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutLabourWage;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutLabourWageIssue_CalcBalanceAmts;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutLabourWageIssue_SetOpenAmt;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutMJobworkResourceRentEntry_CalcContractAmt;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_CalcAmt;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderLine_SetPriceEntered;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderLine_SetUnitPrice;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_SetPrice;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_SetPriceUOM;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_SetVehicleNo;
@@ -63,7 +64,6 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_Warehouse;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_WeighmentEntry;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPMSchedule_TypeChange;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPM_SetMachineryType;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutPaymentCashType;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_CalcSalaryBalannceAmts;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_DocumentType;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_ElementValue;
@@ -73,7 +73,6 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_TFBPartner;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPermitPurchase_CalcAmount;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPermitPurchase_Quarry;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutPriceList_BPartner;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutProduct_CalcTotalValue;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutRentalContract_ResourceType;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutRentalContract_VehicleNo;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutRequisition_SetPriceUOM;
@@ -136,6 +135,7 @@ import org.syvasoft.tallyfrontcrusher.model.TF_MElementValue;
 import org.syvasoft.tallyfrontcrusher.model.TF_MInvoice;
 import org.syvasoft.tallyfrontcrusher.model.TF_MJournal;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
+import org.syvasoft.tallyfrontcrusher.model.TF_MOrderLine;
 import org.syvasoft.tallyfrontcrusher.model.TF_MPayment;
 import org.syvasoft.tallyfrontcrusher.model.TF_MRequisitionLine;
 
@@ -179,7 +179,21 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		//TF_MOrder - Set Vehicle No
 		if(tableName.equals(TF_MOrder.Table_Name) && columnName.equals(TF_MOrder.COLUMNNAME_Vehicle_ID))
 				list.add(new CalloutOrderQuickEntry_SetVehicleNo());
-				
+		
+		if(tableName.equals(TF_MOrderLine.Table_Name)) {
+			if(columnName.equals(TF_MOrderLine.COLUMNNAME_M_Product_ID) || 
+					columnName.equals(TF_MOrderLine.COLUMNNAME_C_UOM_ID) ||
+					columnName.equals(TF_MOrderLine.COLUMNNAME_TF_Destination_ID)) {
+				list.add(new CalloutOrderLine_SetUnitPrice());
+				list.add(new CalloutOrderLine_SetPriceEntered());
+			}
+			
+			if(columnName.equals(TF_MOrderLine.COLUMNNAME_C_Tax_ID) || 
+					columnName.equals(TF_MOrderLine.COLUMNNAME_IsTaxIncluded)) {
+				list.add(new CalloutOrderLine_SetPriceEntered());
+			}
+		}
+		
 		//TF_TripSheet - Calc Running Meter
 		if(tableName.equals(MTripSheet.Table_Name) && (columnName.equals(MTripSheet.COLUMNNAME_Opening_Meter) || 
 				columnName.equals(MTripSheet.COLUMNNAME_Closing_Meter)))

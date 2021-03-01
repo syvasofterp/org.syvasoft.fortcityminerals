@@ -34,11 +34,11 @@ public class MPriceListUOM extends X_TF_PriceListUOM {
 		return super.beforeSave(newRecord);
 	}
 	
-	//Excludes Tax Amount
-	@Override
-	public BigDecimal getPrice() {
-		BigDecimal price = super.getPrice();
-		if(!isTaxIncluded()) {
+		
+	//Price as it is or excluded tax	
+	public BigDecimal getPrice(boolean isTaxIncluded) {
+		BigDecimal price = super.getPrice();		
+		if(!isTaxIncluded() || isTaxIncluded) {
 			return price;
 		}
 		TF_MProduct prod = new TF_MProduct(getCtx(), getM_Product_ID(), get_TrxName());
@@ -50,9 +50,17 @@ public class MPriceListUOM extends X_TF_PriceListUOM {
 
 	//Excludes Tax Amount
 	@Override
-	public BigDecimal getPriceMin() {
+	public BigDecimal getPrice() {
+		return getPrice(false);
+	}
+	
+	
+	//Price as it is or excluded tax	
+	public BigDecimal getPriceMin(boolean isTaxIncluded) {
 		BigDecimal minPrice = super.getPriceMin(); 
-				
+		if(isTaxIncluded)
+			return minPrice;
+		
 		if(minPrice.doubleValue() > 0) {
 			if(!isTaxIncluded()) {
 				TF_MProduct prod = new TF_MProduct(getCtx(), getM_Product_ID(), get_TrxName());
@@ -63,6 +71,12 @@ public class MPriceListUOM extends X_TF_PriceListUOM {
 		}
 		else
 			return getPrice();
+	}
+	
+	//Excludes Tax Amount
+	@Override
+	public BigDecimal getPriceMin() {
+		return getPriceMin(false);
 	}
 	
 	public void validateUniqueness(boolean newRecord) {
