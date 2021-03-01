@@ -33,7 +33,7 @@ public class X_TF_PriceListUOM extends PO implements I_TF_PriceListUOM, I_Persis
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20210225L;
+	private static final long serialVersionUID = 20210301L;
 
     /** Standard Constructor */
     public X_TF_PriceListUOM (Properties ctx, int TF_PriceListUOM_ID, String trxName)
@@ -43,6 +43,8 @@ public class X_TF_PriceListUOM extends PO implements I_TF_PriceListUOM, I_Persis
         {
 			setC_UOM_ID (0);
 			setIsRentInclusive (false);
+// N
+			setIsRoyaltyPassInclusive (false);
 // N
 			setIsSOTrx (false);
 			setIsTaxIncluded (false);
@@ -170,6 +172,27 @@ public class X_TF_PriceListUOM extends PO implements I_TF_PriceListUOM, I_Persis
 	public boolean isRentInclusive () 
 	{
 		Object oo = get_Value(COLUMNNAME_IsRentInclusive);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	/** Set Royalty Pass Inclusive.
+		@param IsRoyaltyPassInclusive Royalty Pass Inclusive	  */
+	public void setIsRoyaltyPassInclusive (boolean IsRoyaltyPassInclusive)
+	{
+		set_Value (COLUMNNAME_IsRoyaltyPassInclusive, Boolean.valueOf(IsRoyaltyPassInclusive));
+	}
+
+	/** Get Royalty Pass Inclusive.
+		@return Royalty Pass Inclusive	  */
+	public boolean isRoyaltyPassInclusive () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsRoyaltyPassInclusive);
 		if (oo != null) 
 		{
 			 if (oo instanceof Boolean) 
