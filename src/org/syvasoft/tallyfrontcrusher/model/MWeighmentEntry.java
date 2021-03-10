@@ -304,7 +304,7 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 	}
 	
 	public int getTF_WeighmentEntryPrimary_ID(String documentNo) {
-		String whereClause = "DocumnentNo = ? ";
+		String whereClause = "DocumentNo = ? ";
 		MWeighmentEntry wEntry = new Query(getCtx(), Table_Name, whereClause, get_TrxName())
 				.setClient_ID()
 				.setParameters(documentNo)
