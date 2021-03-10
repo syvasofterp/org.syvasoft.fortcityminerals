@@ -115,6 +115,9 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 				
 				setInvoiceType(INVOICETYPE_TPWeight);
 			}
+			else {
+				setPrimaryDocumentNo(getDocumentNo());
+			}
 		}
 		
 		boolean ok = super.beforeSave(newRecord);
