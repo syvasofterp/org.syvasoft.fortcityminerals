@@ -20,7 +20,8 @@ public class CalloutOrderQuickEntry_SetPriceUOM implements IColumnCallout {
 	public String start(Properties ctx, int WindowNo, GridTab mTab, GridField mField, Object value, Object oldValue) {
 		boolean isSOTrx = Env.getContext(ctx, WindowNo, "IsSOTrx").equals("Y");
 		Timestamp dateAcct = (Timestamp) mTab.getValue(TF_MOrder.COLUMNNAME_DateAcct);
-		int TF_Destination_ID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_TF_Destination_ID);
+		int TF_Destination_ID = CalloutUtil.getIntValue(mTab, TF_MOrder.COLUMNNAME_TF_Destination_ID);
+		
 		if(value != null
 				&& mTab.getValue(TF_MOrder.COLUMNNAME_C_BPartner_ID) != null
 				&& mTab.getValue(TF_MOrder.COLUMNNAME_Item1_UOM_ID) != null

@@ -76,6 +76,8 @@ public class CreateShipmentForWE extends SvrProcess {
 			inout.setTF_WeighmentEntry_ID(we.getTF_WeighmentEntry_ID());
 			inout.setDescription(we.getDescription());
 			inout.setMovementType(TF_MInOut.MOVEMENTTYPE_CustomerShipment);
+			if(we.getC_OrderLine_ID() > 0)
+				inout.setC_Order_ID(order.getC_Order_ID());
 			inout.saveEx(get_TrxName());
 			
 			//Material Issue Line
@@ -85,6 +87,7 @@ public class CreateShipmentForWE extends SvrProcess {
 			ioLine.setC_UOM_ID(we.getC_UOM_ID());			
 			ioLine.setQty(we.getNetWeightUnit());
 			ioLine.setM_Locator_ID(we.getNetWeightUnit());
+			ioLine.setC_OrderLine_ID(we.getC_OrderLine_ID());
 			ioLine.saveEx(get_TrxName());
 			
 			
