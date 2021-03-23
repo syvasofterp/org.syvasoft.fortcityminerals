@@ -267,6 +267,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return TF_MInOut.class;
 		else if(TF_MInOutLine.Table_Name.equals(tableName))			
 			return TF_MInOutLine.class;
+		else if(MPrintDocSetup.Table_Name.equals(tableName))
+			return MPrintDocSetup.class;
 		return null;
 	}
 
@@ -527,6 +529,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new TF_MInOut(ctx, Record_ID, trxName);
 		else if(TF_MInOutLine.Table_Name.equals(tableName))			
 			return new TF_MInOutLine(ctx, Record_ID, trxName);
+		else if(MPrintDocSetup.Table_Name.equals(tableName))
+			return new MPrintDocSetup(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -789,6 +793,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new TF_MInOut(ctx, rs, trxName);
 		else if(TF_MInOutLine.Table_Name.equals(tableName))			
 			return new TF_MInOutLine(ctx, rs, trxName);
+		else if(MPrintDocSetup.Table_Name.equals(tableName))
+			return new MPrintDocSetup(ctx, rs, trxName);
 		return null;
 	}
 

@@ -1825,6 +1825,21 @@ public class TF_MOrder extends MOrder {
 		return bd;
 	}
 	
+	/** Column name Terms & Conditions */
+    public static final String COLUMNNAME_TermsAndCondition = "TermsAndCondition";
+    
+	public void setTermsAndCondition (String TermsAndCondition)
+	{
+		set_Value (COLUMNNAME_TermsAndCondition, TermsAndCondition);
+	}
+
+	/** Get Delivery UOM.
+		@return Delivery UOM	  */
+	public String getTermsAndCondition () 
+	{		
+		return (String)get_Value(COLUMNNAME_TermsAndCondition);
+	}
+	
 	/** Column name Rent_UOM_ID */
     public static final String COLUMNNAME_Rent_UOM_ID = "Rent_UOM_ID";
     public org.compiere.model.I_C_UOM getRent_UOM() throws RuntimeException
@@ -2235,6 +2250,14 @@ public class TF_MOrder extends MOrder {
 		
 		if(newRecord) {
 			setDateAcct(getDateOrdered());
+			
+			String whereclause = " C_DocType_ID = ?";
+			MPrintDocSetup printdocSetup = new Query(getCtx(), MPrintDocSetup.Table_Name, whereclause, get_TrxName())
+					.setClient_ID().setParameters(getC_DocTypeTarget_ID()).first();
+			
+			if(printdocSetup != null) {
+				setTermsAndCondition(printdocSetup.getTermsConditions());
+			}
 		}
 		return super.beforeSave(newRecord);
 	}
