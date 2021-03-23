@@ -307,6 +307,7 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 		invLine.setC_Tax_ID(oLine.getC_Tax_ID());
 		invLine.setDescription(oLine.getDescription());
 		invLine.setC_Project_ID(order.getC_Project_ID());
+		invLine.setC_OrderLine_ID(wEntry.getC_OrderLine_ID());
 		if(oLine.getPriceEntered().doubleValue() == 0) {
 			throw new AdempiereException("Invalid Price at Line: " + oLine.getLine() + " for Product Name : " + oLine.getM_Product().getName());
 		}

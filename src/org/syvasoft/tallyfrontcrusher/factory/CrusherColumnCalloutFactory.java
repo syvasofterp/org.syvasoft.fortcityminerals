@@ -189,7 +189,8 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 			}
 			
 			if(columnName.equals(TF_MOrderLine.COLUMNNAME_C_Tax_ID) || 
-					columnName.equals(TF_MOrderLine.COLUMNNAME_IsTaxIncluded)) {
+					columnName.equals(TF_MOrderLine.COLUMNNAME_IsTaxIncluded) || 
+					columnName.equals(TF_MOrderLine.COLUMNNAME_UnitPrice)) {
 				list.add(new CalloutOrderLine_SetPriceEntered());
 			}
 		}

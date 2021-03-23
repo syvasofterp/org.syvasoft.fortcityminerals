@@ -339,7 +339,10 @@ public class TF_MOrderLine extends MOrderLine {
 		//everytime price list price will be updated with current price
 		TF_MOrder.addProductPricingIfNot(getM_Product_ID(), getC_Order().getM_PriceList_ID(), getC_BPartner_ID(), 
 				getQtyEntered(), getPriceEntered(), getC_Order().getDateOrdered(), getC_Order().isSOTrx());
-		int C_UOM_ID = getC_UOM_ID();		
+		int C_UOM_ID = getC_UOM_ID();
+		if(is_ValueChanged(COLUMNNAME_QtyEntered)) {
+			setQtyOrdered(getQtyEntered());
+		}
 		boolean success = super.beforeSave(newRecord);
 		setC_UOM_ID(C_UOM_ID);
 		return success;
