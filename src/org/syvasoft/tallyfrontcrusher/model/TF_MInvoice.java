@@ -424,20 +424,41 @@ public class TF_MInvoice extends MInvoice {
 		return ii.intValue();
 	}
 	
+	/** Column name Terms & Conditions */
+    public static final String COLUMNNAME_TermsAndCondition = "TermsAndCondition";
+    
+	public void setTermsAndCondition (String TermsAndCondition)
+	{
+		set_Value (COLUMNNAME_TermsAndCondition, TermsAndCondition);
+	}
+
+	public String getTermsAndCondition () 
+	{		
+		return (String)get_Value(COLUMNNAME_TermsAndCondition);
+	}
 	
 	
 	@Override
-	protected boolean beforeSave(boolean newRecord) {		
-		boolean result = super.beforeSave(newRecord);
+	protected boolean beforeSave(boolean newRecord) {				
 		MBPartner bp = MBPartner.get(getCtx(), getC_BPartner_ID());
 		setBPartner(bp);
 		if(newRecord) {
 			if(getPaymentRule() == null)
 				setPaymentRule(PAYMENTRULE_OnCredit);
+			
+			String whereclause = " C_DocType_ID = ?";
+			MPrintDocSetup printdocSetup = new Query(getCtx(), MPrintDocSetup.Table_Name, whereclause, get_TrxName())
+					.setClient_ID().setParameters(getC_DocTypeTarget_ID()).first();
+			
+			if(printdocSetup != null) {
+				setTermsAndCondition(printdocSetup.getTermsConditions());
+			}
 		}
 		if(!newRecord && isSOTrx() && is_ValueChanged(COLUMNNAME_DocStatus) && getDocStatus().equals(DOCSTATUS_Reversed)) {
 			setDocumentNo(getDocumentNo() + "-" + getC_Invoice_ID());
 		}
+		
+		boolean result = super.beforeSave(newRecord);
 		return result;
 	}
 

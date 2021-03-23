@@ -18,6 +18,7 @@ public class CalloutOrderLine_SetUnitPrice implements IColumnCallout {
 		
 		int C_Order_ID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_C_Order_ID);
 		TF_MOrder ord = new TF_MOrder(ctx, C_Order_ID, null);
+		
 		/*int C_DocType_ID = MSysConfig.getIntValue("STANDARD_ORDER", 1000032);
 		
 		if(C_DocType_ID != ord.getC_DocTypeTarget_ID())

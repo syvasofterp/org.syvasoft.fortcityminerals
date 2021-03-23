@@ -1833,8 +1833,6 @@ public class TF_MOrder extends MOrder {
 		set_Value (COLUMNNAME_TermsAndCondition, TermsAndCondition);
 	}
 
-	/** Get Delivery UOM.
-		@return Delivery UOM	  */
 	public String getTermsAndCondition () 
 	{		
 		return (String)get_Value(COLUMNNAME_TermsAndCondition);
