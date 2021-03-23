@@ -18,10 +18,10 @@ public class CalloutOrderLine_SetUnitPrice implements IColumnCallout {
 		
 		int C_Order_ID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_C_Order_ID);
 		TF_MOrder ord = new TF_MOrder(ctx, C_Order_ID, null);
-		int C_DocType_ID = MSysConfig.getIntValue("STANDARD_ORDER", 1000032);
+		/*int C_DocType_ID = MSysConfig.getIntValue("STANDARD_ORDER", 1000032);
 		
 		if(C_DocType_ID != ord.getC_DocTypeTarget_ID())
-			return null;
+			return null;*/
 		
 		int TF_Destination_ID = CalloutUtil.getIntValue(mTab, TF_MOrder.COLUMNNAME_TF_Destination_ID);
 		int C_UOM_ID = CalloutUtil.getIntValue(mTab, TF_MOrderLine.COLUMNNAME_C_UOM_ID);
@@ -34,8 +34,8 @@ public class CalloutOrderLine_SetUnitPrice implements IColumnCallout {
 			mTab.setValue(TF_MOrderLine.COLUMNNAME_IsRoyaltyPassInclusive, priceUOM.isRoyaltyPassInclusive());
 			mTab.setValue(TF_MOrderLine.COLUMNNAME_IsRentInclusive, priceUOM.isRentInclusive());
 			
-			TF_MProduct prod = new TF_MProduct(ctx, M_Product_ID, null);
-			mTab.setValue(TF_MOrderLine.COLUMNNAME_C_Tax_ID, prod.getTax_ID(true));
+			/*TF_MProduct prod = new TF_MProduct(ctx, M_Product_ID, null);
+			mTab.setValue(TF_MOrderLine.COLUMNNAME_C_Tax_ID, prod.getTax_ID(true));*/
 		}
 		
 		return null;

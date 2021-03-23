@@ -38,6 +38,7 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutLabourWage;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutLabourWageIssue_CalcBalanceAmts;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutLabourWageIssue_SetOpenAmt;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutMJobworkResourceRentEntry_CalcContractAmt;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderLine_SetTax;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderLine_SetPriceEntered;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderLine_SetUnitPrice;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_SetPrice;
@@ -179,6 +180,12 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		//TF_MOrder - Set Vehicle No
 		if(tableName.equals(TF_MOrder.Table_Name) && columnName.equals(TF_MOrder.COLUMNNAME_Vehicle_ID))
 				list.add(new CalloutOrderQuickEntry_SetVehicleNo());
+		
+		if(tableName.equals(TF_MOrderLine.Table_Name)) {
+			if(columnName.equals(TF_MOrderLine.COLUMNNAME_M_Product_ID)) {
+				list.add(new CalloutOrderLine_SetTax());
+			}
+		}
 		
 		if(tableName.equals(TF_MOrderLine.Table_Name)) {
 			if(columnName.equals(TF_MOrderLine.COLUMNNAME_M_Product_ID) || 
