@@ -40,7 +40,7 @@ public class CalloutOrder_UnitPrice implements IColumnCallout {
 			boolean isSOTrx = Env.getContext(ctx, WindowNo, "IsSOTrx").equals("Y");
 			BigDecimal qty = (BigDecimal) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_Qty);
 			int C_UOM_ID=(int) mTab.getValue(TF_MOrder.COLUMNNAME_Item1_UOM_ID);
-			int TF_Destination_ID = (int) mTab.getValue(TF_MOrder.COLUMNNAME_TF_Destination_ID);
+			int TF_Destination_ID = CalloutUtil.getIntValue(mTab, TF_MOrder.COLUMNNAME_TF_Destination_ID);
 			if(MSysConfig.getBooleanValue("DISCOUNT_REQUEST_ENABLED", false)) {
 				MPriceListUOM priceUOM = MPriceListUOM.getPriceListUOM(ctx, product_ID, C_UOM_ID, bPartner_ID, TF_Destination_ID, isSOTrx, dateAcct);
 				//MProductPricing pp = TF_MOrder.getProductPricing(product_ID, priceList_ID, bPartner_ID, qty, dateAcct, isSOTrx);			

@@ -33,7 +33,7 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20210219L;
+	private static final long serialVersionUID = 20210321L;
 
     /** Standard Constructor */
     public X_TF_WeighmentEntry (Properties ctx, int TF_WeighmentEntry_ID, String trxName)
@@ -44,7 +44,13 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 			setDocumentNo (null);
 			setInvoiceType (null);
 // AW
+			setIsRentInclusive (false);
+// N
+			setIsRoyaltyPassInclusive (false);
+// N
 			setIsSecondary (false);
+// N
+			setIsTaxIncluded (false);
 // N
 			setProcessed (false);
 			setStatus (null);
@@ -138,6 +144,31 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public int getC_BPartner_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_C_BPartner_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_BPartner getC_BPartnerWB() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_BPartner)MTable.get(getCtx(), org.compiere.model.I_C_BPartner.Table_Name)
+			.getPO(getC_BPartnerWB_ID(), get_TrxName());	}
+
+	/** Set 3rd Party Weighbridge.
+		@param C_BPartnerWB_ID 3rd Party Weighbridge	  */
+	public void setC_BPartnerWB_ID (int C_BPartnerWB_ID)
+	{
+		if (C_BPartnerWB_ID < 1) 
+			set_Value (COLUMNNAME_C_BPartnerWB_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_BPartnerWB_ID, Integer.valueOf(C_BPartnerWB_ID));
+	}
+
+	/** Get 3rd Party Weighbridge.
+		@return 3rd Party Weighbridge	  */
+	public int getC_BPartnerWB_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_BPartnerWB_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
@@ -538,6 +569,72 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return false;
 	}
 
+	/** Set Price Confidential.
+		@param IsPriceConfidential Price Confidential	  */
+	public void setIsPriceConfidential (boolean IsPriceConfidential)
+	{
+		set_Value (COLUMNNAME_IsPriceConfidential, Boolean.valueOf(IsPriceConfidential));
+	}
+
+	/** Get Price Confidential.
+		@return Price Confidential	  */
+	public boolean isPriceConfidential () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsPriceConfidential);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	/** Set Freight Inclusive.
+		@param IsRentInclusive 
+		Whether Unit Price includes rent?
+	  */
+	public void setIsRentInclusive (boolean IsRentInclusive)
+	{
+		set_Value (COLUMNNAME_IsRentInclusive, Boolean.valueOf(IsRentInclusive));
+	}
+
+	/** Get Freight Inclusive.
+		@return Whether Unit Price includes rent?
+	  */
+	public boolean isRentInclusive () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsRentInclusive);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	/** Set Royalty Pass Inclusive.
+		@param IsRoyaltyPassInclusive Royalty Pass Inclusive	  */
+	public void setIsRoyaltyPassInclusive (boolean IsRoyaltyPassInclusive)
+	{
+		set_Value (COLUMNNAME_IsRoyaltyPassInclusive, Boolean.valueOf(IsRoyaltyPassInclusive));
+	}
+
+	/** Get Royalty Pass Inclusive.
+		@return Royalty Pass Inclusive	  */
+	public boolean isRoyaltyPassInclusive () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsRoyaltyPassInclusive);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
 	/** Set Secondary.
 		@param IsSecondary Secondary	  */
 	public void setIsSecondary (boolean IsSecondary)
@@ -550,6 +647,30 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public boolean isSecondary () 
 	{
 		Object oo = get_Value(COLUMNNAME_IsSecondary);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	/** Set Price includes Tax.
+		@param IsTaxIncluded 
+		Tax is included in the price 
+	  */
+	public void setIsTaxIncluded (boolean IsTaxIncluded)
+	{
+		set_Value (COLUMNNAME_IsTaxIncluded, Boolean.valueOf(IsTaxIncluded));
+	}
+
+	/** Get Price includes Tax.
+		@return Tax is included in the price 
+	  */
+	public boolean isTaxIncluded () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsTaxIncluded);
 		if (oo != null) 
 		{
 			 if (oo instanceof Boolean) 
@@ -885,6 +1006,19 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return (String)get_Value(COLUMNNAME_PrimaryDocumentNo);
 	}
 
+	/** Set PrimaryDocumentNo2.
+		@param PrimaryDocumentNo2 PrimaryDocumentNo2	  */
+	public void setPrimaryDocumentNo2 (String PrimaryDocumentNo2)
+	{
+		throw new IllegalArgumentException ("PrimaryDocumentNo2 is virtual column");	}
+
+	/** Get PrimaryDocumentNo2.
+		@return PrimaryDocumentNo2	  */
+	public String getPrimaryDocumentNo2 () 
+	{
+		return (String)get_Value(COLUMNNAME_PrimaryDocumentNo2);
+	}
+
 	/** Set Processed.
 		@param Processed 
 		The document has been processed
@@ -1108,6 +1242,31 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public int getTF_Destination_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Destination_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public I_TF_PriceListUOM getTF_PriceListUOM() throws RuntimeException
+    {
+		return (I_TF_PriceListUOM)MTable.get(getCtx(), I_TF_PriceListUOM.Table_Name)
+			.getPO(getTF_PriceListUOM_ID(), get_TrxName());	}
+
+	/** Set Price List by UOM.
+		@param TF_PriceListUOM_ID Price List by UOM	  */
+	public void setTF_PriceListUOM_ID (int TF_PriceListUOM_ID)
+	{
+		if (TF_PriceListUOM_ID < 1) 
+			set_Value (COLUMNNAME_TF_PriceListUOM_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_PriceListUOM_ID, Integer.valueOf(TF_PriceListUOM_ID));
+	}
+
+	/** Get Price List by UOM.
+		@return Price List by UOM	  */
+	public int getTF_PriceListUOM_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_PriceListUOM_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();

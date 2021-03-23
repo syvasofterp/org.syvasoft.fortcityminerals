@@ -101,6 +101,17 @@ public interface I_TF_WeighmentEntry
 
 	public org.compiere.model.I_C_BPartner getC_BPartner() throws RuntimeException;
 
+    /** Column name C_BPartnerWB_ID */
+    public static final String COLUMNNAME_C_BPartnerWB_ID = "C_BPartnerWB_ID";
+
+	/** Set 3rd Party Weighbridge	  */
+	public void setC_BPartnerWB_ID (int C_BPartnerWB_ID);
+
+	/** Get 3rd Party Weighbridge	  */
+	public int getC_BPartnerWB_ID();
+
+	public org.compiere.model.I_C_BPartner getC_BPartnerWB() throws RuntimeException;
+
     /** Column name C_Order_ID */
     public static final String COLUMNNAME_C_Order_ID = "C_Order_ID";
 
@@ -358,6 +369,37 @@ public interface I_TF_WeighmentEntry
 	/** Get Permit Sales	  */
 	public boolean isPermitSales();
 
+    /** Column name IsPriceConfidential */
+    public static final String COLUMNNAME_IsPriceConfidential = "IsPriceConfidential";
+
+	/** Set Price Confidential	  */
+	public void setIsPriceConfidential (boolean IsPriceConfidential);
+
+	/** Get Price Confidential	  */
+	public boolean isPriceConfidential();
+
+    /** Column name IsRentInclusive */
+    public static final String COLUMNNAME_IsRentInclusive = "IsRentInclusive";
+
+	/** Set Freight Inclusive.
+	  * Whether Unit Price includes rent?
+	  */
+	public void setIsRentInclusive (boolean IsRentInclusive);
+
+	/** Get Freight Inclusive.
+	  * Whether Unit Price includes rent?
+	  */
+	public boolean isRentInclusive();
+
+    /** Column name IsRoyaltyPassInclusive */
+    public static final String COLUMNNAME_IsRoyaltyPassInclusive = "IsRoyaltyPassInclusive";
+
+	/** Set Royalty Pass Inclusive	  */
+	public void setIsRoyaltyPassInclusive (boolean IsRoyaltyPassInclusive);
+
+	/** Get Royalty Pass Inclusive	  */
+	public boolean isRoyaltyPassInclusive();
+
     /** Column name IsSecondary */
     public static final String COLUMNNAME_IsSecondary = "IsSecondary";
 
@@ -366,6 +408,19 @@ public interface I_TF_WeighmentEntry
 
 	/** Get Secondary	  */
 	public boolean isSecondary();
+
+    /** Column name IsTaxIncluded */
+    public static final String COLUMNNAME_IsTaxIncluded = "IsTaxIncluded";
+
+	/** Set Price includes Tax.
+	  * Tax is included in the price 
+	  */
+	public void setIsTaxIncluded (boolean IsTaxIncluded);
+
+	/** Get Price includes Tax.
+	  * Tax is included in the price 
+	  */
+	public boolean isTaxIncluded();
 
     /** Column name M_Product_ID */
     public static final String COLUMNNAME_M_Product_ID = "M_Product_ID";
@@ -546,6 +601,15 @@ public interface I_TF_WeighmentEntry
 	/** Get Primary Document No	  */
 	public String getPrimaryDocumentNo();
 
+    /** Column name PrimaryDocumentNo2 */
+    public static final String COLUMNNAME_PrimaryDocumentNo2 = "PrimaryDocumentNo2";
+
+	/** Set PrimaryDocumentNo2	  */
+	public void setPrimaryDocumentNo2 (String PrimaryDocumentNo2);
+
+	/** Get PrimaryDocumentNo2	  */
+	public String getPrimaryDocumentNo2();
+
     /** Column name Processed */
     public static final String COLUMNNAME_Processed = "Processed";
 
@@ -660,6 +724,17 @@ public interface I_TF_WeighmentEntry
 	public int getTF_Destination_ID();
 
 	public I_TF_Destination getTF_Destination() throws RuntimeException;
+
+    /** Column name TF_PriceListUOM_ID */
+    public static final String COLUMNNAME_TF_PriceListUOM_ID = "TF_PriceListUOM_ID";
+
+	/** Set Price List by UOM	  */
+	public void setTF_PriceListUOM_ID (int TF_PriceListUOM_ID);
+
+	/** Get Price List by UOM	  */
+	public int getTF_PriceListUOM_ID();
+
+	public I_TF_PriceListUOM getTF_PriceListUOM() throws RuntimeException;
 
     /** Column name TF_ProductionPlant_ID */
     public static final String COLUMNNAME_TF_ProductionPlant_ID = "TF_ProductionPlant_ID";
