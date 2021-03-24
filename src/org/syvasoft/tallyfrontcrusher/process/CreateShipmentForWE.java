@@ -128,7 +128,7 @@ public class CreateShipmentForWE extends SvrProcess {
 					}
 					else if(RateMT.doubleValue() > 0) {						
 						Rent_UOM_ID = MSysConfig.getIntValue("TONNAGE_UOM", 1000069, we.getAD_Client_ID());
-						qty = we.getNetWeightUnit();
+						qty = we.getMT();
 						price = RateMT;
 					}
 					else if(RateKM.doubleValue() > 0) {						
