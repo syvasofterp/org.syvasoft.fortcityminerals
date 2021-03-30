@@ -254,6 +254,15 @@ public interface I_TF_WeighmentEntry
 	  */
 	public String getDocumentNo();
 
+    /** Column name DriverContact */
+    public static final String COLUMNNAME_DriverContact = "DriverContact";
+
+	/** Set Driver Contact No	  */
+	public void setDriverContact (String DriverContact);
+
+	/** Get Driver Contact No	  */
+	public String getDriverContact();
+
     /** Column name DriverName */
     public static final String COLUMNNAME_DriverName = "DriverName";
 
@@ -280,6 +289,28 @@ public interface I_TF_WeighmentEntry
 
 	/** Get eWay Bill No	  */
 	public String geteWayBillNo();
+
+    /** Column name FreightPrice */
+    public static final String COLUMNNAME_FreightPrice = "FreightPrice";
+
+	/** Set Freight Price	  */
+	public void setFreightPrice (BigDecimal FreightPrice);
+
+	/** Get Freight Price	  */
+	public BigDecimal getFreightPrice();
+
+    /** Column name FreightRule */
+    public static final String COLUMNNAME_FreightRule = "FreightRule";
+
+	/** Set Freight Rule.
+	  * Freight Rule
+	  */
+	public void setFreightRule (String FreightRule);
+
+	/** Get Freight Rule.
+	  * Freight Rule
+	  */
+	public String getFreightRule();
 
     /** Column name GrossWeight */
     public static final String COLUMNNAME_GrossWeight = "GrossWeight";

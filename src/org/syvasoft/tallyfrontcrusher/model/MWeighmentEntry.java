@@ -407,5 +407,14 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		
 		return super.getC_Order_ID();
 	}
+	
+	public BigDecimal getMaterialPriceIncludedRent() {
+		if(getRent_Amt() == null || getRent_Amt().doubleValue() == 0)
+			return getPrice();
+		
+		BigDecimal unitRent = getRent_Amt().divide(getNetWeightUnit(), 2,RoundingMode.HALF_EVEN);
+		
+		return getPrice().add(unitRent);
+	}
 				
 }

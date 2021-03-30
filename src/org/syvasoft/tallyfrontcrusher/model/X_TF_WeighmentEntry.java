@@ -394,6 +394,20 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return (String)get_Value(COLUMNNAME_DocumentNo);
 	}
 
+	/** Set Driver Contact No.
+		@param DriverContact Driver Contact No	  */
+	public void setDriverContact (String DriverContact)
+	{
+		set_Value (COLUMNNAME_DriverContact, DriverContact);
+	}
+
+	/** Get Driver Contact No.
+		@return Driver Contact No	  */
+	public String getDriverContact () 
+	{
+		return (String)get_Value(COLUMNNAME_DriverContact);
+	}
+
 	/** Set Driver Name.
 		@param DriverName Driver Name	  */
 	public void setDriverName (String DriverName)
@@ -437,6 +451,49 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public String geteWayBillNo () 
 	{
 		return (String)get_Value(COLUMNNAME_eWayBillNo);
+	}
+
+	/** Set Freight Price.
+		@param FreightPrice Freight Price	  */
+	public void setFreightPrice (BigDecimal FreightPrice)
+	{
+		set_Value (COLUMNNAME_FreightPrice, FreightPrice);
+	}
+
+	/** Get Freight Price.
+		@return Freight Price	  */
+	public BigDecimal getFreightPrice () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_FreightPrice);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Lumpsum Rent Amount = LUMP */
+	public static final String FREIGHTRULE_LumpsumRentAmount = "LUMP";
+	/** Rate / MT = RMT */
+	public static final String FREIGHTRULE_RateMT = "RMT";
+	/** Rate / KM = RKM */
+	public static final String FREIGHTRULE_RateKM = "RKM";
+	/** Rate / MT / KM = RKMMT */
+	public static final String FREIGHTRULE_RateMTKM = "RKMMT";
+	/** Set Freight Rule.
+		@param FreightRule 
+		Freight Rule
+	  */
+	public void setFreightRule (String FreightRule)
+	{
+
+		set_Value (COLUMNNAME_FreightRule, FreightRule);
+	}
+
+	/** Get Freight Rule.
+		@return Freight Rule
+	  */
+	public String getFreightRule () 
+	{
+		return (String)get_Value(COLUMNNAME_FreightRule);
 	}
 
 	/** Set Gross Weight (Kg).

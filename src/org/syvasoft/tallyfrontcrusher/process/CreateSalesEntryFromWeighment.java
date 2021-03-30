@@ -198,7 +198,7 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 		ord.setItem1_PermitIssued(wEntry.getPermitIssuedQty()); 
 		ord.setMDPNo(wEntry.getMDPNo());
 		ord.setItem1_Qty(qty);
-		BigDecimal price = wEntry.getPrice();
+		BigDecimal price = wEntry.getMaterialPriceIncludedRent();
 		ord.setItem1_Price(price);
 		ord.setItem1_UnitPrice(price);
 		ord.setItem1_Amt(ord.getItem1_Qty().multiply(ord.getItem1_Price()));
@@ -218,7 +218,9 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 			ord.setItem2_ID(0);
 			ord.setItem2_Qty(BigDecimal.ZERO);
 		}
-
+		
+		/*
+		 * commented since vehicle rent configuration is implemented in the weighbridge app 
 		if(ord.getTF_RentedVehicle_ID() > 0) {		
 			ord.setIsLumpSumRent(false);
 			MDestination dest = new MDestination(getCtx(), ord.getTF_Destination_ID(), get_TrxName());
@@ -257,6 +259,11 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 			ord.setRentPayable(RentAmt);
 			
 		}
+		*/
+		ord.setRent_Amt(wEntry.getRent_Amt());										
+		ord.setRentMargin(BigDecimal.ZERO);
+		ord.setRentPayable(wEntry.getRent_Amt());
+		
 		ord.setIsRentBreakup(false);
 		ord.setIsRentInclusive(true);			
 		
@@ -348,12 +355,13 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 		invLine.setC_UOM_ID(oLine.getC_UOM_ID());
 		BigDecimal qty = wEntry.getBilledQty();
 		if(billedQty != null)
-			qty = billedQty;		
+			qty = billedQty;
 		invLine.setQty(qty);
-		invLine.setPriceActual(oLine.getPriceActual());
-		invLine.setPriceList(oLine.getPriceList());
-		invLine.setPriceLimit(oLine.getPriceLimit());
-		invLine.setPriceEntered(oLine.getPriceEntered());		
+		BigDecimal price = wEntry.getMaterialPriceIncludedRent();
+		invLine.setPriceActual(price);
+		invLine.setPriceList(price);
+		invLine.setPriceLimit(price);
+		invLine.setPriceEntered(price);		
 		invLine.setC_Tax_ID(oLine.getC_Tax_ID());
 		invLine.setDescription(oLine.getDescription());
 		invLine.setC_Project_ID(order.getC_Project_ID());
@@ -374,6 +382,7 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 			throw new AdempiereException("Failed when processing document - " + invoice.getProcessMsg());
 		invoice.saveEx();
 		
+		//Set generated Invoice Number for the future refernce
 		if(firstInvoice && wEntry.getInvoiceNo() == null) {
 			wEntry.setInvoiceNo(invoice.getDocumentNo());				
 		}
