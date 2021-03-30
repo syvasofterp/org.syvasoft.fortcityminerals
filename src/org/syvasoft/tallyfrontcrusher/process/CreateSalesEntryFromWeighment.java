@@ -30,7 +30,8 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 	private Timestamp DateFrom = null;
 	private Timestamp DateTo = null;
 	*/
-	private String InvoiceType = null; 
+	private String InvoiceType = null;
+	private boolean createTPandNonTPInvocies = false;
 	@Override
 	protected void prepare() {		
 		ProcessInfoParameter[] para = getParameter();		
@@ -39,6 +40,8 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 			String name = para[i].getParameterName();
 			if(name.equals("InvoiceType"))
 				InvoiceType = para[i].getParameterAsString();
+			else if (name.equals("CreateTwoInvoices"))
+				createTPandNonTPInvocies = para[i].getParameterAsBoolean();
 			/*
 			if(name.equals("AD_Org_ID"))
 				AD_Org_ID = para[i].getParameterAsInt();
@@ -52,40 +55,65 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 
 	@Override
 	protected String doIt() throws Exception {
-		String whereClause = " WeighmentEntryType = '1SO' AND Status = 'CO' AND EXISTS (SELECT T_Selection_ID FROM T_Selection WHERE " +
-				" T_Selection.AD_PInstance_ID=? AND T_Selection.T_Selection_ID = TF_WeighmentEntry.TF_WeighmentEntry_ID) "
+		String whereClause = " WeighmentEntryType = '1SO' AND Status = 'CO' AND (EXISTS (SELECT T_Selection_ID FROM T_Selection WHERE " +
+				" T_Selection.AD_PInstance_ID=? AND T_Selection.T_Selection_ID = TF_WeighmentEntry.TF_WeighmentEntry_ID) OR TF_WeighmentEntry_ID = ?) "
 				+ "  ";
 				//+ "AND C_Order.DocStatus IN ('CO','DR','IR'))";
 		int i = 0;
 		List<MWeighmentEntry> wEntries = new Query(getCtx(), MWeighmentEntry.Table_Name, whereClause, get_TrxName())
 				.setClient_ID()
-				.setParameters(getAD_PInstance_ID())
+				.setParameters(getAD_PInstance_ID(), getRecord_ID())
 				.list();
 		for(MWeighmentEntry wEntry : wEntries) {
-			if(wEntry.getDescription() != null && wEntry.getDescription().contains("ERROR:")) 
+			if(wEntry.getDescription() != null && wEntry.getDescription().contains("ERROR:")) {
+				addLog(wEntry.get_Table_ID(), wEntry.getGrossWeightTime(), null, wEntry.getDescription(), wEntry.get_Table_ID(), wEntry.get_ID());
 				continue;
+			}
 			
 			Trx trx = Trx.get(get_TrxName(), false);
 			
 			try {
 				
+				//if(createTPandNonTPInvocies)
+					//wEntry.setInvoiceType(MWeighmentEntry.INVOICETYPE_TPWeight);
+				String msg = null;
 				if(InvoiceType != null) {
-					wEntry.setInvoiceType(InvoiceType);
-					wEntry.saveEx();
+					wEntry.setInvoiceType(InvoiceType);					
 				}
 				
-				wEntry.validateInvoiceType();
+				if(wEntry.getMT_UOM_ID() != wEntry.getC_UOM_ID() && createTPandNonTPInvocies) {
+					msg = wEntry.getDocumentNo() +  " : Two invoices can be created only for MT based sales!";
+					addLog(wEntry.get_Table_ID(), wEntry.getGrossWeightTime(), null, msg, wEntry.get_Table_ID(), wEntry.get_ID());
 					
-				String msg = null;
+				}
+				
+				wEntry.setCreateTwoInvoices(createTPandNonTPInvocies);
+				wEntry.saveEx();
+				wEntry.validateInvoiceType();
+								
 				if(wEntry.getPrice().doubleValue() == 0) {
 					msg = wEntry.getDocumentNo() +  " : Material Price not Set";
 					addLog(wEntry.get_Table_ID(), wEntry.getGrossWeightTime(), null, msg, wEntry.get_Table_ID(), wEntry.get_ID());
 				}
 				
-				if(wEntry.getC_OrderLine_ID() == 0)
-					createSalesQuickEntry(wEntry, trx);
-				else
-					createInvoiceCustomer(wEntry, trx);
+				if(!createTPandNonTPInvocies) {
+					if(wEntry.getC_OrderLine_ID() == 0)
+						createSalesQuickEntry(wEntry, null, true, trx);
+					else
+						createInvoiceCustomer(wEntry, null, true, trx);
+				}
+				else {
+					BigDecimal tpWeight = wEntry.getPermitIssuedQty();
+					BigDecimal remainingQty = wEntry.getBilledQty().subtract(wEntry.getPermitIssuedQty());
+					if(wEntry.getC_OrderLine_ID() == 0) {
+						createSalesQuickEntry(wEntry, tpWeight, true, trx);
+						createSalesQuickEntry(wEntry, remainingQty, false, trx);						
+					}
+					else {
+						createInvoiceCustomer(wEntry, tpWeight, true, trx);
+						createInvoiceCustomer(wEntry, remainingQty, false, trx);
+					}
+				}
 			
 			}
 			catch (Exception ex) {
@@ -107,8 +135,9 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 	}
 	
 	
-	private void createSalesQuickEntry(MWeighmentEntry wEntry, Trx trx) throws Exception {
+	private void createSalesQuickEntry(MWeighmentEntry wEntry, BigDecimal billedQty, boolean firstInvoice, Trx trx) throws Exception {
 		TF_MOrder ord = new TF_MOrder(getCtx(), 0, get_TrxName());
+		ord.firstInvoice = firstInvoice;
 		ord.setAD_Org_ID(wEntry.getAD_Org_ID());
 		ord.setC_DocType_ID(wEntry.getC_DocType_ID());
 		ord.setC_DocTypeTarget_ID(wEntry.getC_DocType_ID());
@@ -157,6 +186,8 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 		ord.setItem1_UOM_ID(wEntry.getC_UOM_ID());
 		ord.setItem1_Tax_ID(wEntry.getC_Tax_ID());
 		BigDecimal qty = wEntry.getBilledQty();
+		if(billedQty != null)
+			qty = billedQty;
 		//BigDecimal qty = wEntry.getNetWeight();
 		//if(uom_id == tonnage_uom_id)
 		//	qty = qty.divide(new BigDecimal(1000));
@@ -243,6 +274,17 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 		ord.setDocStatus(TF_MOrder.DOCSTATUS_Completed);
 		ord.saveEx();
 		
+		//Assigning new generated invoices
+		List<TF_MInvoice> invList = ord.getTFInvoices();
+		if(invList.size() > 0) {
+			if(firstInvoice && wEntry.getInvoiceNo() == null) {
+				wEntry.setInvoiceNo(invList.get(0).getDocumentNo());				
+			}
+			else if(!firstInvoice & wEntry.getInvoiceNo2() == null) {
+				wEntry.setInvoiceNo2(invList.get(0).getDocumentNo());				
+			}
+			wEntry.saveEx();
+		}
 		/*
 		ord.setDocAction(DocAction.ACTION_Prepare);
 		ord.setDocStatus(TF_MOrder.DOCSTATUS_Drafted);
@@ -256,7 +298,7 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 		addLog(ord.get_Table_ID(), ord.getCreated(), null, " Sales Entry : " + ord.getDocumentNo() + " is created!", ord.get_Table_ID(), ord.get_ID());
 	}
 
-	private void createInvoiceCustomer(MWeighmentEntry wEntry, Trx trx) throws Exception {		
+	private void createInvoiceCustomer(MWeighmentEntry wEntry, BigDecimal billedQty,  boolean firstInvoice, Trx trx) throws Exception {		
 		
 		MOrderLine oLine = (MOrderLine) wEntry.getC_OrderLine();
 		int C_Order_ID = oLine.getC_Order_ID();
@@ -272,7 +314,12 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 		invoice.setIsSOTrx(true);
 		invoice.setDateInvoiced(wEntry.getGrossWeightTime());
 		invoice.setDateAcct(wEntry.getGrossWeightTime());
-		invoice.setDocumentNo(wEntry.getInvoiceNo());
+		
+		//fetching already generated invoice no in case of reversing and recreating the existing invoices.
+		if(wEntry.getInvoiceNo() != null && firstInvoice) 
+			invoice.setDocumentNo(wEntry.getInvoiceNo());
+		else if(wEntry.getInvoiceNo2() != null && !firstInvoice)
+			invoice.setDocumentNo(wEntry.getInvoiceNo2());
 		//
 		invoice.setSalesRep_ID(Env.getAD_User_ID(getCtx()));		
 		invoice.setPaymentRule(order.getPaymentRule());
@@ -299,7 +346,10 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 		int M_Product_ID = oLine.getM_Product_ID();
 		invLine.setM_Product_ID(M_Product_ID , true);
 		invLine.setC_UOM_ID(oLine.getC_UOM_ID());
-		invLine.setQty(wEntry.getBilledQty());
+		BigDecimal qty = wEntry.getBilledQty();
+		if(billedQty != null)
+			qty = billedQty;		
+		invLine.setQty(qty);
 		invLine.setPriceActual(oLine.getPriceActual());
 		invLine.setPriceList(oLine.getPriceList());
 		invLine.setPriceLimit(oLine.getPriceLimit());
@@ -324,8 +374,18 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 			throw new AdempiereException("Failed when processing document - " + invoice.getProcessMsg());
 		invoice.saveEx();
 		
+		if(firstInvoice && wEntry.getInvoiceNo() == null) {
+			wEntry.setInvoiceNo(invoice.getDocumentNo());				
+		}
+		else if(!firstInvoice & wEntry.getInvoiceNo2() == null) {
+			wEntry.setInvoiceNo2(invoice.getDocumentNo());				
+		}
+		
+		wEntry.saveEx();
 		
 		trx.releaseSavepoint(sp);
 		addLog(invoice.get_Table_ID(), invoice.getCreated(), null, " Invoice No : " +  invoice.getDocumentNo() + " is created!", invoice.get_Table_ID(), invoice.get_ID());
 	}
+	
+	
 }

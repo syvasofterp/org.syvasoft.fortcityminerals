@@ -42,15 +42,15 @@ public class VoidSalesEntry extends SvrProcess {
 
 	@Override
 	protected String doIt() throws Exception {
-		String whereClause = " WeighmentEntryType = '1SO' AND Status = 'CL' AND EXISTS (SELECT T_Selection_ID FROM T_Selection WHERE " +
-				" T_Selection.AD_PInstance_ID=? AND T_Selection.T_Selection_ID = TF_WeighmentEntry.TF_WeighmentEntry_ID) "
+		String whereClause = " WeighmentEntryType = '1SO' AND Status = 'CL' AND (EXISTS (SELECT T_Selection_ID FROM T_Selection WHERE " +
+				" T_Selection.AD_PInstance_ID=? AND T_Selection.T_Selection_ID = TF_WeighmentEntry.TF_WeighmentEntry_ID) OR TF_WeighmentEntry_ID = ?) "
 				+ "  ";
 				//+ "AND C_Order.DocStatus IN ('CO','DR','IR'))";
 		int i = 0;
 		String oWhereClause = "TF_WeighmentEntry_ID = ? AND C_BPartner_ID = ? AND IsSOTrx = 'Y' AND DocStatus IN ('CO','CL')";
 		List<MWeighmentEntry> wEntries = new Query(getCtx(), MWeighmentEntry.Table_Name, whereClause, get_TrxName())
 				.setClient_ID()
-				.setParameters(getAD_PInstance_ID())
+				.setParameters(getAD_PInstance_ID(), getRecord_ID())
 				.list();
 		
 		for(MWeighmentEntry wEntry : wEntries) {
@@ -76,22 +76,22 @@ public class VoidSalesEntry extends SvrProcess {
 				}
 				
 				//Order
-				TF_MOrder sale = new Query(getCtx(), TF_MOrder.Table_Name, oWhereClause, get_TrxName())
+				List<TF_MOrder> orders = new Query(getCtx(), TF_MOrder.Table_Name, oWhereClause, get_TrxName())
 						.setClient_ID()
 						.setParameters(wEntry.getTF_WeighmentEntry_ID(), wEntry.getC_BPartner_ID())
-						.first();
-				if(sale != null) {
+						.list();
+				for(TF_MOrder sale : orders) {				
 					sale.setDocAction(DocAction.ACTION_Void);
 					sale.voidIt();
 					sale.setDocStatus(TF_MOrder.DOCSTATUS_Voided);
 					sale.saveEx();
 				}
 				//Invoice
-				TF_MInvoice inv = new Query(getCtx(), TF_MInvoice.Table_Name, oWhereClause, get_TrxName())
+				List<TF_MInvoice> invList = new Query(getCtx(), TF_MInvoice.Table_Name, oWhereClause, get_TrxName())
 						.setClient_ID()
 						.setParameters(wEntry.getTF_WeighmentEntry_ID(), wEntry.getC_BPartner_ID())
-						.first();
-				if(inv != null) {
+						.list();
+				for(TF_MInvoice inv : invList) {
 					inv.setDocAction(DocAction.ACTION_Reverse_Correct);
 					inv.voidIt();
 					inv.setDocStatus(TF_MOrder.DOCSTATUS_Reversed);

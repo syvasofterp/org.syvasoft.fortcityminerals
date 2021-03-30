@@ -3410,6 +3410,7 @@ public class TF_MOrder extends MOrder {
 		return DocType_ID;
 	}
 
+	public boolean firstInvoice = true;
 	public void createInvoiceCustomer() {
 		
 		MWeighmentEntry weighment = new MWeighmentEntry(getCtx(), getTF_WeighmentEntry_ID(), get_TrxName());
@@ -3428,7 +3429,13 @@ public class TF_MOrder extends MOrder {
 		invoice.setIsSOTrx(isSOTrx());
 		invoice.setDateInvoiced(getDateAcct());
 		invoice.setDateAcct(getDateAcct());
-		invoice.setDocumentNo(weighment.getInvoiceNo());
+		
+		//fetching already generated invoice no in case of reversing and recreating the existing invoices.
+		if(weighment.getInvoiceNo() != null && firstInvoice) 
+			invoice.setDocumentNo(weighment.getInvoiceNo());
+		else if(weighment.getInvoiceNo2() != null && !firstInvoice)
+			invoice.setDocumentNo(weighment.getInvoiceNo2());
+		
 		//
 		invoice.setSalesRep_ID(Env.getAD_User_ID(getCtx()));		
 		invoice.setPaymentRule(getPaymentRule());
@@ -3613,5 +3620,13 @@ public class TF_MOrder extends MOrder {
 			io.saveEx();
 		}
 	}
-		
+	
+	public List<TF_MInvoice> getTFInvoices() {
+		String whereClause = "C_Order_ID = ? AND DocStatus IN ('CO','CL')";
+		List<TF_MInvoice> list = new Query(getCtx(), TF_MInvoice.Table_Name, whereClause, get_TrxName())
+				.setClient_ID()
+				.setParameters(getC_Order_ID())
+				.list();
+		return list;
+	}
 }

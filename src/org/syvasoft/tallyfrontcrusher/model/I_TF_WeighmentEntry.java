@@ -206,6 +206,19 @@ public interface I_TF_WeighmentEntry
 	  */
 	public int getCreatedBy();
 
+    /** Column name CreateTwoInvoices */
+    public static final String COLUMNNAME_CreateTwoInvoices = "CreateTwoInvoices";
+
+	/** Set Create Two Invoices.
+	  * Create Two Invoices by TP Weight and the remaining Weight
+	  */
+	public void setCreateTwoInvoices (boolean CreateTwoInvoices);
+
+	/** Get Create Two Invoices.
+	  * Create Two Invoices by TP Weight and the remaining Weight
+	  */
+	public boolean isCreateTwoInvoices();
+
     /** Column name Description */
     public static final String COLUMNNAME_Description = "Description";
 
@@ -320,6 +333,15 @@ public interface I_TF_WeighmentEntry
 	  * Invoice No generated from weighbridge app
 	  */
 	public String getInvoiceNo();
+
+    /** Column name InvoiceNo2 */
+    public static final String COLUMNNAME_InvoiceNo2 = "InvoiceNo2";
+
+	/** Set 2nd Inovice No	  */
+	public void setInvoiceNo2 (String InvoiceNo2);
+
+	/** Get 2nd Inovice No	  */
+	public String getInvoiceNo2();
 
     /** Column name InvoiceType */
     public static final String COLUMNNAME_InvoiceType = "InvoiceType";

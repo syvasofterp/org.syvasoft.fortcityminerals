@@ -190,11 +190,11 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		}
 	}
 	
-	public void close() {
-		if(getStatus().equals(STATUS_Billed))
-			throw new AdempiereException("Weighment Entry is already processed!");
-		setStatus(STATUS_Billed);
-		//setProcessed(true);		
+	public void close() {		
+			if(getStatus().equals(STATUS_Billed) && !isCreateTwoInvoices())
+				throw new AdempiereException("Weighment Entry is already processed!");
+			setStatus(STATUS_Billed);
+			//setProcessed(true);
 	}
 	public void reverse() {
 		setStatus(STATUS_Completed);		

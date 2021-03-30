@@ -33,7 +33,7 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20210321L;
+	private static final long serialVersionUID = 20210330L;
 
     /** Standard Constructor */
     public X_TF_WeighmentEntry (Properties ctx, int TF_WeighmentEntry_ID, String trxName)
@@ -41,6 +41,8 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
       super (ctx, TF_WeighmentEntry_ID, trxName);
       /** if (TF_WeighmentEntry_ID == 0)
         {
+			setCreateTwoInvoices (false);
+// N
 			setDocumentNo (null);
 			setInvoiceType (null);
 // AW
@@ -317,6 +319,30 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return (String)get_Value(COLUMNNAME_CompletedBy);
 	}
 
+	/** Set Create Two Invoices.
+		@param CreateTwoInvoices 
+		Create Two Invoices by TP Weight and the remaining Weight
+	  */
+	public void setCreateTwoInvoices (boolean CreateTwoInvoices)
+	{
+		set_Value (COLUMNNAME_CreateTwoInvoices, Boolean.valueOf(CreateTwoInvoices));
+	}
+
+	/** Get Create Two Invoices.
+		@return Create Two Invoices by TP Weight and the remaining Weight
+	  */
+	public boolean isCreateTwoInvoices () 
+	{
+		Object oo = get_Value(COLUMNNAME_CreateTwoInvoices);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
 	/** Set Description.
 		@param Description 
 		Optional short description of the record
@@ -500,6 +526,20 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public String getInvoiceNo () 
 	{
 		return (String)get_Value(COLUMNNAME_InvoiceNo);
+	}
+
+	/** Set 2nd Inovice No.
+		@param InvoiceNo2 2nd Inovice No	  */
+	public void setInvoiceNo2 (String InvoiceNo2)
+	{
+		set_Value (COLUMNNAME_InvoiceNo2, InvoiceNo2);
+	}
+
+	/** Get 2nd Inovice No.
+		@return 2nd Inovice No	  */
+	public String getInvoiceNo2 () 
+	{
+		return (String)get_Value(COLUMNNAME_InvoiceNo2);
 	}
 
 	/** Actual Weight = AW */
@@ -902,7 +942,7 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	/** Mixed POS Payment = M */
 	public static final String PAYMENTRULE_MixedPOSPayment = "M";
 	/** Cash  = Z */
-	public static final String PAYMENTRULE_Prepaid = "Z";
+	public static final String PAYMENTRULE_PrepaidCash = "Z";
 	/** Set Payment Rule.
 		@param PaymentRule 
 		How you pay the invoice
