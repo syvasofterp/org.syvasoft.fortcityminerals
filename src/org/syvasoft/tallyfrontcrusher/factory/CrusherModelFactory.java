@@ -269,6 +269,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return TF_MInOutLine.class;
 		else if(MPrintDocSetup.Table_Name.equals(tableName))
 			return MPrintDocSetup.class;
+		else if(MDispensePlan.Table_Name.equals(tableName))
+			return MDispensePlan.class;
+		else if(MDispensePlanLine.Table_Name.equals(tableName))
+			return MDispensePlanLine.class;
 		return null;
 	}
 
@@ -531,6 +535,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return new TF_MInOutLine(ctx, Record_ID, trxName);
 		else if(MPrintDocSetup.Table_Name.equals(tableName))
 			return new MPrintDocSetup(ctx, Record_ID, trxName);
+		else if(MDispensePlan.Table_Name.equals(tableName))
+			return new MDispensePlan(ctx, Record_ID, trxName);
+		else if(MDispensePlanLine.Table_Name.equals(tableName))
+			return new MDispensePlanLine(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -795,6 +803,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return new TF_MInOutLine(ctx, rs, trxName);
 		else if(MPrintDocSetup.Table_Name.equals(tableName))
 			return new MPrintDocSetup(ctx, rs, trxName);
+		else if(MDispensePlan.Table_Name.equals(tableName))
+			return new MDispensePlan(ctx, rs, trxName);
+		else if(MDispensePlanLine.Table_Name.equals(tableName))
+			return new MDispensePlanLine(ctx, rs, trxName);
 		return null;
 	}
 

@@ -41,6 +41,10 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutMJobworkResourceRentEntry_C
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderLine_SetTax;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderLine_SetPriceEntered;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderLine_SetUnitPrice;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutDispensePlanLine_SetUOMTax;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutDispensePlanLine_SetPriceEntered;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutDispensePlanLine_SetUnitPrice;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutDispensePlanLine_SetOrderInfo;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_SetPrice;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_SetPriceUOM;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_SetVehicleNo;
@@ -105,6 +109,8 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_PriceIncludesTax;
 
 import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MCrusherKatingEntry;
+import org.syvasoft.tallyfrontcrusher.model.MDispensePlan;
+import org.syvasoft.tallyfrontcrusher.model.MDispensePlanLine;
 import org.syvasoft.tallyfrontcrusher.model.MDrillingEntry;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalary;
 import org.syvasoft.tallyfrontcrusher.model.MEmployeeSalaryIssue;
@@ -690,6 +696,33 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		if((tableName.equals(TF_MRequisitionLine.Table_Name)) && (columnName.equals(TF_MRequisitionLine.COLUMNNAME_M_Product_ID)				
 				|| columnName.equals(TF_MRequisitionLine.COLUMNNAME_C_UOM_ID) || columnName.equals(TF_MRequisitionLine.COLUMNNAME_C_BPartner_ID) )) {			
 			list.add(new CalloutRequisition_SetPriceUOM());
+		}
+		
+		if(tableName.equals(MDispensePlanLine.Table_Name)) {
+			if(columnName.equals(MDispensePlanLine.COLUMNNAME_C_OrderLine_ID)) {
+				list.add(new CalloutDispensePlanLine_SetOrderInfo());
+			}
+		}
+		
+		if(tableName.equals(MDispensePlanLine.Table_Name)) {
+			if(columnName.equals(MDispensePlanLine.COLUMNNAME_M_Product_ID)) {
+				list.add(new CalloutDispensePlanLine_SetUOMTax());
+			}
+		}
+		
+		if(tableName.equals(MDispensePlanLine.Table_Name)) {
+			if(columnName.equals(MDispensePlanLine.COLUMNNAME_M_Product_ID) || 
+					columnName.equals(MDispensePlanLine.COLUMNNAME_C_UOM_ID) ||
+					columnName.equals(MDispensePlanLine.COLUMNNAME_TF_Destination_ID)) {
+				list.add(new CalloutDispensePlanLine_SetUnitPrice());
+				list.add(new CalloutDispensePlanLine_SetPriceEntered());
+			}
+			
+			if(columnName.equals(MDispensePlanLine.COLUMNNAME_C_Tax_ID) || 
+					columnName.equals(MDispensePlanLine.COLUMNNAME_IsTaxIncluded) || 
+					columnName.equals(MDispensePlanLine.COLUMNNAME_UnitPrice)) {
+				list.add(new CalloutDispensePlanLine_SetPriceEntered());
+			}
 		}
 		
 		return list != null ? list.toArray(new IColumnCallout[0]) : new IColumnCallout[0];
