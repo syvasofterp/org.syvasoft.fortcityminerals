@@ -250,6 +250,10 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		return MSysConfig.getIntValue("ROYALTY_PASS_PRODUCT_ID", 0, getAD_Client_ID(), getAD_Org_ID());
 	}
 	
+	public int getInvoiceSeq_Id() {
+		return MSysConfig.getIntValue("INVOICE_SEQ_ID", 0, getAD_Client_ID(), getAD_Org_ID());
+	}
+	
 	public int getC_Tax_ID() {
 		TF_MProduct p = new TF_MProduct(getCtx(), getM_Product_ID(), get_TrxName());
 		return p.getTax_ID(isGST());

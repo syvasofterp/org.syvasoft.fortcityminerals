@@ -28,10 +28,10 @@ public class ProcessDispensePlanLine extends SvrProcess {
 	@Override
 	protected String doIt() throws Exception {
 		String m_processMsg = null;
-		if(!docAction.equals("VO")) {
+		if(!dispensePlan.isProcessed()) {
 			dispensePlan.processIt(docAction);
 		}
-		else if(docAction.equals("VO")) {
+		else if(dispensePlan.isProcessed() && docAction.equals("MO")) {
 			dispensePlan.reverseIt();
 		}
 		

@@ -778,6 +778,17 @@ public interface I_TF_WeighmentEntry
 
 	public I_TF_Destination getTF_Destination() throws RuntimeException;
 
+    /** Column name TF_DispensePlanLine_ID */
+    public static final String COLUMNNAME_TF_DispensePlanLine_ID = "TF_DispensePlanLine_ID";
+
+	/** Set Dispense Plan Line	  */
+	public void setTF_DispensePlanLine_ID (int TF_DispensePlanLine_ID);
+
+	/** Get Dispense Plan Line	  */
+	public int getTF_DispensePlanLine_ID();
+
+	public I_TF_DispensePlanLine getTF_DispensePlanLine() throws RuntimeException;
+
     /** Column name TF_PriceListUOM_ID */
     public static final String COLUMNNAME_TF_PriceListUOM_ID = "TF_PriceListUOM_ID";
 

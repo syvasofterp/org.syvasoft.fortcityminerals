@@ -24,6 +24,20 @@ public class MDispensePlanLine extends X_TF_DispensePlanLine {
 	}
 
 	@Override
+	protected boolean beforeSave(boolean newRecord) {
+		if(newRecord) {
+			if(getC_OrderLine_ID() > 0) {
+				setType(TYPE_Order);
+			}
+			else {
+				setType(TYPE_Instant);
+			}
+		}
+		
+		return super.beforeSave(newRecord);
+	}
+	
+	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {
 		if(newRecord) {
 			

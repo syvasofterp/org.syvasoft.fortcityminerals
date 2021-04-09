@@ -10,19 +10,23 @@ import org.compiere.process.ProcessInfoParameter;
 import org.compiere.process.SvrProcess;
 import org.compiere.util.DB;
 import org.syvasoft.tallyfrontcrusher.model.MCrusherProduction;
+import org.syvasoft.tallyfrontcrusher.model.MDispensePlan;
 import org.syvasoft.tallyfrontcrusher.model.MDispensePlanLine;
 
 public class CreateDispenseLines extends SvrProcess {
 	
 	private int p_TF_DispensePlan_ID = 0;
 	private boolean recreate = false;
+	MDispensePlan dispensePlan;
 	
 	@Override
 	protected void prepare() {
+		dispensePlan = new MDispensePlan(getCtx(), getRecord_ID(), get_TrxName());
+		
 		for(ProcessInfoParameter para : getParameter())
 		{
 			String name = para.getParameterName();
-			if("Recreate".equals(name))
+			if(name.toLowerCase().equals("recreate"))
 				recreate = "Y".equals(para.getParameter());
 		}
 		p_TF_DispensePlan_ID = getRecord_ID();
@@ -32,13 +36,13 @@ public class CreateDispenseLines extends SvrProcess {
 	protected String doIt() throws Exception {
 		
 		if(recreate) {
-			String sqlDelete = "DELETE FROM TF_DispensePlanLine WHERE TF_DispensePlan_ID = " + p_TF_DispensePlan_ID;
+			String sqlDelete = "DELETE FROM TF_DispensePlanLine WHERE TF_DispensePlan_ID = " + getRecord_ID();
 			DB.executeUpdate(sqlDelete, get_TrxName());
 		}
 		
 		String sql = "SELECT * FROM c_order o INNER JOIN c_orderline ol ON ol.c_order_id = o.c_order_id WHERE " + 
 				" (trunc(o.dateordered)=trunc(getdate()) OR (trunc(o.dateordered) < trunc(getdate()) AND (qtyordered - qtydelivered) > 0)) " + 
-				"AND c_doctypetarget_id = 1000032 AND docstatus IN ('CO','CL')";
+				"AND c_doctypetarget_id = 1000032 AND docstatus IN ('CO')";
 		
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -46,7 +50,7 @@ public class CreateDispenseLines extends SvrProcess {
 			pstmt = DB.prepareStatement(sql, get_TrxName());
 			rs = pstmt.executeQuery();		
 			while (rs.next()) {
-				createDPLines(rs);
+				dispensePlan.createDPLinesFromOrder(rs);
 			}
 		} catch (SQLException e) {
 			rollback();
@@ -57,43 +61,26 @@ public class CreateDispenseLines extends SvrProcess {
 			pstmt = null;
 		}
 		
+		sql = "SELECT * FROM tf_dispenseplan d INNER JOIN tf_dispenseplanline dl ON d.tf_dispenseplan_id = dl.tf_dispenseplan_id " + 
+				"WHERE trunc(d.scheduledate) < trunc(getdate()) AND (dl.dispenseqty - dl.delivereddpqty) > 0 AND " +
+				"(dl.c_orderline_id IS NULL OR (dl.c_orderline_id IS NOT NULL AND dl.shipmentdestination IS NOT NULL))";
+		
+		pstmt = null;
+		rs = null;
+		try {
+			pstmt = DB.prepareStatement(sql, get_TrxName());
+			rs = pstmt.executeQuery();		
+			while (rs.next()) {
+				dispensePlan.createDPLinesFromPendingDP(rs);
+			}
+		} catch (SQLException e) {
+			rollback();
+			throw new DBException(e, sql);
+		} finally {
+			DB.close(rs, pstmt);
+			rs = null;
+			pstmt = null;
+		}
 		return null;
-	}
-	
-	private void createDPLines(ResultSet rs) throws SQLException {
-		MDispensePlanLine dispenseLine = new MDispensePlanLine(getCtx(), 0, get_TrxName());
-		BigDecimal balanceQty = (rs.getBigDecimal(MDispensePlanLine.COLUMNNAME_QtyOrdered)).subtract(rs.getBigDecimal(MDispensePlanLine.COLUMNNAME_QtyDelivered));
-		
-		dispenseLine.setC_OrderLine_ID(rs.getInt(MDispensePlanLine.COLUMNNAME_C_OrderLine_ID));
-		dispenseLine.setPaymentRule(rs.getString(MDispensePlanLine.COLUMNNAME_PaymentRule));
-		dispenseLine.setC_BPartner_ID(rs.getInt(MDispensePlanLine.COLUMNNAME_C_BPartner_ID));
-		dispenseLine.setDateOrdered(rs.getTimestamp(MDispensePlanLine.COLUMNNAME_DateOrdered));
-		dispenseLine.setTF_Destination_ID(rs.getInt(MDispensePlanLine.COLUMNNAME_TF_Destination_ID));
-		dispenseLine.setLine(10);
-		dispenseLine.setM_Product_ID(rs.getInt(MDispensePlanLine.COLUMNNAME_M_Product_ID));
-		dispenseLine.setM_Warehouse_ID(rs.getInt(MDispensePlanLine.COLUMNNAME_M_Warehouse_ID));
-		dispenseLine.setDescription(rs.getString(MDispensePlanLine.COLUMNNAME_Description));
-		
-		dispenseLine.setDispenseQty(balanceQty);
-		dispenseLine.setC_UOM_ID(rs.getInt(MDispensePlanLine.COLUMNNAME_C_UOM_ID));
-		dispenseLine.setBalanceDPQty(balanceQty);
-		dispenseLine.setDeliveredDPQty(BigDecimal.ZERO);
-		
-		dispenseLine.setQtyOrdered(rs.getBigDecimal(MDispensePlanLine.COLUMNNAME_QtyOrdered));
-		dispenseLine.setQtyDelivered(rs.getBigDecimal(MDispensePlanLine.COLUMNNAME_QtyDelivered));
-		dispenseLine.setBalanceQty(balanceQty);
-		
-		dispenseLine.setC_Tax_ID(rs.getInt(MDispensePlanLine.COLUMNNAME_C_Tax_ID));
-		dispenseLine.setIsTaxIncluded(rs.getBoolean(MDispensePlanLine.COLUMNNAME_IsTaxIncluded));
-		dispenseLine.setIsRoyaltyPassInclusive(rs.getBoolean(MDispensePlanLine.COLUMNNAME_IsRoyaltyPassInclusive));
-		dispenseLine.setIsRentInclusive(rs.getBoolean(MDispensePlanLine.COLUMNNAME_IsRentInclusive));
-		dispenseLine.setUnitPrice(rs.getBigDecimal(MDispensePlanLine.COLUMNNAME_UnitPrice));
-		dispenseLine.setPriceEntered(rs.getBigDecimal(MDispensePlanLine.COLUMNNAME_PriceEntered));
-		dispenseLine.setDiscount(rs.getBigDecimal(MDispensePlanLine.COLUMNNAME_Discount));
-		dispenseLine.setFreightAmt(rs.getBigDecimal(MDispensePlanLine.COLUMNNAME_FreightAmt));
-		dispenseLine.setLineNetAmt(rs.getBigDecimal(MDispensePlanLine.COLUMNNAME_LineNetAmt));	
-		dispenseLine.setTF_DispensePlan_ID(p_TF_DispensePlan_ID);
-		
-		dispenseLine.saveEx();
 	}
 }

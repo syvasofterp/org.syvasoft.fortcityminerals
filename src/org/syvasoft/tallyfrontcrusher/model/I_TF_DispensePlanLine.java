@@ -505,12 +505,12 @@ public interface I_TF_DispensePlanLine
 	/** Set Priority.
 	  * Indicates if this request is of a high, medium or low priority.
 	  */
-	public void setPriority (int Priority);
+	public void setPriority (String Priority);
 
 	/** Get Priority.
 	  * Indicates if this request is of a high, medium or low priority.
 	  */
-	public int getPriority();
+	public String getPriority();
 
     /** Column name QtyDelivered */
     public static final String COLUMNNAME_QtyDelivered = "QtyDelivered";
@@ -576,6 +576,26 @@ public interface I_TF_DispensePlanLine
 	  * Reserved Quantity
 	  */
 	public BigDecimal getQtyReserved();
+
+    /** Column name ShipmentDestination */
+    public static final String COLUMNNAME_ShipmentDestination = "ShipmentDestination";
+
+	/** Set Shipment Destination	  */
+	public void setShipmentDestination (int ShipmentDestination);
+
+	/** Get Shipment Destination	  */
+	public int getShipmentDestination();
+
+	public I_TF_Destination getShipmentDestinat() throws RuntimeException;
+
+    /** Column name ShipmentTo */
+    public static final String COLUMNNAME_ShipmentTo = "ShipmentTo";
+
+	/** Set Shipment To	  */
+	public void setShipmentTo (String ShipmentTo);
+
+	/** Get Shipment To	  */
+	public String getShipmentTo();
 
     /** Column name TF_Destination_ID */
     public static final String COLUMNNAME_TF_Destination_ID = "TF_Destination_ID";

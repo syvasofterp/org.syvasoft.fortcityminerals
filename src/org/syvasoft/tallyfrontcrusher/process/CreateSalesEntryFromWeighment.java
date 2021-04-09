@@ -84,7 +84,7 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 				if(wEntry.getMT_UOM_ID() != wEntry.getC_UOM_ID() && createTPandNonTPInvocies) {
 					msg = wEntry.getDocumentNo() +  " : Two invoices can be created only for MT based sales!";
 					addLog(wEntry.get_Table_ID(), wEntry.getGrossWeightTime(), null, msg, wEntry.get_Table_ID(), wEntry.get_ID());
-					
+					continue;
 				}
 				
 				wEntry.setCreateTwoInvoices(createTPandNonTPInvocies);
@@ -94,6 +94,7 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 				if(wEntry.getPrice().doubleValue() == 0) {
 					msg = wEntry.getDocumentNo() +  " : Material Price not Set";
 					addLog(wEntry.get_Table_ID(), wEntry.getGrossWeightTime(), null, msg, wEntry.get_Table_ID(), wEntry.get_ID());
+					continue;
 				}
 				
 				if(!createTPandNonTPInvocies) {
@@ -105,6 +106,13 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 				else {
 					BigDecimal tpWeight = wEntry.getPermitIssuedQty();
 					BigDecimal remainingQty = wEntry.getBilledQty().subtract(wEntry.getPermitIssuedQty());
+					
+					if(remainingQty.doubleValue() < 0) {
+						msg = wEntry.getDocumentNo() +  " : TP Weight should not be greater than Actual Weight";
+						addLog(wEntry.get_Table_ID(), wEntry.getGrossWeightTime(), null, msg, wEntry.get_Table_ID(), wEntry.get_ID());
+						continue;
+					}
+					
 					if(wEntry.getC_OrderLine_ID() == 0) {
 						createSalesQuickEntry(wEntry, tpWeight, true, trx);
 						createSalesQuickEntry(wEntry, remainingQty, false, trx);						

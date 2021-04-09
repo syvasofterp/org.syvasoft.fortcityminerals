@@ -33,7 +33,7 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20210406L;
+	private static final long serialVersionUID = 20210409L;
 
     /** Standard Constructor */
     public X_TF_DispensePlanLine (Properties ctx, int TF_DispensePlanLine_ID, String trxName)
@@ -812,24 +812,28 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 		return bd;
 	}
 
+	/** Most Urgent = MU */
+	public static final String PRIORITY_MostUrgent = "MU";
+	/** Urgent = U */
+	public static final String PRIORITY_Urgent = "U";
+	/** Normal = N */
+	public static final String PRIORITY_Normal = "N";
 	/** Set Priority.
 		@param Priority 
 		Indicates if this request is of a high, medium or low priority.
 	  */
-	public void setPriority (int Priority)
+	public void setPriority (String Priority)
 	{
-		set_Value (COLUMNNAME_Priority, Integer.valueOf(Priority));
+
+		set_Value (COLUMNNAME_Priority, Priority);
 	}
 
 	/** Get Priority.
 		@return Indicates if this request is of a high, medium or low priority.
 	  */
-	public int getPriority () 
+	public String getPriority () 
 	{
-		Integer ii = (Integer)get_Value(COLUMNNAME_Priority);
-		if (ii == null)
-			 return 0;
-		return ii.intValue();
+		return (String)get_Value(COLUMNNAME_Priority);
 	}
 
 	/** Set Delivered Quantity.
@@ -930,6 +934,42 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
+	}
+
+	public I_TF_Destination getShipmentDestinat() throws RuntimeException
+    {
+		return (I_TF_Destination)MTable.get(getCtx(), I_TF_Destination.Table_Name)
+			.getPO(getShipmentDestination(), get_TrxName());	}
+
+	/** Set Shipment Destination.
+		@param ShipmentDestination Shipment Destination	  */
+	public void setShipmentDestination (int ShipmentDestination)
+	{
+		set_Value (COLUMNNAME_ShipmentDestination, Integer.valueOf(ShipmentDestination));
+	}
+
+	/** Get Shipment Destination.
+		@return Shipment Destination	  */
+	public int getShipmentDestination () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_ShipmentDestination);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Set Shipment To.
+		@param ShipmentTo Shipment To	  */
+	public void setShipmentTo (String ShipmentTo)
+	{
+		set_Value (COLUMNNAME_ShipmentTo, ShipmentTo);
+	}
+
+	/** Get Shipment To.
+		@return Shipment To	  */
+	public String getShipmentTo () 
+	{
+		return (String)get_Value(COLUMNNAME_ShipmentTo);
 	}
 
 	public I_TF_Destination getTF_Destination() throws RuntimeException
@@ -1041,50 +1081,10 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 		return ii.intValue();
 	}
 
-	/** Type AD_Reference_ID=50004 */
-	public static final int TYPE_AD_Reference_ID=50004;
-	/** Workbench = B */
-	public static final String TYPE_Workbench = "B";
-	/** File - Code or other = C */
-	public static final String TYPE_File_CodeOrOther = "C";
-	/** Data = D */
-	public static final String TYPE_Data = "D";
-	/** Workflow = F */
-	public static final String TYPE_Workflow = "F";
-	/** Import Format = IMP */
-	public static final String TYPE_ImportFormat = "IMP";
-	/** Application or Module = M */
-	public static final String TYPE_ApplicationOrModule = "M";
-	/** Process/Report = P */
-	public static final String TYPE_ProcessReport = "P";
-	/** ReportView = R */
-	public static final String TYPE_ReportView = "R";
-	/** Role = S */
-	public static final String TYPE_Role = "S";
-	/** Code Snipit = SNI */
-	public static final String TYPE_CodeSnipit = "SNI";
-	/** SQL Statement = SQL */
-	public static final String TYPE_SQLStatement = "SQL";
-	/** Table = T */
-	public static final String TYPE_Table = "T";
-	/** Window = W */
-	public static final String TYPE_Window = "W";
-	/** Form = X */
-	public static final String TYPE_Form = "X";
-	/** Dynamic Validation Rule = V */
-	public static final String TYPE_DynamicValidationRule = "V";
-	/** Message = MSG */
-	public static final String TYPE_Message = "MSG";
-	/** PrintFormat = PFT */
-	public static final String TYPE_PrintFormat = "PFT";
-	/** Reference = REF */
-	public static final String TYPE_Reference = "REF";
-	/** Model Validator = MV */
-	public static final String TYPE_ModelValidator = "MV";
-	/** Entity Type = ET */
-	public static final String TYPE_EntityType = "ET";
-	/** SQL Mandatory = SQM */
-	public static final String TYPE_SQLMandatory = "SQM";
+	/** Instant = I */
+	public static final String TYPE_Instant = "I";
+	/** Order = O */
+	public static final String TYPE_Order = "O";
 	/** Set Type.
 		@param Type 
 		Type of Validation (SQL, Java Script, Java Language)

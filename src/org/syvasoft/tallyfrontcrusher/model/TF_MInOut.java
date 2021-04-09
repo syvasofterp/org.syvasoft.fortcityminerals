@@ -99,9 +99,10 @@ public class TF_MInOut extends MInOut {
 	
 	@Override
 	public String completeIt() {
+		
+		MWeighmentEntry we = new MWeighmentEntry(getCtx(), getTF_WeighmentEntry_ID(), get_TrxName());
+		
 		if(getTF_WeighmentEntry_ID() > 0) {			
-			
-			MWeighmentEntry we = new MWeighmentEntry(getCtx(), getTF_WeighmentEntry_ID(), get_TrxName());
 			
 			if(we.getWeighmentEntryType().equals(MWeighmentEntry.WEIGHMENTENTRYTYPE_Sales) && isSOTrx())
 				we.shipped();
@@ -110,26 +111,37 @@ public class TF_MInOut extends MInOut {
 			
 			we.saveEx();
 			
+			updateDispenseQty(we, false);
+			
 			if(createConsolidatedTransportInvoice)
 				createTransportMaterialReceipt();
 			createMaterialMovement(we);
 			m_processMsg = postCrusherProduction(we);
 			
 		}
-		
+		String error = super.completeIt();
 		// TODO Auto-generated method stub
-		return super.completeIt();
+		
+		if(getTF_WeighmentEntry_ID() > 0) {		
+			updateOrderDelieverdQty(we, false);
+		}
+		return error;
 	}
 	
 	@Override
 	public boolean reverseCorrectIt() {
+		
+		MWeighmentEntry we = new MWeighmentEntry(getCtx(), getTF_WeighmentEntry_ID(), get_TrxName());
+		
 		if(getTF_WeighmentEntry_ID() >0) {			
-			MWeighmentEntry we = new MWeighmentEntry(getCtx(), getTF_WeighmentEntry_ID(), get_TrxName());
+			
 			if(we.getWeighmentEntryType().equals(MWeighmentEntry.WEIGHMENTENTRYTYPE_Sales) && isSOTrx())
 				we.reverseShipped();
 			else if(!we.getWeighmentEntryType().equals(MWeighmentEntry.WEIGHMENTENTRYTYPE_Sales) && !isSOTrx() )
 				we.reverseShipped();				
 			we.saveEx();
+			
+			updateDispenseQty(we, true);
 			
 			reverseTransportMaterialReceipt();
 		}
@@ -143,8 +155,14 @@ public class TF_MInOut extends MInOut {
 			crProd.saveEx();
 			setTF_Crusher_Production_ID(0);
 		}		
-				
-		return super.reverseCorrectIt();
+		
+		boolean error = super.reverseCorrectIt();
+		// TODO Auto-generated method stub
+		if(getTF_WeighmentEntry_ID() > 0) {		
+			updateOrderDelieverdQty(we, true);
+		}
+		
+		return error;
 	}
 	
 	public void createTransportMaterialReceipt() {
@@ -363,4 +381,30 @@ public class TF_MInOut extends MInOut {
 		return m_processMsg;
 	}	
 
+	public void updateDispenseQty(MWeighmentEntry wEntry, boolean isReverse) {
+		MDispensePlanLine dispensePlanLine = new MDispensePlanLine(getCtx(), wEntry.getTF_DispensePlanLine_ID(), get_TrxName());
+		
+		if(!isReverse) {
+			dispensePlanLine.setDeliveredDPQty(dispensePlanLine.getDeliveredDPQty().add(wEntry.getNetWeightUnit()));
+		}
+		else {
+			dispensePlanLine.setDeliveredDPQty(dispensePlanLine.getDeliveredDPQty().subtract(wEntry.getNetWeightUnit()));
+		}
+		
+		dispensePlanLine.setBalanceDPQty(dispensePlanLine.getDispenseQty().subtract(dispensePlanLine.getDeliveredDPQty()));
+		dispensePlanLine.saveEx();
+	}
+	
+	public void updateOrderDelieverdQty(MWeighmentEntry wEntry, boolean isReverse) {
+		TF_MOrderLine orderLine = new TF_MOrderLine(getCtx(), wEntry.getTF_DispensePlanLine_ID(), get_TrxName());
+		
+		if(!isReverse) {
+			orderLine.setQtyDelivered(orderLine.getQtyDelivered().add(wEntry.getNetWeightUnit()));
+		}
+		else {
+			orderLine.setQtyDelivered(orderLine.getQtyDelivered().subtract(wEntry.getNetWeightUnit()));
+		}
+		
+		orderLine.saveEx();
+	}
 }
