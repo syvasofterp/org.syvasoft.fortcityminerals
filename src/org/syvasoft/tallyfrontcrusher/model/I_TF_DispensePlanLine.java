@@ -434,6 +434,30 @@ public interface I_TF_DispensePlanLine
 
 	public org.compiere.model.I_M_Warehouse getM_Warehouse() throws RuntimeException;
 
+    /** Column name Parent_ID */
+    public static final String COLUMNNAME_Parent_ID = "Parent_ID";
+
+	/** Set Parent.
+	  * Parent of Entity
+	  */
+	public void setParent_ID (int Parent_ID);
+
+	/** Get Parent.
+	  * Parent of Entity
+	  */
+	public int getParent_ID();
+
+	public I_TF_DispensePlanLine getParent() throws RuntimeException;
+
+    /** Column name PartyName */
+    public static final String COLUMNNAME_PartyName = "PartyName";
+
+	/** Set Party Name	  */
+	public void setPartyName (String PartyName);
+
+	/** Get Party Name	  */
+	public String getPartyName();
+
     /** Column name PaymentRule */
     public static final String COLUMNNAME_PaymentRule = "PaymentRule";
 
@@ -585,8 +609,6 @@ public interface I_TF_DispensePlanLine
 
 	/** Get Shipment Destination	  */
 	public int getShipmentDestination();
-
-	public I_TF_Destination getShipmentDestinat() throws RuntimeException;
 
     /** Column name ShipmentTo */
     public static final String COLUMNNAME_ShipmentTo = "ShipmentTo";

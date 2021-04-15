@@ -17,6 +17,7 @@ public class CreateDispenseLines extends SvrProcess {
 	
 	private int p_TF_DispensePlan_ID = 0;
 	private boolean recreate = false;
+	private boolean carryforward = false;
 	MDispensePlan dispensePlan;
 	
 	@Override
@@ -28,6 +29,8 @@ public class CreateDispenseLines extends SvrProcess {
 			String name = para.getParameterName();
 			if(name.toLowerCase().equals("recreate"))
 				recreate = "Y".equals(para.getParameter());
+			else if(name.toLowerCase().equals("carryforward"))
+				carryforward = "Y".equals(para.getParameter());
 		}
 		p_TF_DispensePlan_ID = getRecord_ID();
 	}
@@ -41,8 +44,8 @@ public class CreateDispenseLines extends SvrProcess {
 		}
 		
 		String sql = "SELECT * FROM c_order o INNER JOIN c_orderline ol ON ol.c_order_id = o.c_order_id WHERE " + 
-				" (trunc(o.dateordered)=trunc(getdate()) OR (trunc(o.dateordered) < trunc(getdate()) AND (qtyordered - qtydelivered) > 0)) " + 
-				"AND c_doctypetarget_id = 1000032 AND docstatus IN ('CO')";
+				" trunc(o.dateordered)=trunc(getdate()) " + 
+				" AND c_doctypetarget_id = 1000032 AND docstatus IN ('CO')";
 		
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -61,25 +64,48 @@ public class CreateDispenseLines extends SvrProcess {
 			pstmt = null;
 		}
 		
-		sql = "SELECT * FROM tf_dispenseplan d INNER JOIN tf_dispenseplanline dl ON d.tf_dispenseplan_id = dl.tf_dispenseplan_id " + 
-				"WHERE trunc(d.scheduledate) < trunc(getdate()) AND (dl.dispenseqty - dl.delivereddpqty) > 0 AND " +
-				"(dl.c_orderline_id IS NULL OR (dl.c_orderline_id IS NOT NULL AND dl.shipmentdestination IS NOT NULL))";
-		
-		pstmt = null;
-		rs = null;
-		try {
-			pstmt = DB.prepareStatement(sql, get_TrxName());
-			rs = pstmt.executeQuery();		
-			while (rs.next()) {
-				dispensePlan.createDPLinesFromPendingDP(rs);
-			}
-		} catch (SQLException e) {
-			rollback();
-			throw new DBException(e, sql);
-		} finally {
-			DB.close(rs, pstmt);
-			rs = null;
+		if(carryforward) {
+			sql = "SELECT * FROM c_order o INNER JOIN c_orderline ol ON ol.c_order_id = o.c_order_id WHERE " + 
+					" (trunc(o.dateordered) < trunc(getdate()) AND (qtyordered - qtydelivered) > 0) " + 
+					" AND c_doctypetarget_id = 1000032 AND docstatus IN ('CO')";
+			
 			pstmt = null;
+			rs = null;
+			try {
+				pstmt = DB.prepareStatement(sql, get_TrxName());
+				rs = pstmt.executeQuery();		
+				while (rs.next()) {
+					dispensePlan.createDPLinesFromOrder(rs);
+				}
+			} catch (SQLException e) {
+				rollback();
+				throw new DBException(e, sql);
+			} finally {
+				DB.close(rs, pstmt);
+				rs = null;
+				pstmt = null;
+			}
+			
+			sql = "SELECT * FROM tf_dispenseplan d INNER JOIN tf_dispenseplanline dl ON d.tf_dispenseplan_id = dl.tf_dispenseplan_id " + 
+					"WHERE trunc(d.scheduledate) < trunc(getdate()) AND (dl.dispenseqty - dl.delivereddpqty) > 0 AND " +
+					"(dl.c_orderline_id IS NULL OR (dl.c_orderline_id IS NOT NULL AND dl.shipmentdestination IS NOT NULL))";
+			
+			pstmt = null;
+			rs = null;
+			try {
+				pstmt = DB.prepareStatement(sql, get_TrxName());
+				rs = pstmt.executeQuery();		
+				while (rs.next()) {
+					dispensePlan.createDPLinesFromPendingDP(rs);
+				}
+			} catch (SQLException e) {
+				rollback();
+				throw new DBException(e, sql);
+			} finally {
+				DB.close(rs, pstmt);
+				rs = null;
+				pstmt = null;
+			}
 		}
 		return null;
 	}

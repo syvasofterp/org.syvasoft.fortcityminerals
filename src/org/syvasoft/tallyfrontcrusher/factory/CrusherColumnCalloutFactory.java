@@ -43,6 +43,7 @@ import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderLine_SetPriceEntered;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderLine_SetUnitPrice;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutDispensePlanLine_SetUOMTax;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutDispensePlanLine_SetPriceEntered;
+import org.syvasoft.tallyfrontcrusher.callout.CalloutDispensePlan_SetScheduleDate;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutDispensePlanLine_SetUnitPrice;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutDispensePlanLine_SetOrderInfo;
 import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_SetPrice;
@@ -696,6 +697,12 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		if((tableName.equals(TF_MRequisitionLine.Table_Name)) && (columnName.equals(TF_MRequisitionLine.COLUMNNAME_M_Product_ID)				
 				|| columnName.equals(TF_MRequisitionLine.COLUMNNAME_C_UOM_ID) || columnName.equals(TF_MRequisitionLine.COLUMNNAME_C_BPartner_ID) )) {			
 			list.add(new CalloutRequisition_SetPriceUOM());
+		}
+		
+		if(tableName.equals(MDispensePlan.Table_Name)) {
+			if(columnName.equals(MDispensePlan.COLUMNNAME_TF_DispensePlan_ID) || columnName.equals(MDispensePlan.COLUMNNAME_ScheduleDate)) {
+				list.add(new CalloutDispensePlan_SetScheduleDate());
+			}
 		}
 		
 		if(tableName.equals(MDispensePlanLine.Table_Name)) {

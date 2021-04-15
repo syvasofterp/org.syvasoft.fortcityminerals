@@ -33,7 +33,7 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20210409L;
+	private static final long serialVersionUID = 20210414L;
 
     /** Standard Constructor */
     public X_TF_DispensePlanLine (Properties ctx, int TF_DispensePlanLine_ID, String trxName)
@@ -52,7 +52,9 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 			setLine (0);
 			setLineNetAmt (Env.ZERO);
 			setM_Warehouse_ID (0);
+			setPaymentRule (null);
 			setPriceEntered (Env.ZERO);
+			setPriority (null);
 			setQtyDelivered (Env.ZERO);
 			setQtyOrdered (Env.ZERO);
 			setTF_DispensePlan_ID (0);
@@ -696,6 +698,48 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 		return ii.intValue();
 	}
 
+	public I_TF_DispensePlanLine getParent() throws RuntimeException
+    {
+		return (I_TF_DispensePlanLine)MTable.get(getCtx(), I_TF_DispensePlanLine.Table_Name)
+			.getPO(getParent_ID(), get_TrxName());	}
+
+	/** Set Parent.
+		@param Parent_ID 
+		Parent of Entity
+	  */
+	public void setParent_ID (int Parent_ID)
+	{
+		if (Parent_ID < 1) 
+			set_Value (COLUMNNAME_Parent_ID, null);
+		else 
+			set_Value (COLUMNNAME_Parent_ID, Integer.valueOf(Parent_ID));
+	}
+
+	/** Get Parent.
+		@return Parent of Entity
+	  */
+	public int getParent_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Parent_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Set Party Name.
+		@param PartyName Party Name	  */
+	public void setPartyName (String PartyName)
+	{
+		set_Value (COLUMNNAME_PartyName, PartyName);
+	}
+
+	/** Get Party Name.
+		@return Party Name	  */
+	public String getPartyName () 
+	{
+		return (String)get_Value(COLUMNNAME_PartyName);
+	}
+
 	/** PaymentRule AD_Reference_ID=195 */
 	public static final int PAYMENTRULE_AD_Reference_ID=195;
 	/** Cash = B */
@@ -936,26 +980,18 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 		return bd;
 	}
 
-	public I_TF_Destination getShipmentDestinat() throws RuntimeException
-    {
-		return (I_TF_Destination)MTable.get(getCtx(), I_TF_Destination.Table_Name)
-			.getPO(getShipmentDestination(), get_TrxName());	}
-
 	/** Set Shipment Destination.
 		@param ShipmentDestination Shipment Destination	  */
 	public void setShipmentDestination (int ShipmentDestination)
 	{
-		set_Value (COLUMNNAME_ShipmentDestination, Integer.valueOf(ShipmentDestination));
+		set_Value (COLUMNNAME_ShipmentDestination, ShipmentDestination);
 	}
 
 	/** Get Shipment Destination.
 		@return Shipment Destination	  */
 	public int getShipmentDestination () 
 	{
-		Integer ii = (Integer)get_Value(COLUMNNAME_ShipmentDestination);
-		if (ii == null)
-			 return 0;
-		return ii.intValue();
+		return (int)get_Value(COLUMNNAME_ShipmentDestination);
 	}
 
 	/** Set Shipment To.
