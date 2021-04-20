@@ -33,7 +33,7 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20210414L;
+	private static final long serialVersionUID = 20210420L;
 
     /** Standard Constructor */
     public X_TF_DispensePlanLine (Properties ctx, int TF_DispensePlanLine_ID, String trxName)
@@ -57,7 +57,8 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 			setPriority (null);
 			setQtyDelivered (Env.ZERO);
 			setQtyOrdered (Env.ZERO);
-			setTF_DispensePlan_ID (0);
+			setScheduleDate (new Timestamp( System.currentTimeMillis() ));
+// @#Date@
 			setTF_DispensePlanLine_ID (0);
         } */
     }
@@ -89,6 +90,27 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
         .append(get_ID()).append("]");
       return sb.toString();
     }
+
+	/** Set Allow Carry Forward Previous Day Dispatch Pending.
+		@param AllowCarryForward Allow Carry Forward Previous Day Dispatch Pending	  */
+	public void setAllowCarryForward (boolean AllowCarryForward)
+	{
+		set_Value (COLUMNNAME_AllowCarryForward, Boolean.valueOf(AllowCarryForward));
+	}
+
+	/** Get Allow Carry Forward Previous Day Dispatch Pending.
+		@return Allow Carry Forward Previous Day Dispatch Pending	  */
+	public boolean isAllowCarryForward () 
+	{
+		Object oo = get_Value(COLUMNNAME_AllowCarryForward);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
 
 	/** Set Balance Dispense Qty.
 		@param BalanceDPQty Balance Dispense Qty	  */
@@ -362,6 +384,20 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 		return ii.intValue();
 	}
 
+	/** Set Contact Person.
+		@param ContactPerson Contact Person	  */
+	public void setContactPerson (String ContactPerson)
+	{
+		set_ValueNoCheck (COLUMNNAME_ContactPerson, ContactPerson);
+	}
+
+	/** Get Contact Person.
+		@return Contact Person	  */
+	public String getContactPerson () 
+	{
+		return (String)get_Value(COLUMNNAME_ContactPerson);
+	}
+
 	/** Set Date Ordered.
 		@param DateOrdered 
 		Date of Order
@@ -462,6 +498,40 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
+	}
+
+	/** Set Document Status.
+		@param DocStatus 
+		The current status of the document
+	  */
+	public void setDocStatus (String DocStatus)
+	{
+		set_Value (COLUMNNAME_DocStatus, DocStatus);
+	}
+
+	/** Get Document Status.
+		@return The current status of the document
+	  */
+	public String getDocStatus () 
+	{
+		return (String)get_Value(COLUMNNAME_DocStatus);
+	}
+
+	/** Set Document No.
+		@param DocumentNo 
+		Document sequence number of the document
+	  */
+	public void setDocumentNo (String DocumentNo)
+	{
+		set_ValueNoCheck (COLUMNNAME_DocumentNo, DocumentNo);
+	}
+
+	/** Get Document No.
+		@return Document sequence number of the document
+	  */
+	public String getDocumentNo () 
+	{
+		return (String)get_Value(COLUMNNAME_DocumentNo);
 	}
 
 	/** Set Freight Amount.
@@ -698,6 +768,41 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 		return ii.intValue();
 	}
 
+	/** Set Origin Date.
+		@param OriginDate Origin Date	  */
+	public void setOriginDate (Timestamp OriginDate)
+	{
+		set_Value (COLUMNNAME_OriginDate, OriginDate);
+	}
+
+	/** Get Origin Date.
+		@return Origin Date	  */
+	public Timestamp getOriginDate () 
+	{
+		return (Timestamp)get_Value(COLUMNNAME_OriginDate);
+	}
+
+	/** Set Allow Over Delivery Qty.
+		@param OverUnitDelivery Allow Over Delivery Qty	  */
+	public void setOverUnitDelivery (boolean OverUnitDelivery)
+	{
+		set_Value (COLUMNNAME_OverUnitDelivery, Boolean.valueOf(OverUnitDelivery));
+	}
+
+	/** Get Allow Over Delivery Qty.
+		@return Allow Over Delivery Qty	  */
+	public boolean isOverUnitDelivery () 
+	{
+		Object oo = get_Value(COLUMNNAME_OverUnitDelivery);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
 	public I_TF_DispensePlanLine getParent() throws RuntimeException
     {
 		return (I_TF_DispensePlanLine)MTable.get(getCtx(), I_TF_DispensePlanLine.Table_Name)
@@ -880,6 +985,30 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 		return (String)get_Value(COLUMNNAME_Priority);
 	}
 
+	/** Set Processed.
+		@param Processed 
+		The document has been processed
+	  */
+	public void setProcessed (boolean Processed)
+	{
+		set_Value (COLUMNNAME_Processed, Boolean.valueOf(Processed));
+	}
+
+	/** Get Processed.
+		@return The document has been processed
+	  */
+	public boolean isProcessed () 
+	{
+		Object oo = get_Value(COLUMNNAME_Processed);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
 	/** Set Delivered Quantity.
 		@param QtyDelivered 
 		Delivered Quantity
@@ -980,18 +1109,32 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 		return bd;
 	}
 
+	/** Set Schedule Date.
+		@param ScheduleDate Schedule Date	  */
+	public void setScheduleDate (Timestamp ScheduleDate)
+	{
+		set_Value (COLUMNNAME_ScheduleDate, ScheduleDate);
+	}
+
+	/** Get Schedule Date.
+		@return Schedule Date	  */
+	public Timestamp getScheduleDate () 
+	{
+		return (Timestamp)get_Value(COLUMNNAME_ScheduleDate);
+	}
+
 	/** Set Shipment Destination.
 		@param ShipmentDestination Shipment Destination	  */
-	public void setShipmentDestination (int ShipmentDestination)
+	public void setShipmentDestination (String ShipmentDestination)
 	{
 		set_Value (COLUMNNAME_ShipmentDestination, ShipmentDestination);
 	}
 
 	/** Get Shipment Destination.
 		@return Shipment Destination	  */
-	public int getShipmentDestination () 
+	public String getShipmentDestination () 
 	{
-		return (int)get_Value(COLUMNNAME_ShipmentDestination);
+		return (String)get_Value(COLUMNNAME_ShipmentDestination);
 	}
 
 	/** Set Shipment To.

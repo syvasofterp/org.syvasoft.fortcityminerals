@@ -384,27 +384,31 @@ public class TF_MInOut extends MInOut {
 	public void updateDispenseQty(MWeighmentEntry wEntry, boolean isReverse) {
 		MDispensePlanLine dispensePlanLine = new MDispensePlanLine(getCtx(), wEntry.getTF_DispensePlanLine_ID(), get_TrxName());
 		
-		if(!isReverse) {
-			dispensePlanLine.setDeliveredDPQty(dispensePlanLine.getDeliveredDPQty().add(wEntry.getNetWeightUnit()));
+		if(wEntry.getTF_DispensePlanLine_ID() > 0) {
+			if(!isReverse) {
+				dispensePlanLine.setDeliveredDPQty(dispensePlanLine.getDeliveredDPQty().add(wEntry.getNetWeightUnit()));
+			}
+			else {
+				dispensePlanLine.setDeliveredDPQty(dispensePlanLine.getDeliveredDPQty().subtract(wEntry.getNetWeightUnit()));
+			}
+			
+			dispensePlanLine.setBalanceDPQty(dispensePlanLine.getDispenseQty().subtract(dispensePlanLine.getDeliveredDPQty()));
+			dispensePlanLine.saveEx();
 		}
-		else {
-			dispensePlanLine.setDeliveredDPQty(dispensePlanLine.getDeliveredDPQty().subtract(wEntry.getNetWeightUnit()));
-		}
-		
-		dispensePlanLine.setBalanceDPQty(dispensePlanLine.getDispenseQty().subtract(dispensePlanLine.getDeliveredDPQty()));
-		dispensePlanLine.saveEx();
 	}
 	
 	public void updateOrderDelieverdQty(MWeighmentEntry wEntry, boolean isReverse) {
-		TF_MOrderLine orderLine = new TF_MOrderLine(getCtx(), wEntry.getTF_DispensePlanLine_ID(), get_TrxName());
+		TF_MOrderLine orderLine = new TF_MOrderLine(getCtx(), wEntry.getC_OrderLine_ID(), get_TrxName());
 		
-		if(!isReverse) {
-			orderLine.setQtyDelivered(orderLine.getQtyDelivered().add(wEntry.getNetWeightUnit()));
-		}
-		else {
-			orderLine.setQtyDelivered(orderLine.getQtyDelivered().subtract(wEntry.getNetWeightUnit()));
+		if(wEntry.getC_OrderLine_ID() > 0) {
+			if(!isReverse) {
+				orderLine.setQtyDelivered(orderLine.getQtyDelivered().add(wEntry.getNetWeightUnit()));
+			}
+			else {
+				orderLine.setQtyDelivered(orderLine.getQtyDelivered().subtract(wEntry.getNetWeightUnit()));
+			}
+			orderLine.saveEx();
 		}
 		
-		orderLine.saveEx();
 	}
 }

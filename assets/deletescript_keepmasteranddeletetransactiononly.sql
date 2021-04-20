@@ -46,6 +46,8 @@ set search_path to adempiere;
 -- ENHANCEMENT COMMENT END
 
 -- Crusher Tables
+DELETE FROM tf_dispenseplanline;
+DELETE FROM tf_dispenseplan;
 UPDATE TF_Boulder_Receipt SET Subcon_Invoice_ID = NULL, TF_Employee_Salary_ID = NULL, TF_Vehicle_Rent_ID = NULL,
 	TF_Quarry_Rent_ID = NULL;
 UPDATE TF_Employee_Salary SET GL_Journal_ID = NULL;

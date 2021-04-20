@@ -64,6 +64,15 @@ public interface I_TF_DispensePlanLine
 	  */
 	public int getAD_Org_ID();
 
+    /** Column name AllowCarryForward */
+    public static final String COLUMNNAME_AllowCarryForward = "AllowCarryForward";
+
+	/** Set Allow Carry Forward Previous Day Dispatch Pending	  */
+	public void setAllowCarryForward (boolean AllowCarryForward);
+
+	/** Get Allow Carry Forward Previous Day Dispatch Pending	  */
+	public boolean isAllowCarryForward();
+
     /** Column name BalanceDPQty */
     public static final String COLUMNNAME_BalanceDPQty = "BalanceDPQty";
 
@@ -211,6 +220,15 @@ public interface I_TF_DispensePlanLine
 
 	public org.compiere.model.I_C_UOM getC_UOM() throws RuntimeException;
 
+    /** Column name ContactPerson */
+    public static final String COLUMNNAME_ContactPerson = "ContactPerson";
+
+	/** Set Contact Person	  */
+	public void setContactPerson (String ContactPerson);
+
+	/** Get Contact Person	  */
+	public String getContactPerson();
+
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
 
@@ -292,6 +310,32 @@ public interface I_TF_DispensePlanLine
 
 	/** Get Dispense Qty	  */
 	public BigDecimal getDispenseQty();
+
+    /** Column name DocStatus */
+    public static final String COLUMNNAME_DocStatus = "DocStatus";
+
+	/** Set Document Status.
+	  * The current status of the document
+	  */
+	public void setDocStatus (String DocStatus);
+
+	/** Get Document Status.
+	  * The current status of the document
+	  */
+	public String getDocStatus();
+
+    /** Column name DocumentNo */
+    public static final String COLUMNNAME_DocumentNo = "DocumentNo";
+
+	/** Set Document No.
+	  * Document sequence number of the document
+	  */
+	public void setDocumentNo (String DocumentNo);
+
+	/** Get Document No.
+	  * Document sequence number of the document
+	  */
+	public String getDocumentNo();
 
     /** Column name FreightAmt */
     public static final String COLUMNNAME_FreightAmt = "FreightAmt";
@@ -434,6 +478,24 @@ public interface I_TF_DispensePlanLine
 
 	public org.compiere.model.I_M_Warehouse getM_Warehouse() throws RuntimeException;
 
+    /** Column name OriginDate */
+    public static final String COLUMNNAME_OriginDate = "OriginDate";
+
+	/** Set Origin Date	  */
+	public void setOriginDate (Timestamp OriginDate);
+
+	/** Get Origin Date	  */
+	public Timestamp getOriginDate();
+
+    /** Column name OverUnitDelivery */
+    public static final String COLUMNNAME_OverUnitDelivery = "OverUnitDelivery";
+
+	/** Set Allow Over Delivery Qty	  */
+	public void setOverUnitDelivery (boolean OverUnitDelivery);
+
+	/** Get Allow Over Delivery Qty	  */
+	public boolean isOverUnitDelivery();
+
     /** Column name Parent_ID */
     public static final String COLUMNNAME_Parent_ID = "Parent_ID";
 
@@ -536,6 +598,19 @@ public interface I_TF_DispensePlanLine
 	  */
 	public String getPriority();
 
+    /** Column name Processed */
+    public static final String COLUMNNAME_Processed = "Processed";
+
+	/** Set Processed.
+	  * The document has been processed
+	  */
+	public void setProcessed (boolean Processed);
+
+	/** Get Processed.
+	  * The document has been processed
+	  */
+	public boolean isProcessed();
+
     /** Column name QtyDelivered */
     public static final String COLUMNNAME_QtyDelivered = "QtyDelivered";
 
@@ -601,14 +676,23 @@ public interface I_TF_DispensePlanLine
 	  */
 	public BigDecimal getQtyReserved();
 
+    /** Column name ScheduleDate */
+    public static final String COLUMNNAME_ScheduleDate = "ScheduleDate";
+
+	/** Set Schedule Date	  */
+	public void setScheduleDate (Timestamp ScheduleDate);
+
+	/** Get Schedule Date	  */
+	public Timestamp getScheduleDate();
+
     /** Column name ShipmentDestination */
     public static final String COLUMNNAME_ShipmentDestination = "ShipmentDestination";
 
 	/** Set Shipment Destination	  */
-	public void setShipmentDestination (int ShipmentDestination);
+	public void setShipmentDestination (String ShipmentDestination);
 
 	/** Get Shipment Destination	  */
-	public int getShipmentDestination();
+	public String getShipmentDestination();
 
     /** Column name ShipmentTo */
     public static final String COLUMNNAME_ShipmentTo = "ShipmentTo";

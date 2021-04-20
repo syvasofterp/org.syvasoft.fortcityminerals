@@ -43,7 +43,11 @@ public class CreateDispenseLines extends SvrProcess {
 			DB.executeUpdate(sqlDelete, get_TrxName());
 		}
 		
-		String sql = "SELECT * FROM c_order o INNER JOIN c_orderline ol ON ol.c_order_id = o.c_order_id WHERE " + 
+		String sql = "SELECT " +  
+					 "	C_OrderLine_ID,o.paymentrule,o.c_bpartner_id,o.dateordered,ol.tf_destination_id,ol.m_product_id,ol.m_warehouse_id," + 
+					 " ol.description,ol.c_uom_id,ol.qtyordered,ol.qtydelivered,ol.c_tax_id,ol.istaxincluded,ol.isrentinclusive,ol.isroyaltypassinclusive," + 
+					 " ol.unitprice,ol.priceentered,ol.discount,ol.freightamt,ol.linenetamt,o.ispriceconfidential "	+ 
+					 " FROM c_order o INNER JOIN c_orderline ol ON ol.c_order_id = o.c_order_id WHERE " + 
 				" trunc(o.dateordered)=trunc(getdate()) " + 
 				" AND c_doctypetarget_id = 1000032 AND docstatus IN ('CO')";
 		
@@ -65,7 +69,11 @@ public class CreateDispenseLines extends SvrProcess {
 		}
 		
 		if(carryforward) {
-			sql = "SELECT * FROM c_order o INNER JOIN c_orderline ol ON ol.c_order_id = o.c_order_id WHERE " + 
+			sql = "SELECT " +
+					"	C_OrderLine_ID,o.paymentrule,o.c_bpartner_id,o.dateordered,ol.tf_destination_id,ol.m_product_id,ol.m_warehouse_id," + 
+					 " ol.description,ol.c_uom_id,ol.qtyordered,ol.qtydelivered,ol.c_tax_id,ol.istaxincluded,ol.isrentinclusive,ol.isroyaltypassinclusive," + 
+					 " ol.unitprice,ol.priceentered,ol.discount,ol.freightamt,ol.linenetamt,o.ispriceconfidential "	+
+					 " FROM c_order o INNER JOIN c_orderline ol ON ol.c_order_id = o.c_order_id WHERE " + 
 					" (trunc(o.dateordered) < trunc(getdate()) AND (qtyordered - qtydelivered) > 0) " + 
 					" AND c_doctypetarget_id = 1000032 AND docstatus IN ('CO')";
 			

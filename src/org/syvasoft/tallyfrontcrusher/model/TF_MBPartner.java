@@ -16,6 +16,7 @@ import org.compiere.model.MUser;
 import org.compiere.model.Query;
 import org.compiere.model.X_I_BPartner;
 import org.compiere.process.DocAction;
+import org.compiere.util.AdempiereUserError;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
 
@@ -623,6 +624,25 @@ public class TF_MBPartner extends MBPartner {
 	
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
+		if(newRecord) {
+			String where = " Value = '" + getValue() + "'";
+			
+			TF_MBPartner bpartner = new Query(getCtx(),TF_MBPartner.Table_Name, where, get_TrxName()).first();
+			
+			if(bpartner != null) {
+				throw new AdempiereUserError("Search Key already exists");
+			}
+		}
+		else {
+			String where = " Value = '" + getValue() + "' AND C_BPartner_ID != " + getC_BPartner_ID();
+			
+			TF_MBPartner bpartner = new Query(getCtx(),TF_MBPartner.Table_Name, where, get_TrxName()).first();
+			
+			if(bpartner != null) {
+				throw new AdempiereUserError("Search Key already exists");
+			}
+		}
+		
 		if(IsRequiredTaxInvoicePerLoad()) {
 			setTF_TaxInvoiceCycle_ID(0);
 		}

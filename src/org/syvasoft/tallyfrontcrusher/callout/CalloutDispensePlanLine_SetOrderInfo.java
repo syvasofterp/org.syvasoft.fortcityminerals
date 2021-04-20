@@ -1,15 +1,18 @@
 package org.syvasoft.tallyfrontcrusher.callout;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.Properties;
 
 import org.adempiere.base.IColumnCallout;
 import org.compiere.model.GridField;
 import org.compiere.model.GridTab;
 import org.compiere.model.MSysConfig;
+import org.compiere.model.Query;
 import org.syvasoft.tallyfrontcrusher.model.MPriceListUOM;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
 import org.syvasoft.tallyfrontcrusher.model.TF_MOrderLine;
+import org.syvasoft.tallyfrontcrusher.model.MDispensePlan;
 import org.syvasoft.tallyfrontcrusher.model.MDispensePlanLine;
 import org.syvasoft.tallyfrontcrusher.model.TF_MProduct;
 
@@ -25,6 +28,10 @@ public class CalloutDispensePlanLine_SetOrderInfo implements IColumnCallout {
 			TF_MOrderLine orderline = new TF_MOrderLine(ctx, C_OrderLine_ID, null);
 			
 			if(orderline != null) {
+				String sql = " C_OrderLine_ID = "+ orderline.getC_OrderLine_ID();
+				
+				MDispensePlanLine prevdispenseLine = new Query(ctx, MDispensePlanLine.Table_Name, sql, null).first();
+				
 				BigDecimal balanceQty = orderline.getQtyOrdered().subtract(orderline.getQtyDelivered());
 				
 				TF_MOrder order = new TF_MOrder(ctx, orderline.getC_Order_ID(), null);
@@ -41,9 +48,9 @@ public class CalloutDispensePlanLine_SetOrderInfo implements IColumnCallout {
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_M_Warehouse_ID, orderline.getM_Warehouse_ID());
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_Description, orderline.getDescription());
 				
-				mTab.setValue(MDispensePlanLine.COLUMNNAME_DispenseQty, balanceQty);
+				mTab.setValue(MDispensePlanLine.COLUMNNAME_DispenseQty, 0);
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_C_UOM_ID, orderline.getC_UOM_ID());
-				mTab.setValue(MDispensePlanLine.COLUMNNAME_BalanceDPQty, balanceQty);
+				mTab.setValue(MDispensePlanLine.COLUMNNAME_BalanceDPQty, 0);
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_DeliveredDPQty, BigDecimal.ZERO);
 				
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_QtyOrdered, orderline.getQtyOrdered());
@@ -59,6 +66,13 @@ public class CalloutDispensePlanLine_SetOrderInfo implements IColumnCallout {
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_Discount, orderline.getDiscount());
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_FreightAmt, orderline.getFreightAmt());
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_LineNetAmt, orderline.getLineNetAmt());
+				
+				if(prevdispenseLine != null) {
+					mTab.setValue(MDispensePlanLine.COLUMNNAME_OriginDate, prevdispenseLine.getOriginDate());
+				}
+				else {
+					mTab.setValue(MDispensePlanLine.COLUMNNAME_OriginDate, new Timestamp(System.currentTimeMillis()));
+				}
 			}
 		}
 		return null;

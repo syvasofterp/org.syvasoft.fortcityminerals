@@ -22,6 +22,8 @@ public class MDispensePlan extends X_TF_DispensePlan {
 	 */
 	private static final long serialVersionUID = -8086375269293054622L;
 
+	public Timestamp ScheduleDate;
+	
 	public String ShipmentTo;
 	
 	public String ShipmentDestination;
@@ -34,8 +36,8 @@ public class MDispensePlan extends X_TF_DispensePlan {
 		// TODO Auto-generated constructor stub
 	}
 
-	public MDispensePlan(Properties ctx, int TF_Destination_ID, String trxName) {
-		super(ctx, TF_Destination_ID, trxName);
+	public MDispensePlan(Properties ctx, int TF_DispensePlan_ID, String trxName) {
+		super(ctx, TF_DispensePlan_ID, trxName);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -71,8 +73,14 @@ public class MDispensePlan extends X_TF_DispensePlan {
 		
 		if(dispensePlan == null) {
 			MDispensePlanLine dispenseLine = new MDispensePlanLine(getCtx(), 0, get_TrxName());
+			
+			sql = " C_OrderLine_ID = "+ rs.getInt(MDispensePlanLine.COLUMNNAME_C_OrderLine_ID);
+			
+			MDispensePlanLine prevdispenseLine = new Query(getCtx(), MDispensePlanLine.Table_Name, sql, get_TrxName()).first();
+			
 			BigDecimal balanceQty = (rs.getBigDecimal(MDispensePlanLine.COLUMNNAME_QtyOrdered)).subtract(rs.getBigDecimal(MDispensePlanLine.COLUMNNAME_QtyDelivered));
 			
+			dispenseLine.setScheduleDate(ScheduleDate);
 			dispenseLine.setPriority(MDispensePlanLine.PRIORITY_Normal);
 			dispenseLine.setType(MDispensePlanLine.TYPE_Order);
 			dispenseLine.setC_OrderLine_ID(rs.getInt(MDispensePlanLine.COLUMNNAME_C_OrderLine_ID));
@@ -84,10 +92,10 @@ public class MDispensePlan extends X_TF_DispensePlan {
 			dispenseLine.setM_Product_ID(rs.getInt(MDispensePlanLine.COLUMNNAME_M_Product_ID));
 			dispenseLine.setM_Warehouse_ID(rs.getInt(MDispensePlanLine.COLUMNNAME_M_Warehouse_ID));
 			dispenseLine.setDescription(rs.getString(MDispensePlanLine.COLUMNNAME_Description));
+			dispenseLine.setC_UOM_ID(rs.getInt(MDispensePlanLine.COLUMNNAME_C_UOM_ID));
 			
 			dispenseLine.setDispenseQty(DispatchQty);
-			dispenseLine.setC_UOM_ID(rs.getInt(MDispensePlanLine.COLUMNNAME_C_UOM_ID));
-			dispenseLine.setBalanceDPQty(balanceQty);
+			dispenseLine.setBalanceDPQty(DispatchQty);
 			dispenseLine.setDeliveredDPQty(BigDecimal.ZERO);
 			
 			dispenseLine.setQtyOrdered(rs.getBigDecimal(MDispensePlanLine.COLUMNNAME_QtyOrdered));
@@ -110,10 +118,16 @@ public class MDispensePlan extends X_TF_DispensePlan {
 			}
 
 			if(ShipmentDestination != null) {
-				dispenseLine.setShipmentDestination(Integer.parseInt(ShipmentDestination));
+				dispenseLine.setShipmentDestination(ShipmentDestination);
 			}
-
 			
+			if(prevdispenseLine != null) {
+				dispenseLine.setOriginDate(prevdispenseLine.getOriginDate());
+			}
+			else {
+				dispenseLine.setOriginDate(getScheduleDate());
+			}
+			dispenseLine.setIsPriceConfidential(rs.getBoolean(MDispensePlanLine.COLUMNNAME_IsPriceConfidential));
 			dispenseLine.saveEx();
 		}
 	}
@@ -126,8 +140,15 @@ public class MDispensePlan extends X_TF_DispensePlan {
 		
 		if(dispensePlan == null) {
 			MDispensePlanLine dispenseLine = new MDispensePlanLine(getCtx(), 0, get_TrxName());
+			
+			sql = " C_OrderLine_ID = "+ rs.getInt(MDispensePlanLine.COLUMNNAME_C_OrderLine_ID);
+			
+			MDispensePlanLine prevdispenseLine = new Query(getCtx(), MDispensePlanLine.Table_Name, sql, get_TrxName()).first();
+			
+			
 			BigDecimal balanceQty = (rs.getBigDecimal(MDispensePlanLine.COLUMNNAME_DispenseQty)).subtract(rs.getBigDecimal(MDispensePlanLine.COLUMNNAME_DeliveredDPQty));
 			
+			dispenseLine.setScheduleDate(ScheduleDate);
 			dispenseLine.setPriority(MDispensePlanLine.PRIORITY_Normal);
 			dispenseLine.setType(MDispensePlanLine.TYPE_Instant);		
 			dispenseLine.setC_OrderLine_ID(rs.getInt(MDispensePlanLine.COLUMNNAME_C_OrderLine_ID));
@@ -140,9 +161,9 @@ public class MDispensePlan extends X_TF_DispensePlan {
 			dispenseLine.setM_Warehouse_ID(rs.getInt(MDispensePlanLine.COLUMNNAME_M_Warehouse_ID));
 			dispenseLine.setDescription(rs.getString(MDispensePlanLine.COLUMNNAME_Description));
 			dispenseLine.setShipmentTo(rs.getString(MDispensePlanLine.COLUMNNAME_ShipmentTo));
-			dispenseLine.setShipmentDestination(rs.getInt(MDispensePlanLine.COLUMNNAME_ShipmentDestination));
+			dispenseLine.setShipmentDestination(rs.getString(MDispensePlanLine.COLUMNNAME_ShipmentDestination));
 			
-			dispenseLine.setDispenseQty(balanceQty);
+			dispenseLine.setDispenseQty(BigDecimal.ZERO);
 			dispenseLine.setC_UOM_ID(rs.getInt(MDispensePlanLine.COLUMNNAME_C_UOM_ID));
 			dispenseLine.setBalanceDPQty(balanceQty);
 			dispenseLine.setDeliveredDPQty(BigDecimal.ZERO);
@@ -160,8 +181,15 @@ public class MDispensePlan extends X_TF_DispensePlan {
 			dispenseLine.setDiscount(rs.getBigDecimal(MDispensePlanLine.COLUMNNAME_Discount));
 			dispenseLine.setFreightAmt(rs.getBigDecimal(MDispensePlanLine.COLUMNNAME_FreightAmt));
 			dispenseLine.setLineNetAmt(rs.getBigDecimal(MDispensePlanLine.COLUMNNAME_LineNetAmt));	
+			dispenseLine.setParent_ID(rs.getInt(MDispensePlanLine.COLUMNNAME_TF_DispensePlanLine_ID));
 			dispenseLine.setTF_DispensePlan_ID(getTF_DispensePlan_ID());
 			
+			if(prevdispenseLine != null)
+				dispenseLine.setOriginDate(prevdispenseLine.getOriginDate());
+			else
+				dispenseLine.setOriginDate(getScheduleDate());
+			
+			dispenseLine.setIsPriceConfidential(rs.getBoolean(MDispensePlanLine.COLUMNNAME_IsPriceConfidential));
 			dispenseLine.saveEx();
 		}
 	}

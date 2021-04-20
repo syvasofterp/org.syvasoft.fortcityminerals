@@ -9,105 +9,7 @@ import org.compiere.model.MInvoice;
 import org.compiere.model.MJournalLine;
 import org.compiere.model.MOrder;
 import org.compiere.model.MPayment;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutBoulderReceipt_JobWork;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutBoulderReceipt_Product;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutBoulderReceipt_Warehouse;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutCrusherKatingEntry_CalcAmount;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutCrusherKatingEntry_SetPrice;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutCrusherKatingEntry_WeighmentEntry;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutDrillingEntry_CalcDrillingCost;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutElementValue_AccountGroup;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutEmployeeSalary;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutEmployeeSalaryIssue_CalcBalanceAmts;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutEmployeeSalaryIssue_SetOpenAmt;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutEmployeeSalary_BPartner;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutFuelIssue_CalcAmount;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutFuelIssue_IssueType;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutFuelIssue_SetPrice;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutFuelIssue_TypeChange;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutFuelIssue_Vehicle;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutInterOrgCash_DestAccount;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutInterOrgCash_SrcOrg;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutInvestmentReceipt_AutoDescription;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutInvoiceHeaderItemAmount;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutInvoice_Subcontract;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutJournal_DistributeProfit;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutJournal_QuickEntryMode;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutJournal_SetJobWork;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutLabourWage;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutLabourWageIssue_CalcBalanceAmts;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutLabourWageIssue_SetOpenAmt;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutMJobworkResourceRentEntry_CalcContractAmt;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderLine_SetTax;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderLine_SetPriceEntered;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderLine_SetUnitPrice;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutDispensePlanLine_SetUOMTax;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutDispensePlanLine_SetPriceEntered;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutDispensePlan_SetScheduleDate;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutDispensePlanLine_SetUnitPrice;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutDispensePlanLine_SetOrderInfo;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_SetPrice;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_SetPriceUOM;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutOrderQuickEntry_SetVehicleNo;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_CalcRentAmount;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_CalcRentPayable;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_Destination;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_Distance;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_Item1Tax;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_Org;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_POSCashBP;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_RentedVehicle;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_SOUnitPriceRent;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_SandBlockLine1;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_SandBlockQtyPrice;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_SetProject;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_SetTonnage;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_TokenNo;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_UnitPrice;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_VehicleRent;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_VehicleType;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_Warehouse;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_WeighmentEntry;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutPMSchedule_TypeChange;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutPM_SetMachineryType;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_CalcSalaryBalannceAmts;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_DocumentType;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_ElementValue;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_FromToBankAccount;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_Org;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutPayment_TFBPartner;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutPermitPurchase_CalcAmount;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutPermitPurchase_Quarry;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutPriceList_BPartner;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutRentalContract_ResourceType;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutRentalContract_VehicleNo;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutRequisition_SetPriceUOM;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutTRTaxInvoiceLine_CalcAmount;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutTRTaxInvoice_CalTotalAmt;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutTaxInvoice_CalcAmount;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutTaxInvoice_Product;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutToken_SetUOM;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetFuelExpensed;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetJobwork;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetOpeningEntries;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetRunningMeter;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutTripsheet_Vehicle;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutTripSheetRentalContract;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutTyreAssignment;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutTyreAssignment_CalcRunningMeter;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutTyreAssignment_ReleaseTyreMovement;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutTyreStatusChange_Tyre;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutVehicleRentConfig_Destination;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutVehicleRent_CalcAmount;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutVehicleRent_Vehicle;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutWeighmentEntry_CalcAmount;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutWeighmentEntry_CalcNetWeight;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutWeighmentEntry_Vehicle;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutYardEntry_CalcAmount;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutYardEntry_VehicleType;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_CreateTaxInvoice;
-import org.syvasoft.tallyfrontcrusher.callout.CalloutOrder_PriceIncludesTax;
-
+import org.syvasoft.tallyfrontcrusher.callout.*;
 import org.syvasoft.tallyfrontcrusher.model.MBoulderReceipt;
 import org.syvasoft.tallyfrontcrusher.model.MCrusherKatingEntry;
 import org.syvasoft.tallyfrontcrusher.model.MDispensePlan;
@@ -191,6 +93,7 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 		if(tableName.equals(TF_MOrderLine.Table_Name)) {
 			if(columnName.equals(TF_MOrderLine.COLUMNNAME_M_Product_ID)) {
 				list.add(new CalloutOrderLine_SetTax());
+				list.add(new CalloutOrderLine_SetDestination());
 			}
 		}
 		
@@ -705,19 +608,20 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 			}
 		}
 		
+	
 		if(tableName.equals(MDispensePlanLine.Table_Name)) {
 			if(columnName.equals(MDispensePlanLine.COLUMNNAME_C_OrderLine_ID)) {
 				list.add(new CalloutDispensePlanLine_SetOrderInfo());
 			}
-		}
-		
-		if(tableName.equals(MDispensePlanLine.Table_Name)) {
+			
 			if(columnName.equals(MDispensePlanLine.COLUMNNAME_M_Product_ID)) {
 				list.add(new CalloutDispensePlanLine_SetUOMTax());
 			}
-		}
-		
-		if(tableName.equals(MDispensePlanLine.Table_Name)) {
+			
+			if(columnName.equals(MDispensePlanLine.COLUMNNAME_DispenseQty)) {
+				list.add(new CalloutDispensePlanLine_SetBalanceDPQty());
+			}
+			
 			if(columnName.equals(MDispensePlanLine.COLUMNNAME_M_Product_ID) || 
 					columnName.equals(MDispensePlanLine.COLUMNNAME_C_UOM_ID) ||
 					columnName.equals(MDispensePlanLine.COLUMNNAME_TF_Destination_ID)) {
@@ -731,7 +635,7 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 				list.add(new CalloutDispensePlanLine_SetPriceEntered());
 			}
 		}
-		
+				
 		return list != null ? list.toArray(new IColumnCallout[0]) : new IColumnCallout[0];
 	}
 
