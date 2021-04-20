@@ -80,7 +80,12 @@ public class MDispensePlan extends X_TF_DispensePlan {
 			
 			BigDecimal balanceQty = (rs.getBigDecimal(MDispensePlanLine.COLUMNNAME_QtyOrdered)).subtract(rs.getBigDecimal(MDispensePlanLine.COLUMNNAME_QtyDelivered));
 			
-			dispenseLine.setScheduleDate(ScheduleDate);
+			if(ScheduleDate != null) {
+				dispenseLine.setScheduleDate(ScheduleDate);
+			}
+			else {
+				dispenseLine.setScheduleDate(getScheduleDate());
+			}
 			dispenseLine.setPriority(MDispensePlanLine.PRIORITY_Normal);
 			dispenseLine.setType(MDispensePlanLine.TYPE_Order);
 			dispenseLine.setC_OrderLine_ID(rs.getInt(MDispensePlanLine.COLUMNNAME_C_OrderLine_ID));
