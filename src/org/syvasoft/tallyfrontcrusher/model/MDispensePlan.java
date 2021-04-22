@@ -89,10 +89,23 @@ public class MDispensePlan extends X_TF_DispensePlan {
 			dispenseLine.setPriority(MDispensePlanLine.PRIORITY_Normal);
 			dispenseLine.setType(MDispensePlanLine.TYPE_Order);
 			dispenseLine.setC_OrderLine_ID(rs.getInt(MDispensePlanLine.COLUMNNAME_C_OrderLine_ID));
+			dispenseLine.setDateOrdered(rs.getTimestamp(MDispensePlanLine.COLUMNNAME_DateOrdered));
 			dispenseLine.setPaymentRule(rs.getString(MDispensePlanLine.COLUMNNAME_PaymentRule));
 			dispenseLine.setC_BPartner_ID(rs.getInt(MDispensePlanLine.COLUMNNAME_C_BPartner_ID));
-			dispenseLine.setDateOrdered(rs.getTimestamp(MDispensePlanLine.COLUMNNAME_DateOrdered));
-			dispenseLine.setTF_Destination_ID(rs.getInt(MDispensePlanLine.COLUMNNAME_TF_Destination_ID));
+			
+			TF_MBPartner bpartner = new TF_MBPartner(getCtx(), rs.getInt(MDispensePlanLine.COLUMNNAME_C_BPartner_ID),get_TrxName());
+			
+			if(rs.getInt(MDispensePlanLine.COLUMNNAME_TF_Destination_ID) == 0) {
+				String where = " Name = '" + bpartner.getAddress4() + "'";
+				
+				MDestination destination = new Query(ctx, MDestination.Table_Name, where, null).first();
+				
+				dispenseLine.setTF_Destination_ID(destination.getTF_Destination_ID());
+				//dispenseLine.setShipmentDestination(destination.getTF_Destination_ID());
+			}
+			else {
+				dispenseLine.setTF_Destination_ID(rs.getInt(MDispensePlanLine.COLUMNNAME_TF_Destination_ID));
+			}
 			dispenseLine.setLine(10);
 			dispenseLine.setM_Product_ID(rs.getInt(MDispensePlanLine.COLUMNNAME_M_Product_ID));
 			dispenseLine.setM_Warehouse_ID(rs.getInt(MDispensePlanLine.COLUMNNAME_M_Warehouse_ID));
