@@ -32,6 +32,7 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 	*/
 	private String InvoiceType = null;
 	private boolean createTPandNonTPInvocies = false;
+	private int RecordId = 0;
 	@Override
 	protected void prepare() {		
 		ProcessInfoParameter[] para = getParameter();		
@@ -51,14 +52,17 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 				DateTo = para[i].getParameterAsTimestamp();
 			*/
 		}
+		RecordId = getRecord_ID();
 	}
 
 	@Override
 	protected String doIt() throws Exception {
-		String whereClause = " WeighmentEntryType = '1SO' AND Status = 'CO' AND (EXISTS (SELECT T_Selection_ID FROM T_Selection WHERE " +
+		String whereClause ="";
+		whereClause = " WeighmentEntryType = '1SO' AND Status = 'CO' AND (EXISTS (SELECT T_Selection_ID FROM T_Selection WHERE " +
 				" T_Selection.AD_PInstance_ID=? AND T_Selection.T_Selection_ID = TF_WeighmentEntry.TF_WeighmentEntry_ID) OR TF_WeighmentEntry_ID = ?) "
 				+ "  ";
-				//+ "AND C_Order.DocStatus IN ('CO','DR','IR'))";
+		
+		//+ "AND C_Order.DocStatus IN ('CO','DR','IR'))";
 		int i = 0;
 		List<MWeighmentEntry> wEntries = new Query(getCtx(), MWeighmentEntry.Table_Name, whereClause, get_TrxName())
 				.setClient_ID()

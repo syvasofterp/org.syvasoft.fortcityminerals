@@ -98,7 +98,7 @@ public class MDispensePlan extends X_TF_DispensePlan {
 			if(rs.getInt(MDispensePlanLine.COLUMNNAME_TF_Destination_ID) == 0) {
 				String where = " Name = '" + bpartner.getAddress4() + "'";
 				
-				MDestination destination = new Query(ctx, MDestination.Table_Name, where, null).first();
+				MDestination destination = new Query(getCtx(), MDestination.Table_Name, where, null).first();
 				
 				dispenseLine.setTF_Destination_ID(destination.getTF_Destination_ID());
 				//dispenseLine.setShipmentDestination(destination.getTF_Destination_ID());

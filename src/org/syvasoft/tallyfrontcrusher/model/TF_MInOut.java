@@ -391,8 +391,14 @@ public class TF_MInOut extends MInOut {
 			else {
 				dispensePlanLine.setDeliveredDPQty(dispensePlanLine.getDeliveredDPQty().subtract(wEntry.getNetWeightUnit()));
 			}
-			
 			dispensePlanLine.setBalanceDPQty(dispensePlanLine.getDispenseQty().subtract(dispensePlanLine.getDeliveredDPQty()));
+			
+			if(dispensePlanLine.getDeliveredDPQty().intValue() <= 0)
+				dispensePlanLine.setDocStatus(DOCSTATUS_Completed);
+			else
+				dispensePlanLine.setDocStatus(DOCSTATUS_InProgress);
+			
+			
 			dispensePlanLine.saveEx();
 		}
 	}
