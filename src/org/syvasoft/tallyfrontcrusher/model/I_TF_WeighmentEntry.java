@@ -703,6 +703,15 @@ public interface I_TF_WeighmentEntry
 	/** Get TP No	  */
 	public String getRoyaltyNo();
 
+    /** Column name ShipmentTo */
+    public static final String COLUMNNAME_ShipmentTo = "ShipmentTo";
+
+	/** Set Shipment To	  */
+	public void setShipmentTo (String ShipmentTo);
+
+	/** Get Shipment To	  */
+	public String getShipmentTo();
+
     /** Column name Status */
     public static final String COLUMNNAME_Status = "Status";
 
@@ -894,6 +903,17 @@ public interface I_TF_WeighmentEntry
 	  * Total Amount
 	  */
 	public BigDecimal getTotalAmt();
+
+    /** Column name Transporter_ID */
+    public static final String COLUMNNAME_Transporter_ID = "Transporter_ID";
+
+	/** Set Transporter	  */
+	public void setTransporter_ID (int Transporter_ID);
+
+	/** Get Transporter	  */
+	public int getTransporter_ID();
+
+	public I_TF_RentedVehicle getTransporter() throws RuntimeException;
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";

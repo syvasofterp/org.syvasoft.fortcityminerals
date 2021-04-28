@@ -122,9 +122,7 @@ public class TF_MInOut extends MInOut {
 		String error = super.completeIt();
 		// TODO Auto-generated method stub
 		
-		if(getTF_WeighmentEntry_ID() > 0) {		
-			updateOrderDelieverdQty(we, false);
-		}
+		
 		return error;
 	}
 	
@@ -158,9 +156,6 @@ public class TF_MInOut extends MInOut {
 		
 		boolean error = super.reverseCorrectIt();
 		// TODO Auto-generated method stub
-		if(getTF_WeighmentEntry_ID() > 0) {		
-			updateOrderDelieverdQty(we, true);
-		}
 		
 		return error;
 	}
@@ -386,11 +381,14 @@ public class TF_MInOut extends MInOut {
 		
 		if(wEntry.getTF_DispensePlanLine_ID() > 0) {
 			if(!isReverse) {
+				dispensePlanLine.setQtyDelivered(dispensePlanLine.getQtyDelivered().add(wEntry.getNetWeightUnit()));
 				dispensePlanLine.setDeliveredDPQty(dispensePlanLine.getDeliveredDPQty().add(wEntry.getNetWeightUnit()));
 			}
 			else {
+				dispensePlanLine.setQtyDelivered(dispensePlanLine.getQtyDelivered().subtract(wEntry.getNetWeightUnit()));
 				dispensePlanLine.setDeliveredDPQty(dispensePlanLine.getDeliveredDPQty().subtract(wEntry.getNetWeightUnit()));
 			}
+			dispensePlanLine.setBalanceQty(dispensePlanLine.getQtyOrdered().subtract(dispensePlanLine.getQtyDelivered()));
 			dispensePlanLine.setBalanceDPQty(dispensePlanLine.getDispenseQty().subtract(dispensePlanLine.getDeliveredDPQty()));
 			
 			if(dispensePlanLine.getDeliveredDPQty().intValue() <= 0)
@@ -401,20 +399,5 @@ public class TF_MInOut extends MInOut {
 			
 			dispensePlanLine.saveEx();
 		}
-	}
-	
-	public void updateOrderDelieverdQty(MWeighmentEntry wEntry, boolean isReverse) {
-		TF_MOrderLine orderLine = new TF_MOrderLine(getCtx(), wEntry.getC_OrderLine_ID(), get_TrxName());
-		
-		if(wEntry.getC_OrderLine_ID() > 0) {
-			if(!isReverse) {
-				orderLine.setQtyDelivered(orderLine.getQtyDelivered().add(wEntry.getNetWeightUnit()));
-			}
-			else {
-				orderLine.setQtyDelivered(orderLine.getQtyDelivered().subtract(wEntry.getNetWeightUnit()));
-			}
-			orderLine.saveEx();
-		}
-		
 	}
 }

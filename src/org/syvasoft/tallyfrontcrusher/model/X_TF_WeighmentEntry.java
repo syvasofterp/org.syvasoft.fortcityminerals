@@ -33,7 +33,7 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20210409L;
+	private static final long serialVersionUID = 20210428L;
 
     /** Standard Constructor */
     public X_TF_WeighmentEntry (Properties ctx, int TF_WeighmentEntry_ID, String trxName)
@@ -1188,6 +1188,20 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return (String)get_Value(COLUMNNAME_RoyaltyNo);
 	}
 
+	/** Set Shipment To.
+		@param ShipmentTo Shipment To	  */
+	public void setShipmentTo (String ShipmentTo)
+	{
+		set_Value (COLUMNNAME_ShipmentTo, ShipmentTo);
+	}
+
+	/** Get Shipment To.
+		@return Shipment To	  */
+	public String getShipmentTo () 
+	{
+		return (String)get_Value(COLUMNNAME_ShipmentTo);
+	}
+
 	/** In Progress = IP */
 	public static final String STATUS_InProgress = "IP";
 	/** Completed = CO */
@@ -1354,9 +1368,9 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public void setTF_DispensePlanLine_ID (int TF_DispensePlanLine_ID)
 	{
 		if (TF_DispensePlanLine_ID < 1) 
-			set_ValueNoCheck (COLUMNNAME_TF_DispensePlanLine_ID, null);
+			set_Value (COLUMNNAME_TF_DispensePlanLine_ID, null);
 		else 
-			set_ValueNoCheck (COLUMNNAME_TF_DispensePlanLine_ID, Integer.valueOf(TF_DispensePlanLine_ID));
+			set_Value (COLUMNNAME_TF_DispensePlanLine_ID, Integer.valueOf(TF_DispensePlanLine_ID));
 	}
 
 	/** Get Dispense Plan Line.
@@ -1592,6 +1606,31 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
+	}
+
+	public I_TF_RentedVehicle getTransporter() throws RuntimeException
+    {
+		return (I_TF_RentedVehicle)MTable.get(getCtx(), I_TF_RentedVehicle.Table_Name)
+			.getPO(getTransporter_ID(), get_TrxName());	}
+
+	/** Set Transporter.
+		@param Transporter_ID Transporter	  */
+	public void setTransporter_ID (int Transporter_ID)
+	{
+		if (Transporter_ID < 1) 
+			set_Value (COLUMNNAME_Transporter_ID, null);
+		else 
+			set_Value (COLUMNNAME_Transporter_ID, Integer.valueOf(Transporter_ID));
+	}
+
+	/** Get Transporter.
+		@return Transporter	  */
+	public int getTransporter_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Transporter_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	/** Set User Name.
