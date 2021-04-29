@@ -48,6 +48,9 @@ public class CalloutDispensePlanLine_SetOrderInfo implements IColumnCallout {
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_M_Warehouse_ID, orderline.getM_Warehouse_ID());
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_Description, orderline.getDescription());
 				
+				mTab.setValue(MDispensePlanLine.COLUMNNAME_ContactPerson, orderline.getContactPerson());
+				mTab.setValue(MDispensePlanLine.COLUMNNAME_DeliveryContact, orderline.getDeliveryContact());
+				
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_DispenseQty, 0);
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_C_UOM_ID, orderline.getC_UOM_ID());
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_BalanceDPQty, 0);

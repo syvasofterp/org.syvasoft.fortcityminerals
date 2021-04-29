@@ -297,6 +297,15 @@ public interface I_C_OrderLine
 
 	public org.compiere.model.I_C_UOM getC_UOM() throws RuntimeException;
 
+    /** Column name ContactPerson */
+    public static final String COLUMNNAME_ContactPerson = "ContactPerson";
+
+	/** Set Contact Person	  */
+	public void setContactPerson (String ContactPerson);
+
+	/** Get Contact Person	  */
+	public String getContactPerson();
+
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
 
@@ -382,6 +391,15 @@ public interface I_C_OrderLine
 	  * Date Order was promised
 	  */
 	public Timestamp getDatePromised();
+
+    /** Column name DeliveryContact */
+    public static final String COLUMNNAME_DeliveryContact = "DeliveryContact";
+
+	/** Set Delivery Contact	  */
+	public void setDeliveryContact (String DeliveryContact);
+
+	/** Get Delivery Contact	  */
+	public String getDeliveryContact();
 
     /** Column name Description */
     public static final String COLUMNNAME_Description = "Description";
@@ -469,6 +487,15 @@ public interface I_C_OrderLine
 	  * Whether Unit Price includes rent?
 	  */
 	public boolean isRentInclusive();
+
+    /** Column name IsRoyaltyPassInclusive */
+    public static final String COLUMNNAME_IsRoyaltyPassInclusive = "IsRoyaltyPassInclusive";
+
+	/** Set Royalty Pass Inclusive	  */
+	public void setIsRoyaltyPassInclusive (boolean IsRoyaltyPassInclusive);
+
+	/** Get Royalty Pass Inclusive	  */
+	public boolean isRoyaltyPassInclusive();
 
     /** Column name IsTaxIncluded */
     public static final String COLUMNNAME_IsTaxIncluded = "IsTaxIncluded";

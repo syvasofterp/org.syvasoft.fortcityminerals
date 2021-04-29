@@ -34,7 +34,7 @@ public class X_C_OrderLine extends PO implements I_C_OrderLine, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20210225L;
+	private static final long serialVersionUID = 20210429L;
 
     /** Standard Constructor */
     public X_C_OrderLine (Properties ctx, int C_OrderLine_ID, String trxName)
@@ -57,6 +57,8 @@ public class X_C_OrderLine extends PO implements I_C_OrderLine, I_Persistent
 			setIsDescription (false);
 // N
 			setIsRentInclusive (false);
+// N
+			setIsRoyaltyPassInclusive (false);
 // N
 			setIsUpdatePrice (false);
 // N
@@ -548,6 +550,20 @@ public class X_C_OrderLine extends PO implements I_C_OrderLine, I_Persistent
 		return ii.intValue();
 	}
 
+	/** Set Contact Person.
+		@param ContactPerson Contact Person	  */
+	public void setContactPerson (String ContactPerson)
+	{
+		set_Value (COLUMNNAME_ContactPerson, ContactPerson);
+	}
+
+	/** Get Contact Person.
+		@return Contact Person	  */
+	public String getContactPerson () 
+	{
+		return (String)get_Value(COLUMNNAME_ContactPerson);
+	}
+
 	/** Set Create Production.
 		@param CreateProduction Create Production	  */
 	public void setCreateProduction (String CreateProduction)
@@ -642,6 +658,22 @@ public class X_C_OrderLine extends PO implements I_C_OrderLine, I_Persistent
 	public Timestamp getDatePromised () 
 	{
 		return (Timestamp)get_Value(COLUMNNAME_DatePromised);
+	}
+	
+	
+
+	/** Set Delivery Contact.
+		@param DeliveryContact Delivery Contact	  */
+	public void setDeliveryContact (String DeliveryContact)
+	{
+		set_Value (COLUMNNAME_DeliveryContact, DeliveryContact);
+	}
+
+	/** Get Delivery Contact.
+		@return Delivery Contact	  */
+	public String getDeliveryContact () 
+	{
+		return (String)get_Value(COLUMNNAME_DeliveryContact);
 	}
 
 	/** Set Description.
@@ -761,6 +793,27 @@ public class X_C_OrderLine extends PO implements I_C_OrderLine, I_Persistent
 	public boolean isRentInclusive () 
 	{
 		Object oo = get_Value(COLUMNNAME_IsRentInclusive);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	/** Set Royalty Pass Inclusive.
+		@param IsRoyaltyPassInclusive Royalty Pass Inclusive	  */
+	public void setIsRoyaltyPassInclusive (boolean IsRoyaltyPassInclusive)
+	{
+		set_Value (COLUMNNAME_IsRoyaltyPassInclusive, Boolean.valueOf(IsRoyaltyPassInclusive));
+	}
+
+	/** Get Royalty Pass Inclusive.
+		@return Royalty Pass Inclusive	  */
+	public boolean isRoyaltyPassInclusive () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsRoyaltyPassInclusive);
 		if (oo != null) 
 		{
 			 if (oo instanceof Boolean) 

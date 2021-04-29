@@ -31,6 +31,38 @@ public class TF_MOrderLine extends MOrderLine {
 		super(ctx, rs, trxName);
 		// TODO Auto-generated constructor stub
 	}
+	
+	public static final String COLUMNNAME_DeliveryContact = "DeliveryContact";
+	
+	/** Set Delivery Contact.
+	@param DeliveryContact Delivery Contact	  */
+	public void setDeliveryContact (String DeliveryContact)
+	{
+		set_Value (COLUMNNAME_DeliveryContact, DeliveryContact);
+	}
+	
+	/** Get Delivery Contact.
+		@return Delivery Contact	  */
+	public String getDeliveryContact () 
+	{
+		return (String)get_Value(COLUMNNAME_DeliveryContact);
+	}
+
+	public static final String COLUMNNAME_ContactPerson = "ContactPerson";
+	
+	/** Set Contact Person.
+	@param ContactPerson Contact Person	  */
+	public void setContactPerson (String ContactPerson)
+	{
+		set_Value (COLUMNNAME_ContactPerson, ContactPerson);
+	}
+	
+	/** Get Contact Person.
+		@return Contact Person	  */
+	public String getContactPerson () 
+	{
+		return (String)get_Value(COLUMNNAME_ContactPerson);
+	}
 
 	/** Column name IsUpdatePrice */
     public static final String COLUMNNAME_IsUpdatePrice = "IsUpdatePrice";

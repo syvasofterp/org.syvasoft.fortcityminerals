@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.concurrent.ThreadPoolExecutor.DiscardOldestPolicy;
 
+import org.compiere.model.MOrder;
 import org.compiere.model.Query;
 import org.adempiere.exceptions.AdempiereException;
 import org.adempiere.exceptions.DBException;
@@ -23,8 +24,9 @@ public class ScheduleDispatchPlan extends SvrProcess {
 	private Timestamp ScheduleDate;
 	private String ShipmentTo;
 	private String ShipmentDestination;
+	private String DeliveryContact;
 	private BigDecimal DispenseQty;
-	private String c_orderlineID;
+	private int c_orderlineID;
 	MDispensePlan dispensePlan;
 	
 	@Override
@@ -41,9 +43,10 @@ public class ScheduleDispatchPlan extends SvrProcess {
 				ShipmentDestination = para[i].getParameterAsString();
 			else if(name.toLowerCase().equals("dispenseqty"))
 				DispenseQty = para[i].getParameterAsBigDecimal();
-			else if(name.toLowerCase().equals("record_id"))
-				c_orderlineID = para[i].getParameterAsString();
+			else if(name.toLowerCase().equals("deliverycontact"))
+				DeliveryContact = para[i].getParameterAsString();
 		}
+		c_orderlineID =  getRecord_ID();
 	}
 
 	@Override
@@ -69,11 +72,12 @@ public class ScheduleDispatchPlan extends SvrProcess {
 		dispensePlan.ShipmentTo = ShipmentTo;
 		dispensePlan.ShipmentDestination = ShipmentDestination;
 		dispensePlan.DispatchQty = DispenseQty;
+		dispensePlan.DeliveryContact = DeliveryContact;
 		
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 				
-		if(c_orderlineID == null || c_orderlineID == "") {
+		if(c_orderlineID == 0) {
 			sql ="SELECT COUNT(*) FROM c_order o INNER JOIN c_orderline ol ON ol.c_order_id = o.c_order_id WHERE " + 
 				" (EXISTS (SELECT T_Selection_ID FROM T_Selection WHERE T_Selection.AD_PInstance_ID="+ getAD_PInstance_ID() + " AND T_Selection.T_Selection_ID = ol.c_orderline_id))";
 		}
@@ -86,22 +90,22 @@ public class ScheduleDispatchPlan extends SvrProcess {
 	    int rowCount = rs.getInt(1);
 	    
 	    if((ShipmentTo != null || ShipmentDestination != null) && rowCount > 1) {
-	    	throw new AdempiereException("Please choose one Order for Shipment to and Shipment Destination to schedule Dispatch Plan!");
+	    	throw new AdempiereException("Error: Please choose one Order for Shipment to and Shipment Destination to schedule Dispatch Plan!");
 	    }
 	    else {
-	    	if(c_orderlineID == null || c_orderlineID == "") {
+	    	if(c_orderlineID == 0) {
 				sql = "SELECT " + 
-						"	C_OrderLine_ID,o.paymentrule,o.c_bpartner_id,o.dateordered,ol.tf_destination_id,ol.m_product_id,ol.m_warehouse_id," + 
+						"	o.c_order_id, c_orderline_id,o.paymentrule,o.c_bpartner_id,o.dateordered,ol.tf_destination_id,ol.m_product_id,ol.m_warehouse_id,o.DocStatus," + 
 						"	ol.description,ol.c_uom_id,ol.qtyordered,ol.qtydelivered,ol.c_tax_id,ol.istaxincluded,ol.isrentinclusive,ol.isroyaltypassinclusive," + 
-						"	ol.unitprice,ol.priceentered,ol.discount,ol.freightamt,ol.linenetamt,o.ispriceconfidential " +
+						"	ol.unitprice,ol.priceentered,ol.discount,ol.freightamt,ol.linenetamt,o.ispriceconfidential,ol.ContactPerson,ol.DeliveryContact " +
 						" FROM c_order o INNER JOIN c_orderline ol ON ol.c_order_id = o.c_order_id WHERE " + 
 						" (EXISTS (SELECT T_Selection_ID FROM T_Selection WHERE T_Selection.AD_PInstance_ID="+ getAD_PInstance_ID() + " AND T_Selection.T_Selection_ID = ol.c_orderline_id))";
 	    	}
 	    	else {
 	    		sql = "SELECT " + 
-						"	C_OrderLine_ID,o.paymentrule,o.c_bpartner_id,o.dateordered,ol.tf_destination_id,ol.m_product_id,ol.m_warehouse_id," + 
+						"	o.c_order_id, c_orderline_id,o.paymentrule,o.c_bpartner_id,o.dateordered,ol.tf_destination_id,ol.m_product_id,ol.m_warehouse_id,o.DocStatus," + 
 						"	ol.description,ol.c_uom_id,ol.qtyordered,ol.qtydelivered,ol.c_tax_id,ol.istaxincluded,ol.isrentinclusive,ol.isroyaltypassinclusive," + 
-						"	ol.unitprice,ol.priceentered,ol.discount,ol.freightamt,ol.linenetamt,o.ispriceconfidential " +
+						"	ol.unitprice,ol.priceentered,ol.discount,ol.freightamt,ol.linenetamt,o.ispriceconfidential,ol.ContactPerson,ol.DeliveryContact " +
 						" FROM c_order o INNER JOIN c_orderline ol ON ol.c_order_id = o.c_order_id WHERE ol.c_orderline_id = " + c_orderlineID;
 	    	}
 			
@@ -111,8 +115,15 @@ public class ScheduleDispatchPlan extends SvrProcess {
 				
 				
 				while (rs.next()) {
-					dispensePlan.createDPLinesFromOrder(rs);
-					i=i+1;
+					
+					if(rs.getString(MDispensePlan.COLUMNNAME_DocStatus).equals(MDispensePlan.DOCSTATUS_Completed)) {
+						dispensePlan.createDPLinesFromOrder(rs);
+						i=i+1;
+					}
+					else {
+						throw new AdempiereException("Error: Order Status should be completed before creating DP Line!");
+					}
+					
 				}
 			} catch (SQLException e) {
 				rollback();

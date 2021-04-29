@@ -30,6 +30,7 @@ public class MDispensePlan extends X_TF_DispensePlan {
 	
 	public BigDecimal DispatchQty;
 	
+	public String DeliveryContact;
 	
 	public MDispensePlan(Properties ctx, ResultSet rs, String trxName) {
 		super(ctx, rs, trxName);
@@ -92,6 +93,14 @@ public class MDispensePlan extends X_TF_DispensePlan {
 			dispenseLine.setDateOrdered(rs.getTimestamp(MDispensePlanLine.COLUMNNAME_DateOrdered));
 			dispenseLine.setPaymentRule(rs.getString(MDispensePlanLine.COLUMNNAME_PaymentRule));
 			dispenseLine.setC_BPartner_ID(rs.getInt(MDispensePlanLine.COLUMNNAME_C_BPartner_ID));
+			dispenseLine.setContactPerson(rs.getString(MDispensePlanLine.COLUMNNAME_ContactPerson));
+			
+			if(DeliveryContact != null) {
+				dispenseLine.setDeliveryContact(DeliveryContact);
+			}
+			else {
+				dispenseLine.setDeliveryContact(rs.getString(MDispensePlanLine.COLUMNNAME_DeliveryContact));
+			}
 			
 			TF_MBPartner bpartner = new TF_MBPartner(getCtx(), rs.getInt(MDispensePlanLine.COLUMNNAME_C_BPartner_ID),get_TrxName());
 			
@@ -180,7 +189,8 @@ public class MDispensePlan extends X_TF_DispensePlan {
 			dispenseLine.setDescription(rs.getString(MDispensePlanLine.COLUMNNAME_Description));
 			dispenseLine.setShipmentTo(rs.getString(MDispensePlanLine.COLUMNNAME_ShipmentTo));
 			dispenseLine.setShipmentDestination(rs.getString(MDispensePlanLine.COLUMNNAME_ShipmentDestination));
-			
+			dispenseLine.setContactPerson(rs.getString(MDispensePlanLine.COLUMNNAME_ContactPerson));
+			dispenseLine.setDeliveryContact(rs.getString(MDispensePlanLine.COLUMNNAME_DeliveryContact));
 			dispenseLine.setDispenseQty(BigDecimal.ZERO);
 			dispenseLine.setC_UOM_ID(rs.getInt(MDispensePlanLine.COLUMNNAME_C_UOM_ID));
 			dispenseLine.setBalanceDPQty(balanceQty);
