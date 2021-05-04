@@ -1,9 +1,9 @@
 package org.syvasoft.tallyfrontcrusher.model;
+import java.util.List;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.Properties;
-
 import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.I_C_Location;
 import org.compiere.model.MBPartner;
@@ -643,6 +643,18 @@ public class TF_MBPartner extends MBPartner {
 			}
 		}
 		
+		String where = " Name = '" + getAddress4() + "'";
+		
+		List<MDestination> dest = new Query(getCtx(), MDestination.Table_Name, where, get_TrxName()).list();
+		
+		if(dest.size() == 0)
+		{
+			MDestination destination = new MDestination(getCtx(), 0, get_TrxName());
+			destination.setAD_Org_ID(getAD_Org_ID());
+			destination.setName(getAddress4());
+			destination.setDistance(BigDecimal.ZERO);
+			destination.saveEx();
+		}
 		if(IsRequiredTaxInvoicePerLoad()) {
 			setTF_TaxInvoiceCycle_ID(0);
 		}

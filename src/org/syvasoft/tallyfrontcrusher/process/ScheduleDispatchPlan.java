@@ -26,6 +26,9 @@ public class ScheduleDispatchPlan extends SvrProcess {
 	private String ShipmentDestination;
 	private String DeliveryContact;
 	private BigDecimal DispenseQty;
+	private boolean OverDeliveryQty = false;
+	private boolean CarryForwardPrevDayDP = false;
+	
 	private int c_orderlineID;
 	MDispensePlan dispensePlan;
 	
@@ -45,6 +48,10 @@ public class ScheduleDispatchPlan extends SvrProcess {
 				DispenseQty = para[i].getParameterAsBigDecimal();
 			else if(name.toLowerCase().equals("deliverycontact"))
 				DeliveryContact = para[i].getParameterAsString();
+			else if(name.toLowerCase().equals("overunitdelivery"))
+				OverDeliveryQty = para[i].getParameterAsBoolean();
+			else if(name.toLowerCase().equals("allowcarryforward"))
+				CarryForwardPrevDayDP = para[i].getParameterAsBoolean();
 		}
 		c_orderlineID =  getRecord_ID();
 	}
@@ -73,6 +80,8 @@ public class ScheduleDispatchPlan extends SvrProcess {
 		dispensePlan.ShipmentDestination = ShipmentDestination;
 		dispensePlan.DispatchQty = DispenseQty;
 		dispensePlan.DeliveryContact = DeliveryContact;
+		dispensePlan.OverDeliveryQty = OverDeliveryQty;
+		dispensePlan.CarryForwardPrevDayDP = CarryForwardPrevDayDP;
 		
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -119,6 +128,9 @@ public class ScheduleDispatchPlan extends SvrProcess {
 					if(rs.getString(MDispensePlan.COLUMNNAME_DocStatus).equals(MDispensePlan.DOCSTATUS_Completed)) {
 						dispensePlan.createDPLinesFromOrder(rs);
 						i=i+1;
+					}
+					else if(rs.getString(MDispensePlan.COLUMNNAME_DocStatus).equals(MDispensePlan.DOCSTATUS_Closed)) {
+						throw new AdempiereException("Error: DP Line can't be created for closed order!");
 					}
 					else {
 						throw new AdempiereException("Error: Order Status should be completed before creating DP Line!");

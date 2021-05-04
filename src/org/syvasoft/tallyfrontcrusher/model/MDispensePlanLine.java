@@ -38,8 +38,14 @@ public class MDispensePlanLine extends X_TF_DispensePlanLine {
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
 		if(newRecord) {
-			String where = " C_OrderLine_ID = " + getC_OrderLine_ID();
+			String where = "";
 			
+			if(getShipmentTo() == null && getShipmentDestination() == null) {
+				where = " C_OrderLine_ID = " + getC_OrderLine_ID() + " AND TF_DispensePlan_ID = " + getTF_DispensePlan_ID();
+			}
+			else { 
+				where = " ShipmentTo = " + getShipmentTo() + " AND ShipmentDestination = " + getShipmentDestination() + " AND C_OrderLine_ID = " + getC_OrderLine_ID() + " AND TF_DispensePlan_ID = " + getTF_DispensePlan_ID();
+			}
 			MDispensePlanLine dispensePlanLine = new Query(getCtx(), MDispensePlanLine.Table_Name, where, get_TrxName()).first();
 			
 			if(dispensePlanLine != null) {
@@ -58,7 +64,14 @@ public class MDispensePlanLine extends X_TF_DispensePlanLine {
 			}
 		}
 		else {
-			String where = " C_OrderLine_ID = " + getC_OrderLine_ID() + " AND TF_DispensePlanLine_ID != " + getTF_DispensePlanLine_ID();
+			String where = "";
+			
+			if(getShipmentTo() == null && getShipmentDestination() == null) {
+				where = " C_OrderLine_ID = " + getC_OrderLine_ID()  + " AND TF_DispensePlan_ID = " + getTF_DispensePlan_ID() + " AND TF_DispensePlanLine_ID != " + getTF_DispensePlanLine_ID();	
+			}
+			else {
+				where = " ShipmentTo = " + getShipmentTo() + " AND ShipmentDestination = " + getShipmentDestination() + " AND C_OrderLine_ID = " + getC_OrderLine_ID()  + " AND TF_DispensePlan_ID = " + getTF_DispensePlan_ID() + " AND TF_DispensePlanLine_ID != " + getTF_DispensePlanLine_ID();
+			}
 			
 			MDispensePlanLine dispensePlanLine = new Query(getCtx(), MDispensePlanLine.Table_Name, where, get_TrxName()).first();
 			
@@ -67,6 +80,19 @@ public class MDispensePlanLine extends X_TF_DispensePlanLine {
 			}
 		}
 		
+		MDispensePlan dispensePlan = new MDispensePlan(getCtx(), getTF_DispensePlan_ID(), get_TrxName());
+		
+		if(dispensePlan.getDocStatus().equals(MDispensePlan.DOCSTATUS_Drafted)) {
+			setDocStatus(MDispensePlan.DOCSTATUS_Drafted);
+		}
+		else {
+			if(getBalanceDPQty().intValue() <= 0) {
+				setDocStatus(MDispensePlan.DOCSTATUS_Completed);
+			}
+			else {
+				setDocStatus(MDispensePlan.DOCSTATUS_InProgress);
+			}
+		}
 		return super.beforeSave(newRecord);
 	}
 	

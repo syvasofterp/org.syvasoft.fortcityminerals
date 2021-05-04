@@ -1,19 +1,14 @@
 package org.syvasoft.tallyfrontcrusher.model;
 
 import java.math.BigDecimal;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import org.adempiere.exceptions.DBException;
+import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.Query;
-import org.compiere.util.AdempiereUserError;
-import org.compiere.util.DB;
-import org.compiere.util.TimeUtil;
 
 public class MDispensePlan extends X_TF_DispensePlan {
 
@@ -32,16 +27,41 @@ public class MDispensePlan extends X_TF_DispensePlan {
 	
 	public String DeliveryContact;
 	
+	public boolean OverDeliveryQty;
+	
+	public boolean CarryForwardPrevDayDP;
+	
 	public MDispensePlan(Properties ctx, ResultSet rs, String trxName) {
 		super(ctx, rs, trxName);
 		// TODO Auto-generated constructor stub
 	}
 
-	public MDispensePlan(Properties ctx, int TF_DispensePlan_ID, String trxName) {
+	public MDispensePlan(Properties ctx, int TF_DispensePlan_ID, String trxName) {	
 		super(ctx, TF_DispensePlan_ID, trxName);
 		// TODO Auto-generated constructor stub
 	}
-
+	@Override
+	protected boolean beforeSave(boolean newRecord) {
+		if(newRecord) {
+			String where = " ScheduleDate = '" + getScheduleDate() + "'";
+			
+			MDispensePlan dispensePlan = new Query(getCtx(), MDispensePlan.Table_Name, where, get_TrxName()).first();
+			
+			if(dispensePlan != null) {
+				throw new AdempiereException("Schedule Date already exists in Dispatch Plan!");
+			}
+		}
+		else {
+			String where = " ScheduleDate = '" + getScheduleDate() + "' AND TF_DispensePlan_ID != " + getTF_DispensePlan_ID();
+			
+			MDispensePlan dispensePlan = new Query(getCtx(), MDispensePlan.Table_Name, where, get_TrxName()).first();
+			
+			if(dispensePlan != null) {
+				throw new AdempiereException("Schedule Date already exists in Dispatch Plan!");
+			}
+		}
+		return super.beforeSave(newRecord);
+	}
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {
 		if(newRecord) {
@@ -54,6 +74,13 @@ public class MDispensePlan extends X_TF_DispensePlan {
 		if(MDispensePlan.DOCSTATUS_Completed.equals(docAction)) {
 			setDocStatus(DOCSTATUS_Completed);
 			setProcessed(true);
+			
+			List<MDispensePlanLine> dispenseLines = new Query(getCtx(), MDispensePlanLine.Table_Name,"TF_DispensePlan_ID = " + getTF_DispensePlan_ID(),get_TrxName()).list();
+			
+			for(MDispensePlanLine dpline : dispenseLines) {
+				dpline.setDocStatus(DOCSTATUS_InProgress);
+				dpline.saveEx();
+			}
 		}			
 	}
 	public void reverseIt() {
@@ -147,6 +174,9 @@ public class MDispensePlan extends X_TF_DispensePlan {
 			if(ShipmentDestination != null) {
 				dispenseLine.setShipmentDestination(ShipmentDestination);
 			}
+			
+			dispenseLine.setOverUnitDelivery(OverDeliveryQty);			
+			dispenseLine.setAllowCarryForward(CarryForwardPrevDayDP);
 			
 			if(prevdispenseLine != null) {
 				dispenseLine.setOriginDate(prevdispenseLine.getOriginDate());
