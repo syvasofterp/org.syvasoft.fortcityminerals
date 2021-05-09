@@ -1,4 +1,4 @@
-package org.syvasoft.tallyfrontcrusher.process;
+	package org.syvasoft.tallyfrontcrusher.process;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -109,16 +109,114 @@ public class CreateShipmentForWE extends SvrProcess {
 				if(rv.isOwnVehicle() || (rv.isTransporter() && rv.getC_BPartner_ID() != we.getC_BPartner_ID() )) {
 					int Vendor_ID = rv.getC_BPartner_ID();
 					MDestination dest = new MDestination(getCtx(), we.getTF_Destination_ID(), get_TrxName());
-					BigDecimal RateMT = MLumpSumRentConfig.getRateMT(getCtx(), we.getAD_Org_ID(), Vendor_ID, we.getC_BPartner_ID(), we.getM_Product_ID(), 
+					BigDecimal distance = dest.getDistance();
+					
+					BigDecimal qty = BigDecimal.ZERO;
+					BigDecimal price = BigDecimal.ZERO;
+					BigDecimal RateMTKM = BigDecimal.ZERO;
+					
+					MLumpSumRentConfig lumpsumConfig;
+					int Load_UOM_ID = MSysConfig.getIntValue("LOAD_UOM", 1000072, we.getAD_Client_ID());
+					int KM_UOM_ID = MSysConfig.getIntValue("KM_UOM", 1000071, we.getAD_Client_ID());
+					int MT_KM_UOM_ID = MSysConfig.getIntValue("MT_KM_UOM", 1000071, we.getAD_Client_ID());
+					int Rent_UOM_ID = 0;
+					int TF_LumpSumRentConfig_ID = 0;
+					BigDecimal RentMargin = BigDecimal.ZERO;
+					
+					if(!we.isRentInclusive()) {
+						lumpsumConfig = MLumpSumRentConfig.getFreightPrice(getCtx(), we.getAD_Org_ID(), Vendor_ID, we.getC_BPartner_ID(), we.getM_Product_ID(), 
+							we.getTF_Destination_ID(), we.getTF_VehicleType_ID(), dest.getDistance(), we.getFreightRule_ID(), get_TrxName());
+						
+						if(lumpsumConfig != null) {
+							ioLine.set_ValueOfColumn("FreightRule", we.getFreightRule());
+							
+							if(we.getFreightRule_ID() == Load_UOM_ID)
+							{
+								Rent_UOM_ID = Load_UOM_ID;
+								qty = BigDecimal.ONE;
+								price = we.getRent_Amt();
+							}
+							else if(we.getFreightRule_ID() == KM_UOM_ID)
+							{
+								Rent_UOM_ID = KM_UOM_ID;
+								qty = dest.getDistance();
+								price = we.getRent_Amt();
+							}
+							else if(we.getFreightRule_ID() == MT_KM_UOM_ID)
+							{
+								Rent_UOM_ID = MT_KM_UOM_ID;
+								qty = dest.getDistance();
+								price = we.getRent_Amt();
+								RateMTKM = we.getFreightPrice();
+							}
+							else
+							{
+								Rent_UOM_ID = we.getFreightRule_ID();
+								qty = we.getNetWeightUnit();
+								price = we.getRent_Amt();
+							}
+							TF_LumpSumRentConfig_ID = lumpsumConfig.getTF_LumpSumRent_Config_ID();
+							RentMargin = (BigDecimal) lumpsumConfig.get_Value("RentMargin");
+						}
+						else {
+							Rent_UOM_ID = Load_UOM_ID;
+							qty = BigDecimal.ONE;
+							price = BigDecimal.ZERO;
+						}
+					}
+					else {
+						lumpsumConfig = MLumpSumRentConfig.getFreightPrice(getCtx(), we.getAD_Org_ID(), Vendor_ID, we.getC_BPartner_ID(), we.getM_Product_ID(), 
+								we.getTF_Destination_ID(), we.getTF_VehicleType_ID(), dest.getDistance(),we.getFreightRule_ID(), get_TrxName());
+							
+							if(lumpsumConfig != null) {
+								ioLine.set_ValueOfColumn("FreightRule", we.getFreightRule());
+								
+								if(lumpsumConfig.getC_UOM_ID() == Load_UOM_ID)
+								{
+									Rent_UOM_ID = Load_UOM_ID;
+									qty = BigDecimal.ONE;
+									price = lumpsumConfig.getFreightPrice();
+								}
+								else if(lumpsumConfig.getC_UOM_ID() == KM_UOM_ID)
+								{
+									Rent_UOM_ID = KM_UOM_ID;
+									qty = dest.getDistance();
+									price = lumpsumConfig.getFreightPrice();
+								}
+								else if(lumpsumConfig.getC_UOM_ID() == MT_KM_UOM_ID)
+								{
+									Rent_UOM_ID = MT_KM_UOM_ID;
+									qty = dest.getDistance();
+									price = lumpsumConfig.getFreightPrice();
+									RateMTKM = lumpsumConfig.getRateMTKM().multiply(we.getMT());
+								}
+								else
+								{
+									Rent_UOM_ID = lumpsumConfig.getC_UOM_ID();
+									qty = we.getNetWeightUnit();
+									price = lumpsumConfig.getFreightPrice();
+								}
+								TF_LumpSumRentConfig_ID = lumpsumConfig.getTF_LumpSumRent_Config_ID();
+								RentMargin = (BigDecimal) lumpsumConfig.get_Value("RentMargin");
+							}
+							else {
+								Rent_UOM_ID = Load_UOM_ID;
+								qty = BigDecimal.ONE;
+								price = BigDecimal.ZERO;
+							}
+					}
+						
+					/*BigDecimal RateMT = MLumpSumRentConfig.getRateMT(getCtx(), we.getAD_Org_ID(), Vendor_ID, we.getC_BPartner_ID(), we.getM_Product_ID(), 
 							we.getTF_Destination_ID(), we.getTF_VehicleType_ID(), dest.getDistance(), get_TrxName());
 					BigDecimal RateKM = MLumpSumRentConfig.getRateKm(getCtx(), we.getAD_Org_ID(), Vendor_ID, we.getC_BPartner_ID(), we.getM_Product_ID(), 
 							we.getTF_Destination_ID(), we.getTF_VehicleType_ID(), dest.getDistance(), get_TrxName());
 					BigDecimal RateMTKM = MLumpSumRentConfig.getRateMTKm(getCtx(), we.getAD_Org_ID(), Vendor_ID, we.getC_BPartner_ID(), we.getM_Product_ID(), 
 							we.getTF_Destination_ID(), we.getTF_VehicleType_ID(), dest.getDistance(), get_TrxName());
+					*/
 					
 					
-					BigDecimal distance = dest.getDistance();
-					int Rent_UOM_ID = 0;
+					
+					/*int Rent_UOM_ID = 0;
 					BigDecimal qty = BigDecimal.ZERO;
 					BigDecimal price = BigDecimal.ZERO;
 					if(we.getRent_Amt().doubleValue() > 0) {
@@ -152,7 +250,7 @@ public class CreateShipmentForWE extends SvrProcess {
 						qty = BigDecimal.ONE;
 						price = MLumpSumRentConfig.getLumpSumRent(getCtx(),we.getAD_Org_ID(),Vendor_ID, we.getC_BPartner_ID(), we.getM_Product_ID(), 
 								we.getTF_Destination_ID(), we.getTF_VehicleType_ID(), dest.getDistance(), get_TrxName());
-					}
+					}*/
 					
 					ioLine = new TF_MInOutLine(inout);
 					ioLine.setM_Product_ID(rv.getM_Product_ID());
@@ -162,6 +260,8 @@ public class CreateShipmentForWE extends SvrProcess {
 					ioLine.setRateMTKM(RateMTKM);
 					ioLine.setQty(qty);
 					ioLine.set_ValueOfColumn("Price", price);
+					ioLine.setTF_LumpSumRent_Config_ID(TF_LumpSumRentConfig_ID);
+					ioLine.setRentMargin(RentMargin);
 					ioLine.setM_Locator_ID(qty);
 					ioLine.setDescription("Destination : " + dest.getName());
 					ioLine.saveEx(get_TrxName());

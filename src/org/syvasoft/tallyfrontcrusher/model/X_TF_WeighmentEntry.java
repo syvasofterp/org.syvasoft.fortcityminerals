@@ -33,7 +33,7 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20210428L;
+	private static final long serialVersionUID = 20210508L;
 
     /** Standard Constructor */
     public X_TF_WeighmentEntry (Properties ctx, int TF_WeighmentEntry_ID, String trxName)
@@ -453,15 +453,15 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return (String)get_Value(COLUMNNAME_eWayBillNo);
 	}
 
-	/** Set Freight Price.
-		@param FreightPrice Freight Price	  */
+	/** Set Freight Rate.
+		@param FreightPrice Freight Rate	  */
 	public void setFreightPrice (BigDecimal FreightPrice)
 	{
 		set_Value (COLUMNNAME_FreightPrice, FreightPrice);
 	}
 
-	/** Get Freight Price.
-		@return Freight Price	  */
+	/** Get Freight Rate.
+		@return Freight Rate	  */
 	public BigDecimal getFreightPrice () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_FreightPrice);
@@ -470,30 +470,57 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return bd;
 	}
 
-	/** Lumpsum Rent Amount = LUMP */
-	public static final String FREIGHTRULE_LumpsumRentAmount = "LUMP";
-	/** Rate / MT = RMT */
-	public static final String FREIGHTRULE_RateMT = "RMT";
-	/** Rate / KM = RKM */
-	public static final String FREIGHTRULE_RateKM = "RKM";
-	/** Rate / MT / KM = RKMMT */
-	public static final String FREIGHTRULE_RateMTKM = "RKMMT";
+	public org.compiere.model.I_C_UOM getFreightRule() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_UOM)MTable.get(getCtx(), org.compiere.model.I_C_UOM.Table_Name)
+			.getPO(getFreightRule_ID(), get_TrxName());	}
+
 	/** Set Freight Rule.
-		@param FreightRule 
+		@param FreightRule_ID 
 		Freight Rule
 	  */
-	public void setFreightRule (String FreightRule)
+	public void setFreightRule_ID (int FreightRule_ID)
 	{
-
-		set_Value (COLUMNNAME_FreightRule, FreightRule);
+		if (FreightRule_ID < 1) 
+			set_Value (COLUMNNAME_FreightRule_ID, null);
+		else 
+			set_Value (COLUMNNAME_FreightRule_ID, Integer.valueOf(FreightRule_ID));
 	}
 
 	/** Get Freight Rule.
 		@return Freight Rule
 	  */
-	public String getFreightRule () 
+	public int getFreightRule_ID () 
 	{
-		return (String)get_Value(COLUMNNAME_FreightRule);
+		Integer ii = (Integer)get_Value(COLUMNNAME_FreightRule_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_UOM getFreightUOM() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_UOM)MTable.get(getCtx(), org.compiere.model.I_C_UOM.Table_Name)
+			.getPO(getFreightUOM_ID(), get_TrxName());	}
+
+	/** Set Freight UOM.
+		@param FreightUOM_ID Freight UOM	  */
+	public void setFreightUOM_ID (int FreightUOM_ID)
+	{
+		if (FreightUOM_ID < 1) 
+			set_Value (COLUMNNAME_FreightUOM_ID, null);
+		else 
+			set_Value (COLUMNNAME_FreightUOM_ID, Integer.valueOf(FreightUOM_ID));
+	}
+
+	/** Get Freight UOM.
+		@return Freight UOM	  */
+	public int getFreightUOM_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_FreightUOM_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	/** Set Gross Weight (Kg).
@@ -1204,8 +1231,8 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 
 	/** In Progress = IP */
 	public static final String STATUS_InProgress = "IP";
-	/** Completed = CO */
-	public static final String STATUS_Completed = "CO";
+	/** Unbilled = CO */
+	public static final String STATUS_UnBilled = "CO";
 	/** Billed = CL */
 	public static final String STATUS_Billed = "CL";
 	/** Voided = VO */
@@ -1363,8 +1390,8 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return (I_TF_DispensePlanLine)MTable.get(getCtx(), I_TF_DispensePlanLine.Table_Name)
 			.getPO(getTF_DispensePlanLine_ID(), get_TrxName());	}
 
-	/** Set Dispense Plan Line.
-		@param TF_DispensePlanLine_ID Dispense Plan Line	  */
+	/** Set Dispatch Plan Line.
+		@param TF_DispensePlanLine_ID Dispatch Plan Line	  */
 	public void setTF_DispensePlanLine_ID (int TF_DispensePlanLine_ID)
 	{
 		if (TF_DispensePlanLine_ID < 1) 
@@ -1373,8 +1400,8 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 			set_Value (COLUMNNAME_TF_DispensePlanLine_ID, Integer.valueOf(TF_DispensePlanLine_ID));
 	}
 
-	/** Get Dispense Plan Line.
-		@return Dispense Plan Line	  */
+	/** Get Dispatch Plan Line.
+		@return Dispatch Plan Line	  */
 	public int getTF_DispensePlanLine_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_TF_DispensePlanLine_ID);
@@ -1608,9 +1635,9 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return bd;
 	}
 
-	public I_TF_RentedVehicle getTransporter() throws RuntimeException
+	public org.compiere.model.I_C_BPartner getTransporter() throws RuntimeException
     {
-		return (I_TF_RentedVehicle)MTable.get(getCtx(), I_TF_RentedVehicle.Table_Name)
+		return (org.compiere.model.I_C_BPartner)MTable.get(getCtx(), org.compiere.model.I_C_BPartner.Table_Name)
 			.getPO(getTransporter_ID(), get_TrxName());	}
 
 	/** Set Transporter.

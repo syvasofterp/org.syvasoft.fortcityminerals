@@ -101,7 +101,7 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		
 		if(!newRecord && getWeighmentEntryType().equals(WEIGHMENTENTRYTYPE_Sales)
 				&& MSysConfig.getBooleanValue("WEIGHMENT_REVIEW", false)) {
-			if(is_Changed() && getStatus().equals(STATUS_Completed) && !is_ValueChanged(COLUMNNAME_Status)) {
+			if(is_Changed() && getStatus().equals(STATUS_UnBilled) && !is_ValueChanged(COLUMNNAME_Status)) {
 				setStatus(STATUS_UnderReview);
 			}
 		}
@@ -205,7 +205,7 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 			//setProcessed(true);
 	}
 	public void reverse() {
-		setStatus(STATUS_Completed);		
+		setStatus(STATUS_UnBilled);		
 		//setProcessed(false);
 		//Only Shipment document will set processed as True
 		//or false while reversing shipment document.
@@ -386,7 +386,7 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 			MWeighmentEntry primary = (MWeighmentEntry) (getTF_WeighmentEntryPrimary() != null ? getTF_WeighmentEntryPrimary() : this);
 			
 			if(primary.getInvoiceType().equals(INVOICETYPE_ActualWeight) && getInvoiceType().equalsIgnoreCase(INVOICETYPE_TPWeight))
-				throw new AdempiereException("Please change Primary DC's Invoice type to Actual Weight");
+				throw new AdempiereException("Please change Primary DC's Invoice type to TP Weight");
 			
 			totalActualWeight = primary.getNetWeightUnit();
 			

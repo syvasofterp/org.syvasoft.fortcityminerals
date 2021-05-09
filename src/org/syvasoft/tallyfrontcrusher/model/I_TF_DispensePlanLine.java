@@ -76,10 +76,10 @@ public interface I_TF_DispensePlanLine
     /** Column name BalanceDPQty */
     public static final String COLUMNNAME_BalanceDPQty = "BalanceDPQty";
 
-	/** Set Balance Dispense Qty	  */
+	/** Set Balance Dispatch Qty	  */
 	public void setBalanceDPQty (BigDecimal BalanceDPQty);
 
-	/** Get Balance Dispense Qty	  */
+	/** Get Balance Dispatch Qty	  */
 	public BigDecimal getBalanceDPQty();
 
     /** Column name BalanceQty */
@@ -261,10 +261,10 @@ public interface I_TF_DispensePlanLine
     /** Column name DeliveredDPQty */
     public static final String COLUMNNAME_DeliveredDPQty = "DeliveredDPQty";
 
-	/** Set Delivered Dispense Qty	  */
+	/** Set Delivered Dispatch Qty	  */
 	public void setDeliveredDPQty (BigDecimal DeliveredDPQty);
 
-	/** Get Delivered Dispense Qty	  */
+	/** Get Delivered Dispatch Qty	  */
 	public BigDecimal getDeliveredDPQty();
 
     /** Column name DeliveryContact */
@@ -305,10 +305,10 @@ public interface I_TF_DispensePlanLine
     /** Column name DispenseQty */
     public static final String COLUMNNAME_DispenseQty = "DispenseQty";
 
-	/** Set Dispense Qty	  */
+	/** Set Dispatch Qty	  */
 	public void setDispenseQty (BigDecimal DispenseQty);
 
-	/** Get Dispense Qty	  */
+	/** Get Dispatch Qty	  */
 	public BigDecimal getDispenseQty();
 
     /** Column name DocStatus */
@@ -717,10 +717,10 @@ public interface I_TF_DispensePlanLine
     /** Column name TF_DispensePlan_ID */
     public static final String COLUMNNAME_TF_DispensePlan_ID = "TF_DispensePlan_ID";
 
-	/** Set Dispense Plan	  */
+	/** Set Dispatch Plan	  */
 	public void setTF_DispensePlan_ID (int TF_DispensePlan_ID);
 
-	/** Get Dispense Plan	  */
+	/** Get Dispatch Plan	  */
 	public int getTF_DispensePlan_ID();
 
 	public I_TF_DispensePlan getTF_DispensePlan() throws RuntimeException;
@@ -728,10 +728,10 @@ public interface I_TF_DispensePlanLine
     /** Column name TF_DispensePlanLine_ID */
     public static final String COLUMNNAME_TF_DispensePlanLine_ID = "TF_DispensePlanLine_ID";
 
-	/** Set Dispense Plan Line	  */
+	/** Set Dispatch Plan Line	  */
 	public void setTF_DispensePlanLine_ID (int TF_DispensePlanLine_ID);
 
-	/** Get Dispense Plan Line	  */
+	/** Get Dispatch Plan Line	  */
 	public int getTF_DispensePlanLine_ID();
 
     /** Column name TF_DispensePlanLine_UU */

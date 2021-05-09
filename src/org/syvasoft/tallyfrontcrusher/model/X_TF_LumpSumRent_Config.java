@@ -32,7 +32,7 @@ public class X_TF_LumpSumRent_Config extends PO implements I_TF_LumpSumRent_Conf
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20200603L;
+	private static final long serialVersionUID = 20210509L;
 
     /** Standard Constructor */
     public X_TF_LumpSumRent_Config (Properties ctx, int TF_LumpSumRent_Config_ID, String trxName)
@@ -99,6 +99,51 @@ public class X_TF_LumpSumRent_Config extends PO implements I_TF_LumpSumRent_Conf
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_UOM getC_UOM() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_UOM)MTable.get(getCtx(), org.compiere.model.I_C_UOM.Table_Name)
+			.getPO(getC_UOM_ID(), get_TrxName());	}
+
+	/** Set UOM.
+		@param C_UOM_ID 
+		Unit of Measure
+	  */
+	public void setC_UOM_ID (int C_UOM_ID)
+	{
+		if (C_UOM_ID < 1) 
+			set_Value (COLUMNNAME_C_UOM_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_UOM_ID, Integer.valueOf(C_UOM_ID));
+	}
+
+	/** Get UOM.
+		@return Unit of Measure
+	  */
+	public int getC_UOM_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_UOM_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Set Freight Rate.
+		@param FreightPrice Freight Rate	  */
+	public void setFreightPrice (BigDecimal FreightPrice)
+	{
+		set_Value (COLUMNNAME_FreightPrice, FreightPrice);
+	}
+
+	/** Get Freight Rate.
+		@return Freight Rate	  */
+	public BigDecimal getFreightPrice () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_FreightPrice);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
 	}
 
 	public org.compiere.model.I_M_Product getM_Product() throws RuntimeException
@@ -226,6 +271,23 @@ public class X_TF_LumpSumRent_Config extends PO implements I_TF_LumpSumRent_Conf
 	public BigDecimal getRent_Amt () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Rent_Amt);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set Rent Margin.
+		@param RentMargin Rent Margin	  */
+	public void setRentMargin (BigDecimal RentMargin)
+	{
+		set_Value (COLUMNNAME_RentMargin, RentMargin);
+	}
+
+	/** Get Rent Margin.
+		@return Rent Margin	  */
+	public BigDecimal getRentMargin () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_RentMargin);
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;

@@ -158,6 +158,121 @@ public class MLumpSumRentConfig extends X_TF_LumpSumRent_Config {
 		return lumpDistConfig;
 	}
 	
+	public static MLumpSumRentConfig getFreightPrice(Properties ctx,int AD_Org_ID,int Vendor_ID, int C_BPartner_ID, int M_Product_ID, int TF_Destination_ID, 
+			int TF_VehicleType_ID,BigDecimal Distance, int C_UOM_ID, String trxName) {		
+		String Where;
+		//1 -- Vehicle Type, Vendor, Customer, Product
+		//2 -- Vehicle Type, Customer, Product
+		//3 -- Vehicle Type, Vendor, Product
+		//4 -- Vehicle Type, Vendor, Customer for any product
+		//5 -- Vehicle Type, Customer
+		//6 -- Vehicle Type, Vendor
+		//7 -- Vehicle Type, Product
+		//8 -- Vehicle Type
+		
+		if(Distance.doubleValue() == 0)
+			Distance = BigDecimal.ONE;
+		
+		//1 -- Vehicle Type, Vendor, Customer, Product
+		Where=" AD_Org_ID=? AND Vendor_ID = ? AND C_BPartner_ID = ? AND TF_VehicleType_ID=? AND M_Product_ID = ? AND "
+				+ "(COALESCE(TF_Destination_ID,0) = ? OR ? between minkm AND maxkm) AND C_UOM_ID = ?";
+		MLumpSumRentConfig lumpDistConfig=new Query(ctx, Table_Name, Where, trxName)
+				.setClient_ID()
+				.setOnlyActiveRecords(true)
+				.setParameters(AD_Org_ID,Vendor_ID, C_BPartner_ID, TF_VehicleType_ID, M_Product_ID, TF_Destination_ID, Distance, C_UOM_ID)
+				.setOrderBy("COALESCE(TF_Destination_ID,0) DESC")
+				.first();
+		if(lumpDistConfig != null)
+			return lumpDistConfig;
+		
+		//2 -- Vehicle Type, Customer, Product
+		Where=" AD_Org_ID=? AND Vendor_ID IS NULL AND  C_BPartner_ID = ? AND TF_VehicleType_ID=? AND M_Product_ID = ? AND "
+				+ "(COALESCE(TF_Destination_ID,0) = ? OR ? between minkm AND maxkm) AND C_UOM_ID = ?";
+		lumpDistConfig=new Query(ctx, Table_Name, Where, trxName)
+				.setClient_ID()
+				.setOnlyActiveRecords(true)
+				.setParameters(AD_Org_ID,C_BPartner_ID, TF_VehicleType_ID, M_Product_ID, TF_Destination_ID, Distance, C_UOM_ID)
+				.setOrderBy("COALESCE(TF_Destination_ID,0) DESC")
+				.first();
+		if(lumpDistConfig != null)
+			return lumpDistConfig;
+		
+		//3 -- Vehicle Type, Vendor, Product
+		Where=" AD_Org_ID=? AND Vendor_ID = ? AND  C_BPartner_ID IS NULL AND TF_VehicleType_ID=? AND M_Product_ID = ? AND "
+				+ "(COALESCE(TF_Destination_ID,0) = ? OR ? between minkm AND maxkm) AND C_UOM_ID = ?";
+		lumpDistConfig=new Query(ctx, Table_Name, Where, trxName)
+				.setClient_ID()
+				.setOnlyActiveRecords(true)
+				.setParameters(AD_Org_ID,Vendor_ID, TF_VehicleType_ID, M_Product_ID, TF_Destination_ID, Distance, C_UOM_ID)
+				.setOrderBy("COALESCE(TF_Destination_ID,0) DESC")
+				.first();
+		if(lumpDistConfig != null)
+			return lumpDistConfig;
+		
+		//4 -- Vehicle Type, Vendor, Customer for any product
+		Where=" AD_Org_ID=? AND C_BPartner_ID = ? AND Vendor_ID = ? AND TF_VehicleType_ID=? AND M_Product_ID IS NULL AND "
+				+ " (COALESCE(TF_Destination_ID,0) = ? OR ? between minkm AND maxkm) AND C_UOM_ID = ?";
+		lumpDistConfig=new Query(ctx, Table_Name, Where, trxName)
+				.setClient_ID()
+				.setOnlyActiveRecords(true)
+				.setParameters(AD_Org_ID,C_BPartner_ID, Vendor_ID, TF_VehicleType_ID,TF_Destination_ID, Distance, C_UOM_ID)
+				.setOrderBy("COALESCE(TF_Destination_ID,0) DESC")
+				.first();
+		if(lumpDistConfig != null)
+			return lumpDistConfig;
+		
+		//5 -- Vehicle Type, Customer
+		Where=" AD_Org_ID=? AND C_BPartner_ID = ? AND Vendor_ID IS NULL AND TF_VehicleType_ID=? AND M_Product_ID IS NULL AND "
+				+ " (COALESCE(TF_Destination_ID,0) = ? OR ? between minkm AND maxkm) AND C_UOM_ID = ?";
+		lumpDistConfig=new Query(ctx, Table_Name, Where, trxName)
+				.setClient_ID()
+				.setOnlyActiveRecords(true)
+				.setParameters(AD_Org_ID,C_BPartner_ID, TF_VehicleType_ID,TF_Destination_ID, Distance, C_UOM_ID)
+				.setOrderBy("COALESCE(TF_Destination_ID,0) DESC")
+				.first();
+		if(lumpDistConfig != null)
+			return lumpDistConfig;
+				
+		//6 -- Vehicle Type, Vendor
+		Where=" AD_Org_ID=? AND C_BPartner_ID IS NULL AND Vendor_ID = ? AND TF_VehicleType_ID=? AND M_Product_ID IS NULL AND "
+				+ " (COALESCE(TF_Destination_ID,0) = ? OR ? between minkm AND maxkm) AND C_UOM_ID = ?";
+		lumpDistConfig=new Query(ctx, Table_Name, Where, trxName)
+				.setClient_ID()
+				.setOnlyActiveRecords(true)
+				.setParameters(AD_Org_ID,Vendor_ID, TF_VehicleType_ID,TF_Destination_ID, Distance, C_UOM_ID)
+				.setOrderBy("COALESCE(TF_Destination_ID,0) DESC")
+				.first();
+		if(lumpDistConfig != null)
+			return lumpDistConfig;
+						
+		
+		//7 -- Vehicle Type, Product 
+		Where=" AD_Org_ID=? AND TF_VehicleType_ID=? AND M_Product_ID = ? AND C_BPartner_ID IS NULL AND Vendor_ID IS NULL AND "
+				+ "(COALESCE(TF_Destination_ID,0) = ? OR ? between minkm AND maxkm) AND C_UOM_ID = ?";
+		lumpDistConfig=new Query(ctx, Table_Name, Where, trxName)
+				.setClient_ID()
+				.setOnlyActiveRecords(true)
+				.setParameters(AD_Org_ID, TF_VehicleType_ID, M_Product_ID, TF_Destination_ID, Distance, C_UOM_ID)
+				.setOrderBy("COALESCE(TF_Destination_ID,0) DESC")
+				.first();
+		if(lumpDistConfig != null)
+			return lumpDistConfig;
+					
+		
+		//8 Vehicle Type
+		Where=" AD_Org_ID=? AND TF_VehicleType_ID=? AND Vendor_ID IS NULL AND C_BPartner_ID IS NULL AND M_Product_ID IS NULL AND "
+				+ " (COALESCE(TF_Destination_ID,0) = ? OR ? between minkm AND maxkm) AND C_UOM_ID = ?";
+		
+		lumpDistConfig=new Query(ctx, Table_Name, Where, trxName)
+				.setClient_ID()
+				.setOnlyActiveRecords(true)
+				.setParameters(AD_Org_ID,TF_VehicleType_ID,TF_Destination_ID, Distance, C_UOM_ID)
+				.setOrderBy("COALESCE(TF_Destination_ID,0) DESC")
+				.first();
+		
+		return lumpDistConfig;
+	}
+	
 	public static BigDecimal getRateMT(Properties ctx,int AD_Org_ID,int Vendor_ID, int C_BPartner_ID, int M_Product_ID, int TF_Destination_ID, 
 			int TF_VehicleType_ID,BigDecimal Distance, String trxName) {
 		BigDecimal RateMT=BigDecimal.ZERO;		

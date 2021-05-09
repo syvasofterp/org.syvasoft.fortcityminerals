@@ -293,24 +293,37 @@ public interface I_TF_WeighmentEntry
     /** Column name FreightPrice */
     public static final String COLUMNNAME_FreightPrice = "FreightPrice";
 
-	/** Set Freight Price	  */
+	/** Set Freight Rate	  */
 	public void setFreightPrice (BigDecimal FreightPrice);
 
-	/** Get Freight Price	  */
+	/** Get Freight Rate	  */
 	public BigDecimal getFreightPrice();
 
-    /** Column name FreightRule */
-    public static final String COLUMNNAME_FreightRule = "FreightRule";
+    /** Column name FreightRule_ID */
+    public static final String COLUMNNAME_FreightRule_ID = "FreightRule_ID";
 
 	/** Set Freight Rule.
 	  * Freight Rule
 	  */
-	public void setFreightRule (String FreightRule);
+	public void setFreightRule_ID (int FreightRule_ID);
 
 	/** Get Freight Rule.
 	  * Freight Rule
 	  */
-	public String getFreightRule();
+	public int getFreightRule_ID();
+
+	public org.compiere.model.I_C_UOM getFreightRule() throws RuntimeException;
+
+    /** Column name FreightUOM_ID */
+    public static final String COLUMNNAME_FreightUOM_ID = "FreightUOM_ID";
+
+	/** Set Freight UOM	  */
+	public void setFreightUOM_ID (int FreightUOM_ID);
+
+	/** Get Freight UOM	  */
+	public int getFreightUOM_ID();
+
+	public org.compiere.model.I_C_UOM getFreightUOM() throws RuntimeException;
 
     /** Column name GrossWeight */
     public static final String COLUMNNAME_GrossWeight = "GrossWeight";
@@ -790,10 +803,10 @@ public interface I_TF_WeighmentEntry
     /** Column name TF_DispensePlanLine_ID */
     public static final String COLUMNNAME_TF_DispensePlanLine_ID = "TF_DispensePlanLine_ID";
 
-	/** Set Dispense Plan Line	  */
+	/** Set Dispatch Plan Line	  */
 	public void setTF_DispensePlanLine_ID (int TF_DispensePlanLine_ID);
 
-	/** Get Dispense Plan Line	  */
+	/** Get Dispatch Plan Line	  */
 	public int getTF_DispensePlanLine_ID();
 
 	public I_TF_DispensePlanLine getTF_DispensePlanLine() throws RuntimeException;
@@ -913,7 +926,7 @@ public interface I_TF_WeighmentEntry
 	/** Get Transporter	  */
 	public int getTransporter_ID();
 
-	public I_TF_RentedVehicle getTransporter() throws RuntimeException;
+	public org.compiere.model.I_C_BPartner getTransporter() throws RuntimeException;
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";

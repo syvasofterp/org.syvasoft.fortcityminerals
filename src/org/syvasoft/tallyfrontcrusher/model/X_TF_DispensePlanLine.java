@@ -33,7 +33,7 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20210420L;
+	private static final long serialVersionUID = 20210506L;
 
     /** Standard Constructor */
     public X_TF_DispensePlanLine (Properties ctx, int TF_DispensePlanLine_ID, String trxName)
@@ -112,15 +112,15 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 		return false;
 	}
 
-	/** Set Balance Dispense Qty.
-		@param BalanceDPQty Balance Dispense Qty	  */
+	/** Set Balance Dispatch Qty.
+		@param BalanceDPQty Balance Dispatch Qty	  */
 	public void setBalanceDPQty (BigDecimal BalanceDPQty)
 	{
 		set_Value (COLUMNNAME_BalanceDPQty, BalanceDPQty);
 	}
 
-	/** Get Balance Dispense Qty.
-		@return Balance Dispense Qty	  */
+	/** Get Balance Dispatch Qty.
+		@return Balance Dispatch Qty	  */
 	public BigDecimal getBalanceDPQty () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_BalanceDPQty);
@@ -415,15 +415,15 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 		return (Timestamp)get_Value(COLUMNNAME_DateOrdered);
 	}
 
-	/** Set Delivered Dispense Qty.
-		@param DeliveredDPQty Delivered Dispense Qty	  */
+	/** Set Delivered Dispatch Qty.
+		@param DeliveredDPQty Delivered Dispatch Qty	  */
 	public void setDeliveredDPQty (BigDecimal DeliveredDPQty)
 	{
 		set_Value (COLUMNNAME_DeliveredDPQty, DeliveredDPQty);
 	}
 
-	/** Get Delivered Dispense Qty.
-		@return Delivered Dispense Qty	  */
+	/** Get Delivered Dispatch Qty.
+		@return Delivered Dispatch Qty	  */
 	public BigDecimal getDeliveredDPQty () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_DeliveredDPQty);
@@ -483,15 +483,15 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 		return bd;
 	}
 
-	/** Set Dispense Qty.
-		@param DispenseQty Dispense Qty	  */
+	/** Set Dispatch Qty.
+		@param DispenseQty Dispatch Qty	  */
 	public void setDispenseQty (BigDecimal DispenseQty)
 	{
 		set_Value (COLUMNNAME_DispenseQty, DispenseQty);
 	}
 
-	/** Get Dispense Qty.
-		@return Dispense Qty	  */
+	/** Get Dispatch Qty.
+		@return Dispatch Qty	  */
 	public BigDecimal getDispenseQty () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_DispenseQty);
@@ -500,12 +500,23 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 		return bd;
 	}
 
+	/** Drafted = DR */
+	public static final String DOCSTATUS_Drafted = "DR";
+	/** In Progress = IP */
+	public static final String DOCSTATUS_InProgress = "IP";
+	/** Completed = CO */
+	public static final String DOCSTATUS_Completed = "CO";
+	/** Closed = CL */
+	public static final String DOCSTATUS_Closed = "CL";
+	/** Revised = RV */
+	public static final String DOCSTATUS_Revised = "RV";
 	/** Set Document Status.
 		@param DocStatus 
 		The current status of the document
 	  */
 	public void setDocStatus (String DocStatus)
 	{
+
 		set_Value (COLUMNNAME_DocStatus, DocStatus);
 	}
 
@@ -1181,8 +1192,8 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 		return (I_TF_DispensePlan)MTable.get(getCtx(), I_TF_DispensePlan.Table_Name)
 			.getPO(getTF_DispensePlan_ID(), get_TrxName());	}
 
-	/** Set Dispense Plan.
-		@param TF_DispensePlan_ID Dispense Plan	  */
+	/** Set Dispatch Plan.
+		@param TF_DispensePlan_ID Dispatch Plan	  */
 	public void setTF_DispensePlan_ID (int TF_DispensePlan_ID)
 	{
 		if (TF_DispensePlan_ID < 1) 
@@ -1191,8 +1202,8 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 			set_ValueNoCheck (COLUMNNAME_TF_DispensePlan_ID, Integer.valueOf(TF_DispensePlan_ID));
 	}
 
-	/** Get Dispense Plan.
-		@return Dispense Plan	  */
+	/** Get Dispatch Plan.
+		@return Dispatch Plan	  */
 	public int getTF_DispensePlan_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_TF_DispensePlan_ID);
@@ -1201,8 +1212,8 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 		return ii.intValue();
 	}
 
-	/** Set Dispense Plan Line.
-		@param TF_DispensePlanLine_ID Dispense Plan Line	  */
+	/** Set Dispatch Plan Line.
+		@param TF_DispensePlanLine_ID Dispatch Plan Line	  */
 	public void setTF_DispensePlanLine_ID (int TF_DispensePlanLine_ID)
 	{
 		if (TF_DispensePlanLine_ID < 1) 
@@ -1211,8 +1222,8 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 			set_ValueNoCheck (COLUMNNAME_TF_DispensePlanLine_ID, Integer.valueOf(TF_DispensePlanLine_ID));
 	}
 
-	/** Get Dispense Plan Line.
-		@return Dispense Plan Line	  */
+	/** Get Dispatch Plan Line.
+		@return Dispatch Plan Line	  */
 	public int getTF_DispensePlanLine_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_TF_DispensePlanLine_ID);

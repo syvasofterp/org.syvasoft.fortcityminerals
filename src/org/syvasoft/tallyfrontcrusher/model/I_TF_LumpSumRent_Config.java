@@ -32,7 +32,7 @@ public interface I_TF_LumpSumRent_Config
     /** TableName=TF_LumpSumRent_Config */
     public static final String Table_Name = "TF_LumpSumRent_Config";
 
-    /** AD_Table_ID=1000304 */
+    /** AD_Table_ID=1000283 */
     public static final int Table_ID = MTable.getTable_ID(Table_Name);
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);
@@ -79,6 +79,21 @@ public interface I_TF_LumpSumRent_Config
 
 	public org.compiere.model.I_C_BPartner getC_BPartner() throws RuntimeException;
 
+    /** Column name C_UOM_ID */
+    public static final String COLUMNNAME_C_UOM_ID = "C_UOM_ID";
+
+	/** Set UOM.
+	  * Unit of Measure
+	  */
+	public void setC_UOM_ID (int C_UOM_ID);
+
+	/** Get UOM.
+	  * Unit of Measure
+	  */
+	public int getC_UOM_ID();
+
+	public org.compiere.model.I_C_UOM getC_UOM() throws RuntimeException;
+
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
 
@@ -94,6 +109,15 @@ public interface I_TF_LumpSumRent_Config
 	  * User who created this records
 	  */
 	public int getCreatedBy();
+
+    /** Column name FreightPrice */
+    public static final String COLUMNNAME_FreightPrice = "FreightPrice";
+
+	/** Set Freight Rate	  */
+	public void setFreightPrice (BigDecimal FreightPrice);
+
+	/** Get Freight Rate	  */
+	public BigDecimal getFreightPrice();
 
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";
@@ -176,6 +200,15 @@ public interface I_TF_LumpSumRent_Config
 
 	/** Get Rent (Amount)	  */
 	public BigDecimal getRent_Amt();
+
+    /** Column name RentMargin */
+    public static final String COLUMNNAME_RentMargin = "RentMargin";
+
+	/** Set Rent Margin	  */
+	public void setRentMargin (BigDecimal RentMargin);
+
+	/** Get Rent Margin	  */
+	public BigDecimal getRentMargin();
 
     /** Column name TF_Destination_ID */
     public static final String COLUMNNAME_TF_Destination_ID = "TF_Destination_ID";

@@ -102,6 +102,46 @@ public class TF_MInOutLine extends MInOutLine {
 		return bd;
 	}
 	
+	public static final String COLUMNNAME_RentMargin = "RentMargin";
+	
+	/** Set Rent Margin.
+	@param RentMargin Rent Margin	  */
+	public void setRentMargin (BigDecimal RentMargin)
+	{
+		set_Value (COLUMNNAME_RentMargin, RentMargin);
+	}
+	
+	/** Get Rent Margin.
+		@return Rent Margin	  */
+	public BigDecimal getRentMargin () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_RentMargin);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	public static final String COLUMNNAME_TF_LumpSumRent_Config_ID = "TF_LumpSumRent_Config_ID";
+	/** Set TF_LumpSumRent_Config.
+	@param TF_LumpSumRent_Config_ID TF_LumpSumRent_Config	  */
+	public void setTF_LumpSumRent_Config_ID (int TF_LumpSumRent_Config_ID)
+	{
+		if (TF_LumpSumRent_Config_ID < 1) 
+			set_Value(COLUMNNAME_TF_LumpSumRent_Config_ID, null);
+		else 
+			set_Value(COLUMNNAME_TF_LumpSumRent_Config_ID, Integer.valueOf(TF_LumpSumRent_Config_ID));
+	}
+	
+	/** Get TF_LumpSumRent_Config.
+		@return TF_LumpSumRent_Config	  */
+	public int getTF_LumpSumRent_Config_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_LumpSumRent_Config_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
 		log.fine("");

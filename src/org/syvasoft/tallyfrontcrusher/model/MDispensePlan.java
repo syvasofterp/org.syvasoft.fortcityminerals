@@ -19,17 +19,17 @@ public class MDispensePlan extends X_TF_DispensePlan {
 
 	public Timestamp ScheduleDate;
 	
-	public String ShipmentTo;
+	public String ShipmentTo = "";
 	
-	public String ShipmentDestination;
+	public String ShipmentDestination = "";
 	
-	public BigDecimal DispatchQty;
+	public BigDecimal DispatchQty = BigDecimal.ZERO;
 	
-	public String DeliveryContact;
+	public String DeliveryContact = "";
 	
-	public boolean OverDeliveryQty;
+	public boolean OverDeliveryQty = false;
 	
-	public boolean CarryForwardPrevDayDP;
+	public boolean CarryForwardPrevDayDP = false;
 	
 	public MDispensePlan(Properties ctx, ResultSet rs, String trxName) {
 		super(ctx, rs, trxName);
@@ -74,7 +74,7 @@ public class MDispensePlan extends X_TF_DispensePlan {
 		if(MDispensePlan.DOCSTATUS_Completed.equals(docAction)) {
 			setDocStatus(DOCSTATUS_Completed);
 			setProcessed(true);
-			
+			saveEx();
 			List<MDispensePlanLine> dispenseLines = new Query(getCtx(), MDispensePlanLine.Table_Name,"TF_DispensePlan_ID = " + getTF_DispensePlan_ID(),get_TrxName()).list();
 			
 			for(MDispensePlanLine dpline : dispenseLines) {
@@ -95,8 +95,14 @@ public class MDispensePlan extends X_TF_DispensePlan {
 	
 	public void createDPLinesFromOrder(ResultSet rs) throws SQLException {
 		
-		String sql = " TF_DispensePlan_ID = "+ getTF_DispensePlan_ID() + " AND C_OrderLine_ID = " + rs.getInt(MDispensePlanLine.COLUMNNAME_C_OrderLine_ID);
-		
+		String sql = "";
+		if(ShipmentTo == "" && ShipmentDestination == "") {
+			sql = " TF_DispensePlan_ID = "+ getTF_DispensePlan_ID() + " AND C_OrderLine_ID = " + rs.getInt(MDispensePlanLine.COLUMNNAME_C_OrderLine_ID);
+		}
+		else {
+			sql = " ShipmentTo = '" + ShipmentTo + "' AND ShipmentDestination = '" + ShipmentDestination + "' AND  TF_DispensePlan_ID = "+ getTF_DispensePlan_ID() + " AND C_OrderLine_ID = " + rs.getInt(MDispensePlanLine.COLUMNNAME_C_OrderLine_ID);
+		}
+			
 		MDispensePlanLine dispensePlan = new Query(getCtx(), MDispensePlanLine.Table_Name, sql, get_TrxName()).first();
 		
 		if(dispensePlan == null) {
@@ -185,7 +191,18 @@ public class MDispensePlan extends X_TF_DispensePlan {
 				dispenseLine.setOriginDate(getScheduleDate());
 			}
 			dispenseLine.setIsPriceConfidential(rs.getBoolean(MDispensePlanLine.COLUMNNAME_IsPriceConfidential));
+			
+			if(getDocStatus().equals(MDispensePlan.DOCSTATUS_Drafted)) {
+				dispenseLine.setDocStatus(MDispensePlanLine.DOCSTATUS_Drafted);
+			}
+			else {
+				dispenseLine.setDocStatus(MDispensePlanLine.DOCSTATUS_InProgress);				
+			}
+			
 			dispenseLine.saveEx();
+		}
+		else {
+			throw new AdempiereException("Selected Order Line already exists in Dispatch Plan!");
 		}
 	}
 	
@@ -248,6 +265,13 @@ public class MDispensePlan extends X_TF_DispensePlan {
 				dispenseLine.setOriginDate(getScheduleDate());
 			
 			dispenseLine.setIsPriceConfidential(rs.getBoolean(MDispensePlanLine.COLUMNNAME_IsPriceConfidential));
+			
+			if(getDocStatus().equals(MDispensePlan.DOCSTATUS_Drafted)) {
+				dispenseLine.setDocStatus(MDispensePlanLine.DOCSTATUS_Drafted);
+			}
+			else {
+				dispenseLine.setDocStatus(MDispensePlanLine.DOCSTATUS_InProgress);				
+			}
 			dispenseLine.saveEx();
 		}
 	}

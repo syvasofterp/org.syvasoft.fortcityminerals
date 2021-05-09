@@ -44,7 +44,7 @@ public class MDispensePlanLine extends X_TF_DispensePlanLine {
 				where = " C_OrderLine_ID = " + getC_OrderLine_ID() + " AND TF_DispensePlan_ID = " + getTF_DispensePlan_ID();
 			}
 			else { 
-				where = " ShipmentTo = " + getShipmentTo() + " AND ShipmentDestination = " + getShipmentDestination() + " AND C_OrderLine_ID = " + getC_OrderLine_ID() + " AND TF_DispensePlan_ID = " + getTF_DispensePlan_ID();
+				where = " ShipmentTo = '" + getShipmentTo() + "' AND ShipmentDestination = '" + getShipmentDestination() + "' AND C_OrderLine_ID = " + getC_OrderLine_ID() + " AND TF_DispensePlan_ID = " + getTF_DispensePlan_ID();
 			}
 			MDispensePlanLine dispensePlanLine = new Query(getCtx(), MDispensePlanLine.Table_Name, where, get_TrxName()).first();
 			
@@ -53,7 +53,7 @@ public class MDispensePlanLine extends X_TF_DispensePlanLine {
 			}
 			
 			if(getOriginDate() == null) {
-				MDispensePlan dispenseplan = new MDispensePlan(getCtx(), getTF_DispensePlan_ID() , get_TrxName());
+				MDispensePlan dispenseplan = new MDispensePlan(getCtx(), getTF_DispensePlan_ID() , get_TrxName());	
 				setOriginDate(dispenseplan.getScheduleDate());
 			}
 			if(getC_OrderLine_ID() > 0) {
@@ -70,7 +70,7 @@ public class MDispensePlanLine extends X_TF_DispensePlanLine {
 				where = " C_OrderLine_ID = " + getC_OrderLine_ID()  + " AND TF_DispensePlan_ID = " + getTF_DispensePlan_ID() + " AND TF_DispensePlanLine_ID != " + getTF_DispensePlanLine_ID();	
 			}
 			else {
-				where = " ShipmentTo = " + getShipmentTo() + " AND ShipmentDestination = " + getShipmentDestination() + " AND C_OrderLine_ID = " + getC_OrderLine_ID()  + " AND TF_DispensePlan_ID = " + getTF_DispensePlan_ID() + " AND TF_DispensePlanLine_ID != " + getTF_DispensePlanLine_ID();
+				where = " ShipmentTo = '" + getShipmentTo() + "' AND ShipmentDestination = '" + getShipmentDestination() + "' AND C_OrderLine_ID = " + getC_OrderLine_ID()  + " AND TF_DispensePlan_ID = " + getTF_DispensePlan_ID() + " AND TF_DispensePlanLine_ID != " + getTF_DispensePlanLine_ID();
 			}
 			
 			MDispensePlanLine dispensePlanLine = new Query(getCtx(), MDispensePlanLine.Table_Name, where, get_TrxName()).first();
@@ -82,15 +82,27 @@ public class MDispensePlanLine extends X_TF_DispensePlanLine {
 		
 		MDispensePlan dispensePlan = new MDispensePlan(getCtx(), getTF_DispensePlan_ID(), get_TrxName());
 		
-		if(dispensePlan.getDocStatus().equals(MDispensePlan.DOCSTATUS_Drafted)) {
-			setDocStatus(MDispensePlan.DOCSTATUS_Drafted);
-		}
-		else {
-			if(getBalanceDPQty().intValue() <= 0) {
-				setDocStatus(MDispensePlan.DOCSTATUS_Completed);
+		if(!getDocStatus().equals(MDispensePlanLine.DOCSTATUS_Closed)) {
+			if(dispensePlan.getDocStatus().equals(MDispensePlan.DOCSTATUS_Drafted)) {
+				setDocStatus(MDispensePlanLine.DOCSTATUS_Drafted);
 			}
 			else {
-				setDocStatus(MDispensePlan.DOCSTATUS_InProgress);
+				if(getBalanceDPQty().intValue() <= 0) {
+					setDocStatus(MDispensePlanLine.DOCSTATUS_Completed);
+				}
+				else {
+					if(newRecord) {
+						setDocStatus(MDispensePlanLine.DOCSTATUS_InProgress);
+					}
+					else {
+						if(is_ValueChanged(COLUMNNAME_DispenseQty)) {
+							setDocStatus(MDispensePlanLine.DOCSTATUS_Revised);	
+						}
+						else {
+							setDocStatus(MDispensePlanLine.DOCSTATUS_InProgress);
+						}
+					}
+				}
 			}
 		}
 		return super.beforeSave(newRecord);

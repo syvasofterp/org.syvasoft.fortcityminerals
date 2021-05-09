@@ -196,7 +196,7 @@ public class TF_MInOut extends MInOut {
 		inout.saveEx(get_TrxName());
 		
 		//Material Receipt Line
-		MInOutLine ioLine = new MInOutLine(inout);
+		TF_MInOutLine ioLine = new TF_MInOutLine(inout);
 		MWarehouse wh = (MWarehouse) getM_Warehouse();
 		
 		ioLine.setLine(10);
@@ -207,7 +207,9 @@ public class TF_MInOut extends MInOut {
 		int Rent_UOM_ID = 0;
 		BigDecimal qty = BigDecimal.ZERO;
 		BigDecimal price = BigDecimal.ZERO;		
-					
+		BigDecimal rentMargin = BigDecimal.ZERO;
+		
+		
 		//Get Vehicle Rent from Shipment Line
 		String whereClause = "M_InOut_ID = ? AND M_Product_ID = ? ";
 		TF_MInOutLine srcLine = new Query(getCtx(), TF_MInOutLine.Table_Name, whereClause, get_TrxName())
@@ -228,12 +230,16 @@ public class TF_MInOut extends MInOut {
 			qty = we.getMT();
 		}
 		
+		rentMargin = price.multiply(srcLine.getRentMargin().divide(new BigDecimal(100)));
+		price = price.subtract(rentMargin);
+		
 		ioLine.setQty(qty);
 		ioLine.setC_UOM_ID(Rent_UOM_ID);
 		ioLine.set_ValueOfColumn("TF_Destination_ID", srcLine.getTF_Destination_ID());
 		ioLine.set_ValueOfColumn("Distance", srcLine.getDistance());
 		ioLine.set_ValueOfColumn("RateMTKM", srcLine.getRateMTKM());
 		ioLine.set_ValueOfColumn("Price", price);
+		ioLine.set_ValueOfColumn("DocStatus", MWeighmentEntry.STATUS_UnBilled);
 		if(we.getTF_Destination_ID() > 0)
 			ioLine.setDescription("Destination : " + dest.getName());		
 		ioLine.saveEx(get_TrxName());
