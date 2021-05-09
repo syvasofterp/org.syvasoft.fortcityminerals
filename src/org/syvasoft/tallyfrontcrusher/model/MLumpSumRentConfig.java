@@ -337,6 +337,12 @@ public static BigDecimal getLumpSumRent(Properties ctx,int AD_Org_ID, int Vendor
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
 		// TODO Auto-generated method stub
+		
+		if(getTF_Destination_ID()==0 && (getMaxKM()==0 && getMinKM()==0)) {
+			throw new AdempiereException("Please enter either Destination or Kilometer Range!");
+		}
+		
+		
 		if(getTF_Destination_ID()>0 && (getMaxKM()>0 || getMinKM()>0)) {
 			throw new AdempiereException("Please enter either Destination or Kilometer Range!");
 		}

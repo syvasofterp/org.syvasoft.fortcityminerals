@@ -128,7 +128,7 @@ public class CreateShipmentForWE extends SvrProcess {
 							we.getTF_Destination_ID(), we.getTF_VehicleType_ID(), dest.getDistance(), we.getFreightRule_ID(), get_TrxName());
 						
 						if(lumpsumConfig != null) {
-							ioLine.set_ValueOfColumn("FreightRule", we.getFreightRule());
+							//ioLine.set_ValueOfColumn("FreightRule", we.getFreightRule());
 							
 							if(we.getFreightRule_ID() == Load_UOM_ID)
 							{
@@ -165,11 +165,11 @@ public class CreateShipmentForWE extends SvrProcess {
 						}
 					}
 					else {
-						lumpsumConfig = MLumpSumRentConfig.getFreightPrice(getCtx(), we.getAD_Org_ID(), Vendor_ID, we.getC_BPartner_ID(), we.getM_Product_ID(), 
-								we.getTF_Destination_ID(), we.getTF_VehicleType_ID(), dest.getDistance(),we.getFreightRule_ID(), get_TrxName());
+						lumpsumConfig = MLumpSumRentConfig.getLumpSumRentConfig(getCtx(), we.getAD_Org_ID(), Vendor_ID, we.getC_BPartner_ID(), we.getM_Product_ID(), 
+								we.getTF_Destination_ID(), we.getTF_VehicleType_ID(), dest.getDistance(), get_TrxName());
 							
 							if(lumpsumConfig != null) {
-								ioLine.set_ValueOfColumn("FreightRule", we.getFreightRule());
+								//ioLine.set_ValueOfColumn("FreightRule", we.getFreightRule());
 								
 								if(lumpsumConfig.getC_UOM_ID() == Load_UOM_ID)
 								{

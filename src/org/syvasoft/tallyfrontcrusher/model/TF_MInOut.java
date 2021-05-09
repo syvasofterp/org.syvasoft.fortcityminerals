@@ -226,8 +226,8 @@ public class TF_MInOut extends MInOut {
 				price = (BigDecimal) srcPrice; 
 		}
 		else {
-			Rent_UOM_ID = we.getMT_UOM_ID();
-			qty = we.getMT();
+			Rent_UOM_ID = we.getC_UOM_ID();
+			qty = we.getNetWeightUnit();
 		}
 		
 		rentMargin = price.multiply(srcLine.getRentMargin().divide(new BigDecimal(100)));
