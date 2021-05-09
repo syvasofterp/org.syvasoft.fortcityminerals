@@ -134,13 +134,13 @@ public class CreateShipmentForWE extends SvrProcess {
 							{
 								Rent_UOM_ID = Load_UOM_ID;
 								qty = BigDecimal.ONE;
-								price = we.getRent_Amt();
+								price = we.getFreightPrice();
 							}
 							else if(we.getFreightRule_ID() == KM_UOM_ID)
 							{
 								Rent_UOM_ID = KM_UOM_ID;
 								qty = dest.getDistance();
-								price = we.getRent_Amt();
+								price = we.getFreightPrice();
 							}
 							else if(we.getFreightRule_ID() == MT_KM_UOM_ID)
 							{
@@ -153,7 +153,7 @@ public class CreateShipmentForWE extends SvrProcess {
 							{
 								Rent_UOM_ID = we.getFreightRule_ID();
 								qty = we.getNetWeightUnit();
-								price = we.getRent_Amt();
+								price = we.getFreightPrice();
 							}
 							TF_LumpSumRentConfig_ID = lumpsumConfig.getTF_LumpSumRent_Config_ID();
 							RentMargin = (BigDecimal) lumpsumConfig.get_Value("RentMargin");
