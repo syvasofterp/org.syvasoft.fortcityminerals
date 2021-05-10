@@ -1,25 +1,35 @@
-﻿--DROP VIEW TF_UOM_V;
+-- *** SqlDbx Personal Edition ***
+-- !!! Not licensed for commercial use beyound 90 days evaluation period !!!
+-- For version limitations please check http://www.sqldbx.com/personal_edition.htm
+-- Number of queries executed: 2622, number of rows retrieved: 98720
 
-CREATE OR REPLACE VIEW TF_UOM_V AS
+DROP VIEW IF EXISTS adempiere.tf_uom_v;
 
-SELECT 
-	row_number() OVER (ORDER BY u.C_UOM_ID ) TF_UOM_V_ID, o.AD_client_ID, o.AD_Org_ID, 
-	u.IsActive, u.created, u.updated,
-	u.Createdby, u.Updatedby,
-	u.C_UOM_ID,
-	u.X12DE355, u.UOMSymbol,
-	u.Name,
-	c.M_Product_ID,
-	(SELECT p.Name FROM M_Product p WHERE c.M_Product_ID = p.M_Product_ID ) ProductName,
-	c.C_UOM_TO_ID,
-	(SELECT u1.Name From C_UOM u1 WHERE u1.C_UOM_ID = c.C_UOM_TO_ID) To_UOM,
-	c.dividerate
-FROM 
-	C_UOM u LEFT OUTER JOIN C_UOM_Conversion c
-	 ON u.C_UOM_ID = c.C_UOM_ID 
-	CROSS JOIN AD_Org o
-WHERE 
-	u.AD_Client_ID  IN (0,1000000) AND o.AD_Client_ID = 1000000 AND
-	o.AD_Org_ID > 0 AND u.UOMType = 'WE' 
+CREATE OR REPLACE VIEW adempiere.tf_uom_v AS
+ SELECT row_number() OVER (ORDER BY u.c_uom_id) AS tf_uom_v_id,
+    o.ad_client_id,
+    o.ad_org_id,
+    u.isactive,
+    u.created,
+    u.updated,
+    u.createdby,
+    u.updatedby,
+    u.c_uom_id,
+    u.x12de355,
+    u.uomsymbol,
+    u.name,
+    c.m_product_id,
+    ( SELECT p.name
+           
+FROM m_product p
+          WHERE (c.m_product_id = p.m_product_id)) AS productname,
+    c.c_uom_to_id,
+    ( SELECT u1.name
+           
+FROM c_uom u1
+          WHERE (u1.c_uom_id = c.c_uom_to_id)) AS to_uom,
+    c.dividerate
+   
+FROM (c_uom u LEFT JOIN c_uom_conversion c ON u.c_uom_id = c.c_uom_id )     CROSS JOIN ad_org o
+  WHERE u.isactive = 'Y' AND u.ad_client_id IN (0,1000000) AND o.ad_client_id = 1000000 AND o.ad_org_id > 0 AND u.uomtype='WE';
 
-;
