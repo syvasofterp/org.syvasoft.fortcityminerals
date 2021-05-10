@@ -97,9 +97,11 @@ public class ScheduleDispatchPlan extends SvrProcess {
 		rs = pstmt.executeQuery();
 		rs.next();
 	    int rowCount = rs.getInt(1);
+	    String msg = "";
 	    
 	    if((ShipmentTo != null || ShipmentDestination != null) && rowCount > 1) {
-	    	throw new AdempiereException("Error: Please choose one Order for Shipment to and Shipment Destination to schedule Dispatch Plan!");
+	    	msg = "Error: Please choose one Order for Shipment to and Shipment Destination to schedule Dispatch Plan!";
+	    	addLog(dispensePlan.get_Table_ID(), dispensePlan.getScheduleDate(), null, msg, dispensePlan.get_Table_ID(), dispensePlan.get_ID());
 	    }
 	    else {
 	    	if(c_orderlineID == 0) {
@@ -123,30 +125,35 @@ public class ScheduleDispatchPlan extends SvrProcess {
 				rs = pstmt.executeQuery();		
 				
 				
-				while (rs.next()) {
-					
+				while (rs.next()) {					
 					if(rs.getString(MDispensePlan.COLUMNNAME_DocStatus).equals(MDispensePlan.DOCSTATUS_Completed)) {
 						dispensePlan.createDPLinesFromOrder(rs);
+						addLog(dispensePlan.get_Table_ID(), dispensePlan.getCreated(), null, " Dispense Plan : " + dispensePlan.getDocumentNo() + " is created!", dispensePlan.get_Table_ID(), dispensePlan.get_ID());
 						i=i+1;
 					}
 					else if(rs.getString(MDispensePlan.COLUMNNAME_DocStatus).equals(MDispensePlan.DOCSTATUS_Closed)) {
-						throw new AdempiereException("Error: DP Line can't be created for closed order!");
+						msg = "Error: DP Line can't be created for closed order!";
+				    	addLog(dispensePlan.get_Table_ID(), dispensePlan.getScheduleDate(), null, msg, dispensePlan.get_Table_ID(), dispensePlan.get_ID());
 					}
 					else {
-						throw new AdempiereException("Error: Order Status should be completed before creating DP Line!");
+						msg = "Error: Order Status should be completed before creating DP Line!";
+				    	addLog(dispensePlan.get_Table_ID(), dispensePlan.getScheduleDate(), null, msg, dispensePlan.get_Table_ID(), dispensePlan.get_ID());
 					}
 					
 				}
 			} catch (SQLException e) {
 				rollback();
 				throw new DBException(e, sql);
-			} finally {
+			} 
+			catch (Exception ex) {
+				
+			}
+			finally {
 				DB.close(rs, pstmt);
 				rs = null;
 				pstmt = null;
 			}
-			
-			return i + " Orders are scheduled successfully!";
 	    }
+	    return i + " Orders are scheduled successfully!";
 	}
 }

@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Properties;
-
+import org.compiere.process.SvrProcess;
 import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.Query;
 
