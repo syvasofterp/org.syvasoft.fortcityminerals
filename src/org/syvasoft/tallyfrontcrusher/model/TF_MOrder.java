@@ -2279,6 +2279,15 @@ public class TF_MOrder extends MOrder {
 			List<TF_MInvoice> invList = new Query(getCtx(), TF_MInvoice.Table_Name, "C_Order_ID=? AND DocStatus=?", get_TrxName())
 				.setClient_ID().setParameters(getC_Order_ID(), DOCSTATUS_Completed).list();
 			for(TF_MInvoice inv : invList) {
+				//Keep the existing invoice no while reversing
+				if(!MSysConfig.getBooleanValue(MSysConfig.Invoice_ReverseUseNewNumber, true, getAD_Client_ID()) && invList.size() == 1) {						
+					
+					String sql = "SELECT COUNT(*) FROM C_Invoice WHERE TF_WeighmentEntry_ID = ?";
+					int revCount = DB.getSQLValue(get_TrxName(), sql, getTF_WeighmentEntry_ID());
+					revCount = revCount / 2 + 1;
+					inv.setDocumentNo(inv.getDocumentNo() + "-"+  revCount);
+					inv.saveEx();
+				}
 				if(!inv.reverseCorrectIt())
 					return false;
 				inv.saveEx();

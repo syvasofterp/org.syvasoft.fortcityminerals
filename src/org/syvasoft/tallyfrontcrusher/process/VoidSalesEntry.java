@@ -5,10 +5,12 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import org.adempiere.exceptions.AdempiereException;
+import org.compiere.model.MSysConfig;
 import org.compiere.model.Query;
 import org.compiere.process.DocAction;
 import org.compiere.process.ProcessInfoParameter;
 import org.compiere.process.SvrProcess;
+import org.compiere.util.DB;
 import org.compiere.util.Trx;
 import org.compiere.util.Util;
 import org.syvasoft.tallyfrontcrusher.model.MWeighmentEntry;
@@ -92,6 +94,17 @@ public class VoidSalesEntry extends SvrProcess {
 						.setParameters(wEntry.getTF_WeighmentEntry_ID(), wEntry.getC_BPartner_ID())
 						.list();
 				for(TF_MInvoice inv : invList) {
+					
+					//Keep the existing invoice no while reversing
+					if(!MSysConfig.getBooleanValue(MSysConfig.Invoice_ReverseUseNewNumber, true, getAD_Client_ID()) && invList.size() == 1) {						
+						
+						String sql = "SELECT COUNT(*) FROM C_Invoice WHERE TF_WeighmentEntry_ID = ?";
+						int revCount = DB.getSQLValue(get_TrxName(), sql, wEntry.getTF_WeighmentEntry_ID());
+						revCount = revCount / 2 + 1;
+						inv.setDocumentNo(inv.getDocumentNo() + "-"+  revCount);
+						inv.saveEx();
+					}
+					
 					inv.setDocAction(DocAction.ACTION_Reverse_Correct);
 					inv.voidIt();
 					inv.setDocStatus(TF_MOrder.DOCSTATUS_Reversed);

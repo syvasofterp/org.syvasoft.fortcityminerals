@@ -443,7 +443,7 @@ public class TF_MInvoice extends MInvoice {
 	protected boolean beforeSave(boolean newRecord) {				
 		MBPartner bp = MBPartner.get(getCtx(), getC_BPartner_ID());
 		setBPartner(bp);
-		if(newRecord) {
+		if(newRecord) {			
 			if(getPaymentRule() == null)
 				setPaymentRule(PAYMENTRULE_OnCredit);
 			
@@ -465,14 +465,11 @@ public class TF_MInvoice extends MInvoice {
 				}
 			}
 		}
-		if(!newRecord && isSOTrx() && is_ValueChanged(COLUMNNAME_DocStatus) && getDocStatus().equals(DOCSTATUS_Reversed)) {
-			setDocumentNo(getDocumentNo() + "-" + getC_Invoice_ID());
-		}
-		
+				
 		boolean result = super.beforeSave(newRecord);
 		return result;
 	}
-
+	
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
 		success = super.afterSave(newRecord, success);		
