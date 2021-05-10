@@ -93,10 +93,10 @@ public class MDispensePlan extends X_TF_DispensePlan {
 		
 	}
 	
-	public void createDPLinesFromOrder(ResultSet rs) throws SQLException {
+	public MDispensePlanLine createDPLinesFromOrder(ResultSet rs) throws SQLException {
 		
 		String sql = "";
-		if(ShipmentTo == "" && ShipmentDestination == "") {
+		if(ShipmentTo == null && ShipmentDestination == null) {
 			sql = " TF_DispensePlan_ID = "+ getTF_DispensePlan_ID() + " AND C_OrderLine_ID = " + rs.getInt(MDispensePlanLine.COLUMNNAME_C_OrderLine_ID);
 		}
 		else {
@@ -104,9 +104,9 @@ public class MDispensePlan extends X_TF_DispensePlan {
 		}
 			
 		MDispensePlanLine dispensePlan = new Query(getCtx(), MDispensePlanLine.Table_Name, sql, get_TrxName()).first();
+		MDispensePlanLine dispenseLine = new MDispensePlanLine(getCtx(), 0, get_TrxName());
 		
-		if(dispensePlan == null) {
-			MDispensePlanLine dispenseLine = new MDispensePlanLine(getCtx(), 0, get_TrxName());
+		if(dispensePlan == null) {		
 			
 			sql = " C_OrderLine_ID = "+ rs.getInt(MDispensePlanLine.COLUMNNAME_C_OrderLine_ID);
 			
@@ -173,7 +173,7 @@ public class MDispensePlan extends X_TF_DispensePlan {
 			dispenseLine.setLineNetAmt(rs.getBigDecimal(MDispensePlanLine.COLUMNNAME_LineNetAmt));	
 			dispenseLine.setTF_DispensePlan_ID(getTF_DispensePlan_ID());
 			
-			if(ShipmentTo != "") {
+			if(ShipmentTo != null) {
 				dispenseLine.setShipmentTo(ShipmentTo);
 			}
 
@@ -204,6 +204,8 @@ public class MDispensePlan extends X_TF_DispensePlan {
 		else {
 			throw new AdempiereException("Selected Order Line already exists in Dispatch Plan!");
 		}
+		
+		return dispenseLine;
 	}
 	
 	public void createDPLinesFromPendingDP(ResultSet rs) throws SQLException {

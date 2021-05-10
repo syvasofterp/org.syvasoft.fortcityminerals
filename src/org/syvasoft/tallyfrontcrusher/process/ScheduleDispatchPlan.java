@@ -17,6 +17,7 @@ import org.compiere.util.DB;
 import org.syvasoft.tallyfrontcrusher.model.MCrusherProduction;
 import org.syvasoft.tallyfrontcrusher.model.MDispensePlan;
 import org.syvasoft.tallyfrontcrusher.model.MDispensePlanLine;
+import org.syvasoft.tallyfrontcrusher.model.TF_MOrder;
 
 public class ScheduleDispatchPlan extends SvrProcess {
 	
@@ -101,7 +102,7 @@ public class ScheduleDispatchPlan extends SvrProcess {
 	    
 	    if((ShipmentTo != null || ShipmentDestination != null) && rowCount > 1) {
 	    	msg = "Error: Please choose one Order for Shipment to and Shipment Destination to schedule Dispatch Plan!";
-	    	addLog(dispensePlan.get_Table_ID(), dispensePlan.getScheduleDate(), null, msg, dispensePlan.get_Table_ID(), dispensePlan.get_ID());
+	    	addLog(msg);
 	    }
 	    else {
 	    	if(c_orderlineID == 0) {
@@ -127,17 +128,18 @@ public class ScheduleDispatchPlan extends SvrProcess {
 				
 				while (rs.next()) {					
 					if(rs.getString(MDispensePlan.COLUMNNAME_DocStatus).equals(MDispensePlan.DOCSTATUS_Completed)) {
-						dispensePlan.createDPLinesFromOrder(rs);
-						addLog(dispensePlan.get_Table_ID(), dispensePlan.getCreated(), null, " Dispense Plan : " + dispensePlan.getDocumentNo() + " is created!", dispensePlan.get_Table_ID(), dispensePlan.get_ID());
+						MDispensePlanLine dispensePlanLine = dispensePlan.createDPLinesFromOrder(rs);
+						addLog(dispensePlan.get_Table_ID(), dispensePlan.getCreated(), null, " Dispense Plan : " + dispensePlan.getDocumentNo() + " is created!", dispensePlanLine.get_Table_ID(), dispensePlanLine.get_ID());
 						i=i+1;
 					}
 					else if(rs.getString(MDispensePlan.COLUMNNAME_DocStatus).equals(MDispensePlan.DOCSTATUS_Closed)) {
 						msg = "Error: DP Line can't be created for closed order!";
-				    	addLog(dispensePlan.get_Table_ID(), dispensePlan.getScheduleDate(), null, msg, dispensePlan.get_Table_ID(), dispensePlan.get_ID());
+						addLog(msg);
 					}
 					else {
+						
 						msg = "Error: Order Status should be completed before creating DP Line!";
-				    	addLog(dispensePlan.get_Table_ID(), dispensePlan.getScheduleDate(), null, msg, dispensePlan.get_Table_ID(), dispensePlan.get_ID());
+				    	addLog(dispensePlan.get_Table_ID(), dispensePlan.getScheduleDate(), null, msg, TF_MOrder.Table_ID, rs.getInt("c_order_id"));
 					}
 					
 				}
@@ -146,7 +148,7 @@ public class ScheduleDispatchPlan extends SvrProcess {
 				throw new DBException(e, sql);
 			} 
 			catch (Exception ex) {
-				
+				addLog(ex.getMessage());
 			}
 			finally {
 				DB.close(rs, pstmt);
