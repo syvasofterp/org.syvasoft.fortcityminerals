@@ -1,51 +1,33 @@
-DROP VIEW IF EXISTS adempiere.tf_dispenseplanline_v;
+DROP VIEW IF EXISTS adempiere.tf_transporterdc_v;
 
-CREATE OR REPLACE VIEW adempiere.tf_dispenseplanline_v AS
- SELECT dl.tf_dispenseplanline_id,
-    dl.scheduledate,
-    dl.ad_client_id,
-    dl.ad_org_id,
-    dl.isactive,
-    dl.created,
-    dl.createdby,
-    dl.updated,
-    dl.updatedby,
-    dl.documentno,
-    dl.dateordered,
-    dl.c_orderline_id,
-    dl.c_bpartner_id,
-    dl.paymentrule,
-    dl.m_product_id,
-    dl.dispenseqty,
-    dl.delivereddpqty,
-    dl.balancedpqty,
-    dl.c_uom_id,
-    dl.tf_destination_id,
-    dl.isroyaltypassinclusive,
-    dl.isrentinclusive,
-    dl.istaxincluded,
-    dl.priceentered,
-    dl.ispriceconfidential,
-    dl.deliverycontact,
-    dl.shipmentto,
-    dl.shipmentdestination,
-    dl.priority,
-    dl.type,
-    dl.origindate,
-    dl.overunitdelivery,
-    dl.allowcarryforward,
-    dl.docstatus,
-        CASE
-            WHEN trunc(d.scheduledate) < trunc(getdate()) AND dl.docstatus IN ('RV','IP') THEN 'Red'
-            WHEN dl.docstatus = 'CO' THEN 'Green'
-            ELSE 'Black'
-        END AS color,
-    d.tf_dispenseplan_id,
-    1000334 AS ad_table_id,
-    dl.tf_dispenseplanline_id AS record_id
+CREATE OR REPLACE VIEW adempiere.tf_transporterdc_v AS
+ SELECT io.ad_client_id,
+    io.ad_org_id,
+    io.m_inout_id,
+    io.documentno AS shipmentno,
+    io.docstatus,
+    iol.docstatus receiptlinestatus,
+    io.movementdate,
+    w.documentno AS dcno,
+    io.c_bpartner_id AS vendor_id,
+    iol.tf_lumpsumrent_config_id,
+    iol.tf_destination_id,
+    w.c_bpartner_id,
+    w.m_product_id,
+    w.tf_rentedvehicle_id,
+    iol.c_uom_id,
+    iol.price,
+    rent.rentmargin,
+    io.created,
+    io.createdby,
+    iol.updated,
+    iol.updatedby,
+    io.isactive,
+    319 AS ad_table_id,
+    io.m_inout_id AS record_id
    
-FROM (tf_dispenseplanline dl
-     JOIN tf_dispenseplan d ON ((d.tf_dispenseplan_id = dl.tf_dispenseplan_id)))
-  WHERE 
-  	(dl.docstatus  IN ('IP','RV') AND (dl.allowcarryforward = 'Y' OR trunc(dl.scheduledate) = trunc(getdate()))) OR 
-	(dl.docstatus = 'CO' AND (dl.overunitdelivery = 'Y' OR trunc(dl.scheduledate) = trunc(getdate())))
+FROM m_inout io JOIN m_inoutline iol ON iol.m_inout_id = io.m_inout_id
+     JOIN tf_weighmententry w ON w.tf_weighmententry_id = io.tf_weighmententry_id
+     LEFT JOIN tf_lumpsumrent_config rent ON rent.tf_lumpsumrent_config_id = iol.tf_lumpsumrent_config_id
+  WHERE io.issotrx = 'N';
+
