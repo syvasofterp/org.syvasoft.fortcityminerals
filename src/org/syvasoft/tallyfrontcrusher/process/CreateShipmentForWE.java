@@ -145,9 +145,9 @@ public class CreateShipmentForWE extends SvrProcess {
 							else if(we.getFreightRule_ID() == MT_KM_UOM_ID)
 							{
 								Rent_UOM_ID = MT_KM_UOM_ID;
-								qty = dest.getDistance();
-								price = we.getRent_Amt();
-								RateMTKM = we.getFreightPrice();
+								qty = we.getMT();
+								price = we.getFreightPrice();
+								RateMTKM =  we.getFreightPrice();
 							}
 							else
 							{
@@ -186,9 +186,9 @@ public class CreateShipmentForWE extends SvrProcess {
 								else if(lumpsumConfig.getC_UOM_ID() == MT_KM_UOM_ID)
 								{
 									Rent_UOM_ID = MT_KM_UOM_ID;
-									qty = dest.getDistance();
+									qty = we.getMT();
 									price = lumpsumConfig.getFreightPrice();
-									RateMTKM = lumpsumConfig.getRateMTKM().multiply(we.getMT());
+									RateMTKM = lumpsumConfig.getFreightPrice();
 								}
 								else
 								{
