@@ -93,6 +93,8 @@ public class CrusherEventHandler extends AbstractEventHandler {
 			Env.setContext(Env.getCtx(), "#C_Element_ID", COA_ID);
 			TF_MOrg org = new TF_MOrg(Env.getCtx(), Env.getAD_Org_ID(Env.getCtx()), null);
 			Env.setContext(Env.getCtx(), "#OrgType", org.getOrgType());			
+			MUser user = new MUser(Env.getCtx(),  Env.getAD_User_ID(Env.getCtx()), null);
+			Env.setContext(Env.getCtx(), "#C_BPartnerCustomer_ID", user.getC_BPartner_ID());
 			return;
 		}
 		

@@ -79,7 +79,7 @@ public class MDispensePlanLine extends X_TF_DispensePlanLine {
 				throw new AdempiereException("Selected Order Line already exists in Dispatch Plan!");
 			}
 		}
-		
+		setDispensePlanHeader();
 		MDispensePlan dispensePlan = new MDispensePlan(getCtx(), getTF_DispensePlan_ID(), get_TrxName());
 		
 		if(!getDocStatus().equals(MDispensePlanLine.DOCSTATUS_Closed)) {
@@ -106,6 +106,24 @@ public class MDispensePlanLine extends X_TF_DispensePlanLine {
 			}
 		}
 		return super.beforeSave(newRecord);
+	}
+	
+	private void setDispensePlanHeader() {
+		String whereClause = "AD_Org_ID = ? AND ScheduleDate=?";
+		MDispensePlan dp = new Query(getCtx(), MDispensePlan.Table_Name, whereClause, get_TrxName())
+				.setClient_ID()
+				.setParameters(getAD_Org_ID(), getScheduleDate())
+				.first();
+		if(dp == null) {
+			dp = new MDispensePlan(getCtx(), 0, get_TrxName());
+			dp.setAD_Org_ID(getAD_Org_ID());
+			dp.setScheduleDate(getScheduleDate());
+			dp.setDocStatus(DOCSTATUS_Drafted);
+			dp.saveEx();
+		}
+		
+		setTF_DispensePlan_ID(dp.get_ID());
+			
 	}
 	
 	@Override
