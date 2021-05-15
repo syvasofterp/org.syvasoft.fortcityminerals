@@ -120,6 +120,26 @@ public class TF_MInOutLine extends MInOutLine {
 			 return Env.ZERO;
 		return bd;
 	}
+	
+	public static final String COLUMNNAME_Price = "Price";
+	
+	/** Set Rent Margin.
+	@param RentMargin Rent Margin	  */
+	public void setPrice (BigDecimal Price)
+	{
+		set_Value (COLUMNNAME_Price, Price);
+	}
+	
+	/** Get Rent Margin.
+		@return Rent Margin	  */
+	public BigDecimal getPrice() 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_Price);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
 
 	public static final String COLUMNNAME_TF_LumpSumRent_Config_ID = "TF_LumpSumRent_Config_ID";
 	/** Set TF_LumpSumRent_Config.

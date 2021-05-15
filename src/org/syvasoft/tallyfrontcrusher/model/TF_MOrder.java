@@ -2209,7 +2209,7 @@ public class TF_MOrder extends MOrder {
 		closeTokenNo();
 		closeYardEntry();
 		createInvoiceCustomer();
-		
+		createInvoiceVendor();
 		
 		createTaxInvoice();
 		
@@ -2264,11 +2264,11 @@ public class TF_MOrder extends MOrder {
 	public boolean voidIt() {
 		
 		//POS Order's MR and Invoice should be reversed.
-		if(getC_DocType_ID() == 1000050 || getC_DocType_ID() == 1000041 ||
+		if(getC_DocType_ID() == 1000050 || getC_DocType_ID() == 1000041 || getC_DocType_ID() == getC_VendorInvoiceDocType_ID() ||
 				getC_DocType_ID() == GSTOrderDocType_ID(getCtx()) || getC_DocType_ID() == NonGSTOrderDocType_ID(getCtx())) {
 			//MR/Shipment reverse Correct
-			List<MInOut> inOutList = new Query(getCtx(), MInOut.Table_Name, "C_Order_ID=? AND DocStatus=?", get_TrxName())
-				.setClient_ID().setParameters(getC_Order_ID(),DOCSTATUS_Completed).list();
+			List<MInOut> inOutList = new Query(getCtx(), MInOut.Table_Name, "C_Order_ID=? AND DocStatus=? AND ? != ?", get_TrxName())
+				.setClient_ID().setParameters(getC_Order_ID(),DOCSTATUS_Completed,getC_DocType_ID(), getC_VendorInvoiceDocType_ID()).list();
 			for(MInOut inout : inOutList) {
 				if(!inout.reverseCorrectIt())
 					return false;				
@@ -2293,6 +2293,7 @@ public class TF_MOrder extends MOrder {
 				inv.saveEx();
 			}
 			
+			reverseTransportReceiptStatus();
 			
 		}
 		
@@ -3637,5 +3638,87 @@ public class TF_MOrder extends MOrder {
 				.setParameters(getC_Order_ID())
 				.list();
 		return list;
+	}
+	
+	public static int getC_VendorInvoiceDocType_ID() {
+		int DocType_ID = MSysConfig.getIntValue("VENDORINVOICE_ORDER_ID", 1000064, Env.getAD_Client_ID(Env.getCtx()));
+		return DocType_ID;
+	}
+	
+	public void createInvoiceVendor() {
+						
+		if(getC_DocTypeTarget_ID() != getC_VendorInvoiceDocType_ID())
+			return;
+		
+		//Invoice Header
+		TF_MBPartner bp = new TF_MBPartner(getCtx(), getC_BPartner_ID(), get_TrxName());
+		
+		TF_MInvoice invoice = new TF_MInvoice(getCtx(), 0, get_TrxName());
+		invoice.setC_Order_ID(getC_Order_ID());
+		invoice.setClientOrg(getAD_Client_ID(), getAD_Org_ID());
+		invoice.setC_DocTypeTarget_ID(getC_DocTypeTarget().getC_DocTypeInvoice_ID());	// Counter Doc
+		invoice.setIsSOTrx(isSOTrx());
+		invoice.setDateInvoiced(getDateAcct());
+		invoice.setDateAcct(getDateAcct());
+		
+		//
+		invoice.setSalesRep_ID(Env.getAD_User_ID(getCtx()));		
+		invoice.setPaymentRule(getPaymentRule());
+		invoice.setC_PaymentTerm_ID(getC_PaymentTerm_ID());
+		//
+		
+		invoice.setBPartner(bp);				
+		invoice.setVehicleNo(getVehicleNo());
+		invoice.setDescription(getDescription());
+		
+		//Price List
+				
+		
+		invoice.setM_PriceList_ID(getM_PriceList_ID());
+		invoice.setC_Currency_ID(getC_Currency_ID());
+		
+		//Financial Dimension - Profit Center		
+		//invoice.setC_Project_ID(counterProj.getC_Project_ID());
+		//invoice.setTF_WeighmentEntry_ID(getTF_WeighmentEntry_ID());
+		
+		invoice.saveEx();
+		
+		for(MOrderLine oLine : getLines() ) {
+			//Create Invoice Line
+			MInvoiceLine invLine = new MInvoiceLine(invoice);
+			int M_Product_ID = oLine.getM_Product_ID();
+			invLine.setM_Product_ID(M_Product_ID , true);
+			invLine.setC_UOM_ID(oLine.getC_UOM_ID());
+			invLine.setQty(oLine.getQtyOrdered());
+			invLine.setPriceActual(oLine.getPriceActual());
+			invLine.setPriceList(oLine.getPriceList());
+			invLine.setPriceLimit(oLine.getPriceLimit());
+			invLine.setPriceEntered(oLine.getPriceEntered());		
+			invLine.setC_Tax_ID(oLine.getC_Tax_ID());
+			invLine.setDescription(oLine.getDescription());
+			invLine.setC_Project_ID(getC_Project_ID());
+			invLine.setC_OrderLine_ID(oLine.getC_OrderLine_ID());
+			if(oLine.getPriceEntered().doubleValue() == 0) {
+				throw new AdempiereException("Invalid Price at Line: " + oLine.getLine() + " for Product Name : " + oLine.getM_Product().getName());
+			}			
+			invLine.saveEx();
+		}
+		
+		//Invoice DocAction
+		if (!invoice.processIt(DocAction.ACTION_Complete))
+			throw new AdempiereException("Failed when processing document - " + invoice.getProcessMsg());
+		invoice.saveEx();
+	}
+	
+	private void reverseTransportReceiptStatus() {
+		String whereClause = " C_OrderLIne_ID IN (SELECT C_OrderLine.C_OrderLine_ID FROM C_OrderLine WHERE C_OrderLine.C_Order_ID = ?)";
+		List<TF_MInOutLine> ioLists = new Query(getCtx(), TF_MInOutLine.Table_Name, whereClause, get_TrxName())
+				.setClient_ID()
+				.setParameters(getC_Order_ID())
+				.list();
+		for(TF_MInOutLine ioLine : ioLists) {
+			ioLine.set_ValueOfColumn("DocStatus", MWeighmentEntry.STATUS_UnBilled);
+			ioLine.saveEx();
+		}
 	}
 }
