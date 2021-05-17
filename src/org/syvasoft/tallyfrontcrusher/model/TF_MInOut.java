@@ -230,8 +230,8 @@ public class TF_MInOut extends MInOut {
 			qty = we.getNetWeightUnit();
 		}
 		
-		rentMargin = price.multiply(srcLine.getRentMargin().divide(new BigDecimal(100)));
-		price = price.subtract(rentMargin);
+		/*rentMargin = price.multiply(srcLine.getRentMargin().divide(new BigDecimal(100)));
+		price = price.subtract(rentMargin);*/
 		
 		ioLine.setQty(qty);
 		ioLine.setC_UOM_ID(Rent_UOM_ID);

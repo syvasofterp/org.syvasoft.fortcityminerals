@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.util.Properties;
 
 import org.adempiere.exceptions.AdempiereException;
+import org.compiere.model.MSysConfig;
 import org.compiere.model.Query;
 
 public class MLumpSumRentConfig extends X_TF_LumpSumRent_Config {
@@ -338,13 +339,18 @@ public static BigDecimal getLumpSumRent(Properties ctx,int AD_Org_ID, int Vendor
 	protected boolean beforeSave(boolean newRecord) {
 		// TODO Auto-generated method stub
 		
-		if(getTF_Destination_ID()==0 && (getMaxKM()==0 && getMinKM()==0)) {
-			throw new AdempiereException("Please enter either Destination or Kilometer Range!");
-		}
-		
-		
-		if(getTF_Destination_ID()>0 && (getMaxKM()>0 || getMinKM()>0)) {
-			throw new AdempiereException("Please enter either Destination or Kilometer Range!");
+		int KM_UOM_ID = MSysConfig.getIntValue("KM_UOM", 1000071, getAD_Client_ID());
+		int MT_KM_UOM_ID = MSysConfig.getIntValue("MT_KM_UOM", 1000071, getAD_Client_ID());
+
+		if(getC_UOM_ID() != KM_UOM_ID && getC_UOM_ID() != MT_KM_UOM_ID) {
+			if(getTF_Destination_ID()==0 && (getMaxKM()==0 && getMinKM()==0)) {
+				throw new AdempiereException("Please enter either Destination or Kilometer Range!");
+			}
+			
+			
+			if(getTF_Destination_ID()>0 && (getMaxKM()>0 || getMinKM()>0)) {
+				throw new AdempiereException("Please enter either Destination or Kilometer Range!");
+			}
 		}
 		
 		BigDecimal lumpsumRent=getRent_Amt();

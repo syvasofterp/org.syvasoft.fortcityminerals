@@ -12,11 +12,15 @@
     io.c_bpartner_id AS vendor_id,
     iol.tf_lumpsumrent_config_id,
     iol.tf_destination_id,
+    iol.distance,
+    iol.qtyentered,
     w.c_bpartner_id,
     w.m_product_id,
     w.tf_rentedvehicle_id,
     iol.c_uom_id,
+    u.name uomname,
     iol.price,
+    CASE WHEN iol.c_uom_id = 1000081 THEN iol.distance * iol.qtyentered * iol.price ELSE iol.qtyentered * iol.price END totalamt,
     rent.rentmargin,
     io.created,
     io.createdby,
@@ -29,4 +33,5 @@
 FROM m_inout io JOIN m_inoutline iol ON iol.m_inout_id = io.m_inout_id
      JOIN tf_weighmententry w ON w.tf_weighmententry_id = io.tf_weighmententry_id
      LEFT JOIN tf_lumpsumrent_config rent ON rent.tf_lumpsumrent_config_id = iol.tf_lumpsumrent_config_id
+     LEFT JOIN c_uom u ON u.c_uom_id = iol.c_uom_id
   WHERE io.issotrx = 'N' AND io.docstatus <> 'RE';
