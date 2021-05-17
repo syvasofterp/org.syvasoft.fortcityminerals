@@ -19,6 +19,7 @@ import org.compiere.model.MInOutLine;
 import org.compiere.model.MInvoice;
 import org.compiere.model.MInvoiceLine;
 import org.compiere.model.MJournal;
+import org.compiere.model.MMatchInv;
 import org.compiere.model.MOrder;
 import org.compiere.model.MPInstance;
 import org.compiere.model.MPayment;
@@ -79,6 +80,7 @@ public class CrusherEventHandler extends AbstractEventHandler {
 		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MTransaction.Table_Name);
 		registerTableEvent(IEventTopics.PO_AFTER_NEW, MTyre.Table_Name);
 		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MJournal.Table_Name);
+		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MMatchInv.Table_Name);
 		registerEvent(IEventTopics.AFTER_LOGIN);		
 
 	}
@@ -93,6 +95,8 @@ public class CrusherEventHandler extends AbstractEventHandler {
 			Env.setContext(Env.getCtx(), "#C_Element_ID", COA_ID);
 			TF_MOrg org = new TF_MOrg(Env.getCtx(), Env.getAD_Org_ID(Env.getCtx()), null);
 			Env.setContext(Env.getCtx(), "#OrgType", org.getOrgType());			
+			MUser user = new MUser(Env.getCtx(),  Env.getAD_User_ID(Env.getCtx()), null);
+			Env.setContext(Env.getCtx(), "#C_BPartnerCustomer_ID", user.getC_BPartner_ID());
 			return;
 		}
 		
@@ -194,6 +198,7 @@ public class CrusherEventHandler extends AbstractEventHandler {
 					iLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_TonePerBucket, oLine.getTonePerBucket());
 					iLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_BucketRate, oLine.getBucketRate());
 					iLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_TotalLoad, oLine.getTotalLoad());
+					iLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_TF_WeighmentEntry_ID, oLine.getTF_WeighmentEntry_ID() == 0 ? null : oLine.getTF_WeighmentEntry_ID());
 					iLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_TF_VehicleType_ID, oLine.getTF_VehicleType_ID() == 0 ? null : oLine.getTF_VehicleType_ID());
 				}
 			}
@@ -302,6 +307,16 @@ public class CrusherEventHandler extends AbstractEventHandler {
 				int C_Project_ID = revJ.get_ValueAsInt("C_Project_ID");
 				if(C_Project_ID > 0)
 					j.set_ValueOfColumn("C_Project_ID", C_Project_ID);
+			}
+		}
+		else if (po instanceof MMatchInv) {
+			MMatchInv inv = (MMatchInv) po;
+			
+			if(IEventTopics.PO_BEFORE_NEW.equals(event.getTopic())) {
+				MInOutLine ioLine = new MInOutLine(inv.getCtx(), inv.getM_InOutLine_ID(), inv.get_TrxName());
+				if(inv.getC_InvoiceLine().getC_OrderLine_ID() > 0) 
+					ioLine.setC_OrderLine_ID(inv.getC_InvoiceLine().getC_OrderLine_ID());
+				ioLine.saveEx();
 			}
 		}
 	}
