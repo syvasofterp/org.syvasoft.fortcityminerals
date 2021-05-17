@@ -345,6 +345,10 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 	public int getMT_UOM_ID() {
 		return MSysConfig.getIntValue("TONNAGE_UOM", 1000069, getAD_Client_ID());
 	}
+	
+	public int getMTKM_UOM_ID() {
+		return MSysConfig.getIntValue("MT_KM_UOM", 1000081, getAD_Client_ID());
+	}
 			
 	public BigDecimal getMovementQty() {
 		int MT_UOM_ID = MSysConfig.getIntValue("TONNAGE_UOM", 1000069, getAD_Client_ID());

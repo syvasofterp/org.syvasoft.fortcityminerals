@@ -3,7 +3,7 @@
 SET SEARCH_PATH TO adempiere;
 
 --SELECT * FROM C_Order WHERE ad_client_id=1000000;
-
+ DELETE FROM S_ExpenseType WHERE ad_client_id=1000000;
 -- !!!dangerous!!! This scripts deletes ADempiere and iDempiere transactional data. 
 -- This script is useful when you need to prepare for go-live and you need to delete all your test data.
 -- Be aware this updates all clients including GardenWorld
@@ -46,8 +46,9 @@ set search_path to adempiere;
 -- ENHANCEMENT COMMENT END
 
 -- Crusher Tables
-DELETE FROM tf_dispenseplanline;
-DELETE FROM tf_dispenseplan;
+--DELETE FROM tf_dispenseplanline;
+--DELETE FROM tf_dispenseplan;
+DELETE FROM pm_machinestmt;
 UPDATE TF_Boulder_Receipt SET Subcon_Invoice_ID = NULL, TF_Employee_Salary_ID = NULL, TF_Vehicle_Rent_ID = NULL,
 	TF_Quarry_Rent_ID = NULL;
 UPDATE TF_Employee_Salary SET GL_Journal_ID = NULL;

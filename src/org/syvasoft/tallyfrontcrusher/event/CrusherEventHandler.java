@@ -198,6 +198,7 @@ public class CrusherEventHandler extends AbstractEventHandler {
 					iLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_TonePerBucket, oLine.getTonePerBucket());
 					iLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_BucketRate, oLine.getBucketRate());
 					iLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_TotalLoad, oLine.getTotalLoad());
+					iLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_TF_WeighmentEntry_ID, oLine.getTF_WeighmentEntry_ID() == 0 ? null : oLine.getTF_WeighmentEntry_ID());
 					iLine.set_ValueOfColumn(TF_MOrderLine.COLUMNNAME_TF_VehicleType_ID, oLine.getTF_VehicleType_ID() == 0 ? null : oLine.getTF_VehicleType_ID());
 				}
 			}

@@ -1,8 +1,8 @@
- DROP VIEW adempiere.tf_transporterdc_v;
+/***/DROP VIEW adempiere.tf_transporterdc_v;
 
-CREATE OR REPLACE VIEW adempiere.tf_transporterdc_v
+/***/CREATE  VIEW adempiere.tf_transporterdc_v
  AS
- SELECT io.ad_client_id,
+ /***/SELECT io.ad_client_id,
     io.ad_org_id,
     io.m_inout_id,
 	iol.m_inoutline_id,
@@ -40,6 +40,3 @@ CREATE OR REPLACE VIEW adempiere.tf_transporterdc_v
      LEFT JOIN tf_lumpsumrent_config rent ON rent.tf_lumpsumrent_config_id = iol.tf_lumpsumrent_config_id
      LEFT JOIN c_uom u ON u.c_uom_id = iol.c_uom_id
   WHERE io.issotrx = 'N'::bpchar AND io.docstatus <> 'RE'::bpchar;
-
-ALTER TABLE adempiere.tf_transporterdc_v
-    OWNER TO adempiere;
