@@ -152,8 +152,10 @@ public class MNotification extends X_TF_SmsNotification {
 		String msg = getSimpleMessageForConfiguredRecipients(ID);
 		
 		for(MNotificationRecipient recipient : getRecipients() ) {
-			WhatsAppUtil waUtil = new WhatsAppUtil();
-			waUtil.sendMessage(getAD_Client_ID(), getAD_Org_ID(), recipient.getChatId(), recipient.getMobileNo(), msg);
+			if(isWhatsApp()) {
+				WhatsAppUtil waUtil = new WhatsAppUtil();
+				waUtil.sendMessage(getAD_Client_ID(), getAD_Org_ID(), recipient.getChatId(), recipient.getMobileNo(), msg);
+			}
 		}
 		
 	}
