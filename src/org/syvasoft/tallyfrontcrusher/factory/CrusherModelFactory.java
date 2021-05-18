@@ -273,6 +273,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return MDispensePlan.class;
 		else if(MDispensePlanLine.Table_Name.equals(tableName))
 			return MDispensePlanLine.class;
+		else if(MLumpSumRentRentMargin.Table_Name.equals(tableName))
+			return MLumpSumRentRentMargin.class;
 		return null;
 	}
 
@@ -539,6 +541,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MDispensePlan(ctx, Record_ID, trxName);
 		else if(MDispensePlanLine.Table_Name.equals(tableName))
 			return new MDispensePlanLine(ctx, Record_ID, trxName);
+		else if(MLumpSumRentRentMargin.Table_Name.equals(tableName))
+			return new MLumpSumRentRentMargin(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -807,6 +811,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MDispensePlan(ctx, rs, trxName);
 		else if(MDispensePlanLine.Table_Name.equals(tableName))
 			return new MDispensePlanLine(ctx, rs, trxName);
+		else if(MLumpSumRentRentMargin.Table_Name.equals(tableName))
+			return new MLumpSumRentRentMargin(ctx, rs, trxName);
 		return null;
 	}
 
