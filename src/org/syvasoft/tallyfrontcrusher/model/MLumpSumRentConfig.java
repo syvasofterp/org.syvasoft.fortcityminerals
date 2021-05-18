@@ -280,7 +280,7 @@ public class MLumpSumRentConfig extends X_TF_LumpSumRent_Config {
 		
 		//3 -- Vehicle Type, Vendor, Customer for any product
 		Where=" AD_Org_ID=? AND C_BPartner_ID = ? AND Vendor_ID = ? AND TF_VehicleType_ID=? AND M_Product_ID IS NULL AND "
-				+ " (COALESCE(TF_Destination_ID,0) = ? OR (C_UOM_ID IN (?,?) OR TF_Destination_ID IS NULL))  AND C_UOM_ID = ?";
+				+ "(COALESCE(TF_Destination_ID,0) = ? OR (C_UOM_ID IN (?,?) OR TF_Destination_ID IS NULL)) AND C_UOM_ID = ?";
 		lumpDistConfig=new Query(ctx, Table_Name, Where, trxName)
 				.setClient_ID()
 				.setOnlyActiveRecords(true)
@@ -293,7 +293,7 @@ public class MLumpSumRentConfig extends X_TF_LumpSumRent_Config {
 		
 		//4 -- Vehicle Type, Vendor
 		Where=" AD_Org_ID=? AND C_BPartner_ID IS NULL AND Vendor_ID = ? AND TF_VehicleType_ID=? AND M_Product_ID IS NULL AND "
-				+ " (COALESCE(TF_Destination_ID,0) = ? OR (C_UOM_ID IN (?,?) OR TF_Destination_ID IS NULL)) AND C_UOM_ID = ?";
+				+ "(COALESCE(TF_Destination_ID,0) = ? OR (C_UOM_ID IN (?,?) OR TF_Destination_ID IS NULL)) AND C_UOM_ID = ?";
 		lumpDistConfig=new Query(ctx, Table_Name, Where, trxName)
 				.setClient_ID()
 				.setOnlyActiveRecords(true)
@@ -402,9 +402,9 @@ public static BigDecimal getLumpSumRent(Properties ctx,int AD_Org_ID, int Vendor
 	}
 	
 	public BigDecimal getCustomerFreightMargin(int C_BPartner_ID) {
-		String whereClause = "C_BPartner_ID = ?";
+		String whereClause = "C_BPartner_ID = ? AND TF_LumpSumRent_Config_ID = ?";
 		MLumpSumRentRentMargin margin = new Query(getCtx(), MLumpSumRentRentMargin.Table_Name, whereClause, get_TrxName())
-				.setParameters(C_BPartner_ID)
+				.setParameters(C_BPartner_ID, getTF_LumpSumRent_Config_ID())
 				.setClient_ID()
 				.setOnlyActiveRecords(true)
 				.first();
