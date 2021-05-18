@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.util.Properties;
 
 import org.adempiere.base.IModelFactory;
-import org.compiere.model.MProductionPlan;
 import org.compiere.model.PO;
 import org.compiere.util.Env;
 import org.syvasoft.tallyfrontcrusher.model.*;
@@ -209,10 +208,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return MProductionPlant.class;
 		else if(MPriceListUOM.Table_Name.equals(tableName))			
 			return MPriceListUOM.class;
-		else if(MSmsNotification.Table_Name.equals(tableName))			
-			return MSmsNotification.class;
-		else if(MSmsReceipient.Table_Name.equals(tableName))			
-			return MSmsReceipient.class;
+		else if(MNotification.Table_Name.equals(tableName))			
+			return MNotification.class;
+		else if(MNotificationRecipient.Table_Name.equals(tableName))			
+			return MNotificationRecipient.class;
 		else if(MTRTaxInvoice.Table_Name.equals(tableName))			
 			return MTRTaxInvoice.class;
 		else if(MTRTaxInvoiceLine.Table_Name.equals(tableName))			
@@ -477,10 +476,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MProductionPlant(ctx, Record_ID, trxName);
 		else if(MPriceListUOM.Table_Name.equals(tableName))			
 			return new MPriceListUOM(ctx, Record_ID, trxName);
-		else if(MSmsNotification.Table_Name.equals(tableName))			
-			return new MSmsNotification(ctx, Record_ID, trxName);
-		else if(MSmsReceipient.Table_Name.equals(tableName))			
-			return new MSmsReceipient(ctx, Record_ID, trxName);
+		else if(MNotification.Table_Name.equals(tableName))			
+			return new MNotification(ctx, Record_ID, trxName);
+		else if(MNotificationRecipient.Table_Name.equals(tableName))			
+			return new MNotificationRecipient(ctx, Record_ID, trxName);
 		else if(MTRTaxInvoice.Table_Name.equals(tableName))			
 			return new MTRTaxInvoice(ctx, Record_ID, trxName);
 		else if(MTRTaxInvoiceLine.Table_Name.equals(tableName))			
@@ -747,10 +746,10 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MProductionPlant(ctx, rs, trxName);
 		else if(MPriceListUOM.Table_Name.equals(tableName))			
 			return new MPriceListUOM(ctx, rs, trxName);
-		else if(MSmsNotification.Table_Name.equals(tableName))			
-			return new MSmsNotification(ctx, rs, trxName);
-		else if(MSmsReceipient.Table_Name.equals(tableName))			
-			return new MSmsReceipient(ctx, rs, trxName);
+		else if(MNotification.Table_Name.equals(tableName))			
+			return new MNotification(ctx, rs, trxName);
+		else if(MNotificationRecipient.Table_Name.equals(tableName))			
+			return new MNotificationRecipient(ctx, rs, trxName);
 		else if(MTRTaxInvoice.Table_Name.equals(tableName))			
 			return new MTRTaxInvoice(ctx, rs, trxName);
 		else if(MTRTaxInvoiceLine.Table_Name.equals(tableName))			

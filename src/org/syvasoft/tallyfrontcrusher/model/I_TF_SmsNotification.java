@@ -138,6 +138,33 @@ public interface I_TF_SmsNotification
 	  */
 	public boolean isActive();
 
+    /** Column name IsScheduled */
+    public static final String COLUMNNAME_IsScheduled = "IsScheduled";
+
+	/** Set Scheduled	  */
+	public void setIsScheduled (boolean IsScheduled);
+
+	/** Get Scheduled	  */
+	public boolean isScheduled();
+
+    /** Column name IsSMS */
+    public static final String COLUMNNAME_IsSMS = "IsSMS";
+
+	/** Set SMS	  */
+	public void setIsSMS (boolean IsSMS);
+
+	/** Get SMS	  */
+	public boolean isSMS();
+
+    /** Column name IsWhatsApp */
+    public static final String COLUMNNAME_IsWhatsApp = "IsWhatsApp";
+
+	/** Set WhatsApp	  */
+	public void setIsWhatsApp (boolean IsWhatsApp);
+
+	/** Get WhatsApp	  */
+	public boolean isWhatsApp();
+
     /** Column name Message */
     public static final String COLUMNNAME_Message = "Message";
 
