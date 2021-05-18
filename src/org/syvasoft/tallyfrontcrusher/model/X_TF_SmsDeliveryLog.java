@@ -30,7 +30,7 @@ public class X_TF_SmsDeliveryLog extends PO implements I_TF_SmsDeliveryLog, I_Pe
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20191003L;
+	private static final long serialVersionUID = 20210518L;
 
     /** Standard Constructor */
     public X_TF_SmsDeliveryLog (Properties ctx, int TF_SmsDeliveryLog_ID, String trxName)

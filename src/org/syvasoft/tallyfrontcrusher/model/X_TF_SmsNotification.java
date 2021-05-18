@@ -30,7 +30,7 @@ public class X_TF_SmsNotification extends PO implements I_TF_SmsNotification, I_
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20191003L;
+	private static final long serialVersionUID = 20210518L;
 
     /** Standard Constructor */
     public X_TF_SmsNotification (Properties ctx, int TF_SmsNotification_ID, String trxName)
@@ -38,7 +38,12 @@ public class X_TF_SmsNotification extends PO implements I_TF_SmsNotification, I_
       super (ctx, TF_SmsNotification_ID, trxName);
       /** if (TF_SmsNotification_ID == 0)
         {
-			setDeliveryTime (null);
+			setIsScheduled (false);
+// N
+			setIsSMS (false);
+// N
+			setIsWhatsApp (false);
+// N
 			setMessage (null);
 			setName (null);
 			setSql (null);
@@ -143,6 +148,69 @@ public class X_TF_SmsNotification extends PO implements I_TF_SmsNotification, I_
 	public String getHeaderSql () 
 	{
 		return (String)get_Value(COLUMNNAME_HeaderSql);
+	}
+
+	/** Set Scheduled.
+		@param IsScheduled Scheduled	  */
+	public void setIsScheduled (boolean IsScheduled)
+	{
+		set_Value (COLUMNNAME_IsScheduled, Boolean.valueOf(IsScheduled));
+	}
+
+	/** Get Scheduled.
+		@return Scheduled	  */
+	public boolean isScheduled () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsScheduled);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	/** Set SMS.
+		@param IsSMS SMS	  */
+	public void setIsSMS (boolean IsSMS)
+	{
+		set_Value (COLUMNNAME_IsSMS, Boolean.valueOf(IsSMS));
+	}
+
+	/** Get SMS.
+		@return SMS	  */
+	public boolean isSMS () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsSMS);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	/** Set WhatsApp.
+		@param IsWhatsApp WhatsApp	  */
+	public void setIsWhatsApp (boolean IsWhatsApp)
+	{
+		set_Value (COLUMNNAME_IsWhatsApp, Boolean.valueOf(IsWhatsApp));
+	}
+
+	/** Get WhatsApp.
+		@return WhatsApp	  */
+	public boolean isWhatsApp () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsWhatsApp);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
 	}
 
 	/** Set Message.

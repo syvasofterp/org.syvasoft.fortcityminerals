@@ -9,6 +9,7 @@ import java.util.Properties;
 
 import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.Query;
+import org.compiere.util.Env;
 
 public class MDispensePlanLine extends X_TF_DispensePlanLine {
 
@@ -131,6 +132,9 @@ public class MDispensePlanLine extends X_TF_DispensePlanLine {
 		if(newRecord) {
 			
 		}
+		int C_BPartnerCustomer_ID = Env.getContextAsInt(getCtx(), "#C_BPartnerCustomer_ID");
+		if(getC_BPartner_ID() == C_BPartnerCustomer_ID)
+			MNotification.notifyMessage(getCtx(), "CUSTOMER_DISPATCH_PLAN", get_ID() + "", get_TrxName());
 		return super.afterSave(newRecord, success);
 	}
 	
