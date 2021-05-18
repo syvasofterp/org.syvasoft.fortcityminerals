@@ -62,9 +62,9 @@ public class MNotification extends X_TF_SmsNotification {
 			
 				pstmt1 = null;
 				rs1 = null;
-				hdrSql = getHeaderSql().replace("@ID@", ID);
-				SqlQuery= getSql().replace("@ID@", ID);;	
-				ftrSql = getFooterSql().replace("@ID@", ID);;
+				hdrSql = getHeaderSql() != null ? getHeaderSql().replace("@ID@", ID) : "";
+				SqlQuery= getSql().replace("@ID@", ID);	
+				ftrSql = getFooterSql() != null ? getFooterSql().replace("@ID@", ID) : "";
 				hdrMessage = getHeaderMsg();
 				Message= getMessage();
 				ftrMessage = getFooterMsg();
@@ -99,7 +99,8 @@ public class MNotification extends X_TF_SmsNotification {
 					String msgDetail = Message;	
 					for(int i=1;i<=md.getColumnCount();i++) {
 						String columnName = md.getColumnName(i); 
-						msgDetail=msgDetail.replace("{"+columnName+"}", rs1.getString(columnName));
+						String data = rs1.getString(columnName) == null ? "" : rs1.getString(columnName);
+						msgDetail=msgDetail.replace("{"+columnName+"}", data );
 					}
 					msgBody.append(msgDetail);
 					row++;

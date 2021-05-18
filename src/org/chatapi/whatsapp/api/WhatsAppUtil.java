@@ -21,6 +21,7 @@ public class WhatsAppUtil {
 	String m_Phone = null;
 	String m_ChatId = null;
 	int m_AD_Org_ID = 0;
+	String m_msg = null;
 	public WhatsAppUtil() {
 		
 	}
@@ -31,6 +32,7 @@ public class WhatsAppUtil {
 				 + "/sendMessage?token=" + MSysConfig.getValue("WhatsappToken");
 		m_ChatId = ChatId;
 		m_Phone = Phone;
+		m_msg = Message;
 		m_AD_Org_ID = AD_Org_ID;
 		
 		HashMap<String, String> textMsg  = new HashMap<>();
@@ -80,16 +82,16 @@ public class WhatsAppUtil {
 			rd.close();
 			conn.disconnect();
 			result=buffer.toString();
-			saveMessageLog(sb.toString(), result);
+			saveMessageLog(result);
 	
 		} catch (MalformedURLException e) {
-			saveMessageLog(sb.toString(), e.getMessage());			
+			saveMessageLog(e.getMessage());			
 		}catch (IOException e) {			
-			saveMessageLog(sb.toString(), e.getMessage());
+			saveMessageLog(e.getMessage());
 		} 
 	}
 	
-	private void saveMessageLog(String Message,String result) {
+	private void saveMessageLog(String result) {
 		
 		MSMSDeliveryLog sdlog=new MSMSDeliveryLog(Env.getCtx(), 0, null);			
 		String recipient = m_ChatId;
@@ -97,7 +99,7 @@ public class WhatsAppUtil {
 			recipient = m_Phone;
 		sdlog.setAD_Org_ID(m_AD_Org_ID);
 		sdlog.setRecipients(recipient);
-		sdlog.setMessage(Message.replace("%20"," "));
+		sdlog.setMessage(m_msg);
 		sdlog.setResult(result);
 		sdlog.saveEx();		
 	}
