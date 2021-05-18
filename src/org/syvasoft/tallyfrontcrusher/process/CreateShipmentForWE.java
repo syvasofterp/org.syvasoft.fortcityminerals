@@ -126,131 +126,77 @@ public class CreateShipmentForWE extends SvrProcess {
 					if(!we.isRentInclusive()) {
 						lumpsumConfig = MLumpSumRentConfig.getFreightPrice(getCtx(), we.getAD_Org_ID(), Vendor_ID, we.getC_BPartner_ID(), we.getM_Product_ID(), 
 							we.getTF_Destination_ID(), we.getTF_VehicleType_ID(), dest.getDistance(), we.getFreightRule_ID(), get_TrxName());
+						price = we.getFreightPrice();
+						if(we.getFreightRule_ID() == Load_UOM_ID)
+						{
+							Rent_UOM_ID = Load_UOM_ID;
+							qty = BigDecimal.ONE;							
+						}
+						else if(we.getFreightRule_ID() == KM_UOM_ID)
+						{
+							Rent_UOM_ID = KM_UOM_ID;
+							qty = dest.getDistance();							
+						}
+						else if(we.getFreightRule_ID() == MT_KM_UOM_ID)
+						{
+							Rent_UOM_ID = MT_KM_UOM_ID;
+							qty = we.getMT();							
+							RateMTKM =  price;
+						}
+						else
+						{
+							Rent_UOM_ID = we.getFreightRule_ID();
+							qty = we.getNetWeightUnit();							
+						}
+												
+						if(lumpsumConfig != null)
+						{
+							TF_LumpSumRentConfig_ID = lumpsumConfig.getTF_LumpSumRent_Config_ID();
+							RentMargin = lumpsumConfig.getCustomerFreightMargin(we.getC_BPartner_ID());						
+						}
 						
+					}
+					else {
+						lumpsumConfig = MLumpSumRentConfig.getFreightConfig(getCtx(), we.getAD_Org_ID(), Vendor_ID, we.getC_BPartner_ID(), we.getM_Product_ID(), 
+								we.getTF_Destination_ID(), we.getTF_VehicleType_ID(), dest.getDistance(), get_TrxName());
+							
 						if(lumpsumConfig != null) {
 							//ioLine.set_ValueOfColumn("FreightRule", we.getFreightRule());
+							price = lumpsumConfig.getCustomerFreightPrice(we.getC_BPartner_ID());
 							
-							if(we.getFreightRule_ID() == Load_UOM_ID)
+							if(lumpsumConfig.getC_UOM_ID() == Load_UOM_ID)
 							{
 								Rent_UOM_ID = Load_UOM_ID;
 								qty = BigDecimal.ONE;
-								price = we.getFreightPrice();
+								
 							}
-							else if(we.getFreightRule_ID() == KM_UOM_ID)
+							else if(lumpsumConfig.getC_UOM_ID() == KM_UOM_ID)
 							{
 								Rent_UOM_ID = KM_UOM_ID;
-								qty = dest.getDistance();
-								price = we.getFreightPrice();
+								qty = dest.getDistance();									
 							}
-							else if(we.getFreightRule_ID() == MT_KM_UOM_ID)
+							else if(lumpsumConfig.getC_UOM_ID() == MT_KM_UOM_ID)
 							{
 								Rent_UOM_ID = MT_KM_UOM_ID;
-								qty = we.getMT();
-								price = we.getFreightPrice();
-								RateMTKM =  we.getFreightPrice();
+								qty = we.getMT();									
+								RateMTKM = price;
 							}
 							else
 							{
-								Rent_UOM_ID = we.getFreightRule_ID();
-								qty = we.getNetWeightUnit();
-								price = we.getFreightPrice();
+								Rent_UOM_ID = lumpsumConfig.getC_UOM_ID();
+								qty = we.getNetWeightUnit();									
 							}
 							TF_LumpSumRentConfig_ID = lumpsumConfig.getTF_LumpSumRent_Config_ID();
-							RentMargin = (BigDecimal) lumpsumConfig.get_Value("RentMargin");
+							RentMargin = (BigDecimal) lumpsumConfig.getCustomerFreightMargin(we.getC_BPartner_ID());
 						}
 						else {
 							Rent_UOM_ID = Load_UOM_ID;
 							qty = BigDecimal.ONE;
 							price = BigDecimal.ZERO;
 						}
-					}
-					else {
-						lumpsumConfig = MLumpSumRentConfig.getLumpSumRentConfig(getCtx(), we.getAD_Org_ID(), Vendor_ID, we.getC_BPartner_ID(), we.getM_Product_ID(), 
-								we.getTF_Destination_ID(), we.getTF_VehicleType_ID(), dest.getDistance(), get_TrxName());
-							
-							if(lumpsumConfig != null) {
-								//ioLine.set_ValueOfColumn("FreightRule", we.getFreightRule());
-								
-								if(lumpsumConfig.getC_UOM_ID() == Load_UOM_ID)
-								{
-									Rent_UOM_ID = Load_UOM_ID;
-									qty = BigDecimal.ONE;
-									price = lumpsumConfig.getFreightPrice();
-								}
-								else if(lumpsumConfig.getC_UOM_ID() == KM_UOM_ID)
-								{
-									Rent_UOM_ID = KM_UOM_ID;
-									qty = dest.getDistance();
-									price = lumpsumConfig.getFreightPrice();
-								}
-								else if(lumpsumConfig.getC_UOM_ID() == MT_KM_UOM_ID)
-								{
-									Rent_UOM_ID = MT_KM_UOM_ID;
-									qty = we.getMT();
-									price = lumpsumConfig.getFreightPrice();
-									RateMTKM = lumpsumConfig.getFreightPrice();
-								}
-								else
-								{
-									Rent_UOM_ID = lumpsumConfig.getC_UOM_ID();
-									qty = we.getNetWeightUnit();
-									price = lumpsumConfig.getFreightPrice();
-								}
-								TF_LumpSumRentConfig_ID = lumpsumConfig.getTF_LumpSumRent_Config_ID();
-								RentMargin = (BigDecimal) lumpsumConfig.get_Value("RentMargin");
-							}
-							else {
-								Rent_UOM_ID = Load_UOM_ID;
-								qty = BigDecimal.ONE;
-								price = BigDecimal.ZERO;
-							}
-					}
 						
-					/*BigDecimal RateMT = MLumpSumRentConfig.getRateMT(getCtx(), we.getAD_Org_ID(), Vendor_ID, we.getC_BPartner_ID(), we.getM_Product_ID(), 
-							we.getTF_Destination_ID(), we.getTF_VehicleType_ID(), dest.getDistance(), get_TrxName());
-					BigDecimal RateKM = MLumpSumRentConfig.getRateKm(getCtx(), we.getAD_Org_ID(), Vendor_ID, we.getC_BPartner_ID(), we.getM_Product_ID(), 
-							we.getTF_Destination_ID(), we.getTF_VehicleType_ID(), dest.getDistance(), get_TrxName());
-					BigDecimal RateMTKM = MLumpSumRentConfig.getRateMTKm(getCtx(), we.getAD_Org_ID(), Vendor_ID, we.getC_BPartner_ID(), we.getM_Product_ID(), 
-							we.getTF_Destination_ID(), we.getTF_VehicleType_ID(), dest.getDistance(), get_TrxName());
-					*/
-					
-					
-					
-					/*int Rent_UOM_ID = 0;
-					BigDecimal qty = BigDecimal.ZERO;
-					BigDecimal price = BigDecimal.ZERO;
-					if(we.getRent_Amt().doubleValue() > 0) {
-						Rent_UOM_ID = MSysConfig.getIntValue("LOAD_UOM", 1000072, we.getAD_Client_ID());
-						qty = BigDecimal.ONE;
-						price = we.getRent_Amt();
 					}
-					else if(RateMT.doubleValue() > 0) {						
-						Rent_UOM_ID = MSysConfig.getIntValue("TONNAGE_UOM", 1000069, we.getAD_Client_ID());
-						qty = we.getMT();
-						price = RateMT;
-					}
-					else if(RateKM.doubleValue() > 0) {						
-						Rent_UOM_ID = MSysConfig.getIntValue("KM_UOM", 1000071, we.getAD_Client_ID());
-						qty = dest.getDistance();
-						price = RateKM;
-					}
-					else if(RateMTKM.doubleValue() > 0) {
-						//Currently the price is converted from RateMTKM to RateKM
-						//since two measurement cannot be shown as quantity. 
-						//ioLine.setTF_Destination_ID(we.getTF_Destination_ID());
-						//ioLine.setDistance(distance);
-						//ioLine.setRateMTKM(RateMTKM);
-						//Creating consolidated Transporter Invoice should be reworked based on this condition.
-						Rent_UOM_ID = MSysConfig.getIntValue("MT_KM_UOM", 1000081, we.getAD_Client_ID());
-						qty = dest.getDistance();
-						price = RateMTKM.multiply(we.getNetWeightUnit());
-					}
-					else {
-						Rent_UOM_ID = MSysConfig.getIntValue("LOAD_UOM", 1000072, we.getAD_Client_ID());
-						qty = BigDecimal.ONE;
-						price = MLumpSumRentConfig.getLumpSumRent(getCtx(),we.getAD_Org_ID(),Vendor_ID, we.getC_BPartner_ID(), we.getM_Product_ID(), 
-								we.getTF_Destination_ID(), we.getTF_VehicleType_ID(), dest.getDistance(), get_TrxName());
-					}*/
+				
 					
 					ioLine = new TF_MInOutLine(inout);
 					ioLine.setM_Product_ID(rv.getM_Product_ID());

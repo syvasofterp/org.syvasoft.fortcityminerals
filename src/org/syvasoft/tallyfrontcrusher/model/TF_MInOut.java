@@ -217,13 +217,20 @@ public class TF_MInOut extends MInOut {
 				.setParameters(getM_InOut_ID(), rv.getM_Product_ID())
 				.first();
 		
-		//This has to be customized once again according to customer requirements.
+		
 		if(srcLine != null) {
 			Rent_UOM_ID = srcLine.getC_UOM_ID();
 			qty = srcLine.getQtyEntered();
 			Object srcPrice = srcLine.get_Value("Price");
 			if(srcPrice != null)
 				price = (BigDecimal) srcPrice; 
+			
+			//put transporter freight charge without margin.
+			if(srcLine.getTF_LumpSumRent_Config_ID() > 0) { 
+				MLumpSumRentConfig rentConfig = new MLumpSumRentConfig(getCtx(), srcLine.getTF_LumpSumRent_Config_ID(), get_TrxName());
+				price = rentConfig.getFreightPrice();
+			}			
+			
 		}
 		else {
 			Rent_UOM_ID = we.getC_UOM_ID();
