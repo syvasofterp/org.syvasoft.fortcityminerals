@@ -129,7 +129,10 @@ public class ScheduleDispatchPlan extends SvrProcess {
 				while (rs.next()) {					
 					if(rs.getString(MDispensePlan.COLUMNNAME_DocStatus).equals(MDispensePlan.DOCSTATUS_Completed)) {
 						MDispensePlanLine dispensePlanLine = dispensePlan.createDPLinesFromOrder(rs);
-						addLog(dispensePlan.get_Table_ID(), dispensePlan.getCreated(), null, " Dispense Plan : " + dispensePlan.getDocumentNo() + " is created!", dispensePlanLine.get_Table_ID(), dispensePlanLine.get_ID());
+						String userMsg = "";
+						if(dispensePlanLine.getDocStatus().equals(MDispensePlanLine.DOCSTATUS_Drafted))
+							userMsg = " Please complete the plan!";
+						addLog(dispensePlan.get_Table_ID(), dispensePlan.getCreated(), null, " Dispense Plan : " + dispensePlan.getDocumentNo() + " is created!" + userMsg, dispensePlanLine.get_Table_ID(), dispensePlanLine.get_ID());
 						i=i+1;
 					}
 					else if(rs.getString(MDispensePlan.COLUMNNAME_DocStatus).equals(MDispensePlan.DOCSTATUS_Closed)) {
