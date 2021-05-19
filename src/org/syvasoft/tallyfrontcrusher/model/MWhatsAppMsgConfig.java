@@ -68,19 +68,17 @@ public class MWhatsAppMsgConfig extends X_TF_WhatsAppMsgConfig {
 	private String whereClause = "";
 	private String phoneSql = "";
 	private String fileNameSql = "";
-	private String message = "";
-	private int recordID = 0;
+	private String message = "";	
 	
 	public void init(ProcessInfoParameter[] para, int ID) {
-		parameters = para;
-		recordID = ID;
+		parameters = para;		
 		
 		if(getAD_Table_ID() > 0) {
 			tableClause = getAD_Table().getTableName();
 			
 			whereClause = " WHERE " + tableClause + "_ID = " + ID;
 			
-			if(ID == 0)
+			if(ID <= 0)
 				throw new AdempiereException("Record ID is missing!");
 		}
 		
