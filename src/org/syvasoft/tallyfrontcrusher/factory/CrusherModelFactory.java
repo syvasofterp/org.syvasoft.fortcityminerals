@@ -274,6 +274,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return MDispensePlanLine.class;
 		else if(MLumpSumRentRentMargin.Table_Name.equals(tableName))
 			return MLumpSumRentRentMargin.class;
+		else if(MWhatsAppMsgConfig.Table_Name.equals(tableName))
+			return MWhatsAppMsgConfig.class;
 		return null;
 	}
 
@@ -542,6 +544,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MDispensePlanLine(ctx, Record_ID, trxName);
 		else if(MLumpSumRentRentMargin.Table_Name.equals(tableName))
 			return new MLumpSumRentRentMargin(ctx, Record_ID, trxName);
+		else if(MWhatsAppMsgConfig.Table_Name.equals(tableName))
+			return new MWhatsAppMsgConfig(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -812,6 +816,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MDispensePlanLine(ctx, rs, trxName);
 		else if(MLumpSumRentRentMargin.Table_Name.equals(tableName))
 			return new MLumpSumRentRentMargin(ctx, rs, trxName);
+		else if(MWhatsAppMsgConfig.Table_Name.equals(tableName))
+			return new MWhatsAppMsgConfig(ctx, rs, trxName);
 		return null;
 	}
 
