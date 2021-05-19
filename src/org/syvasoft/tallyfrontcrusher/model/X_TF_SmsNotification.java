@@ -30,7 +30,7 @@ public class X_TF_SmsNotification extends PO implements I_TF_SmsNotification, I_
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20210518L;
+	private static final long serialVersionUID = 20210519L;
 
     /** Standard Constructor */
     public X_TF_SmsNotification (Properties ctx, int TF_SmsNotification_ID, String trxName)
@@ -79,6 +79,34 @@ public class X_TF_SmsNotification extends PO implements I_TF_SmsNotification, I_
         .append(get_ID()).append("]");
       return sb.toString();
     }
+
+	public org.compiere.model.I_AD_Table getAD_Table() throws RuntimeException
+    {
+		return (org.compiere.model.I_AD_Table)MTable.get(getCtx(), org.compiere.model.I_AD_Table.Table_Name)
+			.getPO(getAD_Table_ID(), get_TrxName());	}
+
+	/** Set Table.
+		@param AD_Table_ID 
+		Database Table information
+	  */
+	public void setAD_Table_ID (int AD_Table_ID)
+	{
+		if (AD_Table_ID < 1) 
+			set_Value (COLUMNNAME_AD_Table_ID, null);
+		else 
+			set_Value (COLUMNNAME_AD_Table_ID, Integer.valueOf(AD_Table_ID));
+	}
+
+	/** Get Table.
+		@return Database Table information
+	  */
+	public int getAD_Table_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_AD_Table_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
 
 	/** Set Delivery Time.
 		@param DeliveryTime Delivery Time	  */
@@ -328,5 +356,22 @@ public class X_TF_SmsNotification extends PO implements I_TF_SmsNotification, I_
 			return "Y".equals(oo);
 		}
 		return false;
+	}
+
+	/** Set Sql WHERE.
+		@param WhereClause 
+		Fully qualified SQL WHERE clause
+	  */
+	public void setWhereClause (String WhereClause)
+	{
+		set_Value (COLUMNNAME_WhereClause, WhereClause);
+	}
+
+	/** Get Sql WHERE.
+		@return Fully qualified SQL WHERE clause
+	  */
+	public String getWhereClause () 
+	{
+		return (String)get_Value(COLUMNNAME_WhereClause);
 	}
 }
