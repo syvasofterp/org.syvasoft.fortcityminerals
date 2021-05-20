@@ -32,7 +32,7 @@ public class X_TF_LumpSumRent_Config extends PO implements I_TF_LumpSumRent_Conf
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20210509L;
+	private static final long serialVersionUID = 20210520L;
 
     /** Standard Constructor */
     public X_TF_LumpSumRent_Config (Properties ctx, int TF_LumpSumRent_Config_ID, String trxName)
@@ -40,6 +40,7 @@ public class X_TF_LumpSumRent_Config extends PO implements I_TF_LumpSumRent_Conf
       super (ctx, TF_LumpSumRent_Config_ID, trxName);
       /** if (TF_LumpSumRent_Config_ID == 0)
         {
+			setTF_Destination_ID (0);
 			setTF_LumpSumRent_Config_ID (0);
 			setTF_VehicleType_ID (0);
         } */
@@ -350,6 +351,31 @@ public class X_TF_LumpSumRent_Config extends PO implements I_TF_LumpSumRent_Conf
 	public String getTF_LumpSumRent_Config_UU () 
 	{
 		return (String)get_Value(COLUMNNAME_TF_LumpSumRent_Config_UU);
+	}
+
+	public I_TF_TOrder getTF_TOrder() throws RuntimeException
+    {
+		return (I_TF_TOrder)MTable.get(getCtx(), I_TF_TOrder.Table_Name)
+			.getPO(getTF_TOrder_ID(), get_TrxName());	}
+
+	/** Set TF_Torder.
+		@param TF_TOrder_ID TF_Torder	  */
+	public void setTF_TOrder_ID (int TF_TOrder_ID)
+	{
+		if (TF_TOrder_ID < 1) 
+			set_Value (COLUMNNAME_TF_TOrder_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_TOrder_ID, Integer.valueOf(TF_TOrder_ID));
+	}
+
+	/** Get TF_Torder.
+		@return TF_Torder	  */
+	public int getTF_TOrder_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_TOrder_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	public I_TF_VehicleType getTF_VehicleType() throws RuntimeException

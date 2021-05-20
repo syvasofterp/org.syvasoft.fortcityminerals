@@ -21,25 +21,25 @@ import java.sql.Timestamp;
 import org.compiere.model.*;
 import org.compiere.util.KeyNamePair;
 
-/** Generated Interface for TF_LumpSumRent_Config
+/** Generated Interface for TF_TorderLine
  *  @author iDempiere (generated) 
  *  @version Release 5.1
  */
 @SuppressWarnings("all")
-public interface I_TF_LumpSumRent_Config 
+public interface I_TF_TorderLine 
 {
 
-    /** TableName=TF_LumpSumRent_Config */
-    public static final String Table_Name = "TF_LumpSumRent_Config";
+    /** TableName=TF_TorderLine */
+    public static final String Table_Name = "TF_TorderLine";
 
-    /** AD_Table_ID=1000283 */
+    /** AD_Table_ID=1000358 */
     public static final int Table_ID = MTable.getTable_ID(Table_Name);
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);
 
-    /** AccessLevel = 3 - Client - Org 
+    /** AccessLevel = 1 - Org 
      */
-    BigDecimal accessLevel = BigDecimal.valueOf(3);
+    BigDecimal accessLevel = BigDecimal.valueOf(1);
 
     /** Load Meta Data */
 
@@ -63,21 +63,6 @@ public interface I_TF_LumpSumRent_Config
 	  * Organizational entity within client
 	  */
 	public int getAD_Org_ID();
-
-    /** Column name C_BPartner_ID */
-    public static final String COLUMNNAME_C_BPartner_ID = "C_BPartner_ID";
-
-	/** Set Business Partner .
-	  * Identifies a Business Partner
-	  */
-	public void setC_BPartner_ID (int C_BPartner_ID);
-
-	/** Get Business Partner .
-	  * Identifies a Business Partner
-	  */
-	public int getC_BPartner_ID();
-
-	public org.compiere.model.I_C_BPartner getC_BPartner() throws RuntimeException;
 
     /** Column name C_UOM_ID */
     public static final String COLUMNNAME_C_UOM_ID = "C_UOM_ID";
@@ -132,84 +117,6 @@ public interface I_TF_LumpSumRent_Config
 	  */
 	public boolean isActive();
 
-    /** Column name M_Product_ID */
-    public static final String COLUMNNAME_M_Product_ID = "M_Product_ID";
-
-	/** Set Product.
-	  * Product, Service, Item
-	  */
-	public void setM_Product_ID (int M_Product_ID);
-
-	/** Get Product.
-	  * Product, Service, Item
-	  */
-	public int getM_Product_ID();
-
-	public org.compiere.model.I_M_Product getM_Product() throws RuntimeException;
-
-    /** Column name MaxKM */
-    public static final String COLUMNNAME_MaxKM = "MaxKM";
-
-	/** Set MaxKM	  */
-	public void setMaxKM (int MaxKM);
-
-	/** Get MaxKM	  */
-	public int getMaxKM();
-
-    /** Column name MinKM */
-    public static final String COLUMNNAME_MinKM = "MinKM";
-
-	/** Set MinKM	  */
-	public void setMinKM (int MinKM);
-
-	/** Get MinKM	  */
-	public int getMinKM();
-
-    /** Column name ratekm */
-    public static final String COLUMNNAME_ratekm = "ratekm";
-
-	/** Set Rate / KM	  */
-	public void setratekm (BigDecimal ratekm);
-
-	/** Get Rate / KM	  */
-	public BigDecimal getratekm();
-
-    /** Column name RateMT */
-    public static final String COLUMNNAME_RateMT = "RateMT";
-
-	/** Set Rate / MT	  */
-	public void setRateMT (BigDecimal RateMT);
-
-	/** Get Rate / MT	  */
-	public BigDecimal getRateMT();
-
-    /** Column name RateMTKM */
-    public static final String COLUMNNAME_RateMTKM = "RateMTKM";
-
-	/** Set Rate / MT / KM	  */
-	public void setRateMTKM (BigDecimal RateMTKM);
-
-	/** Get Rate / MT / KM	  */
-	public BigDecimal getRateMTKM();
-
-    /** Column name Rent_Amt */
-    public static final String COLUMNNAME_Rent_Amt = "Rent_Amt";
-
-	/** Set Rent (Amount)	  */
-	public void setRent_Amt (BigDecimal Rent_Amt);
-
-	/** Get Rent (Amount)	  */
-	public BigDecimal getRent_Amt();
-
-    /** Column name RentMargin */
-    public static final String COLUMNNAME_RentMargin = "RentMargin";
-
-	/** Set Rent Margin	  */
-	public void setRentMargin (BigDecimal RentMargin);
-
-	/** Get Rent Margin	  */
-	public BigDecimal getRentMargin();
-
     /** Column name TF_Destination_ID */
     public static final String COLUMNNAME_TF_Destination_ID = "TF_Destination_ID";
 
@@ -221,24 +128,6 @@ public interface I_TF_LumpSumRent_Config
 
 	public I_TF_Destination getTF_Destination() throws RuntimeException;
 
-    /** Column name TF_LumpSumRent_Config_ID */
-    public static final String COLUMNNAME_TF_LumpSumRent_Config_ID = "TF_LumpSumRent_Config_ID";
-
-	/** Set TF_LumpSumRent_Config	  */
-	public void setTF_LumpSumRent_Config_ID (int TF_LumpSumRent_Config_ID);
-
-	/** Get TF_LumpSumRent_Config	  */
-	public int getTF_LumpSumRent_Config_ID();
-
-    /** Column name TF_LumpSumRent_Config_UU */
-    public static final String COLUMNNAME_TF_LumpSumRent_Config_UU = "TF_LumpSumRent_Config_UU";
-
-	/** Set TF_LumpSumRent_Config_UU	  */
-	public void setTF_LumpSumRent_Config_UU (String TF_LumpSumRent_Config_UU);
-
-	/** Get TF_LumpSumRent_Config_UU	  */
-	public String getTF_LumpSumRent_Config_UU();
-
     /** Column name TF_TOrder_ID */
     public static final String COLUMNNAME_TF_TOrder_ID = "TF_TOrder_ID";
 
@@ -249,6 +138,24 @@ public interface I_TF_LumpSumRent_Config
 	public int getTF_TOrder_ID();
 
 	public I_TF_TOrder getTF_TOrder() throws RuntimeException;
+
+    /** Column name TF_TorderLine_ID */
+    public static final String COLUMNNAME_TF_TorderLine_ID = "TF_TorderLine_ID";
+
+	/** Set TF_TorderLine	  */
+	public void setTF_TorderLine_ID (int TF_TorderLine_ID);
+
+	/** Get TF_TorderLine	  */
+	public int getTF_TorderLine_ID();
+
+    /** Column name TF_TorderLine_UU */
+    public static final String COLUMNNAME_TF_TorderLine_UU = "TF_TorderLine_UU";
+
+	/** Set TF_TorderLine_UU	  */
+	public void setTF_TorderLine_UU (String TF_TorderLine_UU);
+
+	/** Get TF_TorderLine_UU	  */
+	public String getTF_TorderLine_UU();
 
     /** Column name TF_VehicleType_ID */
     public static final String COLUMNNAME_TF_VehicleType_ID = "TF_VehicleType_ID";
@@ -276,19 +183,4 @@ public interface I_TF_LumpSumRent_Config
 	  * User who updated this records
 	  */
 	public int getUpdatedBy();
-
-    /** Column name Vendor_ID */
-    public static final String COLUMNNAME_Vendor_ID = "Vendor_ID";
-
-	/** Set Vendor.
-	  * The Vendor of the product/service
-	  */
-	public void setVendor_ID (int Vendor_ID);
-
-	/** Get Vendor.
-	  * The Vendor of the product/service
-	  */
-	public int getVendor_ID();
-
-	public org.compiere.model.I_C_BPartner getVendor() throws RuntimeException;
 }
