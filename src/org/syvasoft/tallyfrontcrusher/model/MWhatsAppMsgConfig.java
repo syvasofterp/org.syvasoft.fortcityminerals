@@ -18,9 +18,7 @@ public class MWhatsAppMsgConfig extends X_TF_WhatsAppMsgConfig {
 
 	public MWhatsAppMsgConfig(Properties ctx, int TF_WhatsAppMsgConfig_ID, String trxName) {
 		super(ctx, TF_WhatsAppMsgConfig_ID, trxName);
-		phoneSql = getPhoneSql();
-		fileNameSql = getFileNameSQL();
-		message = getMessage();		
+		
 	}
 
 	public MWhatsAppMsgConfig(Properties ctx, ResultSet rs, String trxName) {
@@ -72,7 +70,9 @@ public class MWhatsAppMsgConfig extends X_TF_WhatsAppMsgConfig {
 	
 	public void init(ProcessInfoParameter[] para, int ID) {
 		parameters = para;		
-		
+		phoneSql = getPhoneSql();
+		fileNameSql = getFileNameSQL();
+		message = getMessage();		
 		if(getAD_Table_ID() > 0) {
 			tableClause = getAD_Table().getTableName();
 			
@@ -88,11 +88,18 @@ public class MWhatsAppMsgConfig extends X_TF_WhatsAppMsgConfig {
 	
 	//fill context variables from parameter
 	private void parseFields() {
-		
+		for (int i = 0; i < parameters.length; i++)
+		{						
+			String name = parameters[i].getParameterName();			
+			String value = parameters[i].getParameterAsString();
+			phoneSql = phoneSql.replace("@" + name + "@", value);
+			fileNameSql = fileNameSql.replace("@" + name + "@", value);
+		}
 	}
 	
 	public String getParsedFileName() {
-		return executeSql(fileNameSql);
+		String fileName = executeSql(fileNameSql); 
+		return (getPrefix() == null ? "" : getPrefix()) + fileName.replace("/", "-").replace("\\", "-");
 	}
 	
 	public String getParsedMessage() {
@@ -104,7 +111,7 @@ public class MWhatsAppMsgConfig extends X_TF_WhatsAppMsgConfig {
 	}
 	
 	public String executeSql(String expression) {
-		String sql = "SELECT " + expression + " FROM " + tableClause + whereClause;
+		String sql = "SELECT (" + expression + ") "+ (tableClause.length() == 0 ? "" :  " FROM " + tableClause + whereClause);
 		return DB.getSQLValueString(get_TrxName(), sql);
 	}
 	

@@ -1,9 +1,5 @@
 package org.syvasoft.tallyfrontcrusher.process;
 
-import org.adempiere.exceptions.AdempiereException;
-import org.compiere.model.MPInstance;
-import org.compiere.model.Query;
-import org.compiere.process.ProcessInfoParameter;
 import org.compiere.process.SvrProcess;
 import org.compiere.util.Env;
 import org.syvasoft.tallyfrontcrusher.model.MWhatsAppMsgConfig;
