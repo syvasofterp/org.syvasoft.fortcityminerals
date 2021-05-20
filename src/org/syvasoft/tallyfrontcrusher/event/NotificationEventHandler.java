@@ -25,13 +25,14 @@ public class NotificationEventHandler extends AbstractEventHandler {
 			MNotification n = (MNotification) msg;
 			MTable table = new MTable(Env.getCtx(), n.getAD_Table_ID(), null);
 			registerTableEvent(IEventTopics.PO_AFTER_CHANGE, table.getTableName());
+			registerTableEvent(IEventTopics.PO_AFTER_NEW, table.getTableName());
 		}
 	}
 	
 	@Override
 	protected void doHandleEvent(Event event) {
 		PO po = getPO(event);
-		if(event.getTopic().equals(IEventTopics.PO_AFTER_CHANGE)) {
+		if(event.getTopic().equals(IEventTopics.PO_AFTER_CHANGE) || event.getTopic().equals(IEventTopics.PO_AFTER_NEW)) {
 			String whereClause =  "AD_Table_ID = ? AND IsScheduled='N'";
 			List<MNotification> list = new Query(Env.getCtx(), MNotification.Table_Name, whereClause, po.get_TrxName())
 					.setClient_ID()
