@@ -58,7 +58,17 @@ public class MTransportOrder extends X_TF_TOrder {
 
 	public void reverseIt() {
 		// TODO Auto-generated method stub
+		setProcessed(false);
+		setDocStatus(DOCSTATUS_Drafted);
 		
+		String whereClause = "TF_TOrder_ID = ?";
+		List<MLumpSumRentConfig> rentConfig = new org.compiere.model.Query(getCtx(), MLumpSumRentConfig.Table_Name, whereClause, get_TrxName())
+				.setClient_ID()
+				.setParameters(getTF_TOrder_ID())
+				.list();
+		for(MLumpSumRentConfig rconfig : rentConfig) {
+			rconfig.deleteEx(true);
+		}
 	}
 
 }

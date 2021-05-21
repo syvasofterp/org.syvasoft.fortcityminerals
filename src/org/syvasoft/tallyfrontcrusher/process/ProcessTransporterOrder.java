@@ -38,9 +38,7 @@ public class ProcessTransporterOrder extends SvrProcess{
 		
 		torder.saveEx();
 		
-		return null;
+		return m_processMsg;
 	}
-
-	
 
 }
