@@ -1,12 +1,7 @@
--- *** SqlDbx Personal Edition ***
--- !!! Not licensed for commercial use beyound 90 days evaluation period !!!
--- For version limitations please check http://www.sqldbx.com/personal_edition.htm
--- Number of queries executed: 2608, number of rows retrieved: 98720
+/***/DROP VIEW IF EXISTS adempiere.tf_invoice_v;
 
-DROP VIEW IF EXISTS adempiere.tf_invoice_v;
-
-CREATE OR REPLACE VIEW adempiere.tf_invoice_v AS
- SELECT c_invoice.c_invoice_id,
+/***/CREATE OR REPLACE VIEW adempiere.tf_invoice_v AS
+ /***/SELECT c_invoice.c_invoice_id,
     c_invoice.ad_client_id,
     c_invoice.ad_org_id,
     c_invoice.isactive,
@@ -122,7 +117,7 @@ CREATE OR REPLACE VIEW adempiere.tf_invoice_v AS
     c_invoiceline.tf_vehicletype_id,
     318 AS ad_table_id,
     c_invoice.c_invoice_id AS record_id,
-    NULL::unknown AS printinvoice
-   
+    NULL::unknown AS printinvoice,
+   NULL AS printtransporterinvoice
 FROM c_invoice JOIN c_invoiceline ON c_invoiceline.c_invoice_id = c_invoice.c_invoice_id;
 
