@@ -278,6 +278,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return MTransportOrder.class;
 		else if(MTransportOrderLine.Table_Name.equals(tableName))
 			return MTransportOrderLine.class;
+		else if(MWhatsAppMsgConfig.Table_Name.equals(tableName))
+			return MWhatsAppMsgConfig.class;
 		return null;
 	}
 
@@ -550,6 +552,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MTransportOrder(ctx, Record_ID, trxName);
 		else if(MTransportOrderLine.Table_Name.equals(tableName))
 			return new MTransportOrderLine(ctx, Record_ID, trxName);
+		else if(MWhatsAppMsgConfig.Table_Name.equals(tableName))
+			return new MWhatsAppMsgConfig(ctx, Record_ID, trxName);
 		return null;
 	}
 
@@ -824,6 +828,8 @@ public class CrusherModelFactory implements IModelFactory {
 			return new MTransportOrder(ctx, rs, trxName);
 		else if(MTransportOrderLine.Table_Name.equals(tableName))
 			return new MTransportOrderLine(ctx, rs, trxName);
+		else if(MWhatsAppMsgConfig.Table_Name.equals(tableName))
+			return new MWhatsAppMsgConfig(ctx, rs, trxName);
 		return null;
 	}
 
