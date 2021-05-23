@@ -36,7 +36,7 @@ public class NotificationEventHandler extends AbstractEventHandler {
 			String whereClause =  "AD_Table_ID = ? AND IsScheduled='N'";
 			List<MNotification> list = new Query(Env.getCtx(), MNotification.Table_Name, whereClause, po.get_TrxName())
 					.setClient_ID()
-					.setApplyAccessFilter(true)
+					.setOnlyActiveRecords(true)
 					.setParameters(po.get_Table_ID())
 					.list();
 			

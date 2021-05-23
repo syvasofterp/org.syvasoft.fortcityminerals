@@ -211,6 +211,8 @@ public class CreateShipmentForWE extends SvrProcess {
 					ioLine.setM_Locator_ID(qty);
 					ioLine.setDescription("Destination : " + dest.getName());
 					ioLine.saveEx(get_TrxName());
+					
+					we.set_ValueOfColumn("TF_LumpSumRent_Config_ID", TF_LumpSumRentConfig_ID);					
 				}
 			}
 			
