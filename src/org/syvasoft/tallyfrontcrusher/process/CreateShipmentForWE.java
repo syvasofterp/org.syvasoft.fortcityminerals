@@ -212,7 +212,8 @@ public class CreateShipmentForWE extends SvrProcess {
 					ioLine.setDescription("Destination : " + dest.getName());
 					ioLine.saveEx(get_TrxName());
 					
-					we.set_ValueOfColumn("TF_LumpSumRent_Config_ID", TF_LumpSumRentConfig_ID);					
+					we.setTF_LumpSumRent_Config_ID(TF_LumpSumRentConfig_ID);	
+					we.saveEx(get_TrxName());
 				}
 			}
 			

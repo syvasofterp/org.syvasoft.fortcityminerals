@@ -811,6 +811,17 @@ public interface I_TF_WeighmentEntry
 
 	public I_TF_DispensePlanLine getTF_DispensePlanLine() throws RuntimeException;
 
+    /** Column name TF_LumpSumRent_Config_ID */
+    public static final String COLUMNNAME_TF_LumpSumRent_Config_ID = "TF_LumpSumRent_Config_ID";
+
+	/** Set TF_LumpSumRent_Config	  */
+	public void setTF_LumpSumRent_Config_ID (int TF_LumpSumRent_Config_ID);
+
+	/** Get TF_LumpSumRent_Config	  */
+	public int getTF_LumpSumRent_Config_ID();
+
+	public I_TF_LumpSumRent_Config getTF_LumpSumRent_Config() throws RuntimeException;
+
     /** Column name TF_PriceListUOM_ID */
     public static final String COLUMNNAME_TF_PriceListUOM_ID = "TF_PriceListUOM_ID";
 

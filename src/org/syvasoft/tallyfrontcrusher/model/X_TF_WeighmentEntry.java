@@ -33,7 +33,7 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20210508L;
+	private static final long serialVersionUID = 20210524L;
 
     /** Standard Constructor */
     public X_TF_WeighmentEntry (Properties ctx, int TF_WeighmentEntry_ID, String trxName)
@@ -1405,6 +1405,31 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public int getTF_DispensePlanLine_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_TF_DispensePlanLine_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public I_TF_LumpSumRent_Config getTF_LumpSumRent_Config() throws RuntimeException
+    {
+		return (I_TF_LumpSumRent_Config)MTable.get(getCtx(), I_TF_LumpSumRent_Config.Table_Name)
+			.getPO(getTF_LumpSumRent_Config_ID(), get_TrxName());	}
+
+	/** Set TF_LumpSumRent_Config.
+		@param TF_LumpSumRent_Config_ID TF_LumpSumRent_Config	  */
+	public void setTF_LumpSumRent_Config_ID (int TF_LumpSumRent_Config_ID)
+	{
+		if (TF_LumpSumRent_Config_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_TF_LumpSumRent_Config_ID, null);
+		else 
+			set_ValueNoCheck (COLUMNNAME_TF_LumpSumRent_Config_ID, Integer.valueOf(TF_LumpSumRent_Config_ID));
+	}
+
+	/** Get TF_LumpSumRent_Config.
+		@return TF_LumpSumRent_Config	  */
+	public int getTF_LumpSumRent_Config_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_LumpSumRent_Config_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
