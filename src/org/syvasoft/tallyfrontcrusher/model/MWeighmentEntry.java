@@ -77,9 +77,14 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		if(getC_BPartner_ID() == 0 && getPaymentRule().equals(PAYMENTRULE_Cash)) {
 			TF_MBPartner bp = new Query(getCtx(), TF_MBPartner.Table_Name, "IsPOSCashBP='Y'", get_TrxName())
 					.setClient_ID().first();
-			if(bp != null)
-				setC_BPartner_ID(bp.getC_BPartner_ID());
+			if(bp != null) {
+				setC_BPartner_ID(bp.getC_BPartner_ID());				
+			}
+			
 		}
+		
+		if(getPaymentRule().equals(PAYMENTRULE_Cash))
+			setPaymentRule(PAYMENTRULE_OnCredit);
 		
 		if(getTF_RentedVehicle_ID()>0) {
 			String rvwhere="COALESCE(Tareweight,0)!=? AND IsTransporter='N' AND TF_RentedVehicle_ID=?";
