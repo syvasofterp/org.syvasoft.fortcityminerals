@@ -17,13 +17,11 @@ public class NotificationEventHandler extends AbstractEventHandler {
 	
 	@Override
 	protected void initialize() {
-		String whereClause =  "AD_Table_ID IS NOT NULL AND IsScheduled='N'";
-		List<PO> list = new Query(Env.getCtx(), MNotification.Table_Name, whereClause, null)				
+		String whereClause =  "AD_Table_ID IN (SELECT AD_Table_ID FROM TF_SmsNotification WHERE AD_Table_ID IS NOT NULL AND IsActive = 'Y')";
+		List<MTable> list = new Query(Env.getCtx(), MTable.Table_Name, whereClause, null)				
 				.setOnlyActiveRecords(true)
 				.list();
-		for(PO msg : list) {
-			MNotification n = (MNotification) msg;
-			MTable table = new MTable(Env.getCtx(), n.getAD_Table_ID(), null);
+		for(MTable table : list) {
 			registerTableEvent(IEventTopics.PO_AFTER_CHANGE, table.getTableName());
 			registerTableEvent(IEventTopics.PO_AFTER_NEW, table.getTableName());
 		}
