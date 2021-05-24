@@ -22,11 +22,12 @@ public class WhatsAppUtil {
 	String m_ChatId = null;
 	int m_AD_Org_ID = 0;
 	String m_msg = null;
+	int m_TF_SmsNotification_ID = 0;
 	public WhatsAppUtil() {
 		
 	}
 
-	public void sendMessage(int AD_Client_ID,int AD_Org_ID, String ChatId, String Phone,String Message) {
+	public void sendMessage(int AD_Client_ID,int AD_Org_ID, int TF_SmsNotification_ID, String ChatId, String Phone,String Message) {
 		String whatsappapiURLMessage = MSysConfig.getValue("WhatsappAPI") 
 				+ MSysConfig.getValue("WhatsappInstanceId")
 				 + "/sendMessage?token=" + MSysConfig.getValue("WhatsappToken");
@@ -34,6 +35,7 @@ public class WhatsAppUtil {
 		m_Phone = Phone;
 		m_msg = Message;
 		m_AD_Org_ID = AD_Org_ID;
+		m_TF_SmsNotification_ID = TF_SmsNotification_ID;
 		
 		HashMap<String, String> textMsg  = new HashMap<>();
 		if(!Util.isEmpty(Phone))
@@ -98,6 +100,7 @@ public class WhatsAppUtil {
 		if(m_Phone != null)
 			recipient = m_Phone;
 		sdlog.setAD_Org_ID(m_AD_Org_ID);
+		sdlog.setTF_SmsNotification_ID(m_TF_SmsNotification_ID);
 		sdlog.setRecipients(recipient);
 		sdlog.setMessage(m_msg);
 		sdlog.setResult(result);
