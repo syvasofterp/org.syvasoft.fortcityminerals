@@ -47,6 +47,7 @@ public class MNotification extends X_TF_SmsNotification {
 	String Message="";
 	String ftrMessage = "";
 	String Unicode="";
+	boolean EnabledWhatsApp = MSysConfig.getBooleanValue("WHATSAPP_ENABLED", true);
 	
 	public String getSimpleMessageForConfiguredRecipients(String ID) {
 		
@@ -153,7 +154,7 @@ public class MNotification extends X_TF_SmsNotification {
 		String msg = getSimpleMessageForConfiguredRecipients(ID);
 		
 		for(MNotificationRecipient recipient : getRecipients() ) {
-			if(isWhatsApp()) {
+			if(isWhatsApp() && EnabledWhatsApp) {
 				WhatsAppUtil waUtil = new WhatsAppUtil();
 				waUtil.sendMessage(getAD_Client_ID(), getAD_Org_ID(),getTF_SmsNotification_ID(), recipient.getChatId(), recipient.getMobileNo(), msg);
 			}
