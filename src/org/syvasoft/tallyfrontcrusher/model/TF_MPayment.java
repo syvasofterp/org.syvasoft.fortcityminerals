@@ -64,6 +64,28 @@ public class TF_MPayment extends MPayment {
 		return (String)get_Value(COLUMNNAME_CashType);
 	}
 	
+	/** Column name TF_WeighmentEntry_ID */
+    public static final String COLUMNNAME_TF_WeighmentEntry_ID = "TF_WeighmentEntry_ID";
+    /** Set Weighment Entry.
+	@param TF_WeighmentEntry_ID Weighment Entry	  */
+	public void setTF_WeighmentEntry_ID (int TF_WeighmentEntry_ID)
+	{
+		if (TF_WeighmentEntry_ID < 1) 
+			set_Value (COLUMNNAME_TF_WeighmentEntry_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_WeighmentEntry_ID, Integer.valueOf(TF_WeighmentEntry_ID));
+	}
+	
+	/** Get Weighment Entry.
+		@return Weighment Entry	  */
+	public int getTF_WeighmentEntry_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_WeighmentEntry_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+	
 	
 	/** Column name C_ElementValue_ID */
     public static final String COLUMNNAME_C_ElementValue_ID = "C_ElementValue_ID";
