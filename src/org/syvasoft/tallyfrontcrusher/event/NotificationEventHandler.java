@@ -81,7 +81,7 @@ public class NotificationEventHandler extends AbstractEventHandler {
 			}
 			catch (Exception e)
 			{
-				log.log(Level.SEVERE, "Notification Mesaage", e);
+				log.log(Level.WARNING, "Notification Mesaage", e);
 			}
 		}		
 		
