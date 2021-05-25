@@ -30,7 +30,7 @@ public class X_TF_SmsNotification extends PO implements I_TF_SmsNotification, I_
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20210519L;
+	private static final long serialVersionUID = 20210525L;
 
     /** Standard Constructor */
     public X_TF_SmsNotification (Properties ctx, int TF_SmsNotification_ID, String trxName)
@@ -106,6 +106,27 @@ public class X_TF_SmsNotification extends PO implements I_TF_SmsNotification, I_
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
+	}
+
+	/** Set Change Record.
+		@param ChangeRecord Change Record	  */
+	public void setChangeRecord (boolean ChangeRecord)
+	{
+		set_Value (COLUMNNAME_ChangeRecord, Boolean.valueOf(ChangeRecord));
+	}
+
+	/** Get Change Record.
+		@return Change Record	  */
+	public boolean isChangeRecord () 
+	{
+		Object oo = get_Value(COLUMNNAME_ChangeRecord);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
 	}
 
 	/** Set Delivery Time.
@@ -273,6 +294,27 @@ public class X_TF_SmsNotification extends PO implements I_TF_SmsNotification, I_
 	public String getName () 
 	{
 		return (String)get_Value(COLUMNNAME_Name);
+	}
+
+	/** Set New Record.
+		@param NewRecord New Record	  */
+	public void setNewRecord (boolean NewRecord)
+	{
+		set_Value (COLUMNNAME_NewRecord, Boolean.valueOf(NewRecord));
+	}
+
+	/** Get New Record.
+		@return New Record	  */
+	public boolean isNewRecord () 
+	{
+		Object oo = get_Value(COLUMNNAME_NewRecord);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
 	}
 
 	/** Set Recipient SQL.

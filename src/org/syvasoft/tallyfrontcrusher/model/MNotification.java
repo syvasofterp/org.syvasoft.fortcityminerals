@@ -145,8 +145,10 @@ public class MNotification extends X_TF_SmsNotification {
 				.setParameters(getTF_SmsNotification_ID())
 				.setOnlyActiveRecords(true)
 				.list();
-		if(recipients.size() == 0)
-			throw new AdempiereException("Recipients not configured!");
+		/*if(recipients.size() == 0)
+			throw new AdempiereException("Recipients not configured!");*/
+		
+		
 		return recipients;
 	}
 	
@@ -167,4 +169,12 @@ public class MNotification extends X_TF_SmsNotification {
 		msg.notifyMessage(ID);
 	}
 
+	public List<MNotificationTriggerColumn> getTriggerColumns() {
+		String where = "TF_SmsNotification_ID = " + getTF_SmsNotification_ID();
+		
+		List<MNotificationTriggerColumn> triggerColumns = new Query(getCtx(), MNotificationTriggerColumn.Table_Name, where, get_TrxName())
+						.setClient_ID().setOnlyActiveRecords(true).list();
+		
+		return triggerColumns;
+	}
 }

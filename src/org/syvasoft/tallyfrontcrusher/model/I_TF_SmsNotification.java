@@ -79,6 +79,15 @@ public interface I_TF_SmsNotification
 
 	public org.compiere.model.I_AD_Table getAD_Table() throws RuntimeException;
 
+    /** Column name ChangeRecord */
+    public static final String COLUMNNAME_ChangeRecord = "ChangeRecord";
+
+	/** Set Change Record	  */
+	public void setChangeRecord (boolean ChangeRecord);
+
+	/** Get Change Record	  */
+	public boolean isChangeRecord();
+
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
 
@@ -205,6 +214,15 @@ public interface I_TF_SmsNotification
 	  * Alphanumeric identifier of the entity
 	  */
 	public String getName();
+
+    /** Column name NewRecord */
+    public static final String COLUMNNAME_NewRecord = "NewRecord";
+
+	/** Set New Record	  */
+	public void setNewRecord (boolean NewRecord);
+
+	/** Get New Record	  */
+	public boolean isNewRecord();
 
     /** Column name RecipientSQL */
     public static final String COLUMNNAME_RecipientSQL = "RecipientSQL";

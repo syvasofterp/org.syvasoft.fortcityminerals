@@ -31,6 +31,8 @@ public class MDispensePlan extends X_TF_DispensePlan {
 	
 	public boolean CarryForwardPrevDayDP = false;
 	
+	public String Priority = "";
+	
 	public MDispensePlan(Properties ctx, ResultSet rs, String trxName) {
 		super(ctx, rs, trxName);
 		// TODO Auto-generated constructor stub
@@ -120,7 +122,14 @@ public class MDispensePlan extends X_TF_DispensePlan {
 			else {
 				dispenseLine.setScheduleDate(getScheduleDate());
 			}
-			dispenseLine.setPriority(MDispensePlanLine.PRIORITY_Normal);
+			
+			if(Priority == "") {
+				dispenseLine.setPriority(MDispensePlanLine.PRIORITY_Normal);
+			}
+			else {
+				dispenseLine.setPriority(Priority);
+			}
+				
 			dispenseLine.setType(MDispensePlanLine.TYPE_Order);
 			dispenseLine.setC_OrderLine_ID(rs.getInt(MDispensePlanLine.COLUMNNAME_C_OrderLine_ID));
 			dispenseLine.setDateOrdered(rs.getTimestamp(MDispensePlanLine.COLUMNNAME_DateOrdered));
