@@ -33,6 +33,8 @@ public class MDispensePlan extends X_TF_DispensePlan {
 	
 	public String Priority = "";
 	
+	public int TF_VehicleType_ID = 0;
+	
 	public MDispensePlan(Properties ctx, ResultSet rs, String trxName) {
 		super(ctx, rs, trxName);
 		// TODO Auto-generated constructor stub
@@ -136,7 +138,7 @@ public class MDispensePlan extends X_TF_DispensePlan {
 			dispenseLine.setPaymentRule(rs.getString(MDispensePlanLine.COLUMNNAME_PaymentRule));
 			dispenseLine.setC_BPartner_ID(rs.getInt(MDispensePlanLine.COLUMNNAME_C_BPartner_ID));
 			dispenseLine.setContactPerson(rs.getString(MDispensePlanLine.COLUMNNAME_ContactPerson));
-			
+			dispenseLine.setTF_VehicleType_ID(TF_VehicleType_ID);
 			if(DeliveryContact != null) {
 				dispenseLine.setDeliveryContact(DeliveryContact);
 			}

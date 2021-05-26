@@ -80,7 +80,10 @@ public class MDispensePlanLine extends X_TF_DispensePlanLine {
 				throw new AdempiereException("Selected Order Line already exists in Dispatch Plan!");
 			}
 		}
-		setDispensePlanHeader();
+		
+		if(getTF_DispensePlan_ID() == 0) {
+			setDispensePlanHeader();
+		}
 		MDispensePlan dispensePlan = new MDispensePlan(getCtx(), getTF_DispensePlan_ID(), get_TrxName());
 		
 		if(!getDocStatus().equals(MDispensePlanLine.DOCSTATUS_Closed)) {
