@@ -136,11 +136,15 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 					
 					if(wEntry.getC_OrderLine_ID() == 0) {
 						createSalesQuickEntry(wEntry, tpWeight, true, trx);
-						createSalesQuickEntry(wEntry, remainingQty, false, trx);						
+						
+						if(remainingQty.doubleValue() > 0)
+							createSalesQuickEntry(wEntry, remainingQty, false, trx);						
 					}
 					else {
 						createInvoiceCustomer(wEntry, tpWeight, true, trx);
-						createInvoiceCustomer(wEntry, remainingQty, false, trx);
+						
+						if(remainingQty.doubleValue() > 0)
+							createInvoiceCustomer(wEntry, remainingQty, false, trx);
 					}
 				}
 			

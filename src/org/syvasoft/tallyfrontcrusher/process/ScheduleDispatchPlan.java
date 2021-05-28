@@ -6,14 +6,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.concurrent.ThreadPoolExecutor.DiscardOldestPolicy;
-
+import java.util.List;
 import org.compiere.model.MOrder;
+import org.compiere.model.MUserRoles;
 import org.compiere.model.Query;
 import org.adempiere.exceptions.AdempiereException;
 import org.adempiere.exceptions.DBException;
 import org.compiere.process.ProcessInfoParameter;
 import org.compiere.process.SvrProcess;
 import org.compiere.util.DB;
+import org.compiere.util.Env;
 import org.syvasoft.tallyfrontcrusher.model.MCrusherProduction;
 import org.syvasoft.tallyfrontcrusher.model.MDispensePlan;
 import org.syvasoft.tallyfrontcrusher.model.MDispensePlanLine;
@@ -133,12 +135,13 @@ public class ScheduleDispatchPlan extends SvrProcess {
 				pstmt = DB.prepareStatement(sql, get_TrxName());
 				rs = pstmt.executeQuery();		
 				
+				int RoleId = Env.getContextAsInt(getCtx(), "#AD_Role_ID");
 				
 				while (rs.next()) {					
 					if(rs.getString(MDispensePlan.COLUMNNAME_DocStatus).equals(MDispensePlan.DOCSTATUS_Completed)) {
 						MDispensePlanLine dispensePlanLine = dispensePlan.createDPLinesFromOrder(rs);
 						String userMsg = "";
-						if(dispensePlanLine.getDocStatus().equals(MDispensePlanLine.DOCSTATUS_Drafted))
+						if(dispensePlanLine.getDocStatus().equals(MDispensePlanLine.DOCSTATUS_Drafted) && RoleId != 1000036)
 							userMsg = " Please complete the plan!";
 						addLog(dispensePlan.get_Table_ID(), dispensePlan.getCreated(), null, " Dispense Plan : " + dispensePlan.getDocumentNo() + " is created!" + userMsg, dispensePlanLine.get_Table_ID(), dispensePlanLine.get_ID());
 						i=i+1;
