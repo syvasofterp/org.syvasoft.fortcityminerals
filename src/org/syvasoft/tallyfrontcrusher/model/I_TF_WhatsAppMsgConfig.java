@@ -213,4 +213,17 @@ public interface I_TF_WhatsAppMsgConfig
 	  * Search key for the record in the format required - must be unique
 	  */
 	public String getValue();
+
+    /** Column name WhereClause */
+    public static final String COLUMNNAME_WhereClause = "WhereClause";
+
+	/** Set Sql WHERE.
+	  * Fully qualified SQL WHERE clause
+	  */
+	public void setWhereClause (String WhereClause);
+
+	/** Get Sql WHERE.
+	  * Fully qualified SQL WHERE clause
+	  */
+	public String getWhereClause();
 }

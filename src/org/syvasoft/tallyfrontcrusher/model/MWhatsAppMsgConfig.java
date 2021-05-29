@@ -67,23 +67,23 @@ public class MWhatsAppMsgConfig extends X_TF_WhatsAppMsgConfig {
 	private String phoneSql = "";
 	private String fileNameSql = "";
 	private String message = "";	
-	
+	private String whereSql = "";
 	public void init(ProcessInfoParameter[] para, int ID) {
 		parameters = para;		
 		phoneSql = getPhoneSql();
 		fileNameSql = getFileNameSQL();
 		message = getMessage();		
+		whereSql = getWhereClause().replace("@RECORD_ID@", Integer.toString(ID));
+		
+		parseFields();
+		
 		if(getAD_Table_ID() > 0) {
 			tableClause = getAD_Table().getTableName();
-			
-			whereClause = " WHERE " + tableClause + "_ID = " + ID;
+			whereClause = " WHERE " + whereSql;
 			
 			if(ID <= 0)
 				throw new AdempiereException("Record ID is missing!");
-		}
-		
-		parseFields();
-				
+		}		
 	}
 	
 	//fill context variables from parameter
@@ -92,13 +92,14 @@ public class MWhatsAppMsgConfig extends X_TF_WhatsAppMsgConfig {
 		{						
 			String name = parameters[i].getParameterName();			
 			String value = parameters[i].getParameterAsString();
+			whereSql = whereSql.replace("@" + name + "@", value);
 			phoneSql = phoneSql.replace("@" + name + "@", value);
 			fileNameSql = fileNameSql.replace("@" + name + "@", value);
 		}
 	}
 	
 	public String getParsedFileName() {
-		String fileName = executeSql(fileNameSql); 
+		String fileName = executeSql(fileNameSql);
 		return (getPrefix() == null ? "" : getPrefix()) + fileName.replace("/", "-").replace("\\", "-");
 	}
 	

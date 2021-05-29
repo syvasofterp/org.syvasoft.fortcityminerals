@@ -30,7 +30,7 @@ public class X_TF_WhatsAppMsgConfig extends PO implements I_TF_WhatsAppMsgConfig
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20210519L;
+	private static final long serialVersionUID = 20210529L;
 
     /** Standard Constructor */
     public X_TF_WhatsAppMsgConfig (Properties ctx, int TF_WhatsAppMsgConfig_ID, String trxName)
@@ -240,5 +240,22 @@ public class X_TF_WhatsAppMsgConfig extends PO implements I_TF_WhatsAppMsgConfig
 	public String getValue () 
 	{
 		return (String)get_Value(COLUMNNAME_Value);
+	}
+
+	/** Set Sql WHERE.
+		@param WhereClause 
+		Fully qualified SQL WHERE clause
+	  */
+	public void setWhereClause (String WhereClause)
+	{
+		set_Value (COLUMNNAME_WhereClause, WhereClause);
+	}
+
+	/** Get Sql WHERE.
+		@return Fully qualified SQL WHERE clause
+	  */
+	public String getWhereClause () 
+	{
+		return (String)get_Value(COLUMNNAME_WhereClause);
 	}
 }
