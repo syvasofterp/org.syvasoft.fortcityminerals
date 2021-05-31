@@ -220,6 +220,15 @@ public interface I_TF_DispensePlanLine
 
 	public org.compiere.model.I_C_UOM getC_UOM() throws RuntimeException;
 
+    /** Column name CloseDispatchPlan */
+    public static final String COLUMNNAME_CloseDispatchPlan = "CloseDispatchPlan";
+
+	/** Set Close Dispatch Plan	  */
+	public void setCloseDispatchPlan (String CloseDispatchPlan);
+
+	/** Get Close Dispatch Plan	  */
+	public String getCloseDispatchPlan();
+
     /** Column name ContactPerson */
     public static final String COLUMNNAME_ContactPerson = "ContactPerson";
 
@@ -349,6 +358,17 @@ public interface I_TF_DispensePlanLine
 	  * Freight Amount 
 	  */
 	public BigDecimal getFreightAmt();
+
+    /** Column name FreightUOM_ID */
+    public static final String COLUMNNAME_FreightUOM_ID = "FreightUOM_ID";
+
+	/** Set Freight UOM	  */
+	public void setFreightUOM_ID (int FreightUOM_ID);
+
+	/** Get Freight UOM	  */
+	public int getFreightUOM_ID();
+
+	public org.compiere.model.I_C_UOM getFreightUOM() throws RuntimeException;
 
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";
@@ -694,6 +714,15 @@ public interface I_TF_DispensePlanLine
 	/** Get Shipment Destination	  */
 	public String getShipmentDestination();
 
+    /** Column name ShipmentDestination_ID */
+    public static final String COLUMNNAME_ShipmentDestination_ID = "ShipmentDestination_ID";
+
+	/** Set Shipment Destination	  */
+	public void setShipmentDestination_ID (int ShipmentDestination_ID);
+
+	/** Get Shipment Destination	  */
+	public int getShipmentDestination_ID();
+	
     /** Column name ShipmentTo */
     public static final String COLUMNNAME_ShipmentTo = "ShipmentTo";
 

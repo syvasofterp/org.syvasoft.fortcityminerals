@@ -26,7 +26,7 @@ public class ScheduleDispatchPlan extends SvrProcess {
 	private int p_TF_DispensePlan_ID = 0;
 	private Timestamp ScheduleDate;
 	private String ShipmentTo;
-	private String ShipmentDestination;
+	private int ShipmentDestination;
 	private String DeliveryContact;
 	private BigDecimal DispenseQty;
 	private boolean OverDeliveryQty = false;
@@ -48,7 +48,7 @@ public class ScheduleDispatchPlan extends SvrProcess {
 			else if(name.toLowerCase().equals("shipmentto"))
 				ShipmentTo = para[i].getParameterAsString();
 			else if(name.toLowerCase().equals("shipmentdestination"))
-				ShipmentDestination = para[i].getParameterAsString();
+				ShipmentDestination = para[i].getParameterAsInt();
 			else if(name.toLowerCase().equals("dispenseqty"))
 				DispenseQty = para[i].getParameterAsBigDecimal();
 			else if(name.toLowerCase().equals("deliverycontact"))
@@ -110,7 +110,7 @@ public class ScheduleDispatchPlan extends SvrProcess {
 	    int rowCount = rs.getInt(1);
 	    String msg = "";
 	    
-	    if((ShipmentTo != null || ShipmentDestination != null) && rowCount > 1) {
+	    if((ShipmentTo != null || ShipmentDestination > 0) && rowCount > 1) {
 	    	msg = "Error: Please choose one Order for Shipment to and Shipment Destination to schedule Dispatch Plan!";
 	    	addLog(msg);
 	    }
@@ -119,7 +119,7 @@ public class ScheduleDispatchPlan extends SvrProcess {
 				sql = "SELECT " + 
 						"	o.c_order_id, c_orderline_id,o.paymentrule,o.c_bpartner_id,o.dateordered,ol.tf_destination_id,ol.m_product_id,ol.m_warehouse_id,o.DocStatus," + 
 						"	ol.description,ol.c_uom_id,ol.qtyordered,ol.qtydelivered,ol.c_tax_id,ol.istaxincluded,ol.isrentinclusive,ol.isroyaltypassinclusive," + 
-						"	ol.unitprice,ol.priceentered,ol.discount,ol.freightamt,ol.linenetamt,o.ispriceconfidential,ol.ContactPerson,ol.DeliveryContact " +
+						"	ol.unitprice,ol.priceentered,ol.discount,ol.freightamt,ol.linenetamt,o.ispriceconfidential,ol.ContactPerson,ol.DeliveryContact, ol.freightuom_id " +
 						" FROM c_order o INNER JOIN c_orderline ol ON ol.c_order_id = o.c_order_id WHERE " + 
 						" (EXISTS (SELECT T_Selection_ID FROM T_Selection WHERE T_Selection.AD_PInstance_ID="+ getAD_PInstance_ID() + " AND T_Selection.T_Selection_ID = ol.c_orderline_id))";
 	    	}
@@ -127,7 +127,7 @@ public class ScheduleDispatchPlan extends SvrProcess {
 	    		sql = "SELECT " + 
 						"	o.c_order_id, c_orderline_id,o.paymentrule,o.c_bpartner_id,o.dateordered,ol.tf_destination_id,ol.m_product_id,ol.m_warehouse_id,o.DocStatus," + 
 						"	ol.description,ol.c_uom_id,ol.qtyordered,ol.qtydelivered,ol.c_tax_id,ol.istaxincluded,ol.isrentinclusive,ol.isroyaltypassinclusive," + 
-						"	ol.unitprice,ol.priceentered,ol.discount,ol.freightamt,ol.linenetamt,o.ispriceconfidential,ol.ContactPerson,ol.DeliveryContact " +
+						"	ol.unitprice,ol.priceentered,ol.discount,ol.freightamt,ol.linenetamt,o.ispriceconfidential,ol.ContactPerson,ol.DeliveryContact, ol.freightuom_id " +
 						" FROM c_order o INNER JOIN c_orderline ol ON ol.c_order_id = o.c_order_id WHERE ol.c_orderline_id = " + c_orderlineID;
 	    	}
 			

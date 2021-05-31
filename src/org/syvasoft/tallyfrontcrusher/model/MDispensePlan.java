@@ -21,7 +21,7 @@ public class MDispensePlan extends X_TF_DispensePlan {
 	
 	public String ShipmentTo = "";
 	
-	public String ShipmentDestination = "";
+	public int ShipmentDestination = 0;
 	
 	public BigDecimal DispatchQty = BigDecimal.ZERO;
 	
@@ -100,7 +100,7 @@ public class MDispensePlan extends X_TF_DispensePlan {
 	public MDispensePlanLine createDPLinesFromOrder(ResultSet rs) throws SQLException {
 		
 		String sql = "";
-		if(ShipmentTo == null && ShipmentDestination == null) {
+		if(ShipmentTo == null && ShipmentDestination == 0) {
 			sql = " TF_DispensePlan_ID = "+ getTF_DispensePlan_ID() + " AND C_OrderLine_ID = " + rs.getInt(MDispensePlanLine.COLUMNNAME_C_OrderLine_ID);
 		}
 		else {
@@ -177,6 +177,7 @@ public class MDispensePlan extends X_TF_DispensePlan {
 			dispenseLine.setIsTaxIncluded(rs.getBoolean(MDispensePlanLine.COLUMNNAME_IsTaxIncluded));
 			dispenseLine.setIsRoyaltyPassInclusive(rs.getBoolean(MDispensePlanLine.COLUMNNAME_IsRoyaltyPassInclusive));
 			dispenseLine.setIsRentInclusive(rs.getBoolean(MDispensePlanLine.COLUMNNAME_IsRentInclusive));
+			dispenseLine.setFreightUOM_ID(rs.getInt(MDispensePlanLine.COLUMNNAME_FreightUOM_ID));
 			dispenseLine.setUnitPrice(rs.getBigDecimal(MDispensePlanLine.COLUMNNAME_UnitPrice));
 			dispenseLine.setPriceEntered(rs.getBigDecimal(MDispensePlanLine.COLUMNNAME_PriceEntered));
 			dispenseLine.setDiscount(rs.getBigDecimal(MDispensePlanLine.COLUMNNAME_Discount));
@@ -188,8 +189,8 @@ public class MDispensePlan extends X_TF_DispensePlan {
 				dispenseLine.setShipmentTo(ShipmentTo);
 			}
 
-			if(ShipmentDestination != null) {
-				dispenseLine.setShipmentDestination(ShipmentDestination);
+			if(ShipmentDestination > 0) {
+				dispenseLine.setShipmentDestination_ID(ShipmentDestination);
 			}
 			
 			dispenseLine.setOverUnitDelivery(OverDeliveryQty);			

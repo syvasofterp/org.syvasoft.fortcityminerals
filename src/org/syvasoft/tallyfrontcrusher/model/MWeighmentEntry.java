@@ -106,7 +106,7 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		
 		if(!newRecord && getWeighmentEntryType().equals(WEIGHMENTENTRYTYPE_Sales)
 				&& MSysConfig.getBooleanValue("WEIGHMENT_REVIEW", false)) {
-			if(is_Changed() && getStatus().equals(STATUS_UnBilled) && !is_ValueChanged(COLUMNNAME_Status)) {
+			if(is_Changed() && getStatus().equals(STATUS_Unbilled) && !is_ValueChanged(COLUMNNAME_Status)) {
 				setStatus(STATUS_UnderReview);
 			}
 		}
@@ -210,7 +210,7 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 			//setProcessed(true);
 	}
 	public void reverse() {
-		setStatus(STATUS_UnBilled);		
+		setStatus(STATUS_Unbilled);		
 		//setProcessed(false);
 		//Only Shipment document will set processed as True
 		//or false while reversing shipment document.

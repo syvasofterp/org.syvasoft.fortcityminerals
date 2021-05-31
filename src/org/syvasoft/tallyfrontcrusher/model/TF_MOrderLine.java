@@ -21,6 +21,25 @@ public class TF_MOrderLine extends MOrderLine {
 		super(order);
 		// TODO Auto-generated constructor stub
 	}
+	
+	/** Column name FreightUOM_ID */
+    public static final String COLUMNNAME_FreightUOM_ID = "FreightUOM_ID";
+    
+	public void setFreightUOM_ID (int FreightUOM_ID)
+	{
+		if (FreightUOM_ID < 1) 
+			set_Value (COLUMNNAME_FreightUOM_ID, null);
+		else 
+			set_Value (COLUMNNAME_FreightUOM_ID, Integer.valueOf(FreightUOM_ID));
+	}
+
+	public int getFreightUOM_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_FreightUOM_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
 
 	/** Column name TF_WeighmentEntry_ID */
     public static final String COLUMNNAME_TF_WeighmentEntry_ID = "TF_WeighmentEntry_ID";

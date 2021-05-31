@@ -64,6 +64,7 @@ public class CalloutDispensePlanLine_SetOrderInfo implements IColumnCallout {
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_IsTaxIncluded, orderline.isTaxIncluded());
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_IsRoyaltyPassInclusive, orderline.isRoyaltyPassInclusive());
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_IsRentInclusive, orderline.isRentInclusive());
+				mTab.setValue(MDispensePlanLine.COLUMNNAME_FreightUOM_ID, orderline.getFreightUOM_ID());
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_UnitPrice, orderline.getUnitPrice());
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_PriceEntered, orderline.getPriceEntered());
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_Discount, orderline.getDiscount());

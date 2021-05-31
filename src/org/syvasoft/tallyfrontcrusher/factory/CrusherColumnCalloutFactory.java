@@ -330,6 +330,10 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 			list.add(new CalloutOrder_CalcRentPayable());
 		}
 		
+		if(tableName.equals(TF_MOrderLine.Table_Name) && columnName.equals(TF_MOrder.COLUMNNAME_IsRentInclusive)) {
+			list.add(new CalloutOrder_FreightUOM());
+		}
+		
 		if(tableName.equals(TF_MOrder.Table_Name) && (columnName.equals(TF_MOrder.COLUMNNAME_IsRentBreakup)
 				|| columnName.equals(TF_MOrder.COLUMNNAME_Item1_UnitPrice)
 				|| columnName.equals(TF_MOrder.COLUMNNAME_IsRentInclusive)

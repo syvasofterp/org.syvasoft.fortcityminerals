@@ -944,6 +944,8 @@ public class TF_MOrder extends MOrder {
 		return ii.intValue();
 	}
 	
+	 
+	
 	/** Column name Item2_UOM_ID */
     public static final String COLUMNNAME_Item2_UOM_ID = "Item2_UOM_ID";
 	public org.compiere.model.I_C_UOM getItem2_UOM() throws RuntimeException
@@ -3717,7 +3719,7 @@ public class TF_MOrder extends MOrder {
 				.setParameters(getC_Order_ID())
 				.list();
 		for(TF_MInOutLine ioLine : ioLists) {
-			ioLine.set_ValueOfColumn("DocStatus", MWeighmentEntry.STATUS_UnBilled);
+			ioLine.set_ValueOfColumn("DocStatus", MWeighmentEntry.STATUS_Unbilled);
 			ioLine.saveEx();
 		}
 	}

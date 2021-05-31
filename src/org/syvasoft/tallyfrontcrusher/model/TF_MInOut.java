@@ -246,7 +246,7 @@ public class TF_MInOut extends MInOut {
 		ioLine.set_ValueOfColumn("Distance", srcLine.getDistance());
 		ioLine.set_ValueOfColumn("RateMTKM", srcLine.getRateMTKM());
 		ioLine.set_ValueOfColumn("Price", price);
-		ioLine.set_ValueOfColumn("DocStatus", MWeighmentEntry.STATUS_UnBilled);
+		ioLine.set_ValueOfColumn("DocStatus", MWeighmentEntry.STATUS_Unbilled);
 		if(we.getTF_Destination_ID() > 0)
 			ioLine.setDescription("Destination : " + dest.getName());		
 		ioLine.saveEx(get_TrxName());

@@ -33,7 +33,7 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20210524L;
+	private static final long serialVersionUID = 20210531L;
 
     /** Standard Constructor */
     public X_TF_WeighmentEntry (Properties ctx, int TF_WeighmentEntry_ID, String trxName)
@@ -1232,13 +1232,15 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	/** In Progress = IP */
 	public static final String STATUS_InProgress = "IP";
 	/** Unbilled = CO */
-	public static final String STATUS_UnBilled = "CO";
+	public static final String STATUS_Unbilled = "CO";
 	/** Billed = CL */
 	public static final String STATUS_Billed = "CL";
 	/** Voided = VO */
 	public static final String STATUS_Voided = "VO";
 	/** Under Review = UR */
 	public static final String STATUS_UnderReview = "UR";
+	/** Primary DC void = PDCVOID */
+	public static final String STATUS_PrimaryDCVoid = "PDCVOID";
 	/** Set Status.
 		@param Status 
 		Status of the currently running check

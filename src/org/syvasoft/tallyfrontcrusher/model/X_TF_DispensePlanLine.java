@@ -33,7 +33,7 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20210506L;
+	private static final long serialVersionUID = 20210531L;
 
     /** Standard Constructor */
     public X_TF_DispensePlanLine (Properties ctx, int TF_DispensePlanLine_ID, String trxName)
@@ -384,6 +384,20 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 		return ii.intValue();
 	}
 
+	/** Set Close Dispatch Plan.
+		@param CloseDispatchPlan Close Dispatch Plan	  */
+	public void setCloseDispatchPlan (String CloseDispatchPlan)
+	{
+		set_Value (COLUMNNAME_CloseDispatchPlan, CloseDispatchPlan);
+	}
+
+	/** Get Close Dispatch Plan.
+		@return Close Dispatch Plan	  */
+	public String getCloseDispatchPlan () 
+	{
+		return (String)get_Value(COLUMNNAME_CloseDispatchPlan);
+	}
+
 	/** Set Contact Person.
 		@param ContactPerson Contact Person	  */
 	public void setContactPerson (String ContactPerson)
@@ -563,6 +577,31 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
+	}
+
+	public org.compiere.model.I_C_UOM getFreightUOM() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_UOM)MTable.get(getCtx(), org.compiere.model.I_C_UOM.Table_Name)
+			.getPO(getFreightUOM_ID(), get_TrxName());	}
+
+	/** Set Freight UOM.
+		@param FreightUOM_ID Freight UOM	  */
+	public void setFreightUOM_ID (int FreightUOM_ID)
+	{
+		if (FreightUOM_ID < 1) 
+			set_Value (COLUMNNAME_FreightUOM_ID, null);
+		else 
+			set_Value (COLUMNNAME_FreightUOM_ID, Integer.valueOf(FreightUOM_ID));
+	}
+
+	/** Get Freight UOM.
+		@return Freight UOM	  */
+	public int getFreightUOM_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_FreightUOM_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	/** Set Price Confidential.
@@ -1146,6 +1185,26 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 	public String getShipmentDestination () 
 	{
 		return (String)get_Value(COLUMNNAME_ShipmentDestination);
+	}
+
+	/** Set Shipment Destination.
+		@param ShipmentDestination_ID Shipment Destination	  */
+	public void setShipmentDestination_ID (int ShipmentDestination_ID)
+	{
+		if (ShipmentDestination_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_ShipmentDestination_ID, null);
+		else 
+			set_ValueNoCheck (COLUMNNAME_ShipmentDestination_ID, Integer.valueOf(ShipmentDestination_ID));
+	}
+
+	/** Get Shipment Destination.
+		@return Shipment Destination	  */
+	public int getShipmentDestination_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_ShipmentDestination_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	/** Set Shipment To.
