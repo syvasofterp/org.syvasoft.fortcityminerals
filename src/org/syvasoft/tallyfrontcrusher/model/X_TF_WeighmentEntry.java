@@ -1240,7 +1240,7 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	/** Under Review = UR */
 	public static final String STATUS_UnderReview = "UR";
 	/** Primary DC void = PDCVOID */
-	public static final String STATUS_PrimaryDCVoid = "PDCVOID";
+	public static final String STATUS_PrimaryDCVoid = "PV";
 	/** Set Status.
 		@param Status 
 		Status of the currently running check

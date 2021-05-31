@@ -119,10 +119,28 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 				}
 				
 				if(!createTPandNonTPInvocies) {
+					BigDecimal billQty = null;
+					
+					//TP Weight Invoice scenario, getBilledQty returns TP Weight only 
+					if(!wEntry.isSecondary() && wEntry.getBilledQty().doubleValue() ==0) {
+						BigDecimal remainingQty = wEntry.getNetWeightUnit().subtract(wEntry.getTotalTPWeight());
+						//Remaining actual qty should only be non tp invoiced for the Without Order DC
+						//For order DC, PDC Voided should be done the balance tp weight should be tallied using secondary dc 
+						if((remainingQty.doubleValue() == 0 &&  wEntry.getC_OrderLine_ID() == 0) || wEntry.getC_OrderLine_ID() > 0) {
+							msg = "PDCVoided due to TP Weight is ZERO";
+							wEntry.setStatus(MWeighmentEntry.STATUS_PrimaryDCVoid);							
+							wEntry.saveEx();
+							
+							addLog(wEntry.get_Table_ID(), wEntry.getGrossWeightTime(), null, wEntry.getDocumentNo() + " : " + msg, wEntry.get_Table_ID(), wEntry.get_ID());
+							continue;
+						}
+						billQty = remainingQty; //non tp qty
+					}
+					
 					if(wEntry.getC_OrderLine_ID() == 0)
-						createSalesQuickEntry(wEntry, null, true, trx);
+						createSalesQuickEntry(wEntry, billQty, true, trx);
 					else
-						createInvoiceCustomer(wEntry, null, true, trx);
+						createInvoiceCustomer(wEntry, billQty, true, trx);
 				}
 				else {
 					BigDecimal tpWeight = wEntry.getPermitIssuedQty();

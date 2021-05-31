@@ -381,7 +381,15 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		
 		return qty;
 	}
-		
+	
+	public BigDecimal getTotalTPWeight() {		
+		String sql = "SELECT SUM(PermitIssuedQty) FROM TF_WeighmentEntry WHERE ? IN (TF_WeighmentEntry_ID, TF_WeighmentEntryPrimary_ID) "
+				+ " AND Status != 'VO'";
+		BigDecimal totalTPWeight = DB.getSQLValueBD(get_TrxName(), sql, getTF_WeighmentEntry_ID());
+		if(totalTPWeight == null)
+			totalTPWeight = BigDecimal.ZERO;
+		return totalTPWeight;
+	}
 	
 	public void validateInvoiceType() {
 		if(!getWeighmentEntryType().equals(WEIGHMENTENTRYTYPE_Sales)) 
@@ -392,11 +400,11 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		int count = 0;
 		
 		if(getC_OrderLine_ID() == 0 && getInvoiceType().equalsIgnoreCase(INVOICETYPE_ActualWeight)) {
-			String secondaryDCs = "SELECT COUNT(*) FROM TF_WeighmentEntry WHERE TF_WeighmentEntryPrimary_ID = ? AND IsSecondary = 'Y' AND STATUS IN ('CO','CL')";
+			String secondaryDCs = "SELECT COUNT(*) FROM TF_WeighmentEntry WHERE TF_WeighmentEntryPrimary_ID = ? AND IsSecondary = 'Y' AND STATUS IN ('PV','CO','CL')";
 			count = DB.getSQLValue(get_TrxName(), secondaryDCs, getTF_WeighmentEntry_ID());
 		}
 		else if(getC_OrderLine_ID() > 0 && getInvoiceType().equalsIgnoreCase(INVOICETYPE_ActualWeight)){
-			String secondaryDCs = "SELECT COUNT(*) FROM TF_WeighmentEntry WHERE C_OrderLine_ID = ? AND IsSecondary = 'Y' AND STATUS IN ('CO','CL')";
+			String secondaryDCs = "SELECT COUNT(*) FROM TF_WeighmentEntry WHERE C_OrderLine_ID = ? AND IsSecondary = 'Y' AND STATUS IN ('PV','CO','CL')";
 			count = DB.getSQLValue(get_TrxName(), secondaryDCs, getC_OrderLine_ID());
 		}
 		
@@ -414,16 +422,16 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 			totalActualWeight = primary.getNetWeightUnit();
 			
 			String sql = "SELECT SUM(PermitIssuedQty) FROM TF_WeighmentEntry WHERE ? IN (TF_WeighmentEntryPrimary_ID, TF_WeighmentEntry_ID) "
-					+ " AND STATUS IN ('CO','CL')";
+					+ " AND STATUS IN ('PV','CO','CL')";
 			totalTPWeight = DB.getSQLValueBD(get_TrxName(), sql, wEntry_ID);			
 		}		
 		//Validate Total TP Weight against Order Line
 		//if(getC_OrderLine_ID() > 0)
 		else  {
-			String sqlTPWeight = "SELECT SUM(PermitIssuedQty) FROM TF_WeighmentEntry WHERE C_OrderLine_ID = ? AND STATUS IN ('CO','CL')";
+			String sqlTPWeight = "SELECT SUM(PermitIssuedQty) FROM TF_WeighmentEntry WHERE C_OrderLine_ID = ? AND STATUS IN ('PV','CO','CL')";
 			totalTPWeight = DB.getSQLValueBD(get_TrxName(), sqlTPWeight, getC_OrderLine_ID());
 			
-			String sqlActualWeight = "SELECT SUM(NetWeightUnit) FROM TF_WeighmentEntry WHERE C_OrderLine_ID = ? AND STATUS IN ('CO','CL') AND "
+			String sqlActualWeight = "SELECT SUM(NetWeightUnit) FROM TF_WeighmentEntry WHERE C_OrderLine_ID = ? AND STATUS IN ('PV','CO','CL') AND "
 					+ " IsSecondary='N'";
 			totalActualWeight = DB.getSQLValueBD(get_TrxName(), sqlActualWeight, getC_OrderLine_ID());			
 		}
