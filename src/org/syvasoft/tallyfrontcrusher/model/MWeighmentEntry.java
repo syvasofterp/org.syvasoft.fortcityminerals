@@ -8,6 +8,7 @@ import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.MDocType;
 import org.compiere.model.MInOutLine;
 import org.compiere.model.MSysConfig;
+import org.compiere.model.MUOMConversion;
 import org.compiere.model.Query;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
@@ -368,6 +369,12 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		return qtyMovement;
 	}
 	
+	public BigDecimal getUOMQtyConverted(BigDecimal qty) {
+		int tonnage_uom_id = MSysConfig.getIntValue("TONNAGE_UOM", 1000069, Env.getAD_Client_ID(getCtx()));
+		qty = MUOMConversion.convert(tonnage_uom_id, getC_UOM_ID(), qty, true);
+		return qty;
+	}
+	
 	public BigDecimal getBilledQty() {
 		int tonnage_uom_id = MSysConfig.getIntValue("TONNAGE_UOM", 1000069, Env.getAD_Client_ID(getCtx()));
 		BigDecimal qty = getNetWeight();
@@ -377,9 +384,13 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 			qty = getNetWeightUnit();
 		
 		if((!isSecondary() && getInvoiceType().equals(INVOICETYPE_TPWeight)) || isSecondary())
-			qty = getPermitIssuedQty();		
-		
+			qty = getUOMQtyConverted(getPermitIssuedQty());		
+				
 		return qty;
+	}
+	
+	public BigDecimal getTPBilledQty() {
+		return getUOMQtyConverted(getPermitIssuedQty());
 	}
 	
 	public BigDecimal getTotalTPWeight() {		
@@ -388,6 +399,7 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		BigDecimal totalTPWeight = DB.getSQLValueBD(get_TrxName(), sql, getTF_WeighmentEntry_ID());
 		if(totalTPWeight == null)
 			totalTPWeight = BigDecimal.ZERO;
+		totalTPWeight = getUOMQtyConverted(totalTPWeight);
 		return totalTPWeight;
 	}
 	
