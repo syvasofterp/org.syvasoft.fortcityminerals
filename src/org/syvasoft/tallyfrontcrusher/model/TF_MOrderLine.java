@@ -396,6 +396,27 @@ public class TF_MOrderLine extends MOrderLine {
 		return false;
 	}
 	
+	public static final String COLUMNNAME_IsPriceConfidential = "IsPriceConfidential";
+	/** Set Price Confidential.
+	@param IsPriceConfidential Price Confidential	  */
+	public void setIsPriceConfidential (boolean IsPriceConfidential)
+	{
+		set_Value (COLUMNNAME_IsPriceConfidential, Boolean.valueOf(IsPriceConfidential));
+	}
+	
+	/** Get Price Confidential.
+		@return Price Confidential	  */
+	public boolean isPriceConfidential () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsPriceConfidential);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
 	@Override
 	protected boolean afterSave(boolean newRecord, boolean success) {		
 		Boolean ok = super.afterSave(newRecord, success);
@@ -419,6 +440,16 @@ public class TF_MOrderLine extends MOrderLine {
 		}
 		boolean success = super.beforeSave(newRecord);
 		setC_UOM_ID(C_UOM_ID);
+		
+		TF_MBPartner bp = new TF_MBPartner(getCtx(), getC_BPartner_ID(), get_TrxName());
+		
+		if(bp != null) {
+			if(isPriceConfidential() && !bp.get_ValueAsBoolean(COLUMNNAME_IsPriceConfidential)) {
+				bp.set_ValueOfColumn(COLUMNNAME_IsPriceConfidential, isPriceConfidential());
+				bp.saveEx();
+			}
+		}
+		
 		return success;
 	}
 

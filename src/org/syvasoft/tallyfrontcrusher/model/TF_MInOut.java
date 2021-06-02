@@ -111,7 +111,8 @@ public class TF_MInOut extends MInOut {
 			
 			we.saveEx();
 			
-			updateDispenseQty(we, false);
+			if(isSOTrx() && getC_DocType_ID() == 1000055)
+				updateDispenseQty(we, false);
 			
 			if(createConsolidatedTransportInvoice)
 				createTransportMaterialReceipt();
@@ -139,7 +140,8 @@ public class TF_MInOut extends MInOut {
 				we.reverseShipped();				
 			we.saveEx();
 			
-			updateDispenseQty(we, true);
+			if(isSOTrx() && getC_DocType_ID() == 1000055)
+				updateDispenseQty(we, true);
 			
 			reverseTransportMaterialReceipt();
 		}

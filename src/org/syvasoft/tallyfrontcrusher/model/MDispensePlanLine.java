@@ -109,6 +109,16 @@ public class MDispensePlanLine extends X_TF_DispensePlanLine {
 				}
 			}
 		}
+		
+		TF_MBPartner bp = new TF_MBPartner(getCtx(), getC_BPartner_ID(), get_TrxName());
+		
+		if(bp != null) {
+			if(isPriceConfidential() && !bp.get_ValueAsBoolean(COLUMNNAME_IsPriceConfidential)) {
+				bp.set_ValueOfColumn(COLUMNNAME_IsPriceConfidential, isPriceConfidential());
+				bp.saveEx();
+			}
+		}
+			
 		return super.beforeSave(newRecord);
 	}
 	

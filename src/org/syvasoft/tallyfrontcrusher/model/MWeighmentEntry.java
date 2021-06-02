@@ -4,12 +4,16 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.ResultSet;
 import java.util.Properties;
+import java.util.logging.Level;
+
 import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.MDocType;
 import org.compiere.model.MInOutLine;
 import org.compiere.model.MSysConfig;
+import org.compiere.model.MUOM;
 import org.compiere.model.MUOMConversion;
 import org.compiere.model.Query;
+import org.compiere.util.CLogger;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
 
@@ -20,6 +24,9 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 	 * 
 	 */
 	private static final long serialVersionUID = 2613943323993702690L;
+	
+	private static final CLogger s_log = CLogger.getCLogger(MWeighmentEntry.class);
+	
 	public MWeighmentEntry(Properties ctx, ResultSet rs, String trxName) {
 		super(ctx, rs, trxName);
 		// TODO Auto-generated constructor stub
@@ -356,6 +363,35 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		return MSysConfig.getIntValue("MT_KM_UOM", 1000081, getAD_Client_ID());
 	}
 			
+	public BigDecimal qtyUOMConvert(int C_UOM_From_ID, int C_UOM_To_ID, int M_Product_ID, BigDecimal qty) {
+		String whereClause = "IsActive='Y' AND C_UOM_ID=? AND C_UOM_TO_ID=? AND M_Product_ID = ?";
+		
+		MUOMConversion uomconv = new Query(getCtx(),  MUOMConversion.Table_Name, whereClause, get_TrxName())
+									 .setParameters(C_UOM_From_ID, C_UOM_To_ID, M_Product_ID).first();
+		
+		BigDecimal retValue = null;
+		int precision = 2;
+		
+		if(uomconv != null) {
+			retValue = uomconv.getMultiplyRate();
+			
+			MUOM uomTo = new MUOM(getCtx(), C_UOM_To_ID, get_TrxName());
+			
+			precision = uomTo.getStdPrecision();
+			
+			if (retValue == null)
+			{
+				if (s_log.isLoggable(Level.INFO)) s_log.info ("NOT found - FromUOM=" + C_UOM_From_ID + ", ToUOM=" + C_UOM_To_ID);
+				return null;
+			}
+			
+			qty = retValue.multiply(qty);
+			if (retValue.scale() > precision)
+				qty = retValue.setScale(precision, BigDecimal.ROUND_HALF_UP);			
+		}
+		
+		return qty;
+	}
 	public BigDecimal getMovementQty() {
 		int MT_UOM_ID = MSysConfig.getIntValue("TONNAGE_UOM", 1000069, getAD_Client_ID());
 		TF_MProduct prod = new TF_MProduct(getCtx(), getM_Product_ID(), get_TrxName());
@@ -371,7 +407,12 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 	
 	public BigDecimal getUOMQtyConverted(BigDecimal qty) {
 		int tonnage_uom_id = MSysConfig.getIntValue("TONNAGE_UOM", 1000069, Env.getAD_Client_ID(getCtx()));
-		qty = MUOMConversion.convert(tonnage_uom_id, getC_UOM_ID(), qty, true);
+		
+		qty = qtyUOMConvert(tonnage_uom_id, getC_UOM_ID(), getM_Product_ID(), qty);
+		
+		if(getC_UOM_ID() == MSysConfig.getIntValue("CFT_UOM", 1000076, getAD_Client_ID()))
+			qty = qty.setScale(0, BigDecimal.ROUND_UP);
+		
 		return qty;
 	}
 	
@@ -386,6 +427,8 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		if((!isSecondary() && getInvoiceType().equals(INVOICETYPE_TPWeight)) || isSecondary())
 			qty = getUOMQtyConverted(getPermitIssuedQty());		
 				
+		
+		
 		return qty;
 	}
 	

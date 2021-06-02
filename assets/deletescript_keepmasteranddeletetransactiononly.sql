@@ -49,6 +49,7 @@ set search_path to adempiere;
 --DELETE FROM tf_dispenseplanline;
 --DELETE FROM tf_dispenseplan;
 DELETE FROM pm_machinestmt;
+UPDATE tf_weighmententry SET tf_dispenseplanline_id = NULL,c_order_id=NULL,c_orderline_id=NULL;
 UPDATE TF_Boulder_Receipt SET Subcon_Invoice_ID = NULL, TF_Employee_Salary_ID = NULL, TF_Vehicle_Rent_ID = NULL,
 	TF_Quarry_Rent_ID = NULL;
 UPDATE TF_Employee_Salary SET GL_Journal_ID = NULL;
@@ -66,7 +67,8 @@ UPDATE TF_Employee_Salary_Issue SET C_Payment_ID = NULL;
 
 UPDATE TF_TripSheet SET TF_Vehicle_Rental_Contract_ID = NULL;
 UPDATE C_Invoice SET TF_Vehicle_Rental_Contract_ID = NULL;
-
+UPDATE c_invoiceline SET tf_weighmententry_id = NULL;
+UPDATE tf_docattachment SET tf_weighmententry_id = NULL;
 UPDATE M_Transaction SET TF_Boulder_Receipt_ID = NULL;
 
 DELETE FROM TF_Boulder_Receipt_Line;
@@ -118,6 +120,9 @@ TransporterInvoice_ID = null
  WHERE AD_client_ID = 1000000;
 DELETE FROM tf_rmsubcon_movement WHERE AD_client_ID = 1000000;
 DELETE FROM tf_weighmententry WHERE ad_client_id=1000000;
+DELETE FROM tf_dispenseplanline WHERE ad_client_id=1000000;
+DELETE FROM tf_dispenseplan  WHERE ad_client_id=1000000;
+DELETE FROM tf_docattachment WHERE ad_client_id=1000000;
 --DELETE FROM  C_Project WHERE C_Project_id !=1000000 AND ad_client_id=1000000;;
 
 
