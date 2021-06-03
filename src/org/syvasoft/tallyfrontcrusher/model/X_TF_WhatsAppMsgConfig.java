@@ -30,7 +30,7 @@ public class X_TF_WhatsAppMsgConfig extends PO implements I_TF_WhatsAppMsgConfig
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20210529L;
+	private static final long serialVersionUID = 20210603L;
 
     /** Standard Constructor */
     public X_TF_WhatsAppMsgConfig (Properties ctx, int TF_WhatsAppMsgConfig_ID, String trxName)
@@ -127,6 +127,20 @@ public class X_TF_WhatsAppMsgConfig extends PO implements I_TF_WhatsAppMsgConfig
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
+	}
+
+	/** Set Email Sql.
+		@param EmailSql Email Sql	  */
+	public void setEmailSql (String EmailSql)
+	{
+		set_Value (COLUMNNAME_EmailSql, EmailSql);
+	}
+
+	/** Get Email Sql.
+		@return Email Sql	  */
+	public String getEmailSql () 
+	{
+		return (String)get_Value(COLUMNNAME_EmailSql);
 	}
 
 	/** Set File Name SQL.

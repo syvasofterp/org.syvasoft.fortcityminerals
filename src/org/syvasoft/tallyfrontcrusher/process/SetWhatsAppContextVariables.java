@@ -33,7 +33,7 @@ public class SetWhatsAppContextVariables extends SvrProcess {
 
 	@Override
 	protected String doIt() throws Exception {
-		
+		Env.setContext(Env.getCtx(), "#EmailAddress", waConfig.getParsedEmail());
 		Env.setContext(Env.getCtx(), "#WhatsAppPhone", waConfig.getParsedPhone());
 		Env.setContext(Env.getCtx(), "#WhatsAppMessage", waConfig.getParsedMessage());
 		Env.setContext(Env.getCtx(), "#FileName", waConfig.getParsedFileName());
