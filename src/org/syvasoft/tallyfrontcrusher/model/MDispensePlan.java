@@ -211,6 +211,7 @@ public class MDispensePlan extends X_TF_DispensePlan {
 				dispenseLine.setDocStatus(MDispensePlanLine.DOCSTATUS_InProgress);				
 			}
 			
+			dispenseLine.setCustomerTransporter(rs.getBoolean(MDispensePlanLine.COLUMNNAME_CustomerTransporter));
 			dispenseLine.saveEx();
 		}
 		else {

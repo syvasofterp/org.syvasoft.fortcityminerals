@@ -119,6 +119,7 @@ public class MDispensePlanLine extends X_TF_DispensePlanLine {
 			}
 		}
 			
+		setAD_Org_ID(dispensePlan.getAD_Org_ID());
 		return super.beforeSave(newRecord);
 	}
 	

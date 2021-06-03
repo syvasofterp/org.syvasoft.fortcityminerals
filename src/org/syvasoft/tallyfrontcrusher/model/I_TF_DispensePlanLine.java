@@ -254,6 +254,15 @@ public interface I_TF_DispensePlanLine
 	  */
 	public int getCreatedBy();
 
+    /** Column name CustomerTransporter */
+    public static final String COLUMNNAME_CustomerTransporter = "CustomerTransporter";
+
+	/** Set Customer's Transporter	  */
+	public void setCustomerTransporter (boolean CustomerTransporter);
+
+	/** Get Customer's Transporter	  */
+	public boolean isCustomerTransporter();
+
     /** Column name DateOrdered */
     public static final String COLUMNNAME_DateOrdered = "DateOrdered";
 
@@ -722,7 +731,8 @@ public interface I_TF_DispensePlanLine
 
 	/** Get Shipment Destination	  */
 	public int getShipmentDestination_ID();
-	
+
+
     /** Column name ShipmentTo */
     public static final String COLUMNNAME_ShipmentTo = "ShipmentTo";
 

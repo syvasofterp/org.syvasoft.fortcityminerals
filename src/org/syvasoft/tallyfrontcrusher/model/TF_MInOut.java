@@ -174,6 +174,9 @@ public class TF_MInOut extends MInOut {
 		if(rv.isOwnVehicle() || !rv.isTransporter())
 			return;
 		
+		if(rv.isTransporter() && we.isCustomerTransporter())
+			return;
+		
 		//Don't Create Material Receipt for the same Transporter
 		//It stops the recursive loop
 		if(rv.getC_BPartner_ID() == getC_BPartner_ID())

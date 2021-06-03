@@ -33,7 +33,7 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20210531L;
+	private static final long serialVersionUID = 20210603L;
 
     /** Standard Constructor */
     public X_TF_DispensePlanLine (Properties ctx, int TF_DispensePlanLine_ID, String trxName)
@@ -410,6 +410,27 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 	public String getContactPerson () 
 	{
 		return (String)get_Value(COLUMNNAME_ContactPerson);
+	}
+
+	/** Set Customer's Transporter.
+		@param CustomerTransporter Customer's Transporter	  */
+	public void setCustomerTransporter (boolean CustomerTransporter)
+	{
+		set_Value (COLUMNNAME_CustomerTransporter, Boolean.valueOf(CustomerTransporter));
+	}
+
+	/** Get Customer's Transporter.
+		@return Customer's Transporter	  */
+	public boolean isCustomerTransporter () 
+	{
+		Object oo = get_Value(COLUMNNAME_CustomerTransporter);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
 	}
 
 	/** Set Date Ordered.
@@ -1187,14 +1208,15 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 		return (String)get_Value(COLUMNNAME_ShipmentDestination);
 	}
 
+	
 	/** Set Shipment Destination.
 		@param ShipmentDestination_ID Shipment Destination	  */
 	public void setShipmentDestination_ID (int ShipmentDestination_ID)
 	{
 		if (ShipmentDestination_ID < 1) 
-			set_ValueNoCheck (COLUMNNAME_ShipmentDestination_ID, null);
+			set_Value (COLUMNNAME_ShipmentDestination_ID, null);
 		else 
-			set_ValueNoCheck (COLUMNNAME_ShipmentDestination_ID, Integer.valueOf(ShipmentDestination_ID));
+			set_Value (COLUMNNAME_ShipmentDestination_ID, Integer.valueOf(ShipmentDestination_ID));
 	}
 
 	/** Get Shipment Destination.

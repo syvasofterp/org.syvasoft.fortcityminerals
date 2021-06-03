@@ -219,6 +219,15 @@ public interface I_TF_WeighmentEntry
 	  */
 	public boolean isCreateTwoInvoices();
 
+    /** Column name CustomerTransporter */
+    public static final String COLUMNNAME_CustomerTransporter = "CustomerTransporter";
+
+	/** Set Customer's Transporter	  */
+	public void setCustomerTransporter (boolean CustomerTransporter);
+
+	/** Get Customer's Transporter	  */
+	public boolean isCustomerTransporter();
+
     /** Column name Description */
     public static final String COLUMNNAME_Description = "Description";
 
