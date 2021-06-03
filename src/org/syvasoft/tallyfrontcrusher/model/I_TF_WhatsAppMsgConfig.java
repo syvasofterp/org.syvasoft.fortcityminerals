@@ -110,6 +110,15 @@ public interface I_TF_WhatsAppMsgConfig
 	  */
 	public int getCreatedBy();
 
+    /** Column name EmailSql */
+    public static final String COLUMNNAME_EmailSql = "EmailSql";
+
+	/** Set Email Sql	  */
+	public void setEmailSql (String EmailSql);
+
+	/** Get Email Sql	  */
+	public String getEmailSql();
+
     /** Column name FileNameSQL */
     public static final String COLUMNNAME_FileNameSQL = "FileNameSQL";
 
