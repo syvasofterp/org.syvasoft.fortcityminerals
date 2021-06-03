@@ -335,6 +335,26 @@ public class TF_MBPartner extends MBPartner {
 		set_Value (COLUMNNAME_DebitBalance, DebitBalance);
 	}
 	
+	
+    /** Column name EMail */
+    public static final String COLUMNNAME_EMail = "EMail";
+	/** Set EMail Address.
+	@param EMail 
+	Electronic Mail Address
+  */
+	public void setEMail (String EMail)
+	{
+		set_Value (COLUMNNAME_EMail, EMail);
+	}
+	
+	/** Get EMail Address.
+		@return Electronic Mail Address
+	  */
+	public String getEMail () 
+	{
+		return (String)get_Value(COLUMNNAME_EMail);
+	}
+	
 	/** Get Debit Balance.
 		@return Debit Balance	  */
 	public BigDecimal getDebitBalance () 
@@ -668,6 +688,7 @@ public class TF_MBPartner extends MBPartner {
 		MUser user = new MUser(getCtx(), getAD_User_ID(), get_TrxName());		
 		user.setC_BPartner_ID(getC_BPartner_ID());
 		user.setAD_Org_ID(getAD_Org_ID());
+		user.setEMail(getEMail());
 		user.setName(getContactName());
 		user.setPhone(getPhone());
 		user.setNotificationType(MUser.NOTIFICATIONTYPE_EMail);
