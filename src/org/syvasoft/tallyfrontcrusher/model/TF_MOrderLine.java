@@ -90,6 +90,30 @@ public class TF_MOrderLine extends MOrderLine {
 		return (String)get_Value(COLUMNNAME_DeliveryContact);
 	}
 
+	public static final String COLUMNNAME_CustomerTransporter = "CustomerTransporter";
+	
+	/** Set Customer's Transporter.
+	@param CustomerTransporter Customer's Transporter	  */
+	public void setCustomerTransporter (boolean CustomerTransporter)
+	{
+		set_Value (COLUMNNAME_CustomerTransporter, Boolean.valueOf(CustomerTransporter));
+	}
+	
+	/** Get Customer's Transporter.
+		@return Customer's Transporter	  */
+	public boolean isCustomerTransporter () 
+	{
+		Object oo = get_Value(COLUMNNAME_CustomerTransporter);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+	
+
 	public static final String COLUMNNAME_ContactPerson = "ContactPerson";
 	
 	/** Set Contact Person.
