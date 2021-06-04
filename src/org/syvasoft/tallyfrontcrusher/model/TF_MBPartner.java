@@ -719,7 +719,7 @@ public class TF_MBPartner extends MBPartner {
 		}		
 		
 		bpLoc.set_TrxName(get_TrxName());
-		bpLoc.setName(getCity());
+		bpLoc.setName(getAddress4());
 		bpLoc.setC_Location_ID(loc.getC_Location_ID());
 		bpLoc.setPhone(getPhone());
 		bpLoc.setIsBillTo(true);
