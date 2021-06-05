@@ -51,6 +51,21 @@ public interface I_TF_SmsNotification
 	  */
 	public int getAD_Client_ID();
 
+    /** Column name AD_Message_ID */
+    public static final String COLUMNNAME_AD_Message_ID = "AD_Message_ID";
+
+	/** Set Message.
+	  * System Message
+	  */
+	public void setAD_Message_ID (int AD_Message_ID);
+
+	/** Get Message.
+	  * System Message
+	  */
+	public int getAD_Message_ID();
+
+	public org.compiere.model.I_AD_Message getAD_Message() throws RuntimeException;
+
     /** Column name AD_Org_ID */
     public static final String COLUMNNAME_AD_Org_ID = "AD_Org_ID";
 
@@ -78,6 +93,21 @@ public interface I_TF_SmsNotification
 	public int getAD_Table_ID();
 
 	public org.compiere.model.I_AD_Table getAD_Table() throws RuntimeException;
+
+    /** Column name AD_User_ID */
+    public static final String COLUMNNAME_AD_User_ID = "AD_User_ID";
+
+	/** Set User/Contact.
+	  * User within the system - Internal or Business Partner Contact
+	  */
+	public void setAD_User_ID (int AD_User_ID);
+
+	/** Get User/Contact.
+	  * User within the system - Internal or Business Partner Contact
+	  */
+	public int getAD_User_ID();
+
+	public org.compiere.model.I_AD_User getAD_User() throws RuntimeException;
 
     /** Column name ChangeRecord */
     public static final String COLUMNNAME_ChangeRecord = "ChangeRecord";
@@ -224,6 +254,15 @@ public interface I_TF_SmsNotification
 	/** Get New Record	  */
 	public boolean isNewRecord();
 
+    /** Column name NoticeFlag */
+    public static final String COLUMNNAME_NoticeFlag = "NoticeFlag";
+
+	/** Set Notice	  */
+	public void setNoticeFlag (boolean NoticeFlag);
+
+	/** Get Notice	  */
+	public boolean isNoticeFlag();
+
     /** Column name RecipientSQL */
     public static final String COLUMNNAME_RecipientSQL = "RecipientSQL";
 
@@ -232,6 +271,15 @@ public interface I_TF_SmsNotification
 
 	/** Get Recipient SQL	  */
 	public String getRecipientSQL();
+
+    /** Column name RequiredAction */
+    public static final String COLUMNNAME_RequiredAction = "RequiredAction";
+
+	/** Set Required Action	  */
+	public void setRequiredAction (String RequiredAction);
+
+	/** Get Required Action	  */
+	public String getRequiredAction();
 
     /** Column name Sql */
     public static final String COLUMNNAME_Sql = "Sql";
@@ -245,10 +293,10 @@ public interface I_TF_SmsNotification
     /** Column name TF_SmsNotification_ID */
     public static final String COLUMNNAME_TF_SmsNotification_ID = "TF_SmsNotification_ID";
 
-	/** Set TF_SmsNotification	  */
+	/** Set Notification	  */
 	public void setTF_SmsNotification_ID (int TF_SmsNotification_ID);
 
-	/** Get TF_SmsNotification	  */
+	/** Get Notification	  */
 	public int getTF_SmsNotification_ID();
 
     /** Column name TF_SmsNotification_UU */

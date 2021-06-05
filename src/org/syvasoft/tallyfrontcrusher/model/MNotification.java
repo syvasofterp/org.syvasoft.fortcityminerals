@@ -10,6 +10,7 @@ import java.util.Properties;
 import org.adempiere.exceptions.AdempiereException;
 import org.adempiere.exceptions.DBException;
 import org.chatapi.whatsapp.api.WhatsAppUtil;
+import org.compiere.model.MNote;
 import org.compiere.model.MSysConfig;
 import org.compiere.model.Query;
 import org.compiere.util.DB;
@@ -159,6 +160,19 @@ public class MNotification extends X_TF_SmsNotification {
 			if(isWhatsApp() && EnabledWhatsApp) {
 				WhatsAppUtil waUtil = new WhatsAppUtil();
 				waUtil.sendMessage(getAD_Client_ID(), getAD_Org_ID(),getTF_SmsNotification_ID(), recipient.getChatId(), recipient.getMobileNo(), msg);
+			}
+			
+			if(isNoticeFlag()) {
+				MNote note = new MNote(getCtx(), 0, get_TrxName());
+				
+				note.setAD_Org_ID(getAD_Org_ID());
+				note.setAD_Message_ID(getAD_Message_ID());
+				note.setAD_User_ID(getAD_User_ID());
+				note.setAD_Table_ID(getAD_Table_ID());
+				note.setRecord_ID(Integer.parseInt(ID));
+				note.setDescription(getRequiredAction());
+				note.setTextMsg(msg);
+				note.saveEx();
 			}
 		}
 		
