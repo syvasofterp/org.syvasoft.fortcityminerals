@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.MInvoiceLine;
+import org.compiere.model.MNote;
 import org.compiere.model.MOrderLine;
 import org.compiere.model.MPriceList;
 import org.compiere.model.MSysConfig;
@@ -121,6 +122,13 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 					continue;
 				}
 				
+				List<MNote> notes = new Query(getCtx(), MNote.Table_Name, " processed = 'N' AND ad_table_id = 1000212 AND record_id = " + wEntry.getTF_WeighmentEntry_ID() , get_TrxName()).list();
+				
+				if(notes.size() > 0) {
+					msg = wEntry.getDocumentNo() +  " : Invoice cannot be generated due to pending Notice for this DC.";
+					addLog(wEntry.get_Table_ID(), wEntry.getGrossWeightTime(), null, msg, wEntry.get_Table_ID(), wEntry.get_ID());
+					continue;
+				}
 				if(!createTPandNonTPInvocies) {
 					BigDecimal billQty = null;
 					
