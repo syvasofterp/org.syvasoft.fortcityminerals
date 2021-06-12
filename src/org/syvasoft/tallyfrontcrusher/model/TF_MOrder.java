@@ -1801,8 +1801,8 @@ public class TF_MOrder extends MOrder {
 			multiplyRate = BigDecimal.ONE;
 		}
 		
-		
-		line.setPriceActual(price.multiply(multiplyRate)); // Price in Default UOM such as Tonnage
+		line.setPriceActual(price);
+		//line.setPriceActual(price.multiply(multiplyRate)); // Price in Default UOM such as Tonnage
 		line.setPriceList(price); // Price for the Sales UOM
 		line.setPriceLimit(line.getPriceActual()); // 
 		line.setPriceEntered(price); // Price for the Sales UOM
