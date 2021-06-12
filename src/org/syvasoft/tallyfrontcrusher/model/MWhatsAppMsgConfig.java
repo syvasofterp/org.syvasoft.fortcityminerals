@@ -97,17 +97,21 @@ public class MWhatsAppMsgConfig extends X_TF_WhatsAppMsgConfig {
 		{						
 			String name = parameters[i].getParameterName();			
 			String value = parameters[i].getParameterAsString();
-			whereSql = whereSql.replace("@" + name + "@", value);
-			if(emailSql != null)
-				emailSql = emailSql.replace("@" + name + "@", value);
-			phoneSql = phoneSql.replace("@" + name + "@", value);
-			fileNameSql = fileNameSql.replace("@" + name + "@", value);
+			
+			if(value != null) {
+				whereSql = whereSql.replace("@" + name + "@", value);
+				if(emailSql != null)
+					emailSql = emailSql.replace("@" + name + "@", value);
+				phoneSql = phoneSql.replace("@" + name + "@", value);
+				fileNameSql = fileNameSql.replace("@" + name + "@", value);
+			}
 		}
 	}
 	
 	public String getParsedFileName() {
 		String fileName = executeSql(fileNameSql);
-		return (getPrefix() == null ? "" : getPrefix()) + fileName.replace("/", "-").replace("\\", "-");
+		
+		return (getPrefix() == null ? "" : getPrefix()) + ((fileName == null) ? "" : fileName.replace("/", "-").replace("\\", "-"));		 
 	}
 	
 	public String getParsedMessage() {
