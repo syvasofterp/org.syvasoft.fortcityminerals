@@ -35,6 +35,8 @@ public class MDispensePlan extends X_TF_DispensePlan {
 	
 	public int TF_VehicleType_ID = 0;
 	
+	public int FreightUOM_ID = 0;
+	
 	public MDispensePlan(Properties ctx, ResultSet rs, String trxName) {
 		super(ctx, rs, trxName);
 		// TODO Auto-generated constructor stub
@@ -177,7 +179,14 @@ public class MDispensePlan extends X_TF_DispensePlan {
 			dispenseLine.setIsTaxIncluded(rs.getBoolean(MDispensePlanLine.COLUMNNAME_IsTaxIncluded));
 			dispenseLine.setIsRoyaltyPassInclusive(rs.getBoolean(MDispensePlanLine.COLUMNNAME_IsRoyaltyPassInclusive));
 			dispenseLine.setIsRentInclusive(rs.getBoolean(MDispensePlanLine.COLUMNNAME_IsRentInclusive));
-			dispenseLine.setFreightUOM_ID(rs.getInt(MDispensePlanLine.COLUMNNAME_FreightUOM_ID));
+			
+			if(FreightUOM_ID > 0 && !rs.getBoolean(MDispensePlanLine.COLUMNNAME_IsRentInclusive)) {				
+				dispenseLine.setFreightUOM_ID(FreightUOM_ID);
+			}
+			else {
+				dispenseLine.setFreightUOM_ID(rs.getInt(MDispensePlanLine.COLUMNNAME_FreightUOM_ID));
+			}
+			
 			dispenseLine.setUnitPrice(rs.getBigDecimal(MDispensePlanLine.COLUMNNAME_UnitPrice));
 			dispenseLine.setPriceEntered(rs.getBigDecimal(MDispensePlanLine.COLUMNNAME_PriceEntered));
 			dispenseLine.setDiscount(rs.getBigDecimal(MDispensePlanLine.COLUMNNAME_Discount));

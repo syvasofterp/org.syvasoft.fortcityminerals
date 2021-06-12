@@ -33,7 +33,7 @@ public class ProcessDispensePlanLine extends SvrProcess {
 	protected String doIt() throws Exception {
 		String m_processMsg = null;
 		
-		if(recordType == "Header") {
+		if(recordType.equals("Header")) {
 			dispensePlan = new MDispensePlan(getCtx(), m_recordID, get_TrxName());
 			if(!dispensePlan.isProcessed()) {
 				dispensePlan.processIt(docAction);

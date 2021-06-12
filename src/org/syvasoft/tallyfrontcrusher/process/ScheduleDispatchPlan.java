@@ -33,7 +33,7 @@ public class ScheduleDispatchPlan extends SvrProcess {
 	private boolean CarryForwardPrevDayDP = false;
 	private String Priority;
 	private int TF_VehicleType_ID;
-	
+	private int FreightUOM_ID;
 	private int c_orderlineID;
 	MDispensePlan dispensePlan;
 	
@@ -61,6 +61,8 @@ public class ScheduleDispatchPlan extends SvrProcess {
 				Priority = para[i].getParameterAsString();
 			else if(name.toLowerCase().equals("tf_vehicletype_id"))
 				TF_VehicleType_ID = para[i].getParameterAsInt();
+			else if(name.toLowerCase().equals("freightuom_id"))
+				FreightUOM_ID = Integer.parseInt(para[i].getParameterAsString());
 		}
 		c_orderlineID =  getRecord_ID();
 	}
@@ -93,6 +95,7 @@ public class ScheduleDispatchPlan extends SvrProcess {
 		dispensePlan.CarryForwardPrevDayDP = CarryForwardPrevDayDP;
 		dispensePlan.Priority = Priority;
 		dispensePlan.TF_VehicleType_ID = TF_VehicleType_ID;
+		dispensePlan.FreightUOM_ID = FreightUOM_ID;
 		
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
