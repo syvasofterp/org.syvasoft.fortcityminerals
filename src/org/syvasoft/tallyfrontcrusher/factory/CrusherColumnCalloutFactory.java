@@ -629,7 +629,9 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 				list.add(new CalloutDispensePlanLine_SetBalanceDPQty());
 			}
 			
-			if(columnName.equals(MDispensePlanLine.COLUMNNAME_M_Product_ID) || 
+			if(columnName.equals(MDispensePlanLine.COLUMNNAME_DateOrdered) ||
+					columnName.equals(MDispensePlanLine.COLUMNNAME_C_BPartner_ID) ||
+					columnName.equals(MDispensePlanLine.COLUMNNAME_M_Product_ID) || 
 					columnName.equals(MDispensePlanLine.COLUMNNAME_C_UOM_ID) ||
 					columnName.equals(MDispensePlanLine.COLUMNNAME_TF_Destination_ID)) {
 				list.add(new CalloutDispensePlanLine_SetUnitPrice());
