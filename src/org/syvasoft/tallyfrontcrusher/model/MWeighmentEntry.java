@@ -133,6 +133,10 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 			}
 		}
 		
+		if(isCreateTwoInvoices() && isSecondary()) {
+			throw new AdempiereException("Secondary DC cannot be created as TP and Non TP Invoices!");
+		}
+		
 		boolean ok = super.beforeSave(newRecord);
 		return ok;
 	}

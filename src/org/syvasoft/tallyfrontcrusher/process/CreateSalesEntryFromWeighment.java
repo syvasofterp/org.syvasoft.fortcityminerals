@@ -157,8 +157,14 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 					BigDecimal tpWeight = wEntry.getTPBilledQty();
 					BigDecimal remainingQty = wEntry.getBilledQty().subtract(tpWeight);
 					
+					if(tpWeight.doubleValue() < 0) {
+						msg = wEntry.getDocumentNo() +  " : TP Weight should not be ZERO!";
+						addLog(wEntry.get_Table_ID(), wEntry.getGrossWeightTime(), null, msg, wEntry.get_Table_ID(), wEntry.get_ID());
+						continue;
+					}
+					
 					if(remainingQty.doubleValue() < 0) {
-						msg = wEntry.getDocumentNo() +  " : TP Weight should not be greater than Actual Weight";
+						msg = wEntry.getDocumentNo() +  " : TP Weight should not be greater than Actual Weight!";
 						addLog(wEntry.get_Table_ID(), wEntry.getGrossWeightTime(), null, msg, wEntry.get_Table_ID(), wEntry.get_ID());
 						continue;
 					}
@@ -250,6 +256,10 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 		BigDecimal qty = wEntry.getBilledQty();
 		if(billedQty != null)
 			qty = billedQty;
+		
+		if(qty.doubleValue() == 0)
+			throw new AdempiereException("Invalid Billing Qty!");
+		
 		//BigDecimal qty = wEntry.getNetWeight();
 		//if(uom_id == tonnage_uom_id)
 		//	qty = qty.divide(new BigDecimal(1000));
@@ -418,6 +428,10 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 		BigDecimal qty = wEntry.getBilledQty();
 		if(billedQty != null)
 			qty = billedQty;
+		
+		if(qty.doubleValue() == 0)
+			throw new AdempiereException("Invalid Billing Qty!");
+		
 		invLine.setQty(qty);
 		BigDecimal price = wEntry.getMaterialPriceIncludedRent();
 		invLine.setPriceActual(price);
