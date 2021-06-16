@@ -33,7 +33,7 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20210603L;
+	private static final long serialVersionUID = 20210616L;
 
     /** Standard Constructor */
     public X_TF_DispensePlanLine (Properties ctx, int TF_DispensePlanLine_ID, String trxName)
@@ -41,9 +41,12 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
       super (ctx, TF_DispensePlanLine_ID, trxName);
       /** if (TF_DispensePlanLine_ID == 0)
         {
+			setArrangeTransport (false);
+// N
 			setC_Tax_ID (0);
 			setC_UOM_ID (0);
 			setDateOrdered (new Timestamp( System.currentTimeMillis() ));
+// @#Date@
 			setFreightAmt (Env.ZERO);
 			setIsRentInclusive (false);
 // N
@@ -103,6 +106,27 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 	public boolean isAllowCarryForward () 
 	{
 		Object oo = get_Value(COLUMNNAME_AllowCarryForward);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	/** Set Arrange Transport.
+		@param ArrangeTransport Arrange Transport	  */
+	public void setArrangeTransport (boolean ArrangeTransport)
+	{
+		set_Value (COLUMNNAME_ArrangeTransport, Boolean.valueOf(ArrangeTransport));
+	}
+
+	/** Get Arrange Transport.
+		@return Arrange Transport	  */
+	public boolean isArrangeTransport () 
+	{
+		Object oo = get_Value(COLUMNNAME_ArrangeTransport);
 		if (oo != null) 
 		{
 			 if (oo instanceof Boolean) 
@@ -412,6 +436,20 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 		return (String)get_Value(COLUMNNAME_ContactPerson);
 	}
 
+	/** Set Customer GST No.
+		@param CustomerGSTIN Customer GST No	  */
+	public void setCustomerGSTIN (String CustomerGSTIN)
+	{
+		set_Value (COLUMNNAME_CustomerGSTIN, CustomerGSTIN);
+	}
+
+	/** Get Customer GST No.
+		@return Customer GST No	  */
+	public String getCustomerGSTIN () 
+	{
+		return (String)get_Value(COLUMNNAME_CustomerGSTIN);
+	}
+
 	/** Set Customer's Transporter.
 		@param CustomerTransporter Customer's Transporter	  */
 	public void setCustomerTransporter (boolean CustomerTransporter)
@@ -545,6 +583,8 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 	public static final String DOCSTATUS_Closed = "CL";
 	/** Revised = RV */
 	public static final String DOCSTATUS_Revised = "RV";
+	/** Expired = EX */
+	public static final String DOCSTATUS_Expired = "EX";
 	/** Set Document Status.
 		@param DocStatus 
 		The current status of the document
@@ -697,7 +737,7 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 	  */
 	public void setIsTaxIncluded (boolean IsTaxIncluded)
 	{
-		set_ValueNoCheck (COLUMNNAME_IsTaxIncluded, Boolean.valueOf(IsTaxIncluded));
+		set_Value (COLUMNNAME_IsTaxIncluded, Boolean.valueOf(IsTaxIncluded));
 	}
 
 	/** Get Price includes Tax.
@@ -1194,6 +1234,20 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 		return (Timestamp)get_Value(COLUMNNAME_ScheduleDate);
 	}
 
+	/** Set Shipment Address.
+		@param ShipmentAddress Shipment Address	  */
+	public void setShipmentAddress (String ShipmentAddress)
+	{
+		set_Value (COLUMNNAME_ShipmentAddress, ShipmentAddress);
+	}
+
+	/** Get Shipment Address.
+		@return Shipment Address	  */
+	public String getShipmentAddress () 
+	{
+		return (String)get_Value(COLUMNNAME_ShipmentAddress);
+	}
+
 	/** Set Shipment Destination.
 		@param ShipmentDestination Shipment Destination	  */
 	public void setShipmentDestination (String ShipmentDestination)
@@ -1201,14 +1255,13 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 		set_Value (COLUMNNAME_ShipmentDestination, ShipmentDestination);
 	}
 
-	/** Get Shipment Destination.
-		@return Shipment Destination	  */
-	public String getShipmentDestination () 
-	{
-		return (String)get_Value(COLUMNNAME_ShipmentDestination);
-	}
-
 	
+
+	public I_TF_Destination getShipmentDestination() throws RuntimeException
+    {
+		return (I_TF_Destination)MTable.get(getCtx(), I_TF_Destination.Table_Name)
+			.getPO(getShipmentDestination_ID(), get_TrxName());	}
+
 	/** Set Shipment Destination.
 		@param ShipmentDestination_ID Shipment Destination	  */
 	public void setShipmentDestination_ID (int ShipmentDestination_ID)
@@ -1227,6 +1280,23 @@ public class X_TF_DispensePlanLine extends PO implements I_TF_DispensePlanLine, 
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
+	}
+
+	/** Set Shipment Rate.
+		@param ShipmentRate Shipment Rate	  */
+	public void setShipmentRate (BigDecimal ShipmentRate)
+	{
+		set_Value (COLUMNNAME_ShipmentRate, ShipmentRate);
+	}
+
+	/** Get Shipment Rate.
+		@return Shipment Rate	  */
+	public BigDecimal getShipmentRate () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_ShipmentRate);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
 	}
 
 	/** Set Shipment To.

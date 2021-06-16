@@ -27,10 +27,15 @@ public class ScheduleDispatchPlan extends SvrProcess {
 	private Timestamp ScheduleDate;
 	private String ShipmentTo;
 	private int ShipmentDestination;
+	private String ShipmentAddress;
+	private String CustomerGSTIN;
+	private BigDecimal ShipmentRate;
 	private String DeliveryContact;
 	private BigDecimal DispenseQty;
 	private boolean OverDeliveryQty = false;
 	private boolean CarryForwardPrevDayDP = false;
+	private boolean CustomerTransporter = false;
+	private boolean ArrangeTransport = false;
 	private String Priority;
 	private int TF_VehicleType_ID;
 	private int FreightUOM_ID;
@@ -61,8 +66,18 @@ public class ScheduleDispatchPlan extends SvrProcess {
 				Priority = para[i].getParameterAsString();
 			else if(name.toLowerCase().equals("tf_vehicletype_id"))
 				TF_VehicleType_ID = para[i].getParameterAsInt();
-			else if(name.toLowerCase().equals("freightuom_id"))
+			else if(name.toLowerCase().equals("freightuom_id") && para[i].getParameterAsString() != null)
 				FreightUOM_ID = Integer.parseInt(para[i].getParameterAsString());
+			else if(name.toLowerCase().equals("shipmentaddress"))
+				ShipmentAddress = para[i].getParameterAsString();
+			else if(name.toLowerCase().equals("customergstin"))
+				CustomerGSTIN = para[i].getParameterAsString();
+			else if(name.toLowerCase().equals("shipmentrate"))
+				ShipmentRate = para[i].getParameterAsBigDecimal();
+			else if(name.toLowerCase().equals("customertransporter"))
+				CustomerTransporter = para[i].getParameterAsBoolean();
+			else if(name.toLowerCase().equals("arrangetransport"))
+				ArrangeTransport = para[i].getParameterAsBoolean();
 		}
 		c_orderlineID =  getRecord_ID();
 	}
@@ -96,6 +111,11 @@ public class ScheduleDispatchPlan extends SvrProcess {
 		dispensePlan.Priority = Priority;
 		dispensePlan.TF_VehicleType_ID = TF_VehicleType_ID;
 		dispensePlan.FreightUOM_ID = FreightUOM_ID;
+		dispensePlan.ShipmentAddress = ShipmentAddress;
+		dispensePlan.ShipmentRate = ShipmentRate;
+		dispensePlan.CustomerGSTIN = CustomerGSTIN;
+		dispensePlan.CustomerTransporter = CustomerTransporter;
+		dispensePlan.ArrangeTransport = ArrangeTransport;
 		
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;

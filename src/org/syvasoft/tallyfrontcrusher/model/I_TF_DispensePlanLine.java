@@ -73,6 +73,15 @@ public interface I_TF_DispensePlanLine
 	/** Get Allow Carry Forward Previous Day Dispatch Pending	  */
 	public boolean isAllowCarryForward();
 
+    /** Column name ArrangeTransport */
+    public static final String COLUMNNAME_ArrangeTransport = "ArrangeTransport";
+
+	/** Set Arrange Transport	  */
+	public void setArrangeTransport (boolean ArrangeTransport);
+
+	/** Get Arrange Transport	  */
+	public boolean isArrangeTransport();
+
     /** Column name BalanceDPQty */
     public static final String COLUMNNAME_BalanceDPQty = "BalanceDPQty";
 
@@ -253,6 +262,15 @@ public interface I_TF_DispensePlanLine
 	  * User who created this records
 	  */
 	public int getCreatedBy();
+
+    /** Column name CustomerGSTIN */
+    public static final String COLUMNNAME_CustomerGSTIN = "CustomerGSTIN";
+
+	/** Set Customer GST No	  */
+	public void setCustomerGSTIN (String CustomerGSTIN);
+
+	/** Get Customer GST No	  */
+	public String getCustomerGSTIN();
 
     /** Column name CustomerTransporter */
     public static final String COLUMNNAME_CustomerTransporter = "CustomerTransporter";
@@ -714,14 +732,22 @@ public interface I_TF_DispensePlanLine
 	/** Get Schedule Date	  */
 	public Timestamp getScheduleDate();
 
+    /** Column name ShipmentAddress */
+    public static final String COLUMNNAME_ShipmentAddress = "ShipmentAddress";
+
+	/** Set Shipment Address	  */
+	public void setShipmentAddress (String ShipmentAddress);
+
+	/** Get Shipment Address	  */
+	public String getShipmentAddress();
+
     /** Column name ShipmentDestination */
     public static final String COLUMNNAME_ShipmentDestination = "ShipmentDestination";
 
 	/** Set Shipment Destination	  */
 	public void setShipmentDestination (String ShipmentDestination);
 
-	/** Get Shipment Destination	  */
-	public String getShipmentDestination();
+	
 
     /** Column name ShipmentDestination_ID */
     public static final String COLUMNNAME_ShipmentDestination_ID = "ShipmentDestination_ID";
@@ -732,6 +758,16 @@ public interface I_TF_DispensePlanLine
 	/** Get Shipment Destination	  */
 	public int getShipmentDestination_ID();
 
+	public I_TF_Destination getShipmentDestination() throws RuntimeException;
+
+    /** Column name ShipmentRate */
+    public static final String COLUMNNAME_ShipmentRate = "ShipmentRate";
+
+	/** Set Shipment Rate	  */
+	public void setShipmentRate (BigDecimal ShipmentRate);
+
+	/** Get Shipment Rate	  */
+	public BigDecimal getShipmentRate();
 
     /** Column name ShipmentTo */
     public static final String COLUMNNAME_ShipmentTo = "ShipmentTo";

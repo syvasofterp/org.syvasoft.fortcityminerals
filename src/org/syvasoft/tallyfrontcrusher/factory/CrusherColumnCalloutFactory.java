@@ -640,7 +640,8 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 			
 			if(columnName.equals(MDispensePlanLine.COLUMNNAME_C_Tax_ID) || 
 					columnName.equals(MDispensePlanLine.COLUMNNAME_IsTaxIncluded) || 
-					columnName.equals(MDispensePlanLine.COLUMNNAME_UnitPrice)) {
+					columnName.equals(MDispensePlanLine.COLUMNNAME_UnitPrice)|| 
+					columnName.equals(MDispensePlanLine.COLUMNNAME_DispenseQty)) {
 				list.add(new CalloutDispensePlanLine_SetPriceEntered());
 			}
 		}

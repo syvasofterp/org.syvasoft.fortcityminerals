@@ -35,6 +35,7 @@ public class CalloutOrderLine_SetUnitPrice implements IColumnCallout {
 			mTab.setValue(TF_MOrderLine.COLUMNNAME_IsRoyaltyPassInclusive, priceUOM.isRoyaltyPassInclusive());
 			mTab.setValue(TF_MOrderLine.COLUMNNAME_IsRentInclusive, priceUOM.isRentInclusive());
 			
+			
 			/*TF_MProduct prod = new TF_MProduct(ctx, M_Product_ID, null);
 			mTab.setValue(TF_MOrderLine.COLUMNNAME_C_Tax_ID, prod.getTax_ID(true));*/
 		}

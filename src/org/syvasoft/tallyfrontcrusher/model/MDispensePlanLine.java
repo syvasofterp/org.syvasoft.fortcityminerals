@@ -86,7 +86,7 @@ public class MDispensePlanLine extends X_TF_DispensePlanLine {
 		}
 		MDispensePlan dispensePlan = new MDispensePlan(getCtx(), getTF_DispensePlan_ID(), get_TrxName());
 		
-		if(!getDocStatus().equals(MDispensePlanLine.DOCSTATUS_Closed)) {
+		if(!getDocStatus().equals(MDispensePlanLine.DOCSTATUS_Closed) && !getDocStatus().equals(MDispensePlanLine.DOCSTATUS_Expired)) {
 			if(dispensePlan.getDocStatus().equals(MDispensePlan.DOCSTATUS_Drafted)) {
 				setDocStatus(MDispensePlanLine.DOCSTATUS_Drafted);
 			}

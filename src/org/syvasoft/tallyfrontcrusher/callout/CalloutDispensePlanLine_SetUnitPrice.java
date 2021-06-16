@@ -25,10 +25,10 @@ public class CalloutDispensePlanLine_SetUnitPrice implements IColumnCallout {
 						CalloutUtil.getIntValue(mTab, MDispensePlanLine.COLUMNNAME_C_BPartner_ID), TF_Destination_ID, true, 
 						CalloutUtil.getTimestamp(mTab, MDispensePlanLine.COLUMNNAME_DateOrdered));
 				if(priceUOM != null) {
-					mTab.setValue(TF_MOrderLine.COLUMNNAME_UnitPrice, priceUOM.getPrice(true));
-					mTab.setValue(TF_MOrderLine.COLUMNNAME_IsTaxIncluded, priceUOM.isTaxIncluded());
-					mTab.setValue(TF_MOrderLine.COLUMNNAME_IsRoyaltyPassInclusive, priceUOM.isRoyaltyPassInclusive());
-					mTab.setValue(TF_MOrderLine.COLUMNNAME_IsRentInclusive, priceUOM.isRentInclusive());
+					mTab.setValue(MDispensePlanLine.COLUMNNAME_UnitPrice, priceUOM.getPrice(true));
+					mTab.setValue(MDispensePlanLine.COLUMNNAME_IsTaxIncluded, priceUOM.isTaxIncluded());
+					mTab.setValue(MDispensePlanLine.COLUMNNAME_IsRoyaltyPassInclusive, priceUOM.isRoyaltyPassInclusive());
+					mTab.setValue(MDispensePlanLine.COLUMNNAME_IsRentInclusive, priceUOM.isRentInclusive());
 				}
 			}
 		}

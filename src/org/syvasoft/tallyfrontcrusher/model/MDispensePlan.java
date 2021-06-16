@@ -37,6 +37,17 @@ public class MDispensePlan extends X_TF_DispensePlan {
 	
 	public int FreightUOM_ID = 0;
 	
+	public String ShipmentAddress = "";
+	
+	public String CustomerGSTIN = "";
+	
+	public BigDecimal ShipmentRate = BigDecimal.ZERO;
+	
+	public boolean CustomerTransporter = false;
+	
+	public boolean ArrangeTransport = false;
+	
+	
 	public MDispensePlan(Properties ctx, ResultSet rs, String trxName) {
 		super(ctx, rs, trxName);
 		// TODO Auto-generated constructor stub
@@ -202,6 +213,17 @@ public class MDispensePlan extends X_TF_DispensePlan {
 				dispenseLine.setShipmentDestination_ID(ShipmentDestination);
 			}
 			
+			if(ShipmentAddress != null) {
+				dispenseLine.setShipmentAddress(ShipmentAddress);
+			}
+			
+			if(CustomerGSTIN != null) {
+				dispenseLine.setCustomerGSTIN(CustomerGSTIN);
+			}
+			
+			if(ShipmentRate.doubleValue() > 0) {
+				dispenseLine.setShipmentRate(ShipmentRate);
+			}
 			dispenseLine.setOverUnitDelivery(OverDeliveryQty);			
 			dispenseLine.setAllowCarryForward(CarryForwardPrevDayDP);
 			
@@ -220,7 +242,14 @@ public class MDispensePlan extends X_TF_DispensePlan {
 				dispenseLine.setDocStatus(MDispensePlanLine.DOCSTATUS_InProgress);				
 			}
 			
-			dispenseLine.setCustomerTransporter(rs.getBoolean(MDispensePlanLine.COLUMNNAME_CustomerTransporter));
+			if(CustomerTransporter) {
+				dispenseLine.setCustomerTransporter(CustomerTransporter);
+			}
+			else {
+				dispenseLine.setCustomerTransporter(rs.getBoolean(MDispensePlanLine.COLUMNNAME_CustomerTransporter));
+			}
+			
+			dispenseLine.setArrangeTransport(ArrangeTransport);
 			dispenseLine.saveEx();
 		}
 		else {
