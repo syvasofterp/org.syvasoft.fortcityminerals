@@ -255,7 +255,7 @@ public class MLumpSumRentConfig extends X_TF_LumpSumRent_Config {
 		
 		//1 -- Vehicle Type, Vendor, Customer, Product
 		Where=" AD_Org_ID=? AND COALESCE(Vendor_ID,0) = ? AND C_BPartner_ID = ? AND TF_VehicleType_ID=? AND M_Product_ID = ? AND "
-				+ "(COALESCE(TF_Destination_ID,0) = ? OR (C_UOM_ID IN (?,?) OR TF_Destination_ID IS NULL)) AND C_UOM_ID = ?";
+				+ "(COALESCE(TF_Destination_ID,0) = ? OR (C_UOM_ID IN (?,?) AND TF_Destination_ID IS NULL)) AND C_UOM_ID = ?";
 		MLumpSumRentConfig lumpDistConfig=new Query(ctx, Table_Name, Where, trxName)
 				.setClient_ID()
 				.setOnlyActiveRecords(true)
@@ -268,7 +268,7 @@ public class MLumpSumRentConfig extends X_TF_LumpSumRent_Config {
 		
 		//2 -- Vehicle Type, Vendor, Product
 		Where=" AD_Org_ID=? AND Vendor_ID = ? AND  C_BPartner_ID IS NULL AND TF_VehicleType_ID=? AND M_Product_ID = ? AND "
-				+ "(COALESCE(TF_Destination_ID,0) = ? OR (C_UOM_ID IN (?,?) OR TF_Destination_ID IS NULL)) AND C_UOM_ID = ?";
+				+ "(COALESCE(TF_Destination_ID,0) = ? OR (C_UOM_ID IN (?,?) AND TF_Destination_ID IS NULL)) AND C_UOM_ID = ?";
 		lumpDistConfig=new Query(ctx, Table_Name, Where, trxName)
 				.setClient_ID()
 				.setOnlyActiveRecords(true)
@@ -280,7 +280,7 @@ public class MLumpSumRentConfig extends X_TF_LumpSumRent_Config {
 		
 		//3 -- Vehicle Type, Vendor, Customer for any product
 		Where=" AD_Org_ID=? AND C_BPartner_ID = ? AND Vendor_ID = ? AND TF_VehicleType_ID=? AND M_Product_ID IS NULL AND "
-				+ "(COALESCE(TF_Destination_ID,0) = ? OR (C_UOM_ID IN (?,?) OR TF_Destination_ID IS NULL)) AND C_UOM_ID = ?";
+				+ "(COALESCE(TF_Destination_ID,0) = ? OR (C_UOM_ID IN (?,?) AND TF_Destination_ID IS NULL)) AND C_UOM_ID = ?";
 		lumpDistConfig=new Query(ctx, Table_Name, Where, trxName)
 				.setClient_ID()
 				.setOnlyActiveRecords(true)
@@ -293,7 +293,7 @@ public class MLumpSumRentConfig extends X_TF_LumpSumRent_Config {
 		
 		//4 -- Vehicle Type, Vendor
 		Where=" AD_Org_ID=? AND C_BPartner_ID IS NULL AND Vendor_ID = ? AND TF_VehicleType_ID=? AND M_Product_ID IS NULL AND "
-				+ "(COALESCE(TF_Destination_ID,0) = ? OR (C_UOM_ID IN (?,?) OR TF_Destination_ID IS NULL)) AND C_UOM_ID = ?";
+				+ "(COALESCE(TF_Destination_ID,0) = ? OR (C_UOM_ID IN (?,?) AND TF_Destination_ID IS NULL)) AND C_UOM_ID = ?";
 		lumpDistConfig=new Query(ctx, Table_Name, Where, trxName)
 				.setClient_ID()
 				.setOnlyActiveRecords(true)

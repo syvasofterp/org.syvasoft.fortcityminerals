@@ -3,19 +3,25 @@ package org.syvasoft.tallyfrontcrusher.model;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.ResultSet;
+import java.sql.Savepoint;
+import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 
 import org.adempiere.exceptions.AdempiereException;
+import org.adempiere.exceptions.DBException;
 import org.compiere.model.MDocType;
+import org.compiere.model.MInOut;
 import org.compiere.model.MInOutLine;
 import org.compiere.model.MSysConfig;
 import org.compiere.model.MUOM;
 import org.compiere.model.MUOMConversion;
 import org.compiere.model.Query;
+import org.compiere.process.DocAction;
 import org.compiere.util.CLogger;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
+import org.compiere.util.Trx;
 
 
 public class MWeighmentEntry extends X_TF_WeighmentEntry {
@@ -76,65 +82,74 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
 		//CreateBP();
-		CreateDestination();
-		CreateCustomerVehicle();
 		
-		if(getTF_RentedVehicle_ID() > 0 && (getVehicleNo() == null || getVehicleNo().length() == 0))
-				setVehicleNo(getTF_RentedVehicle().getVehicleNo());
-		
-		if(getC_BPartner_ID() == 0 && getPaymentRule().equals(PAYMENTRULE_Cash)) {
-			TF_MBPartner bp = new Query(getCtx(), TF_MBPartner.Table_Name, "IsPOSCashBP='Y'", get_TrxName())
-					.setClient_ID().first();
-			if(bp != null) {
-				setC_BPartner_ID(bp.getC_BPartner_ID());				
-			}
+		if(!getStatus().equals(STATUS_Voided)) {
+			CreateDestination();
+			CreateCustomerVehicle();
 			
-		}
-		
-		if(getPaymentRule().equals(PAYMENTRULE_Cash))
-			setPaymentRule(PAYMENTRULE_OnCredit);
-		
-		if(getTF_RentedVehicle_ID()>0) {
-			String rvwhere="COALESCE(Tareweight,0)!=? AND IsTransporter='N' AND TF_RentedVehicle_ID=?";
-			MRentedVehicle rv= new Query(getCtx(), MRentedVehicle.Table_Name, rvwhere, get_TrxName())
-					.setClient_ID()
-					.setParameters(getTareWeight(),getTF_RentedVehicle_ID())
-					.first();
+			if(getTF_RentedVehicle_ID() > 0 && (getVehicleNo() == null || getVehicleNo().length() == 0))
+					setVehicleNo(getTF_RentedVehicle().getVehicleNo());
 			
-			if(rv!=null) {
-				if(rv.getTareWeight()!=null) {
-					rv.setOldTareweight(rv.getTareWeight());
+			if(getC_BPartner_ID() == 0 && getPaymentRule().equals(PAYMENTRULE_Cash)) {
+				TF_MBPartner bp = new Query(getCtx(), TF_MBPartner.Table_Name, "IsPOSCashBP='Y'", get_TrxName())
+						.setClient_ID().first();
+				if(bp != null) {
+					setC_BPartner_ID(bp.getC_BPartner_ID());				
 				}
-				rv.setTareWeight(getTareWeight());
-				rv.saveEx();
-			}
-					
-		}
-		
-		
-		if(!newRecord && getWeighmentEntryType().equals(WEIGHMENTENTRYTYPE_Sales)
-				&& MSysConfig.getBooleanValue("WEIGHMENT_REVIEW", false)) {
-			if(is_Changed() && getStatus().equals(STATUS_Unbilled) && !is_ValueChanged(COLUMNNAME_Status)) {
-				setStatus(STATUS_UnderReview);
-			}
-		}
-		
-		if(newRecord) {
-			if(isSecondary()) {
-				if(getTF_WeighmentEntryPrimary_ID() == 0 && getPrimaryDocumentNo() != null)
-					setTF_WeighmentEntryPrimary_ID(getTF_WeighmentEntryPrimary_ID(getPrimaryDocumentNo()));
-				//else if(getPrimaryDocumentNo() == null)
-				//	throw new AdempiereException("Invalid Secondary Entry without Primary DC Reference");
 				
-				setInvoiceType(INVOICETYPE_TPWeight);
 			}
-			else {
-				setPrimaryDocumentNo(getDocumentNo());
+			
+			if(getPaymentRule().equals(PAYMENTRULE_Cash))
+				setPaymentRule(PAYMENTRULE_OnCredit);
+			
+			if(getTF_RentedVehicle_ID()>0) {
+				String rvwhere="COALESCE(Tareweight,0)!=? AND IsTransporter='N' AND TF_RentedVehicle_ID=?";
+				MRentedVehicle rv= new Query(getCtx(), MRentedVehicle.Table_Name, rvwhere, get_TrxName())
+						.setClient_ID()
+						.setParameters(getTareWeight(),getTF_RentedVehicle_ID())
+						.first();
+				
+				if(rv!=null) {
+					if(rv.getTareWeight()!=null) {
+						rv.setOldTareweight(rv.getTareWeight());
+					}
+					rv.setTareWeight(getTareWeight());
+					rv.saveEx();
+				}
+						
+			}
+			
+			
+			if(!newRecord && getWeighmentEntryType().equals(WEIGHMENTENTRYTYPE_Sales)
+					&& MSysConfig.getBooleanValue("WEIGHMENT_REVIEW", false)) {
+				if(is_Changed() && getStatus().equals(STATUS_Unbilled) && !is_ValueChanged(COLUMNNAME_Status)) {
+					setStatus(STATUS_UnderReview);
+				}
+			}
+			
+			if(newRecord) {
+				if(isSecondary()) {
+					if(getTF_WeighmentEntryPrimary_ID() == 0 && getPrimaryDocumentNo() != null)
+						setTF_WeighmentEntryPrimary_ID(getTF_WeighmentEntryPrimary_ID(getPrimaryDocumentNo()));
+					//else if(getPrimaryDocumentNo() == null)
+					//	throw new AdempiereException("Invalid Secondary Entry without Primary DC Reference");
+					
+					setInvoiceType(INVOICETYPE_TPWeight);
+				}
+				else {
+					setPrimaryDocumentNo(getDocumentNo());
+				}
+			}
+			
+			if(isCreateTwoInvoices() && isSecondary()) {
+				throw new AdempiereException("Secondary DC cannot be created as TP and Non TP Invoices!");
 			}
 		}
 		
-		if(isCreateTwoInvoices() && isSecondary()) {
-			throw new AdempiereException("Secondary DC cannot be created as TP and Non TP Invoices!");
+		if(getStatus().equals(STATUS_Voided)) {
+			voidWeighmentEntry();
+			setStatus(STATUS_Voided);
+			setProcessed(true);
 		}
 		
 		boolean ok = super.beforeSave(newRecord);
@@ -518,5 +533,63 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		
 		return getPrice().add(unitRent);
 	}
+	
+	public void voidWeighmentEntry() {
+		String oWhereClause = "TF_WeighmentEntry_ID = ? AND C_BPartner_ID = ? AND IsSOTrx = 'Y' AND DocStatus IN ('CO','CL')";
+		
+		try {
+			String msg = null;
+			
+			
+			//Shipment
+			MInOut io = new Query(getCtx(), TF_MInOut.Table_Name, oWhereClause, get_TrxName())
+					.setClient_ID()
+					.setParameters(getTF_WeighmentEntry_ID(), getC_BPartner_ID())
+					.first();
+			if(io != null) {
+				io.setDocAction(DocAction.ACTION_Reverse_Correct);
+				io.voidIt();
+				io.setDocStatus(TF_MOrder.DOCSTATUS_Reversed);
+				io.saveEx();
+			}
+			
+			//Order
+			List<TF_MOrder> orders = new Query(getCtx(), TF_MOrder.Table_Name, oWhereClause, get_TrxName())
+					.setClient_ID()
+					.setParameters(getTF_WeighmentEntry_ID(), getC_BPartner_ID())
+					.list();
+			for(TF_MOrder sale : orders) {				
+				sale.setDocAction(DocAction.ACTION_Void);
+				sale.voidIt();
+				sale.setDocStatus(TF_MOrder.DOCSTATUS_Voided);
+				sale.saveEx();
+			}
+			//Invoice
+			List<TF_MInvoice> invList = new Query(getCtx(), TF_MInvoice.Table_Name, oWhereClause, get_TrxName())
+					.setClient_ID()
+					.setParameters(getTF_WeighmentEntry_ID(), getC_BPartner_ID())
+					.list();
+			for(TF_MInvoice inv : invList) {
 				
+				//Keep the existing invoice no while reversing
+				if(!MSysConfig.getBooleanValue(MSysConfig.Invoice_ReverseUseNewNumber, true, getAD_Client_ID()) && invList.size() == 1) {						
+					
+					String sql = "SELECT COUNT(*) FROM C_Invoice WHERE TF_WeighmentEntry_ID = ?";
+					int revCount = DB.getSQLValue(get_TrxName(), sql, getTF_WeighmentEntry_ID());
+					revCount = revCount / 2 + 1;
+					inv.setDocumentNo(inv.getDocumentNo() + "-"+  revCount);
+					inv.saveEx();
+				}
+				
+				inv.setDocAction(DocAction.ACTION_Reverse_Correct);
+				inv.voidIt();
+				inv.setDocStatus(TF_MOrder.DOCSTATUS_Reversed);
+				inv.saveEx();
+			}
+			
+		}
+		catch (Exception ex) {
+			throw new AdempiereException(ex.getMessage());
+		}	
+	}				
 }

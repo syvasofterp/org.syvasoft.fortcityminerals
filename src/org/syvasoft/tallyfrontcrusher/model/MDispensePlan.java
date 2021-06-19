@@ -221,7 +221,7 @@ public class MDispensePlan extends X_TF_DispensePlan {
 				dispenseLine.setCustomerGSTIN(CustomerGSTIN);
 			}
 			
-			if(ShipmentRate.doubleValue() > 0) {
+			if(ShipmentRate != null) {
 				dispenseLine.setShipmentRate(ShipmentRate);
 			}
 			dispenseLine.setOverUnitDelivery(OverDeliveryQty);			

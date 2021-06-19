@@ -20,7 +20,14 @@ public class CalloutDispensePlan_SetScheduleDate implements IColumnCallout {
 	@Override
 	public String start(Properties ctx, int WindowNo, GridTab mTab, GridField mField, Object value, Object oldValue) {
 		
-		String whereClause = " trunc(ScheduleDate) = '" + mTab.get_ValueAsString(MDispensePlan.COLUMNNAME_ScheduleDate) + "'";
+		String whereClause = "";
+		String ID = mTab.get_ValueAsString(MDispensePlan.COLUMNNAME_TF_DispensePlan_ID);
+		if(ID == null) {
+			whereClause = " trunc(ScheduleDate) = '" + mTab.get_ValueAsString(MDispensePlan.COLUMNNAME_ScheduleDate) + "'";
+		}
+		else {
+			whereClause = " trunc(ScheduleDate) = '" + mTab.get_ValueAsString(MDispensePlan.COLUMNNAME_ScheduleDate) + "' AND TF_DispensePlan_ID != '" + ID + "'";
+		}
 		
 		List<MDispensePlan> dispensePlan = new Query(Env.getCtx(), MDispensePlan.Table_Name, whereClause, null).list();
 		

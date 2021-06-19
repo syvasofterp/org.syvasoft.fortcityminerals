@@ -67,7 +67,9 @@ public class MTransportOrder extends X_TF_TOrder {
 				.setParameters(getTF_TOrder_ID())
 				.list();
 		for(MLumpSumRentConfig rconfig : rentConfig) {
-			rconfig.deleteEx(true);
+			rconfig.setIsActive(false);
+			rconfig.saveEx();
+			
 		}
 	}
 

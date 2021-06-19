@@ -65,51 +65,8 @@ public class VoidSalesEntry extends SvrProcess {
 				String msg = null;
 				sp = trx.setSavepoint(wEntry.getDocumentNo());
 				
-				//Shipment
-				TF_MInOut io = new Query(getCtx(), TF_MInOut.Table_Name, oWhereClause, get_TrxName())
-						.setClient_ID()
-						.setParameters(wEntry.getTF_WeighmentEntry_ID(), wEntry.getC_BPartner_ID())
-						.first();
-				if(io != null) {
-					io.setDocAction(DocAction.ACTION_Reverse_Correct);
-					io.voidIt();
-					io.setDocStatus(TF_MOrder.DOCSTATUS_Reversed);
-					io.saveEx();
-				}
+				wEntry.voidWeighmentEntry();
 				
-				//Order
-				List<TF_MOrder> orders = new Query(getCtx(), TF_MOrder.Table_Name, oWhereClause, get_TrxName())
-						.setClient_ID()
-						.setParameters(wEntry.getTF_WeighmentEntry_ID(), wEntry.getC_BPartner_ID())
-						.list();
-				for(TF_MOrder sale : orders) {				
-					sale.setDocAction(DocAction.ACTION_Void);
-					sale.voidIt();
-					sale.setDocStatus(TF_MOrder.DOCSTATUS_Voided);
-					sale.saveEx();
-				}
-				//Invoice
-				List<TF_MInvoice> invList = new Query(getCtx(), TF_MInvoice.Table_Name, oWhereClause, get_TrxName())
-						.setClient_ID()
-						.setParameters(wEntry.getTF_WeighmentEntry_ID(), wEntry.getC_BPartner_ID())
-						.list();
-				for(TF_MInvoice inv : invList) {
-					
-					//Keep the existing invoice no while reversing
-					if(!MSysConfig.getBooleanValue(MSysConfig.Invoice_ReverseUseNewNumber, true, getAD_Client_ID()) && invList.size() == 1) {						
-						
-						String sql = "SELECT COUNT(*) FROM C_Invoice WHERE TF_WeighmentEntry_ID = ?";
-						int revCount = DB.getSQLValue(get_TrxName(), sql, wEntry.getTF_WeighmentEntry_ID());
-						revCount = revCount / 2 + 1;
-						inv.setDocumentNo(inv.getDocumentNo() + "-"+  revCount);
-						inv.saveEx();
-					}
-					
-					inv.setDocAction(DocAction.ACTION_Reverse_Correct);
-					inv.voidIt();
-					inv.setDocStatus(TF_MOrder.DOCSTATUS_Reversed);
-					inv.saveEx();
-				}
 				trx.releaseSavepoint(sp);
 			}
 			catch (Exception ex) {
