@@ -29,7 +29,7 @@ public class CreateTransporterInvoice extends SvrProcess {
 	Savepoint sp = null;
 	Timestamp dateInvoiced = null;
 	boolean IsConsolidateInvoice = false;
-	
+	boolean OverrideTaxConfig = false;
 	@Override
 	protected void prepare() {
 		ProcessInfoParameter[] para = getParameter();	
@@ -45,6 +45,8 @@ public class CreateTransporterInvoice extends SvrProcess {
 				dateInvoiced  = para[i].getParameterAsTimestamp();
 			else if(name.equals("IsConsolidateInvoice"))
 				IsConsolidateInvoice = para[i].getParameterAsBoolean();
+			else if(name.equals("overridetaxconfig"))
+				OverrideTaxConfig = para[i].getParameterAsBoolean();
 		}
 		
 		M_InoutLine_ID = getRecord_ID();
@@ -127,8 +129,15 @@ public class CreateTransporterInvoice extends SvrProcess {
 					ordLine.addDescription("Rate MT/km : " + rateMTKM.doubleValue() + ", Distance (km): " + distance);
 				}
 				
-				if(IsTaxIncluded) {					
-					price = price.multiply(taxRate);
+				if(IsTaxIncluded) {
+					if(OverrideTaxConfig) {					
+						price = price.multiply(taxRate);
+					}
+					else {
+						MTax taxMain = new MTax(getCtx(), ioLine.getC_Tax_ID(), get_TrxName());
+						BigDecimal taxRateMain = taxMain.getRate().divide(new BigDecimal(100), 2, RoundingMode.HALF_EVEN).add(BigDecimal.ONE);
+						price = price.multiply(taxRateMain);								
+					}
 				}
 				
 				ordLine.set_ValueOfColumn(TF_MOrder.COLUMNNAME_TF_WeighmentEntry_ID, wEntry.getTF_WeighmentEntry_ID());
@@ -139,7 +148,14 @@ public class CreateTransporterInvoice extends SvrProcess {
 				ordLine.setPriceLimit(price);
 				ordLine.setPriceEntered(price);
 				ordLine.setQty(ioLine.getMovementQty());
-				ordLine.setC_Tax_ID(C_Tax_ID);
+
+				if(OverrideTaxConfig) {
+					ordLine.setC_Tax_ID(C_Tax_ID);
+				}
+				else {
+					ordLine.setC_Tax_ID(ioLine.getC_Tax_ID());
+				}
+				
 				ordLine.saveEx();
 				
 				io.setC_Order_ID(ord.getC_Order_ID());
@@ -228,8 +244,15 @@ public class CreateTransporterInvoice extends SvrProcess {
 				ordLine.addDescription("Rate MT/km : " + rateMTKM.doubleValue() + ", Distance (km): " + distance);
 			}
 			
-			if(IsTaxIncluded) {			
-				price = price.multiply(taxRate);
+			if(IsTaxIncluded) {
+				if(OverrideTaxConfig) {					
+					price = price.multiply(taxRate);
+				}
+				else {
+					MTax taxMain = new MTax(getCtx(), ioLine.getC_Tax_ID(), get_TrxName());
+					BigDecimal taxRateMain = taxMain.getRate().divide(new BigDecimal(100), 2, RoundingMode.HALF_EVEN).add(BigDecimal.ONE);
+					price = price.multiply(taxRateMain);								
+				}
 			}
 			
 			ordLine.set_ValueOfColumn(TF_MOrder.COLUMNNAME_TF_WeighmentEntry_ID, wEntry.getTF_WeighmentEntry_ID());
@@ -240,7 +263,14 @@ public class CreateTransporterInvoice extends SvrProcess {
 			ordLine.setPriceLimit(price);
 			ordLine.setPriceEntered(price);
 			ordLine.setQty(ioLine.getMovementQty());
-			ordLine.setC_Tax_ID(C_Tax_ID);
+			
+			if(OverrideTaxConfig) {
+				ordLine.setC_Tax_ID(C_Tax_ID);
+			}
+			else {
+				ordLine.setC_Tax_ID(ioLine.getC_Tax_ID());
+			}
+			
 			ordLine.saveEx();
 			
 			io.setC_Order_ID(ord.getC_Order_ID());

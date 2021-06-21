@@ -47,6 +47,8 @@ public class MTransportOrder extends X_TF_TOrder {
 				rentConfig.setTF_Destination_ID(toline.getTF_Destination_ID());
 				rentConfig.setC_UOM_ID(toline.getC_UOM_ID());
 				rentConfig.setFreightPrice(toline.getFreightPrice());
+				rentConfig.setIsTaxIncluded(toline.isTaxIncluded());
+				rentConfig.setC_Tax_ID(toline.getC_Tax_ID());
 			//	rentConfig.setTF_TOrder_ID(getTF_TOrder_ID());
 				rentConfig.saveEx();
 				
