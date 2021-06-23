@@ -235,8 +235,8 @@ public class TF_MInOut extends MInOut {
 				MLumpSumRentConfig rentConfig = new MLumpSumRentConfig(getCtx(), srcLine.getTF_LumpSumRent_Config_ID(), get_TrxName());
 				price = rentConfig.getFreightPrice();
 				
-				ioLine.set_ValueOfColumn("C_Tax_ID", rentConfig.getC_Tax_ID());
-				ioLine.set_ValueOfColumn("IsTaxIncluded", rentConfig.isTaxIncluded());
+				ioLine.setC_Tax_ID(rentConfig.getC_Tax_ID());
+				ioLine.setIsTaxIncluded(rentConfig.isTaxIncluded());
 				ioLine.set_ValueOfColumn("TF_LumpSumRent_Config_ID", rentConfig.getTF_LumpSumRent_Config_ID());
 			}			
 			
