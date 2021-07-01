@@ -33,7 +33,7 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20210603L;
+	private static final long serialVersionUID = 20210628L;
 
     /** Standard Constructor */
     public X_TF_WeighmentEntry (Properties ctx, int TF_WeighmentEntry_ID, String trxName)
@@ -544,6 +544,23 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return ii.intValue();
 	}
 
+	/** Set Gross Price.
+		@param GrossPrice Gross Price	  */
+	public void setGrossPrice (BigDecimal GrossPrice)
+	{
+		set_Value (COLUMNNAME_GrossPrice, GrossPrice);
+	}
+
+	/** Get Gross Price.
+		@return Gross Price	  */
+	public BigDecimal getGrossPrice () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_GrossPrice);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
 	/** Set Gross Weight (Kg).
 		@param GrossWeight Gross Weight (Kg)	  */
 	public void setGrossWeight (BigDecimal GrossWeight)
@@ -587,6 +604,23 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public BigDecimal getGSTAmount () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_GSTAmount);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set GST %.
+		@param GSTRate GST %	  */
+	public void setGSTRate (BigDecimal GSTRate)
+	{
+		set_ValueNoCheck (COLUMNNAME_GSTRate, GSTRate);
+	}
+
+	/** Get GST %.
+		@return GST %	  */
+	public BigDecimal getGSTRate () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_GSTRate);
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
@@ -920,6 +954,20 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 		return (String)get_Value(COLUMNNAME_MDPNo);
 	}
 
+	/** Set ML No.
+		@param MLNo ML No	  */
+	public void setMLNo (String MLNo)
+	{
+		set_Value (COLUMNNAME_MLNo, MLNo);
+	}
+
+	/** Get ML No.
+		@return ML No	  */
+	public String getMLNo () 
+	{
+		return (String)get_Value(COLUMNNAME_MLNo);
+	}
+
 	/** Set Net Weight (Kg).
 		@param NetWeight Net Weight (Kg)	  */
 	public void setNetWeight (BigDecimal NetWeight)
@@ -1115,6 +1163,20 @@ public class X_TF_WeighmentEntry extends PO implements I_TF_WeighmentEntry, I_Pe
 	public String getPhone () 
 	{
 		return (String)get_Value(COLUMNNAME_Phone);
+	}
+
+	/** Set PIT No.
+		@param PITNo PIT No	  */
+	public void setPITNo (String PITNo)
+	{
+		set_Value (COLUMNNAME_PITNo, PITNo);
+	}
+
+	/** Get PIT No.
+		@return PIT No	  */
+	public String getPITNo () 
+	{
+		return (String)get_Value(COLUMNNAME_PITNo);
 	}
 
 	/** Set Price.

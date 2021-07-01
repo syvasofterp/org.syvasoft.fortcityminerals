@@ -33,7 +33,7 @@ public class X_M_InOutLine extends PO implements I_M_InOutLine, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20210619L;
+	private static final long serialVersionUID = 20210629L;
 
     /** Standard Constructor */
     public X_M_InOutLine (Properties ctx, int M_InOutLine_ID, String trxName)
@@ -827,6 +827,26 @@ public class X_M_InOutLine extends PO implements I_M_InOutLine, I_Persistent
 		return bd;
 	}
 
+	/** Set Machinery.
+		@param PM_Machinery_ID Machinery	  */
+	public void setPM_Machinery_ID (int PM_Machinery_ID)
+	{
+		if (PM_Machinery_ID < 1) 
+			set_Value (COLUMNNAME_PM_Machinery_ID, null);
+		else 
+			set_Value (COLUMNNAME_PM_Machinery_ID, Integer.valueOf(PM_Machinery_ID));
+	}
+
+	/** Get Machinery.
+		@return Machinery	  */
+	public int getPM_Machinery_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_PM_Machinery_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	/** Set Price.
 		@param Price 
 		Price
@@ -886,6 +906,23 @@ public class X_M_InOutLine extends PO implements I_M_InOutLine, I_Persistent
 	public BigDecimal getQtyEntered () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_QtyEntered);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set Quantity Issued.
+		@param QtyIssued Quantity Issued	  */
+	public void setQtyIssued (BigDecimal QtyIssued)
+	{
+		set_Value (COLUMNNAME_QtyIssued, QtyIssued);
+	}
+
+	/** Get Quantity Issued.
+		@return Quantity Issued	  */
+	public BigDecimal getQtyIssued () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_QtyIssued);
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;

@@ -45,7 +45,7 @@ public class CreateTransporterInvoice extends SvrProcess {
 				dateInvoiced  = para[i].getParameterAsTimestamp();
 			else if(name.equals("IsConsolidateInvoice"))
 				IsConsolidateInvoice = para[i].getParameterAsBoolean();
-			else if(name.equals("overridetaxconfig"))
+			else if(name.equals("OverrideTaxConfig"))
 				OverrideTaxConfig = para[i].getParameterAsBoolean();
 		}
 		
@@ -130,13 +130,13 @@ public class CreateTransporterInvoice extends SvrProcess {
 				}
 				
 				if(IsTaxIncluded) {
-					if(OverrideTaxConfig) {					
-						price = price.multiply(taxRate);
-					}
-					else {
+					if(OverrideTaxConfig) {			
 						MTax taxMain = new MTax(getCtx(), ioLine.getC_Tax_ID(), get_TrxName());
 						BigDecimal taxRateMain = taxMain.getRate().divide(new BigDecimal(100), 2, RoundingMode.HALF_EVEN).add(BigDecimal.ONE);
-						price = price.multiply(taxRateMain);								
+						price = price.multiply(taxRateMain);						
+					}
+					else {
+						price = price.multiply(taxRate);
 					}
 				}
 				
@@ -265,10 +265,10 @@ public class CreateTransporterInvoice extends SvrProcess {
 			ordLine.setQty(ioLine.getMovementQty());
 			
 			if(OverrideTaxConfig) {
-				ordLine.setC_Tax_ID(C_Tax_ID);
+				ordLine.setC_Tax_ID(ioLine.getC_Tax_ID());
 			}
 			else {
-				ordLine.setC_Tax_ID(ioLine.getC_Tax_ID());
+				ordLine.setC_Tax_ID(C_Tax_ID);				
 			}
 			
 			ordLine.saveEx();

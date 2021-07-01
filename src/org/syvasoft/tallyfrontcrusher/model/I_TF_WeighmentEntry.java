@@ -334,6 +334,15 @@ public interface I_TF_WeighmentEntry
 
 	public org.compiere.model.I_C_UOM getFreightUOM() throws RuntimeException;
 
+    /** Column name GrossPrice */
+    public static final String COLUMNNAME_GrossPrice = "GrossPrice";
+
+	/** Set Gross Price	  */
+	public void setGrossPrice (BigDecimal GrossPrice);
+
+	/** Get Gross Price	  */
+	public BigDecimal getGrossPrice();
+
     /** Column name GrossWeight */
     public static final String COLUMNNAME_GrossWeight = "GrossWeight";
 
@@ -360,6 +369,15 @@ public interface I_TF_WeighmentEntry
 
 	/** Get GST Amount	  */
 	public BigDecimal getGSTAmount();
+
+    /** Column name GSTRate */
+    public static final String COLUMNNAME_GSTRate = "GSTRate";
+
+	/** Set GST %	  */
+	public void setGSTRate (BigDecimal GSTRate);
+
+	/** Get GST %	  */
+	public BigDecimal getGSTRate();
 
     /** Column name HasBalance */
     public static final String COLUMNNAME_HasBalance = "HasBalance";
@@ -547,6 +565,15 @@ public interface I_TF_WeighmentEntry
 	/** Get MDP No	  */
 	public String getMDPNo();
 
+    /** Column name MLNo */
+    public static final String COLUMNNAME_MLNo = "MLNo";
+
+	/** Set ML No	  */
+	public void setMLNo (String MLNo);
+
+	/** Get ML No	  */
+	public String getMLNo();
+
     /** Column name NetWeight */
     public static final String COLUMNNAME_NetWeight = "NetWeight";
 
@@ -653,6 +680,15 @@ public interface I_TF_WeighmentEntry
 	  * Identifies a telephone number
 	  */
 	public String getPhone();
+
+    /** Column name PITNo */
+    public static final String COLUMNNAME_PITNo = "PITNo";
+
+	/** Set PIT No	  */
+	public void setPITNo (String PITNo);
+
+	/** Get PIT No	  */
+	public String getPITNo();
 
     /** Column name Price */
     public static final String COLUMNNAME_Price = "Price";

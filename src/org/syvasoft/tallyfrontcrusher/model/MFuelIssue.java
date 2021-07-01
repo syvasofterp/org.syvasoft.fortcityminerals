@@ -44,6 +44,8 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 		// TODO Auto-generated constructor stub
 	}
 
+	public boolean validateStock = true;
+	
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
 		
@@ -65,6 +67,7 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 		//}
 		
 		//if(is_ValueChanged(COLUMNNAME_M_Product_ID) || is_ValueChanged(COLUMNNAME_Qty)) {
+		if(validateStock) {
 			MWarehouse wh = (MWarehouse) getM_Warehouse();
 			
 			String sql = " SELECT " +
@@ -79,6 +82,7 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 				//log.saveError("NotEnoughStocked", Msg.getElement(getCtx(), COLUMNNAME_Qty));
 				throw new AdempiereException("Inventory on Hand : " + qtyAvailable);				
 			}
+		}
 		//}
 			
 		TF_MCharge.createChargeFromAccount(getCtx(), getAccount_ID(), get_TrxName());
@@ -315,7 +319,7 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 		
 		if(getM_Product_ID() > 0) { 
 			//Material Issue
-			MInOut inout = new MInOut(invoice, MGLPostingConfig.getMGLPostingConfig(getCtx()).getMaterialIssue_DocType_ID(), getDateAcct(), getM_Warehouse_ID());
+		/*	MInOut inout = new MInOut(invoice, MGLPostingConfig.getMGLPostingConfig(getCtx()).getMaterialIssue_DocType_ID(), getDateAcct(), getM_Warehouse_ID());
 			inout.setDescription(invoice.getDescription());
 			inout.setMovementType(MInOut.MOVEMENTTYPE_VendorReturns);
 			inout.saveEx(get_TrxName());
@@ -334,7 +338,7 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 			//End DocAction
 			
 			invLine.setM_InOutLine_ID(ioLine.getM_InOutLine_ID());
-			setM_InOut_ID(inout.getM_InOut_ID());
+			setM_InOut_ID(inout.getM_InOut_ID());*/
 		}
 				
 		invLine.saveEx();
@@ -358,12 +362,12 @@ public class MFuelIssue extends X_TF_Fuel_Issue {
 			inv.saveEx();
 			setDebitNote_Invoice_ID(0);
 		}
-		if(getM_InOut_ID() > 0) {
+		/*if(getM_InOut_ID() > 0) {
 			MInOut io = new MInOut(getCtx(), getM_InOut_ID(), get_TrxName());
 			io.reverseCorrectIt();
 			io.saveEx();
 			setM_InOut_ID(0);
-		}
+		}*/
 		if(getM_Inventory_ID() > 0) {
 			MInventory inv = new MInventory(getCtx(), getM_Inventory_ID(), get_TrxName());
 			if(!inv.getDocStatus().equals(DOCSTATUS_Reversed)) {

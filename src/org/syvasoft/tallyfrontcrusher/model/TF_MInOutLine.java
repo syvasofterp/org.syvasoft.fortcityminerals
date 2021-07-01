@@ -42,6 +42,29 @@ public class TF_MInOutLine extends MInOutLine {
 		// TODO Auto-generated constructor stub
 	}
 	
+	
+	
+	public static final String COLUMNNAME_TF_Fuel_Issue_ID = "TF_Fuel_Issue_ID";
+	/** Set Fuel Issue.
+	@param TF_Fuel_Issue_ID Fuel Issue	  */
+	public void setTF_Fuel_Issue_ID (int TF_Fuel_Issue_ID)
+	{
+		if (TF_Fuel_Issue_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_TF_Fuel_Issue_ID, null);
+		else 
+			set_ValueNoCheck (COLUMNNAME_TF_Fuel_Issue_ID, Integer.valueOf(TF_Fuel_Issue_ID));
+	}
+	
+	/** Get Fuel Issue.
+		@return Fuel Issue	  */
+	public int getTF_Fuel_Issue_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Fuel_Issue_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	/** Column name Distance */
     public static final String COLUMNNAME_Distance = "Distance";
 	/** Set Distance (km).
@@ -59,6 +82,44 @@ public class TF_MInOutLine extends MInOutLine {
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
+	}
+	
+	public static String COLUMNNAME_QtyIssued = "QtyIssued";
+	/** Set Quantity Issued.
+	@param QtyIssued Quantity Issued	  */
+	public void setQtyIssued (BigDecimal QtyIssued)
+	{
+		set_Value (COLUMNNAME_QtyIssued, QtyIssued);
+	}
+	
+	/** Get Quantity Issued.
+		@return Quantity Issued	  */
+	public BigDecimal getQtyIssued () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_QtyIssued);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+	public static String COLUMNNAME_PM_Machinery_ID = "PM_Machinery_ID";
+	/** Set Machinery.
+	@param PM_Machinery_ID Machinery	  */
+	public void setPM_Machinery_ID (int PM_Machinery_ID)
+	{
+		if (PM_Machinery_ID < 1) 
+			set_Value (COLUMNNAME_PM_Machinery_ID, null);
+		else 
+			set_Value (COLUMNNAME_PM_Machinery_ID, Integer.valueOf(PM_Machinery_ID));
+	}
+	
+	/** Get Machinery.
+		@return Machinery	  */
+	public int getPM_Machinery_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_PM_Machinery_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 	
 	public static String COLUMNNAME_C_Tax_ID = "C_Tax_ID";
@@ -207,6 +268,7 @@ public class TF_MInOutLine extends MInOutLine {
 		else 
 			set_Value(COLUMNNAME_TF_LumpSumRent_Config_ID, Integer.valueOf(TF_LumpSumRent_Config_ID));
 	}
+	
 	
 	/** Get TF_LumpSumRent_Config.
 		@return TF_LumpSumRent_Config	  */

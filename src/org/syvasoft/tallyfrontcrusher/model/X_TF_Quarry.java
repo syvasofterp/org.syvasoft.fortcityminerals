@@ -26,14 +26,14 @@ import org.compiere.util.Env;
 
 /** Generated Model for TF_Quarry
  *  @author iDempiere (generated) 
- *  @version Release 4.1 - $Id$ */
+ *  @version Release 5.1 - $Id$ */
 public class X_TF_Quarry extends PO implements I_TF_Quarry, I_Persistent 
 {
 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180403L;
+	private static final long serialVersionUID = 20210628L;
 
     /** Standard Constructor */
     public X_TF_Quarry (Properties ctx, int TF_Quarry_ID, String trxName)
@@ -77,6 +77,26 @@ public class X_TF_Quarry extends PO implements I_TF_Quarry, I_Persistent
       return sb.toString();
     }
 
+	/** Set Actual Quantity.
+		@param ActualQty 
+		The actual quantity
+	  */
+	public void setActualQty (BigDecimal ActualQty)
+	{
+		set_Value (COLUMNNAME_ActualQty, ActualQty);
+	}
+
+	/** Get Actual Quantity.
+		@return The actual quantity
+	  */
+	public BigDecimal getActualQty () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_ActualQty);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
 	/** Set Address.
 		@param Address Address	  */
 	public void setAddress (String Address)
@@ -89,6 +109,23 @@ public class X_TF_Quarry extends PO implements I_TF_Quarry, I_Persistent
 	public String getAddress () 
 	{
 		return (String)get_Value(COLUMNNAME_Address);
+	}
+
+	/** Set Balance Qty.
+		@param BalanceQty Balance Qty	  */
+	public void setBalanceQty (BigDecimal BalanceQty)
+	{
+		set_Value (COLUMNNAME_BalanceQty, BalanceQty);
+	}
+
+	/** Get Balance Qty.
+		@return Balance Qty	  */
+	public BigDecimal getBalanceQty () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_BalanceQty);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
 	}
 
 	public org.compiere.model.I_C_ElementValue getC_ElementValue() throws RuntimeException
@@ -156,6 +193,23 @@ public class X_TF_Quarry extends PO implements I_TF_Quarry, I_Persistent
 	public String getCreateProfitCenter () 
 	{
 		return (String)get_Value(COLUMNNAME_CreateProfitCenter);
+	}
+
+	/** Set Delivered TP Quantity.
+		@param DeliveredTPQty Delivered TP Quantity	  */
+	public void setDeliveredTPQty (BigDecimal DeliveredTPQty)
+	{
+		set_Value (COLUMNNAME_DeliveredTPQty, DeliveredTPQty);
+	}
+
+	/** Get Delivered TP Quantity.
+		@return Delivered TP Quantity	  */
+	public BigDecimal getDeliveredTPQty () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_DeliveredTPQty);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
 	}
 
 	/** Set Description.

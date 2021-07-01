@@ -154,8 +154,8 @@ public class TF_MInOut extends MInOut {
 			crProd.reverseIt();
 			crProd.saveEx();
 			setTF_Crusher_Production_ID(0);
-		}		
-		
+		}
+		reverseFuelIssue();
 		boolean error = super.reverseCorrectIt();
 		// TODO Auto-generated method stub
 		
@@ -267,6 +267,24 @@ public class TF_MInOut extends MInOut {
 		inout.saveEx();
 	}
 	
+	public void reverseFuelIssue() {
+		List<TF_MInOutLine> inoutines = new Query(getCtx(), TF_MInOutLine.Table_Name, " M_InOut_ID = " + getM_InOut_ID(), get_TrxName()).list();
+		
+		for(TF_MInOutLine inoutline : inoutines) {
+			if(inoutline.getTF_Fuel_Issue_ID() > 0) {
+				MFuelIssue fissue = new MFuelIssue(getCtx(), inoutline.getTF_Fuel_Issue_ID(), get_TrxName());
+				if(fissue.getDocStatus().equals(DOCSTATUS_Completed)) {
+					fissue.reverseIt();
+					fissue.setDocStatus(MFuelIssue.DOCSTATUS_Voided);
+					fissue.setProcessing(true);
+					fissue.saveEx();
+				}
+				inoutline.setTF_Fuel_Issue_ID(0);
+				inoutline.saveEx();
+				
+			}
+		}
+	}
 	public void reverseTransportMaterialReceipt() {
 		MWeighmentEntry we = new MWeighmentEntry(getCtx(), getTF_WeighmentEntry_ID(), get_TrxName());
 		

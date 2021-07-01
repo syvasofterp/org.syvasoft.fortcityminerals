@@ -23,7 +23,7 @@ import org.compiere.util.KeyNamePair;
 
 /** Generated Interface for TF_Quarry
  *  @author iDempiere (generated) 
- *  @version Release 4.1
+ *  @version Release 5.1
  */
 @SuppressWarnings("all")
 public interface I_TF_Quarry 
@@ -42,6 +42,19 @@ public interface I_TF_Quarry
     BigDecimal accessLevel = BigDecimal.valueOf(3);
 
     /** Load Meta Data */
+
+    /** Column name ActualQty */
+    public static final String COLUMNNAME_ActualQty = "ActualQty";
+
+	/** Set Actual Quantity.
+	  * The actual quantity
+	  */
+	public void setActualQty (BigDecimal ActualQty);
+
+	/** Get Actual Quantity.
+	  * The actual quantity
+	  */
+	public BigDecimal getActualQty();
 
     /** Column name AD_Client_ID */
     public static final String COLUMNNAME_AD_Client_ID = "AD_Client_ID";
@@ -72,6 +85,15 @@ public interface I_TF_Quarry
 
 	/** Get Address	  */
 	public String getAddress();
+
+    /** Column name BalanceQty */
+    public static final String COLUMNNAME_BalanceQty = "BalanceQty";
+
+	/** Set Balance Qty	  */
+	public void setBalanceQty (BigDecimal BalanceQty);
+
+	/** Get Balance Qty	  */
+	public BigDecimal getBalanceQty();
 
     /** Column name C_ElementValue_ID */
     public static final String COLUMNNAME_C_ElementValue_ID = "C_ElementValue_ID";
@@ -123,6 +145,15 @@ public interface I_TF_Quarry
 
 	/** Get Create Profit Center	  */
 	public String getCreateProfitCenter();
+
+    /** Column name DeliveredTPQty */
+    public static final String COLUMNNAME_DeliveredTPQty = "DeliveredTPQty";
+
+	/** Set Delivered TP Quantity	  */
+	public void setDeliveredTPQty (BigDecimal DeliveredTPQty);
+
+	/** Get Delivered TP Quantity	  */
+	public BigDecimal getDeliveredTPQty();
 
     /** Column name Description */
     public static final String COLUMNNAME_Description = "Description";

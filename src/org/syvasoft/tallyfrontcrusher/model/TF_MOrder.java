@@ -70,6 +70,45 @@ public class TF_MOrder extends MOrder {
 			 return Env.ZERO;
 		return bd;
 	}
+	
+	public static String COLUMNNAME_QtyIssued = "QtyIssued";
+	/** Set Quantity Issued.
+	@param QtyIssued Quantity Issued	  */
+	public void setQtyIssued (BigDecimal QtyIssued)
+	{
+		set_Value (COLUMNNAME_QtyIssued, QtyIssued);
+	}
+	
+	/** Get Quantity Issued.
+		@return Quantity Issued	  */
+	public BigDecimal getQtyIssued () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_QtyIssued);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	public static String COLUMNNAME_PM_Machinery_ID   = "PM_Machinery_ID";
+	/** Set Machinery.
+	@param PM_Machinery_ID Machinery	  */
+	public void setPM_Machinery_ID (int PM_Machinery_ID)
+	{
+		if (PM_Machinery_ID < 1) 
+			set_Value (COLUMNNAME_PM_Machinery_ID, null);
+		else 
+			set_Value (COLUMNNAME_PM_Machinery_ID, Integer.valueOf(PM_Machinery_ID));
+	}
+	
+	/** Get Machinery.
+		@return Machinery	  */
+	public int getPM_Machinery_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_PM_Machinery_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
 
 	/** Column name Item1_C_OrderLine_ID */
     public static final String COLUMNNAME_Item1_C_OrderLine_ID = "Item1_C_OrderLine_ID";
@@ -2200,7 +2239,6 @@ public class TF_MOrder extends MOrder {
 		String msg = super.completeIt();
 		purchasePermit();
 		issuePermit();		
-		
 		if(!createConsolidatedTransportInvoice)
 			createTransporterInvoice();
 		//else
@@ -2947,7 +2985,7 @@ public class TF_MOrder extends MOrder {
 			}
 		}
 	}
-	
+		
 	public void reversePurchasedPermit() {
 		if(!isSOTrx()) {
 			TF_MProduct prod = new TF_MProduct(getCtx(), getItem1_ID(), get_TrxName());

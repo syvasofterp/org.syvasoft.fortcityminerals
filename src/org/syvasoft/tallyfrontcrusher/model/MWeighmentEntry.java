@@ -164,7 +164,53 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 			 " WHERE TF_WeighmentEntry_ID =  " + getTF_WeighmentEntry_ID();
 			DB.executeUpdate(updateSql, get_TrxName());
 		}
+		
+		if(getWeighmentEntryType().equals(WEIGHMENTENTRYTYPE_OwnProductionReceipt) || 
+				getWeighmentEntryType().equals(WEIGHMENTENTRYTYPE_SubcontractProductionReceipt) ||
+				getWeighmentEntryType().equals(WEIGHMENTENTRYTYPE_Input)) {
+			CreateQuarry();
+		}
+		
 		return super.afterSave(newRecord, success);
+	}
+	
+	void CreateQuarry() {
+		
+		if(getMLNo() != null) {
+			String where = "Value = '" + getMLNo() + "'";
+			
+			MQuarry quarry = new Query(getCtx(), MQuarry.Table_Name, where, get_TrxName()).first();
+			
+			if(quarry == null) {
+				quarry = new MQuarry(getCtx(), 0, get_TrxName());
+				quarry.setAD_Org_ID(getAD_Org_ID());
+				quarry.setName(getMLNo());
+				quarry.setValue(getMLNo());
+				quarry.setActualQty(getNetWeightUnit());
+				quarry.setDeliveredTPQty(getPermitIssuedQty());
+				quarry.setBalanceQty(getNetWeightUnit().subtract(getPermitIssuedQty()));
+				quarry.saveEx();
+				setTF_Quarry_ID(quarry.getTF_Quarry_ID());
+				saveEx();
+			}
+			else{
+				String sql = "SELECT SUM(PermitIssuedQty) FROM TF_WeighmentEntry WHERE MLNo  = ? "
+						+ " AND Status != 'VO' AND WeighmentEntryType = ?";
+				BigDecimal totalTPWeight = DB.getSQLValueBD(get_TrxName(), sql, getMLNo(), getWeighmentEntryType());
+				
+				sql = "SELECT SUM(NetWeightUnit) FROM TF_WeighmentEntry WHERE MLNo  = ? "
+						+ " AND Status != 'VO' AND IsSecondary = 'N' AND WeighmentEntryType = ?";
+				BigDecimal netweightUnit = DB.getSQLValueBD(get_TrxName(), sql, getMLNo(), getWeighmentEntryType());
+				
+				if(!isSecondary()) {
+					quarry.setActualQty(netweightUnit);
+				}
+				
+				quarry.setDeliveredTPQty(totalTPWeight);
+				quarry.setBalanceQty(netweightUnit.subtract(totalTPWeight));
+				quarry.saveEx();
+			}
+		}
 	}
 	
 	void CreateCustomerVehicle() {
@@ -278,7 +324,7 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 	 */
 	public int getC_DocTypeShipment_ID() {
 		MDocType dt = new MDocType(getCtx(), getC_DocType_ID(), get_TrxName());
-		return dt.getC_DocTypeShipment_ID();
+		return dt.getC_DocTypeShipment_ID();                                                                           
 	}
 	
 	public int getC_DocTypeInvoice_ID() {
@@ -532,6 +578,15 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		BigDecimal unitRent = getRent_Amt().divide(getNetWeightUnit(), 2,RoundingMode.HALF_EVEN);
 		
 		return getPrice().add(unitRent);
+	}
+	
+	public BigDecimal getMaterialPriceIncludedRoyaltyPass(BigDecimal price) {
+		if(getPermitPassAmount() == null || getPermitPassAmount().doubleValue() == 0 || getPassQtyIssued() == null || getPassQtyIssued().doubleValue() == 0)
+			return getPrice();
+		
+		BigDecimal unitPassAmt = getPermitPassAmount().divide(getPassQtyIssued(), 2,RoundingMode.HALF_EVEN);
+		
+		return price.add(unitPassAmt);
 	}
 	
 	public void voidWeighmentEntry() {

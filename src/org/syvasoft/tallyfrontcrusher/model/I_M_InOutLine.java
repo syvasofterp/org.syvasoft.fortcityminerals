@@ -500,6 +500,15 @@ public interface I_M_InOutLine
 	/** Get Picked Quantity	  */
 	public BigDecimal getPickedQty();
 
+    /** Column name PM_Machinery_ID */
+    public static final String COLUMNNAME_PM_Machinery_ID = "PM_Machinery_ID";
+
+	/** Set Machinery	  */
+	public void setPM_Machinery_ID (int PM_Machinery_ID);
+
+	/** Get Machinery	  */
+	public int getPM_Machinery_ID();
+
     /** Column name Price */
     public static final String COLUMNNAME_Price = "Price";
 
@@ -538,6 +547,15 @@ public interface I_M_InOutLine
 	  * The Quantity Entered is based on the selected UoM
 	  */
 	public BigDecimal getQtyEntered();
+
+    /** Column name QtyIssued */
+    public static final String COLUMNNAME_QtyIssued = "QtyIssued";
+
+	/** Set Quantity Issued	  */
+	public void setQtyIssued (BigDecimal QtyIssued);
+
+	/** Get Quantity Issued	  */
+	public BigDecimal getQtyIssued();
 
     /** Column name QtyOverReceipt */
     public static final String COLUMNNAME_QtyOverReceipt = "QtyOverReceipt";

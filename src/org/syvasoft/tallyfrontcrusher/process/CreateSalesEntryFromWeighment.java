@@ -137,7 +137,7 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 						BigDecimal remainingQty = wEntry.getNetWeightUnit().subtract(wEntry.getTotalTPWeight());
 						//Remaining actual qty should only be non tp invoiced for the Without Order DC
 						//For order DC, PDC Voided should be done the balance tp weight should be tally using secondary dc 
-						if((remainingQty.doubleValue() == 0 &&  wEntry.getC_OrderLine_ID() == 0) || wEntry.getC_OrderLine_ID() > 0) {
+						if((remainingQty.doubleValue() <= 0 &&  wEntry.getC_OrderLine_ID() == 0) || wEntry.getC_OrderLine_ID() > 0) {
 							msg = "PDCVoided due to TP Weight is ZERO";
 							wEntry.setStatus(MWeighmentEntry.STATUS_PrimaryDCVoid);							
 							wEntry.saveEx();
@@ -434,6 +434,9 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 		
 		invLine.setQty(qty);
 		BigDecimal price = wEntry.getMaterialPriceIncludedRent();
+		
+		price = wEntry.getMaterialPriceIncludedRoyaltyPass(price);
+		
 		invLine.setPriceActual(price);
 		invLine.setPriceList(price);
 		invLine.setPriceLimit(price);
