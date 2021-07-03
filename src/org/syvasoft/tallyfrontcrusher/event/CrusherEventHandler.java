@@ -336,13 +336,17 @@ public class CrusherEventHandler extends AbstractEventHandler {
 		}
 		else if(po.get_TableName().equals(MInOutLine.Table_Name)) {
 			
-			TF_MInOutLine iLine = (TF_MInOutLine) po;
+			MInOutLine iLine = (MInOutLine) po;
 			if(event.getTopic().equals(IEventTopics.PO_BEFORE_NEW)) {
 				if (iLine.getC_OrderLine_ID() > 0) {
 					TF_MOrderLine oLine = new TF_MOrderLine(Env.getCtx(), iLine.getC_OrderLine_ID(), iLine.get_TrxName());
 					
-					iLine.setPM_Machinery_ID(oLine.getPM_Machinery_ID());
-					iLine.setQtyIssued(oLine.getQtyIssued());
+					if(oLine.getPM_Machinery_ID() > 0) {
+						iLine.set_ValueOfColumn("PM_Machinery_ID", oLine.getPM_Machinery_ID());
+					}
+					if(oLine.getQtyIssued().doubleValue() > 0) {
+						iLine.set_ValueOfColumn("QtyIssued", oLine.getQtyIssued());
+					}
 				}
 			}
 		}

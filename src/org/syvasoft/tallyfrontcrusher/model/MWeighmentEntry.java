@@ -87,6 +87,12 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 			CreateDestination();
 			CreateCustomerVehicle();
 			
+			if(getWeighmentEntryType().equals(WEIGHMENTENTRYTYPE_OwnProductionReceipt) || 
+					getWeighmentEntryType().equals(WEIGHMENTENTRYTYPE_SubcontractProductionReceipt) ||
+					getWeighmentEntryType().equals(WEIGHMENTENTRYTYPE_Input)) {
+				CreateQuarry();
+			}
+			
 			if(getTF_RentedVehicle_ID() > 0 && (getVehicleNo() == null || getVehicleNo().length() == 0))
 					setVehicleNo(getTF_RentedVehicle().getVehicleNo());
 			
@@ -168,7 +174,7 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 		if(getWeighmentEntryType().equals(WEIGHMENTENTRYTYPE_OwnProductionReceipt) || 
 				getWeighmentEntryType().equals(WEIGHMENTENTRYTYPE_SubcontractProductionReceipt) ||
 				getWeighmentEntryType().equals(WEIGHMENTENTRYTYPE_Input)) {
-			CreateQuarry();
+			UpdateQuarryQty();
 		}
 		
 		return super.afterSave(newRecord, success);
@@ -177,42 +183,50 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 	void CreateQuarry() {
 		
 		if(getMLNo() != null) {
-			String where = "Value = '" + getMLNo() + "'";
-			
-			MQuarry quarry = new Query(getCtx(), MQuarry.Table_Name, where, get_TrxName()).first();
+			MQuarry quarry = MQuarry.getQuarry(getMLNo(), getWeighmentEntryType(), getC_BPartner_ID(), getM_Product_ID(), getTF_Destination_ID(), getC_UOM_ID(), 0);
 			
 			if(quarry == null) {
 				quarry = new MQuarry(getCtx(), 0, get_TrxName());
 				quarry.setAD_Org_ID(getAD_Org_ID());
 				quarry.setName(getMLNo());
 				quarry.setValue(getMLNo());
-				quarry.setActualQty(getNetWeightUnit());
-				quarry.setDeliveredTPQty(getPermitIssuedQty());
-				quarry.setBalanceQty(getNetWeightUnit().subtract(getPermitIssuedQty()));
-				quarry.saveEx();
-				setTF_Quarry_ID(quarry.getTF_Quarry_ID());
-				saveEx();
-			}
-			else{
-				String sql = "SELECT SUM(PermitIssuedQty) FROM TF_WeighmentEntry WHERE MLNo  = ? "
-						+ " AND Status != 'VO' AND WeighmentEntryType = ?";
-				BigDecimal totalTPWeight = DB.getSQLValueBD(get_TrxName(), sql, getMLNo(), getWeighmentEntryType());
-				
-				sql = "SELECT SUM(NetWeightUnit) FROM TF_WeighmentEntry WHERE MLNo  = ? "
-						+ " AND Status != 'VO' AND IsSecondary = 'N' AND WeighmentEntryType = ?";
-				BigDecimal netweightUnit = DB.getSQLValueBD(get_TrxName(), sql, getMLNo(), getWeighmentEntryType());
-				
-				if(!isSecondary()) {
-					quarry.setActualQty(netweightUnit);
-				}
-				
-				quarry.setDeliveredTPQty(totalTPWeight);
-				quarry.setBalanceQty(netweightUnit.subtract(totalTPWeight));
+				quarry.setWeighmentEntryType(getWeighmentEntryType());
+				quarry.setC_BPartner_ID(getC_BPartner_ID());
+				quarry.setM_Product_ID(getM_Product_ID());
+				quarry.setTF_Destination_ID(getTF_Destination_ID());
+				quarry.setC_UOM_ID(getC_UOM_ID());
 				quarry.saveEx();
 			}
+			
+			setTF_Quarry_ID(quarry.getTF_Quarry_ID());
 		}
 	}
 	
+	void UpdateQuarryQty() {
+		
+		if(getMLNo() != null) {
+			String where = "Value = '" + getMLNo() + "'";
+			
+			MQuarry quarry = new Query(getCtx(), MQuarry.Table_Name, where, get_TrxName()).first();
+			
+			String sql = "SELECT SUM(PermitIssuedQty) FROM TF_WeighmentEntry WHERE MLNo  = ? "
+						+ " AND Status != 'VO' AND WeighmentEntryType = ?";
+			BigDecimal totalTPWeight = DB.getSQLValueBD(get_TrxName(), sql, getMLNo(), getWeighmentEntryType());
+			
+			sql = "SELECT SUM(NetWeightUnit) FROM TF_WeighmentEntry WHERE MLNo  = ? "
+					+ " AND Status != 'VO' AND IsSecondary = 'N' AND WeighmentEntryType = ?";
+			BigDecimal netweightUnit = DB.getSQLValueBD(get_TrxName(), sql, getMLNo(), getWeighmentEntryType());
+			
+			if(!isSecondary()) {
+				quarry.setActualQty(netweightUnit);
+			}
+			
+			quarry.setDeliveredTPQty(totalTPWeight);
+			quarry.setBalanceQty(netweightUnit.subtract(totalTPWeight));
+			quarry.saveEx();			
+		}
+	}
+
 	void CreateCustomerVehicle() {
 		if(getTF_RentedVehicle_ID() == 0 && getPaymentRule().equals(PAYMENTRULE_OnCredit.toString())) {
 			String whereClause="UPPER(replace(vehicleno,' ',''))='"+getVehicleNo().replace(" ","").toUpperCase()+"'";
@@ -597,13 +611,13 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 			
 			
 			//Shipment
-			MInOut io = new Query(getCtx(), TF_MInOut.Table_Name, oWhereClause, get_TrxName())
+			TF_MInOut io = new Query(getCtx(), TF_MInOut.Table_Name, oWhereClause, get_TrxName())
 					.setClient_ID()
 					.setParameters(getTF_WeighmentEntry_ID(), getC_BPartner_ID())
 					.first();
 			if(io != null) {
 				io.setDocAction(DocAction.ACTION_Reverse_Correct);
-				io.voidIt();
+				io.reverseCorrectIt();
 				io.setDocStatus(TF_MOrder.DOCSTATUS_Reversed);
 				io.saveEx();
 			}

@@ -95,6 +95,21 @@ public interface I_TF_Quarry
 	/** Get Balance Qty	  */
 	public BigDecimal getBalanceQty();
 
+    /** Column name C_BPartner_ID */
+    public static final String COLUMNNAME_C_BPartner_ID = "C_BPartner_ID";
+
+	/** Set Business Partner .
+	  * Identifies a Business Partner
+	  */
+	public void setC_BPartner_ID (int C_BPartner_ID);
+
+	/** Get Business Partner .
+	  * Identifies a Business Partner
+	  */
+	public int getC_BPartner_ID();
+
+	public org.compiere.model.I_C_BPartner getC_BPartner() throws RuntimeException;
+
     /** Column name C_ElementValue_ID */
     public static final String COLUMNNAME_C_ElementValue_ID = "C_ElementValue_ID";
 
@@ -120,6 +135,21 @@ public interface I_TF_Quarry
 	public int getC_ElementValuePermitExp_ID();
 
 	public org.compiere.model.I_C_ElementValue getC_ElementValuePermitExp() throws RuntimeException;
+
+    /** Column name C_UOM_ID */
+    public static final String COLUMNNAME_C_UOM_ID = "C_UOM_ID";
+
+	/** Set UOM.
+	  * Unit of Measure
+	  */
+	public void setC_UOM_ID (int C_UOM_ID);
+
+	/** Get UOM.
+	  * Unit of Measure
+	  */
+	public int getC_UOM_ID();
+
+	public org.compiere.model.I_C_UOM getC_UOM() throws RuntimeException;
 
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
@@ -199,6 +229,21 @@ public interface I_TF_Quarry
 	/** Get License No	  */
 	public String getLicenseNo();
 
+    /** Column name M_Product_ID */
+    public static final String COLUMNNAME_M_Product_ID = "M_Product_ID";
+
+	/** Set Product.
+	  * Product, Service, Item
+	  */
+	public void setM_Product_ID (int M_Product_ID);
+
+	/** Get Product.
+	  * Product, Service, Item
+	  */
+	public int getM_Product_ID();
+
+	public org.compiere.model.I_M_Product getM_Product() throws RuntimeException;
+
     /** Column name Name */
     public static final String COLUMNNAME_Name = "Name";
 
@@ -255,6 +300,17 @@ public interface I_TF_Quarry
 	  * Tender Amount
 	  */
 	public BigDecimal getTenderAmount();
+
+    /** Column name TF_Destination_ID */
+    public static final String COLUMNNAME_TF_Destination_ID = "TF_Destination_ID";
+
+	/** Set Destination	  */
+	public void setTF_Destination_ID (int TF_Destination_ID);
+
+	/** Get Destination	  */
+	public int getTF_Destination_ID();
+
+	public I_TF_Destination getTF_Destination() throws RuntimeException;
 
     /** Column name TF_Quarry_ID */
     public static final String COLUMNNAME_TF_Quarry_ID = "TF_Quarry_ID";
@@ -328,4 +384,13 @@ public interface I_TF_Quarry
 	  * Search key for the record in the format required - must be unique
 	  */
 	public String getValue();
+
+    /** Column name WeighmentEntryType */
+    public static final String COLUMNNAME_WeighmentEntryType = "WeighmentEntryType";
+
+	/** Set Type	  */
+	public void setWeighmentEntryType (String WeighmentEntryType);
+
+	/** Get Type	  */
+	public String getWeighmentEntryType();
 }

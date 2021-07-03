@@ -33,7 +33,7 @@ public class X_TF_Quarry extends PO implements I_TF_Quarry, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20210628L;
+	private static final long serialVersionUID = 20210703L;
 
     /** Standard Constructor */
     public X_TF_Quarry (Properties ctx, int TF_Quarry_ID, String trxName)
@@ -128,6 +128,34 @@ public class X_TF_Quarry extends PO implements I_TF_Quarry, I_Persistent
 		return bd;
 	}
 
+	public org.compiere.model.I_C_BPartner getC_BPartner() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_BPartner)MTable.get(getCtx(), org.compiere.model.I_C_BPartner.Table_Name)
+			.getPO(getC_BPartner_ID(), get_TrxName());	}
+
+	/** Set Business Partner .
+		@param C_BPartner_ID 
+		Identifies a Business Partner
+	  */
+	public void setC_BPartner_ID (int C_BPartner_ID)
+	{
+		if (C_BPartner_ID < 1) 
+			set_Value (COLUMNNAME_C_BPartner_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_BPartner_ID, Integer.valueOf(C_BPartner_ID));
+	}
+
+	/** Get Business Partner .
+		@return Identifies a Business Partner
+	  */
+	public int getC_BPartner_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_BPartner_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	public org.compiere.model.I_C_ElementValue getC_ElementValue() throws RuntimeException
     {
 		return (org.compiere.model.I_C_ElementValue)MTable.get(getCtx(), org.compiere.model.I_C_ElementValue.Table_Name)
@@ -176,6 +204,34 @@ public class X_TF_Quarry extends PO implements I_TF_Quarry, I_Persistent
 	public int getC_ElementValuePermitExp_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_C_ElementValuePermitExp_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public org.compiere.model.I_C_UOM getC_UOM() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_UOM)MTable.get(getCtx(), org.compiere.model.I_C_UOM.Table_Name)
+			.getPO(getC_UOM_ID(), get_TrxName());	}
+
+	/** Set UOM.
+		@param C_UOM_ID 
+		Unit of Measure
+	  */
+	public void setC_UOM_ID (int C_UOM_ID)
+	{
+		if (C_UOM_ID < 1) 
+			set_Value (COLUMNNAME_C_UOM_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_UOM_ID, Integer.valueOf(C_UOM_ID));
+	}
+
+	/** Get UOM.
+		@return Unit of Measure
+	  */
+	public int getC_UOM_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_UOM_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
@@ -262,6 +318,34 @@ public class X_TF_Quarry extends PO implements I_TF_Quarry, I_Persistent
 	public String getLicenseNo () 
 	{
 		return (String)get_Value(COLUMNNAME_LicenseNo);
+	}
+
+	public org.compiere.model.I_M_Product getM_Product() throws RuntimeException
+    {
+		return (org.compiere.model.I_M_Product)MTable.get(getCtx(), org.compiere.model.I_M_Product.Table_Name)
+			.getPO(getM_Product_ID(), get_TrxName());	}
+
+	/** Set Product.
+		@param M_Product_ID 
+		Product, Service, Item
+	  */
+	public void setM_Product_ID (int M_Product_ID)
+	{
+		if (M_Product_ID < 1) 
+			set_Value (COLUMNNAME_M_Product_ID, null);
+		else 
+			set_Value (COLUMNNAME_M_Product_ID, Integer.valueOf(M_Product_ID));
+	}
+
+	/** Get Product.
+		@return Product, Service, Item
+	  */
+	public int getM_Product_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_M_Product_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	/** Set Name.
@@ -354,6 +438,31 @@ public class X_TF_Quarry extends PO implements I_TF_Quarry, I_Persistent
 		return bd;
 	}
 
+	public I_TF_Destination getTF_Destination() throws RuntimeException
+    {
+		return (I_TF_Destination)MTable.get(getCtx(), I_TF_Destination.Table_Name)
+			.getPO(getTF_Destination_ID(), get_TrxName());	}
+
+	/** Set Destination.
+		@param TF_Destination_ID Destination	  */
+	public void setTF_Destination_ID (int TF_Destination_ID)
+	{
+		if (TF_Destination_ID < 1) 
+			set_Value (COLUMNNAME_TF_Destination_ID, null);
+		else 
+			set_Value (COLUMNNAME_TF_Destination_ID, Integer.valueOf(TF_Destination_ID));
+	}
+
+	/** Get Destination.
+		@return Destination	  */
+	public int getTF_Destination_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_TF_Destination_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	/** Set Quarry.
 		@param TF_Quarry_ID Quarry	  */
 	public void setTF_Quarry_ID (int TF_Quarry_ID)
@@ -437,5 +546,32 @@ public class X_TF_Quarry extends PO implements I_TF_Quarry, I_Persistent
 	public String getValue () 
 	{
 		return (String)get_Value(COLUMNNAME_Value);
+	}
+
+	/** Sales = 1SO */
+	public static final String WEIGHMENTENTRYTYPE_Sales = "1SO";
+	/** Input = 2PO */
+	public static final String WEIGHMENTENTRYTYPE_Input = "2PO";
+	/** Own Production Receipt = 3PR */
+	public static final String WEIGHMENTENTRYTYPE_OwnProductionReceipt = "3PR";
+	/** Subcontract Production Receipt = 4SR */
+	public static final String WEIGHMENTENTRYTYPE_SubcontractProductionReceipt = "4SR";
+	/** Stock to Crusher = 5KA */
+	public static final String WEIGHMENTENTRYTYPE_StockToCrusher = "5KA";
+	/** Other Purchase = 8OP */
+	public static final String WEIGHMENTENTRYTYPE_OtherPurchase = "8OP";
+	/** Set Type.
+		@param WeighmentEntryType Type	  */
+	public void setWeighmentEntryType (String WeighmentEntryType)
+	{
+
+		set_Value (COLUMNNAME_WeighmentEntryType, WeighmentEntryType);
+	}
+
+	/** Get Type.
+		@return Type	  */
+	public String getWeighmentEntryType () 
+	{
+		return (String)get_Value(COLUMNNAME_WeighmentEntryType);
 	}
 }
