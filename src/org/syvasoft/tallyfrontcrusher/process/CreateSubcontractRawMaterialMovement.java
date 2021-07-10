@@ -25,7 +25,7 @@ public class CreateSubcontractRawMaterialMovement extends SvrProcess {
 		
 		//Quarry Production to Crusher Production Raw Material movements		
 		//MSubcontractMaterialMovement.createRawmaterialMovementsFromWeighment(get_TrxName());
-		String whereClause = "WeighmentEntryType = '4SR' AND C_Project_ID IS NOT NULL AND Status='CO' AND Processed='N' AND TareWeightTime IS NOT NULL AND GrossWeightTime IS NOT NULL";
+		String whereClause = "WeighmentEntryType = '4SR' AND C_Project_ID IS NOT NULL AND Status='CO' AND Processed='N' AND TareWeightTime IS NOT NULL AND GrossWeightTime IS NOT NULL AND IsSecondary='N'";
 		List<MWeighmentEntry> wEntries = new Query(Env.getCtx(), MWeighmentEntry.Table_Name, whereClause, get_TrxName())
 				.list();
 		
@@ -93,7 +93,7 @@ public class CreateSubcontractRawMaterialMovement extends SvrProcess {
 		
 		
 		//Own Quarry Production Receipt to Crusher Production
-		whereClause = "WeighmentEntryType = '3PR' AND Status='CO' AND Processed='N' AND TareWeightTime IS NOT NULL AND GrossWeightTime IS NOT NULL";
+		whereClause = "WeighmentEntryType = '3PR' AND Status='CO' AND Processed='N' AND TareWeightTime IS NOT NULL AND GrossWeightTime IS NOT NULL AND IsSecondary='N'";
 		wEntries = new Query(Env.getCtx(), MWeighmentEntry.Table_Name, whereClause, get_TrxName())
 				.list();
 		
@@ -103,7 +103,7 @@ public class CreateSubcontractRawMaterialMovement extends SvrProcess {
 				if(!entry.isSecondary()) {
 					br.createFromWeighmentEntry(entry);
 					br.saveEx();
-					br.createSubcontractMovement();
+					//br.createSubcontractMovement();
 					br.saveEx();
 					if(!br.isProcessed()) {
 						br.processIt(MBoulderReceipt.DOCACTION_Complete);					

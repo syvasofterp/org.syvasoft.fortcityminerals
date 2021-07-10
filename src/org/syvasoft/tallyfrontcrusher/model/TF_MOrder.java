@@ -10,6 +10,7 @@ import java.util.Properties;
 import org.adempiere.exceptions.AdempiereException;
 import org.adempiere.exceptions.ProductNotOnPriceListException;
 import org.compiere.model.MBPartner;
+import org.compiere.model.MDocType;
 import org.compiere.model.MInOut;
 import org.compiere.model.MInOutLine;
 import org.compiere.model.MInvoice;
@@ -2303,12 +2304,15 @@ public class TF_MOrder extends MOrder {
 	@Override
 	public boolean voidIt() {
 		
+		MDocType dt = (MDocType) getC_DocTypeTarget();
+		String DocSubTypeSO = dt.getDocSubTypeSO();
+		
 		//POS Order's MR and Invoice should be reversed.
-		if(getC_DocType_ID() == 1000050 || getC_DocType_ID() == 1000041 || getC_DocType_ID() == getC_VendorInvoiceDocType_ID() ||
+		if(getC_DocType_ID() == 1000050 || getC_DocType_ID() == 1000041 ||  DocSubTypeSO.equals("IN") ||
 				getC_DocType_ID() == GSTOrderDocType_ID(getCtx()) || getC_DocType_ID() == NonGSTOrderDocType_ID(getCtx())) {
 			//MR/Shipment reverse Correct
-			List<MInOut> inOutList = new Query(getCtx(), MInOut.Table_Name, "C_Order_ID=? AND DocStatus=? AND ? != ?", get_TrxName())
-				.setClient_ID().setParameters(getC_Order_ID(),DOCSTATUS_Completed,getC_DocType_ID(), getC_VendorInvoiceDocType_ID()).list();
+			List<MInOut> inOutList = new Query(getCtx(), MInOut.Table_Name, "C_Order_ID=? AND DocStatus=? AND 'IN' != ?", get_TrxName())
+				.setClient_ID().setParameters(getC_Order_ID(),DOCSTATUS_Completed, DocSubTypeSO == null ? "" : DocSubTypeSO).list();
 			for(MInOut inout : inOutList) {
 				if(!inout.reverseCorrectIt())
 					return false;				
@@ -3685,9 +3689,18 @@ public class TF_MOrder extends MOrder {
 		return DocType_ID;
 	}
 	
+	public static int getC_TransporterInvoiceDocType_ID() {
+		int DocType_ID = MSysConfig.getIntValue("VENDORINVOICE_ORDER_ID", 1000064, Env.getAD_Client_ID(Env.getCtx()));
+		return DocType_ID;
+	}
+	
 	public void createInvoiceVendor() {
-						
-		if(getC_DocTypeTarget_ID() != getC_VendorInvoiceDocType_ID())
+		if(isSOTrx())
+			return;
+		
+		MDocType dt = (MDocType) getC_DocTypeTarget();
+		
+		if(dt.getDocSubTypeSO() != null && !dt.getDocSubTypeSO().equals("IN"))
 			return;
 		
 		//Invoice Header
