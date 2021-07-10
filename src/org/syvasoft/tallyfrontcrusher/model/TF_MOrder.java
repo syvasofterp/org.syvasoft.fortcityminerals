@@ -3690,7 +3690,7 @@ public class TF_MOrder extends MOrder {
 	}
 	
 	public static int getC_TransporterInvoiceDocType_ID() {
-		int DocType_ID = MSysConfig.getIntValue("VENDORINVOICE_ORDER_ID", 1000064, Env.getAD_Client_ID(Env.getCtx()));
+		int DocType_ID = MSysConfig.getIntValue("TRANSPORTER_INVOICE_ORDER_ID", 1000064, Env.getAD_Client_ID(Env.getCtx()));
 		return DocType_ID;
 	}
 	
