@@ -206,8 +206,10 @@ public class CreateShipmentForWE extends SvrProcess {
 					ioLine.setTF_Destination_ID(we.getTF_Destination_ID());
 					ioLine.setDistance(distance);
 					ioLine.setRateMTKM(RateMTKM);
-					ioLine.setC_Tax_ID(lumpsumConfig.getC_Tax_ID());
-					ioLine.setIsTaxIncluded(lumpsumConfig.isTaxIncluded());
+					if(lumpsumConfig != null) {
+						ioLine.setC_Tax_ID(lumpsumConfig.getC_Tax_ID());
+						ioLine.setIsTaxIncluded(lumpsumConfig.isTaxIncluded());
+					}
 					ioLine.setQty(qty);
 					ioLine.set_ValueOfColumn("Price", price);
 					ioLine.setTF_LumpSumRent_Config_ID(TF_LumpSumRentConfig_ID);
