@@ -52,8 +52,6 @@ public class CreateSubcontractRawMaterialMovement extends SvrProcess {
 					try {
 						br.createFromWeighmentEntry(entry);
 						br.saveEx();
-						br.createSubcontractMovement();
-						br.saveEx();
 						if(!br.isProcessed()) {
 							br.processIt(MBoulderReceipt.DOCACTION_Complete);					
 							br.saveEx();					

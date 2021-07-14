@@ -322,9 +322,9 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 			
 			MWarehouse warehouse = MWarehouse.get(getCtx(), getM_Warehouse_ID());
 			int defaultLocatorID = warehouse.getDefaultLocator().getM_Locator_ID();
-			
+			createSubcontractMovement();
 			if(getTF_Send_To().equals(TF_SEND_TO_SubcontractProduction)) {
-				createSubcontractMovement();						
+										
 				// to check Requires Consolidate Invoice				
 				if(!proj.isRequiredConsolidateInv())							
 					createSubcontractInvoice();
@@ -336,7 +336,7 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 				return null;
 			}
 			else if(getC_Project_ID() == 0) {
-				createSubcontractMovement();
+				
 				createInternalUseInventory();
 			}
 			else {
@@ -372,57 +372,7 @@ public class MBoulderReceipt extends X_TF_Boulder_Receipt {
 				
 					setM_Transaction_ID(mtrx.getM_Transaction_ID());
 				}
-				/*
-				//Posting GL journal for Jobwork expense 
-				MJournal j = new MJournal(getCtx(), 0, get_TrxName());
-				j.setAD_Org_ID(getAD_Org_ID());
-				j.setDescription("Generated Jobwork Expense Journal Entry from Boulder Receipt - " + getDocumentNo());
-				j.setC_AcctSchema_ID(as.getC_AcctSchema_ID());
-				//j.setC_Currency_ID(Env.getContextAsInt(getCtx(), "$C_Currency_ID"));
-				j.setC_Currency_ID(MClient.get(Env.getCtx()).getC_Currency_ID());
-				j.setPostingType(MJournal.POSTINGTYPE_Actual);
-				j.setC_DocType_ID(1000000);
-				j.setDateDoc(getDateAcct());
-				j.setDateAcct(getDateAcct());
-				j.setDocStatus(DOCSTATUS_Drafted);
-				MPeriod period = MPeriod.get(getCtx(), getDateAcct());
-				j.setC_Period_ID(period.getC_Period_ID());
-				j.setGL_Category_ID(1000000);
-				j.setC_ConversionType_ID(114);
-				j.saveEx();
-				
-				BigDecimal amount = getQtyReceived().multiply(getJobwork_StdPrice());
-				
-				//Jobwork Expense
-				MJournalLine jl = new MJournalLine(j);
-				jl.setLine(10);			
-				jl.setAccount_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getJobworkExpenseAcct_ID());
-				jl.setC_BPartner_ID(getSubcontractor_ID());
-				jl.setM_Product_ID(getJobWork_Product_ID());			
-				jl.setUser1_ID(getTF_Quarry().getC_ElementValue_ID()); // Quarry Profit Center
-				jl.setAmtSourceDr(amount);
-				jl.setAmtAcctDr(amount);
-				jl.setIsGenerated(true);
-				jl.saveEx();
-				
-				//Jobwork Payable Clearing
-				jl = new MJournalLine(j);
-				jl.setLine(20);			
-				jl.setAccount_ID(MGLPostingConfig.getMGLPostingConfig(getCtx()).getJobworkPayableClearingAcct_ID());
-				jl.setC_BPartner_ID(getSubcontractor_ID());
-				jl.setM_Product_ID(getJobWork_Product_ID());			
-				jl.setUser1_ID(getTF_Quarry().getC_ElementValue_ID()); // Quarry Profit Center
-				jl.setAmtSourceCr(amount);
-				jl.setAmtAcctCr(amount);
-				jl.setIsGenerated(true);
-				jl.saveEx();
-				
-				j.processIt(MJournal.ACTION_Complete);
-				j.saveEx();
-				setJobwork_Journal_ID(j.getGL_Journal_ID());		
-				
-				 */
-				createSubcontractMovement();
+			
 				// to check Requires Consolidate Invoice	
 				if(!proj.isRequiredConsolidateInv())				
 					createSubcontractInvoice();

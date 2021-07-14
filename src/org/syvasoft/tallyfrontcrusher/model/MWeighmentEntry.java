@@ -656,6 +656,17 @@ public class MWeighmentEntry extends X_TF_WeighmentEntry {
 				inv.saveEx();
 			}
 			
+			//Boulder Receipt
+			List<MBoulderReceipt> boulders = new Query(getCtx(), MBoulderReceipt.Table_Name, "TF_WeighmentEntry_ID = ? AND DocStatus ='CO'", get_TrxName())
+					.setClient_ID()
+					.setParameters(getTF_WeighmentEntry_ID())
+					.list();
+			
+			for(MBoulderReceipt br : boulders) {
+				br.reverseIt();
+				br.setDocStatus(MBoulderReceipt.DOCSTATUS_Voided);
+				br.saveEx();
+			}
 		}
 		catch (Exception ex) {
 			throw new AdempiereException(ex.getMessage());
