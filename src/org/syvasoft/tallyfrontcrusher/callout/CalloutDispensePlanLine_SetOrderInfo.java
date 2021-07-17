@@ -27,7 +27,7 @@ public class CalloutDispensePlanLine_SetOrderInfo implements IColumnCallout {
 		if(C_OrderLine_ID > 0) {
 			TF_MOrderLine orderline = new TF_MOrderLine(ctx, C_OrderLine_ID, null);
 			
-			if(orderline != null) {
+			if(orderline != null) {				
 				String sql = " C_OrderLine_ID = "+ orderline.getC_OrderLine_ID();
 				
 				MDispensePlanLine prevdispenseLine = new Query(ctx, MDispensePlanLine.Table_Name, sql, null).first();
@@ -41,7 +41,7 @@ public class CalloutDispensePlanLine_SetOrderInfo implements IColumnCallout {
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_C_OrderLine_ID, orderline.getC_OrderLine_ID());
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_PaymentRule, order.getPaymentRule());
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_C_BPartner_ID, order.getC_BPartner_ID());
-				mTab.setValue(MDispensePlanLine.COLUMNNAME_IsPriceConfidential, order.get_Attribute(MDispensePlanLine.COLUMNNAME_IsPriceConfidential));
+				mTab.setValue(MDispensePlanLine.COLUMNNAME_IsPriceConfidential, order.get_ValueAsBoolean(MDispensePlanLine.COLUMNNAME_IsPriceConfidential));
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_DateOrdered, orderline.getDateOrdered());
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_TF_Destination_ID, orderline.getTF_Destination_ID());
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_Line, 10);
@@ -65,7 +65,7 @@ public class CalloutDispensePlanLine_SetOrderInfo implements IColumnCallout {
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_IsTaxIncluded, orderline.isTaxIncluded());
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_IsRoyaltyPassInclusive, orderline.isRoyaltyPassInclusive());
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_IsRentInclusive, orderline.isRentInclusive());
-				mTab.setValue(MDispensePlanLine.COLUMNNAME_IsPriceConfidential, orderline.isPriceConfidential());
+				//mTab.setValue(MDispensePlanLine.COLUMNNAME_IsPriceConfidential, orderline.isPriceConfidential());
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_CustomerTransporter, orderline.isCustomerTransporter());
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_FreightUOM_ID, orderline.getFreightUOM_ID());
 				mTab.setValue(MDispensePlanLine.COLUMNNAME_UnitPrice, orderline.getUnitPrice());
