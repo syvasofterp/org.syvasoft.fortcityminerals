@@ -1,7 +1,7 @@
 -- *** SqlDbx Personal Edition ***
 -- !!! Not licensed for commercial use beyound 90 days evaluation period !!!
 -- For version limitations please check http://www.sqldbx.com/personal_edition.htm
--- Number of queries executed: 2513, number of rows retrieved: 98578
+-- Number of queries executed: 8843, number of rows retrieved: 251820
 
 DROP VIEW IF EXISTS adempiere.tf_weighmententry_view;
 
@@ -72,7 +72,10 @@ CREATE OR REPLACE VIEW adempiere.tf_weighmententry_view AS
     tf_weighmententry.gstamount,
     tf_weighmententry.newproduct,
     tf_weighmententry.tpno,
-    tf_weighmententry.tf_weighmententryprimary_id,
+        CASE
+            WHEN (tf_weighmententry.issecondary = 'N'::bpchar) THEN NULL::numeric
+            ELSE tf_weighmententry.tf_weighmententryprimary_id
+        END AS tf_weighmententryprimary_id,
     tf_weighmententry.issecondary,
     tf_weighmententry.invoicetype,
     tf_weighmententry.royaltyno,
@@ -91,10 +94,65 @@ CREATE OR REPLACE VIEW adempiere.tf_weighmententry_view AS
     tf_weighmententry.createtwoinvoices,
     tf_weighmententry.tf_dispenseplanline_id,
     tf_weighmententry.shipmentto,
+        CASE
+            WHEN ((tf_weighmententry.status)::text = 'CO'::text) THEN 1
+            ELSE 2
+        END AS statusorder,
+    ( SELECT string_agg((pay_1.documentno)::text, ','::text ORDER BY (pay_1.documentno)::text) AS string_agg
+           
+FROM c_payment pay_1
+          WHERE ((tf_weighmententry.tf_weighmententry_id = pay_1.tf_weighmententry_id) AND (pay_1.docstatus = ANY (ARRAY['CO'::bpchar, 'CL'::bpchar])))) AS cashbookentryno,
+    ( SELECT string_agg(to_char(pay_1.datetrx, 'dd/mm/yyyy'::text), ','::text ORDER BY pay_1.documentno) AS string_agg
+           
+FROM c_payment pay_1
+          WHERE ((tf_weighmententry.tf_weighmententry_id = pay_1.tf_weighmententry_id) AND (pay_1.docstatus = ANY (ARRAY['CO'::bpchar, 'CL'::bpchar])))) AS cashbookreceiptdate,
+    ( SELECT sum(pay_1.payamt) AS sum
+           
+FROM c_payment pay_1
+          WHERE ((tf_weighmententry.tf_weighmententry_id = pay_1.tf_weighmententry_id) AND (pay_1.docstatus = ANY (ARRAY['CO'::bpchar, 'CL'::bpchar])))) AS cashreceived,
+        CASE
+            WHEN (doc.tf_docattachment_id IS NOT NULL) THEN 'Yes'::text
+            ELSE 'No'::text
+        END AS docattachment,
     NULL::unknown AS generate_salesentry,
+        CASE
+            WHEN (( SELECT count(*) AS count
+               
+FROM ad_note
+              WHERE ((ad_note.record_id = tf_weighmententry.tf_weighmententry_id) AND (ad_note.ad_table_id = (1000212)::numeric))) = 0) THEN 'Black'::text
+            WHEN (( SELECT count(*) AS count
+               
+FROM ad_note
+              WHERE ((ad_note.record_id = tf_weighmententry.tf_weighmententry_id) AND (ad_note.ad_table_id = (1000212)::numeric) AND (ad_note.processed = 'N'::bpchar))) > 0) THEN 'Red'::text
+            WHEN (( SELECT count(*) AS count
+               
+FROM ad_note
+              WHERE ((ad_note.record_id = tf_weighmententry.tf_weighmententry_id) AND (ad_note.ad_table_id = (1000212)::numeric) AND (ad_note.processed = 'Y'::bpchar))) > 0) THEN 'Green'::text
+            ELSE NULL::text
+        END AS color,
+        CASE
+            WHEN ((tf_rentedvehicle.istransporter = 'Y'::bpchar) AND (tf_weighmententry.customertransporter = 'N'::bpchar)) THEN ( SELECT c_bpartner.name
+               
+FROM c_bpartner
+              WHERE (c_bpartner.c_bpartner_id = tf_rentedvehicle.c_bpartner_id))
+            WHEN (tf_rentedvehicle.isownvehicle = 'Y'::bpchar) THEN 'Own Vehicle'::character varying
+            ELSE 'Customer Vehicle'::character varying
+        END AS transporter,
+        CASE
+            WHEN ((tf_rentedvehicle.istransporter = 'Y'::bpchar) AND (tf_weighmententry.customertransporter = 'N'::bpchar)) THEN tf_rentedvehicle.c_bpartner_id
+            ELSE NULL::numeric
+        END AS transporter_id,
+        CASE
+            WHEN ((tf_rentedvehicle.istransporter = 'Y'::bpchar) AND (tf_weighmententry.customertransporter = 'N'::bpchar)) THEN 'T'::character varying
+            WHEN (tf_rentedvehicle.isownvehicle = 'Y'::bpchar) THEN 'O'::character varying
+            ELSE 'C'::character varying
+        END AS vehiclecategory,
     NULL::unknown AS print_challan,
     1000212 AS ad_table_id,
     tf_weighmententry.tf_weighmententry_id AS record_id
    
-FROM tf_weighmententry;
+FROM tf_weighmententry
+     LEFT JOIN c_payment pay ON tf_weighmententry.tf_weighmententry_id = pay.tf_weighmententry_id AND pay.docstatus = ANY (ARRAY['CO'::bpchar, 'CL'::bpchar])
+     LEFT JOIN tf_docattachment doc ON doc.tf_weighmententry_id = tf_weighmententry.tf_weighmententry_id
+     LEFT JOIN tf_rentedvehicle ON tf_rentedvehicle.tf_rentedvehicle_id = tf_weighmententry.tf_rentedvehicle_id;
 

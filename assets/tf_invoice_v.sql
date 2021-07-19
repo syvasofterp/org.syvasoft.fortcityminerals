@@ -1,7 +1,12 @@
-/***/DROP VIEW IF EXISTS adempiere.tf_invoice_v;
+-- *** SqlDbx Personal Edition ***
+-- !!! Not licensed for commercial use beyound 90 days evaluation period !!!
+-- For version limitations please check http://www.sqldbx.com/personal_edition.htm
+-- Number of queries executed: 8833, number of rows retrieved: 251820
 
-/***/CREATE OR REPLACE VIEW adempiere.tf_invoice_v AS
- /***/SELECT c_invoice.c_invoice_id,
+DROP VIEW IF EXISTS adempiere.tf_invoice_v;
+
+CREATE OR REPLACE VIEW adempiere.tf_invoice_v AS
+ SELECT c_invoice.c_invoice_id,
     c_invoice.ad_client_id,
     c_invoice.ad_org_id,
     c_invoice.isactive,
@@ -26,7 +31,7 @@
     c_invoice.salesrep_id,
     c_invoice.dateinvoiced,
     c_invoice.dateprinted,
-    c_invoice.dateacct,
+    date(c_invoice.dateacct) AS dateacct,
     c_invoice.c_bpartner_id,
     c_invoice.c_bpartner_location_id,
     c_invoice.poreference,
@@ -118,6 +123,10 @@
     318 AS ad_table_id,
     c_invoice.c_invoice_id AS record_id,
     NULL::unknown AS printinvoice,
-   NULL AS printtransporterinvoice
-FROM c_invoice JOIN c_invoiceline ON c_invoiceline.c_invoice_id = c_invoice.c_invoice_id;
+    NULL::unknown AS printtransporterinvoice,
+    tf_weighmententry.documentno AS dcno,
+    tf_weighmententry.weighmententrytype
+   
+FROM c_invoice JOIN c_invoiceline ON c_invoiceline.c_invoice_id = c_invoice.c_invoice_id
+     LEFT JOIN tf_weighmententry ON tf_weighmententry.tf_weighmententry_id = c_invoice.tf_weighmententry_id;
 

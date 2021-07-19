@@ -1,7 +1,7 @@
 -- *** SqlDbx Personal Edition ***
 -- !!! Not licensed for commercial use beyound 90 days evaluation period !!!
 -- For version limitations please check http://www.sqldbx.com/personal_edition.htm
--- Number of queries executed: 2610, number of rows retrieved: 98720
+-- Number of queries executed: 8841, number of rows retrieved: 251820
 
 DROP VIEW IF EXISTS adempiere.tf_order_v;
 
@@ -34,7 +34,7 @@ CREATE OR REPLACE VIEW adempiere.tf_order_v AS
     c_order.dateordered,
     c_order.datepromised,
     c_order.dateprinted,
-    c_order.dateacct,
+    date(c_order.dateacct) AS dateacct,
     c_order.c_bpartner_id,
     c_order.c_bpartner_location_id,
     c_order.poreference,
@@ -210,5 +210,6 @@ CREATE OR REPLACE VIEW adempiere.tf_order_v AS
     NULL::character varying(10) AS quotetoorder,
     NULL::character varying(10) AS createdp
    
-FROM c_order JOIN c_orderline ON c_orderline.c_order_id = c_order.c_order_id;
+FROM c_order
+     JOIN c_orderline ON c_orderline.c_order_id = c_order.c_order_id;
 
