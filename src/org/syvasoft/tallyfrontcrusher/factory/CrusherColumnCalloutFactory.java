@@ -294,6 +294,7 @@ public class CrusherColumnCalloutFactory implements IColumnCalloutFactory {
 			if(columnName.equals(MWeighmentEntry.COLUMNNAME_Price) || 
 					columnName.equals(MWeighmentEntry.COLUMNNAME_GSTAmount) || 
 					columnName.equals(MWeighmentEntry.COLUMNNAME_IsPermitSales) ||
+					columnName.equals(MWeighmentEntry.COLUMNNAME_Rent_Amt) ||
 					columnName.equals(MWeighmentEntry.COLUMNNAME_DriverTips)) {
 				list.add(new CalloutWeighmentEntry_CalcAmount());
 			}

@@ -84,21 +84,23 @@ public class CreateSalesEntryFromWeighment extends SvrProcess {
 				
 				//if(createTPandNonTPInvocies)
 					//wEntry.setInvoiceType(MWeighmentEntry.INVOICETYPE_TPWeight);
-				
-				String checkValidation = " WeighmentEntryType = '1SO' AND Status = 'CO' AND InvoiceNo IS NULL AND GrossWeightTime < ?";
-				
-				List<MWeighmentEntry> prevEntries = new Query(getCtx(), MWeighmentEntry.Table_Name, checkValidation, get_TrxName())
-						.setClient_ID()
-						.setParameters(wEntry.getGrossWeightTime())
-						.list();
-				
 				String msg = null;
-				if(prevEntries.size() > 0) {
-					msg = wEntry.getDocumentNo() +  " : DC cannot be converted as invoice before Old DCs converted as invoice!";
-					addLog(wEntry.get_Table_ID(), wEntry.getGrossWeightTime(), null, msg, wEntry.get_Table_ID(), wEntry.get_ID());
-					continue;
+				if(wEntry.getInvoiceNo() == null) {
+					String checkValidation = " WeighmentEntryType = '1SO' AND Status = 'CO' AND InvoiceNo IS NULL AND GrossWeightTime < ?";
+					
+					List<MWeighmentEntry> prevEntries = new Query(getCtx(), MWeighmentEntry.Table_Name, checkValidation, get_TrxName())
+							.setClient_ID()
+							.setParameters(wEntry.getGrossWeightTime())
+							.list();
+					
+					
+					if(prevEntries.size() > 0) {
+						msg = wEntry.getDocumentNo() +  " : DC cannot be converted as invoice before Old DCs converted as invoice!";
+						addLog(wEntry.get_Table_ID(), wEntry.getGrossWeightTime(), null, msg, wEntry.get_Table_ID(), wEntry.get_ID());
+						continue;
+					}
+					
 				}
-				
 				if(InvoiceType != null) {
 					wEntry.setInvoiceType(InvoiceType);					
 				}
